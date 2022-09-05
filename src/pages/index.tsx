@@ -1,8 +1,10 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Gallery from "../components/Gallery";
+import Slider from "../components/Slider";
 import Hero from "../components/Hero";
 import Nav from "../components/Nav";
+import Investments from "../components/Investments";
+import PuzzleItem from "../components/PuzzleItem";
 
 const Home: NextPage = () => {
   return (
@@ -19,7 +21,10 @@ const Home: NextPage = () => {
       <main className="container mx-auto flex flex-col max-w-4xl p-4">
         <Nav />
         <Hero className="my-12" />
-        <Gallery className="flex" />
+        <Slider />
+        <Investments />
+        <PuzzleItem level={1} amount={100000} progress={25} />
+        <PuzzleItem level={2} amount={200000} progress={0} />
       </main>
     </>
   );
