@@ -40,11 +40,11 @@ export default function Investments() {
                 "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2"
               )}
             >
-              <ul>
+              <ul className="grid grid-cols-2 gap-2">
                 {investmentStatus.map((investment) => (
                   <li
                     key={investment.id}
-                    className="relative rounded-md p-3 hover:bg-gray-100"
+                    className="relative rounded-md border  p-3 h-24 bg-gray-200 hover:bg-gray-100"
                   >
                     <h3 className="text-sm font-medium leading-5">
                       {investment.title}
