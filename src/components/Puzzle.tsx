@@ -1,7 +1,7 @@
 import React from "react";
 import PuzzleItem from "./PuzzleItem";
 
-const Puzzle: React.FC = () => {
+const Puzzle = () => {
   return (
     <section id="puzzle">
       <h2 className="text-2xl">Puzzle</h2>

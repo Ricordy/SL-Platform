@@ -2,11 +2,7 @@ import React from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { MdKeyboardArrowRight } from "react-icons/md";
 
-type SliderPops = {
-  className?: string;
-};
-
-const Slider: React.FC = (props) => {
+const Slider: React.FC = () => {
   return (
     <section className="flex flex-col">
       <div className="simpleSlider flex justify-center items-center">
