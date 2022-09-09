@@ -5,7 +5,7 @@ import logo from "../../public/logo-black.svg";
 
 const Nav: React.FC = () => {
   return (
-    <nav className="flex justify-between">
+    <nav className="flex justify-between max-w-4xl mx-auto py-6">
       <Link href="/">
         <a>
           <Image src={logo} alt="Something Legendary logo" />

@@ -1,16 +1,12 @@
 import React from "react";
 
-type PuzzleProgressData = {
+type PuzzleItemData = {
   level: number;
   amount: number;
   progress: number;
 };
 
-const PuzzleProgress: React.FC<PuzzleProgressData> = ({
-  level,
-  amount,
-  progress,
-}) => {
+const PuzzleItem: React.FC<PuzzleItemData> = ({ level, amount, progress }) => {
   return (
     <div className="py-6">
       <h2 className="font-bold">{`Level ${level}`}</h2>
@@ -27,4 +23,4 @@ const PuzzleProgress: React.FC<PuzzleProgressData> = ({
   );
 };
 
-export default PuzzleProgress;
+export default PuzzleItem;

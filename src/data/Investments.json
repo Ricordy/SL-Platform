@@ -1,0 +1,64 @@
+{
+  "Active": [
+    {
+      "id": 1,
+      "title": "Aston Martin DB5 1964",
+      "amount": "10000000",
+      "percentage": "50",
+      "phase": "Withdraw"
+    },
+    {
+      "id": 2,
+      "title": "Porsche 911 1963",
+      "amount": "25000000",
+      "percentage": "25",
+      "phase": "In progress"
+    },
+    {
+      "id": 3,
+      "title": "Volkswagen Beetle",
+      "amount": "5000000",
+      "percentage": "100",
+      "phase": "Funds Collected"
+    },
+    {
+      "id": 4,
+      "title": "Ford Mustang Shelby GT350 1965",
+      "amount": "25000000",
+      "percentage": "25",
+      "phase": "In process"
+    },
+    {
+      "id": 5,
+      "title": "Bugatti Type 57 Atlantic 1938",
+      "amount": "15000000",
+      "percentage": "65",
+      "phase": "Refunding"
+    }
+  ],
+  "Upcoming": [
+    {
+      "id": 1,
+      "title": "Jaguar E-Type 1961",
+      "amount": "10000000",
+      "percentage": "50",
+      "phase": "Begining Soon"
+    },
+    {
+      "id": 2,
+      "title": "Ferrari 250 GTO 1962",
+      "amount": "10000000",
+      "percentage": "50",
+      "phase": "Begining Soon"
+    }
+  ],
+  "Finished": [
+    {
+      "id": 1,
+      "title": "Ford F-100",
+      "amount": "10000000",
+      "percentage": "50",
+      "phase": "Closed"
+    }
+  ]
+}
