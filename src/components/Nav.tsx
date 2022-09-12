@@ -3,7 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import logo from "../../public/logo-black.svg";
 import ProfileMenu from "./ProfileMenu";
-import MenuExample from "./MenuExample";
 
 const Nav = () => {
   const [walletConnected, setWalletConnected] = useState(false);

@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import { useState } from "react";
 import { Tab } from "@headlessui/react";
 
@@ -7,7 +6,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 const MyPuzzle: NextPage = () => {
-  let [categories] = useState({
+  const [categories] = useState({
     "Level 1": [
       {
         id: 1,
@@ -156,6 +155,7 @@ const MyPuzzle: NextPage = () => {
 
   return (
     <div className="w-full px-2 py-16 sm:px-0">
+      <h2 className="text-2xl py-6">My Puzzle</h2>
       <Tab.Group>
         <Tab.List className="flex space-x-1 rounded-xl bg-gray-900/20 p-1">
           {Object.keys(categories).map((category) => (
@@ -212,14 +212,6 @@ const MyPuzzle: NextPage = () => {
                         </svg>
                       )}
                     </ul>
-
-                    <a
-                      href="#"
-                      className={classNames(
-                        "absolute inset-0 rounded-md",
-                        "ring-gray-400 focus:z-10 focus:outline-none focus:ring-2"
-                      )}
-                    />
                   </li>
                 ))}
               </ul>
