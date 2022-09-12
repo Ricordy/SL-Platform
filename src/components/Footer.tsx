@@ -4,7 +4,7 @@ import { AiOutlineTwitter } from "react-icons/ai";
 import { AiOutlineMedium } from "react-icons/ai";
 import { AiOutlineInstagram } from "react-icons/ai";
 
-const Footer: React.FC = () => {
+const Footer = () => {
   return (
     <footer className="flex max-w-4xl mx-auto my-12 gap-3">
       <Link href="#contact">

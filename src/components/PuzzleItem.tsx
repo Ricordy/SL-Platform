@@ -16,7 +16,7 @@ const PuzzleItem: React.FC<PuzzleItemData> = ({ level, amount, progress }) => {
           className="bg-gray-600 text-xs font-medium text-gray-100 text-center p-0.5 leading-none rounded-l-full"
           style={{ width: `${progress}%` }}
         >
-          {progress}
+          {progress}%
         </div>
       </div>
     </div>
