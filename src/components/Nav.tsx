@@ -29,7 +29,10 @@ const Nav = () => {
       {walletConnected && <ProfileMenu logout={toggleWallet} />}
       {!walletConnected && (
         <Link className=" self-end" href="#connect">
-          <a className="px-4 py-2 border rounded-sm" onClick={toggleWallet}>
+          <a
+            className="px-4 py-2 border rounded-md bg-slate-800 text-slate-50"
+            onClick={toggleWallet}
+          >
             Connect Wallet
           </a>
         </Link>
