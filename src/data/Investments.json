@@ -2,9 +2,9 @@
   "Active": [
     {
       "id": 1,
-      "title": "Aston Martin DB5 1964",
-      "amount": "10000000",
-      "percentage": "50",
+      "title": "Mercedes-benz 280sl Pagoda 1969",
+      "amount": "129000.00",
+      "percentage": "100",
       "phase": "Withdraw"
     },
     {
@@ -25,15 +25,8 @@
       "id": 4,
       "title": "Ford Mustang Shelby GT350 1965",
       "amount": "25000000",
-      "percentage": "25",
+      "percentage": "100",
       "phase": "In process"
-    },
-    {
-      "id": 5,
-      "title": "Bugatti Type 57 Atlantic 1938",
-      "amount": "15000000",
-      "percentage": "65",
-      "phase": "Refunding"
     }
   ],
   "Upcoming": [

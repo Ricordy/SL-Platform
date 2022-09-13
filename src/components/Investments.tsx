@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Tab } from "@headlessui/react";
 import investmentData from "../data/Investments.json";
+import { NumericFormat } from "react-number-format";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -53,7 +54,15 @@ export default function Investments() {
                     <ul className="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500">
                       <li>{investment.phase}</li>
                       <li>&middot;</li>
-                      <li>{investment.amount}</li>
+                      <li>
+                        <NumericFormat
+                          value={investment.amount}
+                          displayType="text"
+                          allowLeadingZeros
+                          thousandSeparator=","
+                          decimalScale={2}
+                        />
+                      </li>
                       <li>&middot;</li>
                       <li>{investment.percentage}%</li>
                     </ul>

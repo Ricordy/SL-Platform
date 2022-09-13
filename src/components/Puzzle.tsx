@@ -5,8 +5,18 @@ const Puzzle = () => {
   return (
     <section id="puzzle">
       <h2 className="text-2xl">Puzzle</h2>
-      <PuzzleItem level={1} amount={100000} progress={25} />
-      <PuzzleItem level={2} amount={200000} progress={0} />
+      <PuzzleItem
+        level={1}
+        amount="20 %"
+        progress="20"
+        showProgressInsideBar={false}
+      />
+      <PuzzleItem
+        level={2}
+        amount="N/A"
+        progress="0"
+        showProgressInsideBar={false}
+      />
     </section>
   );
 };

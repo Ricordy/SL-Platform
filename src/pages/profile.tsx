@@ -7,8 +7,8 @@ import { FiExternalLink } from "react-icons/fi";
 const Profile: NextPage = () => {
   const ProfileDetails = () => {
     return (
-      <div className="flex flex-col">
-        <div className="flex gap-2 pb-6">
+      <div className="">
+        <div className="">
           <div className="border w-10">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -30,23 +30,38 @@ const Profile: NextPage = () => {
             </a>
           </Link>
         </div>
-        <div className="flex w-full gap-6">
-          <div className="w-1/2">
-            <h2 className="font-bold">Level: 1</h2>
+        <div className="w-3/4">
+          <div className="flex flex-col">
             <div className="flex justify-between">
-              <div className="title">Total Invested</div>
-              <div className="">$ 2000.00</div>
+              <div className="font-bold">Total Invested</div>
+              <div className="">$ 5000.00</div>
             </div>
-            <div className="flex flex-col">
-              <div className="title">Puzzle Progress</div>
-              <PuzzleItem level={1} amount={150000} progress={10} />
+            <div className="flex flex-col ">
+              <div className="font-bold pt-6">Puzzle Progress</div>
+              <div className="flex gap-6">
+                <PuzzleItem
+                  level={1}
+                  amount="$ 5000 / $ 5000"
+                  progress="100"
+                  showProgressInsideBar={true}
+                />
+                <button className="border rounded-md self-end p-2 bg-slate-800 text-slate-50">
+                  Claim
+                </button>
+              </div>
             </div>
-            <h2 className="font-bold">Level: 2</h2>
-            <div className="title">N/A</div>
+            <div className="flex gap-6">
+              <PuzzleItem
+                level={2}
+                amount="N/A"
+                progress="0"
+                showProgressInsideBar={true}
+              />
+              <button disabled className="border rounded-md self-end p-2">
+                Claim
+              </button>
+            </div>
           </div>
-          <button className="border rounded-md h-fit self-end p-2 bg-slate-800 text-slate-50">
-            Claim
-          </button>
         </div>
       </div>
     );

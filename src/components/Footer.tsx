@@ -7,11 +7,11 @@ import { AiOutlineInstagram } from "react-icons/ai";
 const Footer = () => {
   return (
     <footer className="flex max-w-4xl mx-auto my-12 gap-3">
-      <Link href="#contact">
-        <a>Contact</a>
+      <Link href="https://beta.somethinglegendary.com/#contact">
+        <a target="_blank">Contact</a>
       </Link>
-      <Link href="/security">
-        <a>Security</a>
+      <Link href="https://beta.somethinglegendary.com/security">
+        <a target="_blank">Security</a>
       </Link>
       <Link href="/faq">
         <a>FAQ</a>

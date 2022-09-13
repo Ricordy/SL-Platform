@@ -26,7 +26,7 @@ const FAQ: NextPage = () => {
                 </Disclosure.Button>
                 <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
                   You can withdraw your investment after the completion. Check
-                  the details page &lsquo;My Investments&rsquo; page.
+                  details in &lsquo;My Investments&rsquo; page.
                 </Disclosure.Panel>
               </>
             )}
@@ -35,7 +35,9 @@ const FAQ: NextPage = () => {
             {({ open }) => (
               <>
                 <Disclosure.Button className="flex w-full justify-between rounded-lg bg-gray-100 px-4 py-2 text-left text-sm font-medium text-gray-900 hover:bg-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75">
-                  <span>What is your refund policy?</span>
+                  <span>
+                    Can I invest in more than one project at the same time?
+                  </span>
                   <ChevronUpIcon
                     className={`${
                       open ? "rotate-180 transform" : ""
@@ -43,9 +45,7 @@ const FAQ: NextPage = () => {
                   />
                 </Disclosure.Button>
                 <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
-                  If you&lsquo;re unhappy with your purchase for any reason,
-                  email us within 90 days and we&lsquo;ll refund you in full, no
-                  questions asked.
+                  Yes. You can invest in all active projects.
                 </Disclosure.Panel>
               </>
             )}
@@ -54,7 +54,7 @@ const FAQ: NextPage = () => {
             {({ open }) => (
               <>
                 <Disclosure.Button className="flex w-full justify-between rounded-lg bg-gray-100 px-4 py-2 text-left text-sm font-medium text-gray-900 hover:bg-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75">
-                  <span>Do you offer technical support?</span>
+                  <span>How can I follow the restoring process?</span>
                   <ChevronUpIcon
                     className={`${
                       open ? "rotate-180 transform" : ""
@@ -62,7 +62,8 @@ const FAQ: NextPage = () => {
                   />
                 </Disclosure.Button>
                 <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
-                  No.
+                  You can check the restoring process going to My investments
+                  page.
                 </Disclosure.Panel>
               </>
             )}

@@ -215,6 +215,7 @@ const MyPuzzle: NextPage = () => {
                   </li>
                 ))}
               </ul>
+              <button className="border p-2">Claim NFT Level 2 (2/10)</button>
             </Tab.Panel>
           ))}
         </Tab.Panels>

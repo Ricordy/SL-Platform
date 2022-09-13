@@ -1,8 +1,8 @@
 export const investmentData = [
   {
     id: 1,
-    title: "Aston Martin DB5 1964",
-    amount: "10000000",
+    title: "Mercedes-benz 280sl Pagoda 1969",
+    amount: "129000",
     percentage: "50",
     phase: "Withdraw",
     status: "Active",

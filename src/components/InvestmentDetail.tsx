@@ -10,7 +10,11 @@ const InvestmentDetail = () => {
       <div className="flex w-full max-w-4xl  gap-6">
         <div className="flex flex-col w-3/4">
           <Slider />
-          <PuzzleItem level={1} amount={150000} progress={10} />
+          <PuzzleItem
+            amount="$ 129000"
+            progress="100"
+            showProgressInsideBar={true}
+          />
           <InvestmentNumbers />
         </div>
         <InvestmentSidebar />

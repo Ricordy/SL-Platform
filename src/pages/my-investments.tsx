@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import { useState } from "react";
 import { Tab } from "@headlessui/react";
+import Link from "next/link";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -17,8 +18,8 @@ const MyInvestments: NextPage = () => {
       },
       {
         id: 1,
-        title: "Aston Martin DB5 1964",
-        amount: "10000000",
+        title: "Mercedes-benz 280sl Pagoda 1969",
+        amount: "129000",
         percentage: "100",
         phase: "Withdraw",
       },
@@ -34,7 +35,7 @@ const MyInvestments: NextPage = () => {
   });
 
   return (
-    <div className="w-full px-2 py-16 sm:px-0">
+    <div className="w-full px-2 sm:px-0">
       <h2 className="text-2xl py-6">My Investments</h2>
       <Tab.Group>
         <Tab.List className="flex space-x-1 rounded-xl bg-gray-900/20 p-1">
@@ -68,13 +69,15 @@ const MyInvestments: NextPage = () => {
                 {posts.map((post) => (
                   <li
                     key={post.id}
-                    className="relative rounded-md p-3 border  hover:bg-gray-100"
+                    className="relative rounded-md p-3 border  flex  flex-col  justify-around hover:bg-gray-100"
                   >
                     <h3 className="text-sm font-medium leading-5">
-                      {post.title}
+                      <Link href="/investment/1">{post.title}</Link>
                     </h3>
                     {post.phase !== "Withdraw" ? (
-                      post.phase
+                      <button className="border p-2 text-xs rounded-md">
+                        {post.phase}
+                      </button>
                     ) : (
                       <button className="border p-2 text-xs rounded-md bg-slate-500 text-slate-100">
                         Withdraw

@@ -2,12 +2,12 @@ import React from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { MdKeyboardArrowRight } from "react-icons/md";
 
-const Slider: React.FC = () => {
+const Slider = () => {
   return (
     <section className="flex flex-col">
-      <div className="simpleSlider flex justify-center items-center">
+      <div className="simpleSlider flex justify-center items-center h-60">
         <MdKeyboardArrowLeft />
-        <h2 className="text-3xl mx-auto">Slider</h2>
+        <h2 className="text-3xl mx-auto ">Slider</h2>
         <MdKeyboardArrowRight />
       </div>
     </section>
