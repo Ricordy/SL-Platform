@@ -2,6 +2,8 @@ import React from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { MdKeyboardArrowRight } from "react-icons/md";
 
+const images = [{ url: "/slider/car1.png" }, { url: "/slider/car2.png" }];
+
 const Slider = () => {
   return (
     <section className="flex flex-col">

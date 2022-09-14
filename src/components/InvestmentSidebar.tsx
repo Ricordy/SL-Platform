@@ -106,26 +106,40 @@ export const InvestmentSidebar = () => {
       <aside className="w-1/3 flex flex-col align-middle justify-between">
         <div className="flex flex-col align-middle">
           <h4 className="font-bold pb-3">Mercedes-benz 280sl Pagoda 1969</h4>
-          <div className="text">Chassis Nr: 113044-10-010413</div>
-          <div className="text">Total Production W113 280SL: 23885</div>
-          <div className="text">Total Production in 1969 280SL: 8047</div>
-          <div className="text">
-            Color combination: 124 G Arabian Grey with Cognac MBTEX
+          <div className="pb-3">
+            <div className="text-xs text-slate-700">Chassis Nr:</div>
+            <div className="text">113044-10-010413</div>
           </div>
-          <Link href="/mercedes-benz">
-            <a className="flex gap-2 align-middle">
-              More info <FiExternalLink />
-            </a>
-          </Link>
+          <div className="pb-3">
+            <div className="text-xs text-slate-700">
+              Total Production W113 280SL:
+            </div>
+            <div className="text">23885</div>
+          </div>
+          <div className="pb-3">
+            <div className="text-xs text-slate-700">
+              Total Production in 1969 280SL:
+            </div>
+            <div className="text">8047</div>
+          </div>
+          <div className="pb-3">
+            <div className="text-xs text-slate-700">Color combination:</div>
+            <div className="text">124 G Arabian Grey with Cognac MBTEX</div>
+          </div>
         </div>
-        <div className="address">
-          <h3>Contract address:</h3>
+        <div className="pb-3">
+          <h3 className="text-xs text-slate-700">Contract address:</h3>
           <Link href="#">
             <a className="flex align-middle gap-2">
               0x0c7...1Be <FiExternalLink />
             </a>
           </Link>
         </div>
+        <Link href="/mercedes-benz">
+          <a className="flex gap-2 align-middle border p-2 rounded-md justify-center mb-6 align-middle">
+            More info <FiExternalLink />
+          </a>
+        </Link>
         <button
           onClick={openModal}
           className="border rounded-md p-2 bg-slate-800 text-slate-50"
