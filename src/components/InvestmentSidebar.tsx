@@ -18,10 +18,9 @@ export const InvestmentSidebar = () => {
 
   function handleClick(e) {
     if (approveInvestment) {
-      // closeModal();
+      closeModal();
     } else {
       e.preventDefault();
-      // console.log("clicou");
       setApproveInvestment(true);
     }
   }
