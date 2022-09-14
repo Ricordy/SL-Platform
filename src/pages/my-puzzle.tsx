@@ -180,7 +180,7 @@ const MyPuzzle: NextPage = () => {
             <Tab.Panel
               key={idx}
               className={classNames(
-                "rounded-xl bg-white p-3",
+                "flex flex-col rounded-xl bg-white p-3",
                 "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-400 focus:outline-none focus:ring-2"
               )}
             >
@@ -188,13 +188,13 @@ const MyPuzzle: NextPage = () => {
                 {posts.map((post) => (
                   <li
                     key={post.id}
-                    className="relative rounded-md p-3 border  hover:bg-gray-100"
+                    className="relative flex flex-col justify-between rounded-md p-3 border min-h-[100px] hover:bg-gray-100"
                   >
                     <h3 className="text-sm font-medium leading-5">
                       {post.title}
                     </h3>
 
-                    <ul className="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500">
+                    <div className="mt-1 flex self-end space-x-1 text-xs font-normal leading-4 text-gray-500">
                       {post.nft && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -211,11 +211,15 @@ const MyPuzzle: NextPage = () => {
                           />
                         </svg>
                       )}
-                    </ul>
+                    </div>
                   </li>
                 ))}
               </ul>
-              <button className="border p-2">Claim NFT Level 2 (2/10)</button>
+              {idx == 0 && (
+                <button className="border mt-6 self-center rounded-md p-2">
+                  Claim NFT Level 2 (2/10)
+                </button>
+              )}
             </Tab.Panel>
           ))}
         </Tab.Panels>

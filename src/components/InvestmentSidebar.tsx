@@ -5,7 +5,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 
 export const InvestmentSidebar = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [approveInvestment, setApproveInvestment] = useState(false);
 
   function closeModal() {
@@ -16,12 +16,13 @@ export const InvestmentSidebar = () => {
     setIsOpen(true);
   }
 
-  function handleClick() {
+  function handleClick(e) {
     if (approveInvestment) {
-      closeModal();
+      // closeModal();
     } else {
+      e.preventDefault();
+      // console.log("clicou");
       setApproveInvestment(true);
-      return false;
     }
   }
 
@@ -84,7 +85,7 @@ export const InvestmentSidebar = () => {
                       />
                       <button
                         type="button"
-                        className="inline-flex justify-center rounded-md border border-transparent bg-gray-100 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
                         onClick={handleClick}
                       >
                         {approveInvestment ? "Invest now" : "Approve USDC"}
@@ -99,13 +100,6 @@ export const InvestmentSidebar = () => {
       </Transition>
     );
   }
-
-  //
-  //
-  //
-  // - input onde o usuário informa o valor dentro do range com um botão MAX ao lado
-  // - Approve USDT/USDC (Qdo clica muda para o confirm)
-  // - Confirm button
 
   return (
     <>

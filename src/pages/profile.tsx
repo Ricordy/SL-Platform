@@ -8,7 +8,7 @@ const Profile: NextPage = () => {
   const ProfileDetails = () => {
     return (
       <div className="">
-        <div className="">
+        <div className="flex pb-6 gap-6">
           <div className="border w-10">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -36,12 +36,12 @@ const Profile: NextPage = () => {
               <div className="font-bold">Total Invested</div>
               <div className="">$ 5000.00</div>
             </div>
-            <div className="flex flex-col ">
-              <div className="font-bold pt-6">Puzzle Progress</div>
+            <div className="font-bold py-6">Puzzle Progress</div>
+            <div className="flex flex-col gap-6">
               <div className="flex gap-6">
                 <PuzzleItem
                   level={1}
-                  amount="$ 5000 / $ 5000"
+                  amount="$ 5000.00 / $ 5000.00"
                   progress="100"
                   showProgressInsideBar={true}
                 />
@@ -49,17 +49,17 @@ const Profile: NextPage = () => {
                   Claim
                 </button>
               </div>
-            </div>
-            <div className="flex gap-6">
-              <PuzzleItem
-                level={2}
-                amount="N/A"
-                progress="0"
-                showProgressInsideBar={true}
-              />
-              <button disabled className="border rounded-md self-end p-2">
-                Claim
-              </button>
+              <div className="flex gap-6">
+                <PuzzleItem
+                  level={2}
+                  amount="N/A"
+                  progress="0"
+                  showProgressInsideBar={true}
+                />
+                <button disabled className="border rounded-md self-end p-2">
+                  Claim
+                </button>
+              </div>
             </div>
           </div>
         </div>
