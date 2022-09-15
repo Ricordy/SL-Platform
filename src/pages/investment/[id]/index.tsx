@@ -34,7 +34,7 @@ const Investment = () => {
             </div>
             <InvestmentSidebar
               title={investment?.title}
-              chassis={investment?.title}
+              chassis={investment?.chassis}
               address={investment?.address}
               totalProduction={investment?.totalProduction}
               totalModelProduction={investment?.totalModelProduction}
