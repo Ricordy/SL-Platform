@@ -135,7 +135,7 @@ export const InvestmentSidebar = () => {
           </Link>
         </div>
         <Link href="/mercedes-benz">
-          <a className="flex gap-2 align-middle border p-2 rounded-md justify-center mb-6 align-middle">
+          <a className="flex gap-2 border p-2 rounded-md justify-center mb-6 align-middle">
             More info <FiExternalLink />
           </a>
         </Link>
