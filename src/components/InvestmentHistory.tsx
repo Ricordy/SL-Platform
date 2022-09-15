@@ -8,26 +8,30 @@ const InvestmentHistory = () => {
           Total Invested: <span className="text-bold text-xl">$ 5,000.00</span>
         </h2>
         <table>
-          <tr>
-            <th className="text-center">Amount</th>
-            <th className="text-center">Date</th>
-            <th className="text-center">Transaction Id</th>
-          </tr>
-          <tr>
-            <td>3,000</td>
-            <td>2022-03-01</td>
-            <td>0x999999999</td>
-          </tr>
-          <tr className="bg-gray-100">
-            <td>1,500</td>
-            <td>2022-02-22</td>
-            <td>0x999999998</td>
-          </tr>
-          <tr>
-            <td>500</td>
-            <td>2022-01-04</td>
-            <td>0x999999997</td>
-          </tr>
+          <thead>
+            <tr>
+              <th className="text-center">Amount</th>
+              <th className="text-center">Date</th>
+              <th className="text-center">Transaction Id</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>3,000</td>
+              <td>2022-03-01</td>
+              <td>0x999999999</td>
+            </tr>
+            <tr className="bg-gray-100">
+              <td>1,500</td>
+              <td>2022-02-22</td>
+              <td>0x999999998</td>
+            </tr>
+            <tr>
+              <td>500</td>
+              <td>2022-01-04</td>
+              <td>0x999999997</td>
+            </tr>
+          </tbody>
         </table>
       </div>
       <div className="flex flex-col justify-between ">

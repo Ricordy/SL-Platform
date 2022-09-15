@@ -3,6 +3,7 @@ import Head from "next/head";
 import PuzzleItem from "../components/PuzzleItem";
 import Link from "next/link";
 import { FiExternalLink } from "react-icons/fi";
+import InvestmentHistory from "../components/InvestmentHistory";
 
 const Profile: NextPage = () => {
   const ProfileDetails = () => {
@@ -32,10 +33,7 @@ const Profile: NextPage = () => {
         </div>
         <div className="w-3/4">
           <div className="flex flex-col">
-            <div className="flex justify-between">
-              <div className="font-bold">Total Invested</div>
-              <div className="">$ 5000.00</div>
-            </div>
+            <InvestmentHistory />
             <div className="font-bold py-6">Puzzle Progress</div>
             <div className="flex flex-col gap-6">
               <div className="flex gap-6">
