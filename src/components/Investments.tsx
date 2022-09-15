@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Tab } from "@headlessui/react";
-import investmentData from "../data/Investments.json";
+import { investmentData } from "../data/Investments";
+import { investmentStatusesData } from "../data/InvestmentStatuses";
 import { NumericFormat } from "react-number-format";
 
 function classNames(...classes: string[]) {
@@ -8,14 +9,14 @@ function classNames(...classes: string[]) {
 }
 
 export default function Investments() {
-  const [investmentStatuses] = useState(investmentData);
+  const [investmentStatuses] = useState(investmentStatusesData);
 
   return (
     <section id="investments" className="w-full px-2 py-16 sm:px-0">
       <h2 className="text-3xl mx-auto my-6">Investments</h2>
       <Tab.Group>
         <Tab.List className="flex space-x-1 rounded-xl bg-gray-900/20 p-1">
-          {Object.keys(investmentStatuses).map((investmentStatus) => (
+          {investmentStatuses.map((investmentStatus) => (
             <Tab
               key={investmentStatus}
               className={({ selected }) =>
@@ -33,7 +34,7 @@ export default function Investments() {
           ))}
         </Tab.List>
         <Tab.Panels className="mt-2">
-          {Object.values(investmentStatuses).map((investmentStatus, idx) => (
+          {investmentStatuses.map((investmentStatus, idx) => (
             <Tab.Panel
               key={idx}
               className={classNames(
@@ -42,44 +43,42 @@ export default function Investments() {
               )}
             >
               <ul className="grid grid-cols-2 gap-2">
-                {investmentStatus.map((investment) => (
-                  <li
-                    key={investment.id}
-                    className="relative rounded-md border  p-3 h-24 bg-gray-200 hover:bg-gray-100"
-                  >
-                    <h3 className="text-sm font-medium leading-5">
-                      {investment.title}
-                    </h3>
+                {investmentData
+                  .filter((i) => i.status == investmentStatus)
+                  .map((investment) => (
+                    <li
+                      key={investment.id}
+                      className="relative rounded-md border  p-3 h-24 bg-gray-200 hover:bg-gray-100"
+                    >
+                      <h3 className="text-sm font-medium leading-5">
+                        {investment.title}
+                      </h3>
 
-                    <ul className="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500">
-                      <li>{investment.phase}</li>
-                      <li>&middot;</li>
-                      <li>
-                        <NumericFormat
-                          value={investment.amount}
-                          displayType="text"
-                          allowLeadingZeros
-                          thousandSeparator=","
-                          decimalScale={2}
-                        />
-                      </li>
-                      <li>&middot;</li>
-                      <li>{investment.percentage}%</li>
-                    </ul>
+                      <ul className="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500">
+                        <li>{investment.phase}</li>
+                        <li>&middot;</li>
+                        <li>
+                          <NumericFormat
+                            value={investment.amount}
+                            displayType="text"
+                            allowLeadingZeros
+                            thousandSeparator=","
+                            decimalScale={2}
+                          />
+                        </li>
+                        <li>&middot;</li>
+                        <li>{investment.percentage}%</li>
+                      </ul>
 
-                    <a
-                      href={`/investment/${investment.id}?status=${Object.keys(
-                        investmentStatuses
-                      )
-                        .at(idx)
-                        .toLowerCase()}`}
-                      className={classNames(
-                        "absolute inset-0 rounded-md",
-                        "ring-gray-400 focus:z-10 focus:outline-none focus:ring-2"
-                      )}
-                    />
-                  </li>
-                ))}
+                      <a
+                        href={`/investment/${investment.id}`}
+                        className={classNames(
+                          "absolute inset-0 rounded-md",
+                          "ring-gray-400 focus:z-10 focus:outline-none focus:ring-2"
+                        )}
+                      />
+                    </li>
+                  ))}
               </ul>
             </Tab.Panel>
           ))}

@@ -5,28 +5,44 @@
       "title": "Mercedes-benz 280sl Pagoda 1969",
       "amount": "129000.00",
       "percentage": "100",
-      "phase": "Withdraw"
+      "phase": "Withdraw",
+      "chassis": "113044-10-010413",
+      "totalProduction": 23885,
+      "totalModelProduction": 8047,
+      "colorCombination": "124 G Arabian Grey with Cognac MBTEX"
     },
     {
       "id": 2,
       "title": "Porsche 911 1963",
       "amount": "25000000",
       "percentage": "25",
-      "phase": "In progress"
+      "phase": "In progress",
+      "chassis": "",
+      "totalProduction": 0,
+      "totalModelProduction": 0,
+      "colorCombination": ""
     },
     {
       "id": 3,
       "title": "Volkswagen Beetle",
       "amount": "5000000",
       "percentage": "100",
-      "phase": "Funds Collected"
+      "phase": "Funds Collected",
+      "chassis": "",
+      "totalProduction": 0,
+      "totalModelProduction": 0,
+      "colorCombination": ""
     },
     {
       "id": 4,
       "title": "Ford Mustang Shelby GT350 1965",
       "amount": "25000000",
       "percentage": "100",
-      "phase": "In process"
+      "phase": "In process",
+      "chassis": "",
+      "totalProduction": 0,
+      "totalModelProduction": 0,
+      "colorCombination": ""
     }
   ],
   "Upcoming": [
@@ -35,14 +51,22 @@
       "title": "Jaguar E-Type 1961",
       "amount": "10000000",
       "percentage": "50",
-      "phase": "Begining Soon"
+      "phase": "Begining Soon",
+      "chassis": "",
+      "totalProduction": 0,
+      "totalModelProduction": 0,
+      "colorCombination": ""
     },
     {
       "id": 2,
       "title": "Ferrari 250 GTO 1962",
       "amount": "10000000",
       "percentage": "50",
-      "phase": "Begining Soon"
+      "phase": "Begining Soon",
+      "chassis": "",
+      "totalProduction": 0,
+      "totalModelProduction": 0,
+      "colorCombination": ""
     }
   ],
   "Finished": [
@@ -51,7 +75,11 @@
       "title": "Ford F-100",
       "amount": "10000000",
       "percentage": "50",
-      "phase": "Closed"
+      "phase": "Closed",
+      "chassis": "",
+      "totalProduction": 0,
+      "totalModelProduction": 0,
+      "colorCombination": ""
     }
   ]
 }

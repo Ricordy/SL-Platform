@@ -1,8 +1,9 @@
 import React from "react";
+import { NumericFormat } from "react-number-format";
 
 type PuzzleItemData = {
   level?: number;
-  amount?: string;
+  amount: string;
   progress?: string;
   showProgressInsideBar: boolean;
 };
@@ -16,7 +17,15 @@ const PuzzleItem: React.FC<PuzzleItemData> = ({
   return (
     <div className="w-full">
       {level && <h2 className="">{`Level ${level}`}</h2>}
-      <div className="w-full text-center">{amount}</div>
+      <div className="w-full text-center">
+        <NumericFormat
+          value={amount}
+          displayType="text"
+          thousandSeparator=","
+          decimalScale={2}
+          prefix="$ "
+        />
+      </div>
 
       <div className="w-full bg-gray-200 rounded-full">
         <div

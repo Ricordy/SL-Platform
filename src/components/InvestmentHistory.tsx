@@ -1,11 +1,25 @@
 import React from "react";
+import { NumericFormat } from "react-number-format";
 
-const InvestmentHistory = () => {
+type historyProps = {
+  totalInvested: number;
+};
+const InvestmentHistory = (props: historyProps) => {
   return (
     <div className="grid grid-cols-2 gap-12 pt-6 justify-start">
       <div className="flex flex-col">
         <h2 className="text-xs pb-3">
-          Total Invested: <span className="text-bold text-xl">$ 5,000.00</span>
+          Total Invested:{" "}
+          <span className="text-bold text-xl">
+            <NumericFormat
+              value={props.totalInvested}
+              displayType="text"
+              thousandSeparator=","
+              decimalScale={2}
+              // fixedDecimalScale={true}
+              prefix="$ "
+            />
+          </span>
         </h2>
         <table>
           <thead>

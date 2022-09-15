@@ -4,7 +4,19 @@ import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 
-export const InvestmentSidebar = () => {
+type investmentProps = {
+  address: string;
+  title: string;
+  amount: string; // Check type
+  percentageInvested?: string;
+  phase: string;
+  chassis: string;
+  totalProduction: number;
+  totalModelProduction: number;
+  colorCombination: string;
+};
+
+export const InvestmentSidebar = (props: investmentProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [approveInvestment, setApproveInvestment] = useState(false);
 
@@ -23,6 +35,13 @@ export const InvestmentSidebar = () => {
       e.preventDefault();
       setApproveInvestment(true);
     }
+  }
+
+  function formatAddress(address: string) {
+    if (address) {
+      return `${address.slice(0, 5)} ... ${address.slice(address.length - 4)}`;
+    }
+    return null;
   }
 
   function ModalInvestNow() {
@@ -104,33 +123,33 @@ export const InvestmentSidebar = () => {
     <>
       <aside className="w-1/3 flex flex-col align-middle justify-between">
         <div className="flex flex-col align-middle">
-          <h4 className="font-bold pb-3">Mercedes-benz 280sl Pagoda 1969</h4>
+          <h4 className="font-bold pb-3">{props.title}</h4>
           <div className="pb-3">
             <div className="text-xs text-slate-700">Chassis Nr:</div>
-            <div className="text">113044-10-010413</div>
+            <div className="text">{props.chassis}</div>
           </div>
           <div className="pb-3">
             <div className="text-xs text-slate-700">
               Total Production W113 280SL:
             </div>
-            <div className="text">23885</div>
+            <div className="text">{props.totalProduction}</div>
           </div>
           <div className="pb-3">
             <div className="text-xs text-slate-700">
               Total Production in 1969 280SL:
             </div>
-            <div className="text">8047</div>
+            <div className="text">{props.totalModelProduction}</div>
           </div>
           <div className="pb-3">
             <div className="text-xs text-slate-700">Color combination:</div>
-            <div className="text">124 G Arabian Grey with Cognac MBTEX</div>
+            <div className="text">{props.colorCombination}</div>
           </div>
         </div>
         <div className="pb-3">
           <h3 className="text-xs text-slate-700">Contract address:</h3>
           <Link href="#">
             <a className="flex align-middle gap-2">
-              0x0c7...1Be <FiExternalLink />
+              {formatAddress(props.address)} <FiExternalLink />
             </a>
           </Link>
         </div>

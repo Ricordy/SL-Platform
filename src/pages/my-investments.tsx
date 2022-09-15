@@ -2,35 +2,20 @@ import type { NextPage } from "next";
 import { useState } from "react";
 import { Tab } from "@headlessui/react";
 import Link from "next/link";
+import { investmentData } from "../data/Investments";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
+// TODO: Get from user wallet
+const userInvestments = [1, 2, 3];
+const selectedInvestments = investmentData.filter(
+  (i) => userInvestments.indexOf(i.id) > -1
+);
+
 const MyInvestments: NextPage = () => {
   const [categories] = useState({
-    "Level 1": [
-      {
-        id: 3,
-        title: "Volkswagen Beetle",
-        amount: "5000000",
-        percentage: "100",
-        phase: "Funds Collected",
-      },
-      {
-        id: 1,
-        title: "Mercedes-benz 280sl Pagoda 1969",
-        amount: "129000",
-        percentage: "100",
-        phase: "Withdraw",
-      },
-      {
-        id: 2,
-        title: "Porsche 911 1963",
-        amount: "25000000",
-        percentage: "60",
-        phase: "In progress",
-      },
-    ],
+    "Level 1": selectedInvestments,
     "Level 2": [],
   });
 
@@ -72,7 +57,7 @@ const MyInvestments: NextPage = () => {
                     className="relative rounded-md p-3 border  flex  flex-col  justify-around hover:bg-gray-100"
                   >
                     <h3 className="text-sm font-medium leading-5">
-                      <Link href="/investment/1">{post.title}</Link>
+                      <Link href={`/investment/${post.id}`}>{post.title}</Link>
                     </h3>
                     {post.phase !== "Withdraw" ? (
                       <button className="border p-2 text-xs rounded-md">

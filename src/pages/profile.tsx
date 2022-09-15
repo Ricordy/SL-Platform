@@ -33,7 +33,7 @@ const Profile: NextPage = () => {
         </div>
         <div className="w-3/4">
           <div className="flex flex-col">
-            <InvestmentHistory />
+            <InvestmentHistory totalInvested={100} />
             <div className="font-bold py-6">Puzzle Progress</div>
             <div className="flex flex-col gap-6">
               <div className="flex gap-6">
