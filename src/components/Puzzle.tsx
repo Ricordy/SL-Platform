@@ -10,7 +10,7 @@ const Puzzle = () => {
           <Link href="/my-puzzle">View My Puzzle</Link>
         </div>
         <div className="flex flex-col items-center  justify-center bg-gray-200 p-6 rounded-md w-1/3">
-          <div className="">Claim NFT Puzzle</div>
+          <Link href="/profile">Claim NFT Puzzle</Link>
         </div>
 
         <div className="flex flex-col items-center  justify-center bg-gray-200 p-6 rounded-md w-1/3">
