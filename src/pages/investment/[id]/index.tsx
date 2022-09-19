@@ -26,7 +26,7 @@ const Investment = () => {
               <Slider />
               <PuzzleItem
                 amount={investment?.amount.toString()}
-                progress="100"
+                progress={investment?.percentage}
                 showProgressInsideBar={true}
               />
               <InvestmentNumbers />
