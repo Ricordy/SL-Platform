@@ -31,9 +31,9 @@ const Profile: NextPage = () => {
             </a>
           </Link>
         </div>
-        <div className="w-3/4">
+        <div className="">
           <div className="flex flex-col">
-            <InvestmentHistory totalInvested={100} />
+            <InvestmentHistory totalInvested={100} showExpectedReturn={false} />
             <div className="font-bold py-6">Puzzle Progress</div>
             <div className="flex flex-col gap-6">
               <div className="flex gap-6">

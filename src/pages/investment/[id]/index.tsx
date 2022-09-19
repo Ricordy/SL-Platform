@@ -30,7 +30,10 @@ const Investment = () => {
                 showProgressInsideBar={true}
               />
               <InvestmentNumbers />
-              <InvestmentHistory totalInvested={500000} />
+              <InvestmentHistory
+                totalInvested={500000}
+                showExpectedReturn={true}
+              />
             </div>
             <InvestmentSidebar
               title={investment?.title}
