@@ -1,17 +1,17 @@
-import React, { forwardRef, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import logo from "../../public/logo-black.svg";
 import ProfileMenu from "./ProfileMenu";
 
-const Nav = () => {
+const Nav = (props) => {
   const [walletConnected, setWalletConnected] = useState(false);
   const toggleWallet = () => {
     setWalletConnected(!walletConnected);
   };
 
   return (
-    <nav className="flex justify-between max-w-4xl mx-auto py-6">
+    <nav className={props.className}>
       <Link href="/">
         <a>
           <Image src={logo} alt="Something Legendary logo" />

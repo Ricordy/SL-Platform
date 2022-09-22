@@ -10,7 +10,7 @@ const Slider = () => {
   return (
     <section className="flex flex-col">
       <div className="simpleSlider flex justify-center items-center">
-        <Carousel>
+        <Carousel showThumbs={false}>
           {images.map((image, idx) => (
             <div key={idx}>
               <Image src={image.url} width={960} height={400} alt="car" />
