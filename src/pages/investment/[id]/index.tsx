@@ -19,34 +19,27 @@ const Investment = () => {
       <Head>
         <title>Something Legendary | Investment</title>
       </Head>
-      <main className="">
-        <div className="flex flex-col">
-          <div className="flex max-w-4xl  gap-6">
-            <div className="flex flex-col w-3/4">
-              <Slider />
-              <PuzzleItem
-                amount={investment?.amount.toString()}
-                progress={investment?.percentage}
-                showProgressInsideBar={true}
-              />
-              <InvestmentNumbers />
-              <InvestmentHistory
-                totalInvested={500000}
-                showExpectedReturn={true}
-              />
-            </div>
-            <InvestmentSidebar
-              title={investment?.title}
-              chassis={investment?.chassis}
-              address={investment?.address}
-              totalProduction={investment?.totalProduction}
-              totalModelProduction={investment?.totalModelProduction}
-              colorCombination={investment?.colorCombination}
-              amount={investment?.amount.toString()}
-              phase={investment?.phase}
-            />
-          </div>
+      <main className="flex max-w-4xl  gap-6">
+        <div className="flex flex-col w-3/4">
+          <Slider />
+          <PuzzleItem
+            amount={investment?.amount.toString()}
+            progress={investment?.percentage}
+            showProgressInsideBar={true}
+          />
+          <InvestmentNumbers />
+          <InvestmentHistory totalInvested={500000} showExpectedReturn={true} />
         </div>
+        <InvestmentSidebar
+          title={investment?.title}
+          chassis={investment?.chassis}
+          address={investment?.address}
+          totalProduction={investment?.totalProduction}
+          totalModelProduction={investment?.totalModelProduction}
+          colorCombination={investment?.colorCombination}
+          amount={investment?.amount.toString()}
+          phase={investment?.phase}
+        />
       </main>
     </>
   );

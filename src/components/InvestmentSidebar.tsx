@@ -122,48 +122,48 @@ export const InvestmentSidebar = (props: investmentProps) => {
   return (
     <>
       <aside className="w-1/3 flex flex-col align-middle justify-between">
-        <div className="flex flex-col align-middle">
-          <h4 className="font-bold pb-3">{props.title}</h4>
-          <div className="pb-3">
-            <div className="text-xs text-slate-700">Chassis Nr:</div>
-            <div className="text">{props.chassis}</div>
-          </div>
-          <div className="pb-3">
-            <div className="text-xs text-slate-700">
-              Total Production W113 280SL:
+        <div className="sticky top-0">
+          <div className="flex flex-col align-middle">
+            <h4 className="font-bold pb-3">{props.title}</h4>
+            <div className="pb-3">
+              <div className="text-xs text-slate-700">Chassis Nr:</div>
+              <div className="text">{props.chassis}</div>
             </div>
-            <div className="text">{props.totalProduction}</div>
-          </div>
-          <div className="pb-3">
-            <div className="text-xs text-slate-700">
-              Total Production in 1969 280SL:
+            <div className="pb-3">
+              <div className="text-xs text-slate-700">Total Production:</div>
+              <div className="text">{props.totalProduction}</div>
             </div>
-            <div className="text">{props.totalModelProduction}</div>
+            <div className="pb-3">
+              <div className="text-xs text-slate-700">
+                Total Model Production:
+              </div>
+              <div className="text">{props.totalModelProduction}</div>
+            </div>
+            <div className="pb-3">
+              <div className="text-xs text-slate-700">Color combination:</div>
+              <div className="text">{props.colorCombination}</div>
+            </div>
           </div>
-          <div className="pb-3">
-            <div className="text-xs text-slate-700">Color combination:</div>
-            <div className="text">{props.colorCombination}</div>
+          <div className="pb-6">
+            <h3 className="text-xs text-slate-700">Contract address:</h3>
+            <Link href="#">
+              <a className="flex align-middle gap-2">
+                {formatAddress(props.address)} <FiExternalLink />
+              </a>
+            </Link>
           </div>
-        </div>
-        <div className="pb-3">
-          <h3 className="text-xs text-slate-700">Contract address:</h3>
-          <Link href="#">
-            <a className="flex align-middle gap-2">
-              {formatAddress(props.address)} <FiExternalLink />
+          <Link href="/mercedes-benz">
+            <a className="flex gap-2 border p-2 rounded-md justify-center mb-6 align-middle">
+              More info <FiExternalLink />
             </a>
           </Link>
+          <button
+            onClick={openModal}
+            className="w-full border rounded-md p-2 bg-slate-800 text-slate-50"
+          >
+            Invest Now
+          </button>
         </div>
-        <Link href="/mercedes-benz">
-          <a className="flex gap-2 border p-2 rounded-md justify-center mb-6 align-middle">
-            More info <FiExternalLink />
-          </a>
-        </Link>
-        <button
-          onClick={openModal}
-          className="border rounded-md p-2 bg-slate-800 text-slate-50"
-        >
-          Invest Now
-        </button>
       </aside>
       <ModalInvestNow />
     </>

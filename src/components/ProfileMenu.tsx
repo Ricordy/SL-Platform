@@ -1,11 +1,32 @@
 import { Menu, Transition } from "@headlessui/react";
-import { Fragment } from "react";
+import { forwardRef, Fragment } from "react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 
 type MenuProps = {
   logout: () => void;
 };
+type MyLinkProps = {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+};
+
+const MyLink = forwardRef<HTMLAnchorElement, MyLinkProps>((props, ref) => {
+  const { href, children, ...rest } = props;
+  return (
+    <Link href={href}>
+      <a ref={ref} {...rest}>
+        {children}
+      </a>
+    </Link>
+  );
+});
+MyLink.displayName = "MyLink";
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
 
 export default function ProfileMenu(props: MenuProps) {
   return (
@@ -33,7 +54,7 @@ export default function ProfileMenu(props: MenuProps) {
             <div className="px-1 py-1">
               <Menu.Item>
                 {({ active }) => (
-                  <Link href="/profile">
+                  <MyLink href="/profile">
                     <button
                       className={`${
                         active ? "bg-gray-500 text-white" : "text-gray-900"
@@ -45,33 +66,33 @@ export default function ProfileMenu(props: MenuProps) {
                       />
                       Profile
                     </button>
-                  </Link>
+                  </MyLink>
                 )}
               </Menu.Item>
             </div>
             <div className="px-1 py-1">
               <Menu.Item>
                 {({ active }) => (
-                  <Link href="/my-investments">
-                    <a
-                      className={`${
-                        active ? "bg-gray-500 text-white" : "text-gray-900"
-                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                    >
-                      <InvestmentIcon
-                        className="mr-2 h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      My Investments
-                    </a>
-                  </Link>
+                  <MyLink
+                    href="/my-investments"
+                    className={classNames(
+                      active ? "bg-gray-500 text-white" : "text-gray-900",
+                      "group flex w-full items-center rounded-md px-2 py-2 text-sm"
+                    )}
+                  >
+                    <InvestmentIcon
+                      className="mr-2 h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                    My Investments
+                  </MyLink>
                 )}
               </Menu.Item>
             </div>
             <div className="px-1 py-1">
               <Menu.Item>
                 {({ active }) => (
-                  <Link href="/my-puzzle">
+                  <MyLink href="/my-puzzle">
                     <a
                       className={`${
                         active ? "bg-gray-500 text-white" : "text-gray-900"
@@ -83,11 +104,11 @@ export default function ProfileMenu(props: MenuProps) {
                       />
                       My Puzzle
                     </a>
-                  </Link>
+                  </MyLink>
                 )}
               </Menu.Item>
             </div>
-            <div className="px-1 py-1">
+            <div className="px-1 py-1 z-100">
               <Menu.Item>
                 {({ active }) => (
                   <button
