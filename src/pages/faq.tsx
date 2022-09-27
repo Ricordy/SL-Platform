@@ -10,7 +10,7 @@ const FAQ: NextPage = () => {
         <title>Something Legendary</title>
       </Head>
 
-      <main className="container mx-auto flex flex-col max-w-4xl p-4">
+      <main className="container mx-auto flex flex-col max-w-4xl p-4 mt-16 md:mt-0">
         <div className="w-full max-w-md rounded-2xl bg-white">
           <h2 className="text-2xl py-6">FAQ</h2>
           <Disclosure>
