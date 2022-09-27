@@ -107,42 +107,6 @@ const Nav = () => {
               </div>
             </div>
           </div>
-          <div className=" hidden">
-            <div
-              className={`flex-1 justify-self-center pb-3 mt-8 md:block  md:pb-0 md:mt-0 ${
-                navbar ? "block" : "hidden"
-              }`}
-            >
-              <ul className="items-center justify-items-end space-y-4 md:flex md:space-x-6 md:space-y-0">
-                {menuItems.map((menu) => (
-                  <li
-                    key={menu.text}
-                    className="text-gray-600 hover:text-gray-800"
-                  >
-                    <Link href={menu.link}>
-                      <a className="block px-4 py-2">{menu.text}</a>
-                    </Link>
-                  </li>
-                ))}
-                <li
-                  key="profile-menu"
-                  className="text-gray-600 hover:text-gray-800"
-                >
-                  {walletConnected && <ProfileMenu logout={toggleWallet} />}
-                  {!walletConnected && (
-                    <Link className=" self-end" href="#connect">
-                      <a
-                        className="px-4 py-2 border rounded-md bg-slate-800 text-slate-50"
-                        onClick={toggleWallet}
-                      >
-                        Connect Wallet
-                      </a>
-                    </Link>
-                  )}
-                </li>
-              </ul>
-            </div>
-          </div>
           <div
             className={`flex-1 justify-self-center pb-3 mt-8 md:block  md:pb-0 md:mt-0 ${
               navbar ? "block" : "hidden"
