@@ -5,10 +5,12 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { Carousel } from "react-responsive-carousel";
 
 const images = [{ url: "/slider/car1.jpg" }, { url: "/slider/car2.jpg" }];
-
-const Slider = () => {
+interface SliderProps {
+  className?: string;
+}
+const Slider = (props: SliderProps) => {
   return (
-    <section className="flex flex-col">
+    <section className={props.className}>
       <div className="simpleSlider flex justify-center items-center">
         <Carousel showThumbs={false}>
           {images.map((image, idx) => (

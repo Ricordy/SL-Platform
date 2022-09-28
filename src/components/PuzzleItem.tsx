@@ -6,6 +6,7 @@ type PuzzleItemData = {
   amount: string;
   progress?: string;
   showProgressInsideBar: boolean;
+  className?: string;
 };
 
 const PuzzleItem: React.FC<PuzzleItemData> = ({
@@ -13,9 +14,10 @@ const PuzzleItem: React.FC<PuzzleItemData> = ({
   amount,
   progress,
   showProgressInsideBar,
+  className,
 }) => {
   return (
-    <div className="w-full">
+    <div className={className}>
       {level && <h2 className="">{`Level ${level}`}</h2>}
       <div className="w-full text-center">
         <NumericFormat

@@ -14,6 +14,7 @@ type investmentProps = {
   totalProduction: number;
   totalModelProduction: number;
   colorCombination: string;
+  className: string;
 };
 
 export const InvestmentSidebar = (props: investmentProps) => {
@@ -121,7 +122,7 @@ export const InvestmentSidebar = (props: investmentProps) => {
 
   return (
     <>
-      <aside className="w-1/3 flex flex-col align-middle justify-between">
+      <aside className={props.className}>
         <div className="sticky top-0">
           <div className="flex flex-col align-middle">
             <h4 className="font-bold pb-3">{props.title}</h4>

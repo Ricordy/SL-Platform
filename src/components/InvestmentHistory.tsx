@@ -6,10 +6,11 @@ import { ChevronUpIcon } from "@heroicons/react/20/solid";
 type historyProps = {
   totalInvested: number;
   showExpectedReturn: boolean;
+  className?: string;
 };
 const InvestmentHistory = (props: historyProps) => {
   return (
-    <div className="grid grid-cols-2 gap-12 pt-6 justify-start">
+    <div className={props.className}>
       <div className="flex flex-col">
         <Disclosure>
           {({ open }) => (
