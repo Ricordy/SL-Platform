@@ -42,7 +42,7 @@ export default function Investments() {
                 "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2"
               )}
             >
-              <ul className="grid grid-cols-2 gap-2">
+              <ul className="grid sm:grid-cols-2 grid-cols-1 gap-2">
                 {investmentData
                   .filter((i) => i.status == investmentStatus)
                   .map((investment) => (

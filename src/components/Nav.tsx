@@ -33,7 +33,7 @@ const Nav = () => {
 
   return (
     <>
-      <nav className="md:flex hidden justify-between max-w-4xl mx-auto py-6 shrink-0">
+      <nav className="md:flex hidden justify-between w-full max-w-4xl mx-auto p-6 lg:px-0 shrink-0">
         <Link href="/">
           <a>
             <Image src={logo} alt="Something Legendary logo" />
@@ -60,7 +60,7 @@ const Nav = () => {
           </Link>
         )}
       </nav>
-      <nav className="bg-white shadow-sm flex fixed w-full z-20 md:hidden  drop-shadow-md px-6 py-2 items-center justify-around">
+      <nav className="bg-white shadow-sm flex fixed w-full z-20 md:hidden  drop-shadow-md px-3 py-0 items-center justify-around">
         <div className="justify-between px-4 w-full md:items-center md:flex md:px-8 ">
           <div>
             <div className="flex items-center justify-between py-3 md:py-2 md:block w-full">

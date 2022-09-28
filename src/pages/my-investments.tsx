@@ -20,7 +20,7 @@ const MyInvestments: NextPage = () => {
   });
 
   return (
-    <div className="w-full px-2 sm:px-0">
+    <div className="flex flex-col w-full px-6 lg:px-3 mt-16 md:mt-0">
       <h2 className="text-2xl py-6">My Investments</h2>
       <Tab.Group>
         <Tab.List className="flex space-x-1 rounded-xl bg-gray-900/20 p-1">
@@ -50,13 +50,13 @@ const MyInvestments: NextPage = () => {
                 "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-400 focus:outline-none focus:ring-2"
               )}
             >
-              <ul className="grid grid-cols-5 gap-2">
+              <ul className="grid  sm:grid-cols-2 grid-cols-1 gap-2">
                 {posts.map((post) => (
                   <li
                     key={post.id}
                     className="relative rounded-md p-3 border  flex  flex-col  justify-around hover:bg-gray-100"
                   >
-                    <h3 className="text-sm font-medium leading-5">
+                    <h3 className="text-sm font-medium leading-5 pb-3">
                       <Link href={`/investment/${post.id}`}>{post.title}</Link>
                     </h3>
                     {post.phase !== "Withdraw" ? (
