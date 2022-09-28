@@ -19,18 +19,20 @@ const Footer = (props) => {
       <div className="social ml-auto gap-3 flex">
         <Link href="https://twitter.com">
           <a className="flex items-center">
-            <AiOutlineTwitter /> Twitter
+            <AiOutlineTwitter />{" "}
+            <span className="hidden md:block">Twitter</span>
           </a>
         </Link>
         <Link href="https://instagram.com">
           <a className="flex items-center">
-            <AiOutlineInstagram /> Instagram
+            <AiOutlineInstagram />{" "}
+            <span className="hidden md:block">Instagram</span>
           </a>
         </Link>
         <Link href="https://medium.com">
           <a className="flex items-center">
             <AiOutlineMedium />
-            Medium
+            <span className="hidden md:block">Medium</span>
           </a>
         </Link>
       </div>
