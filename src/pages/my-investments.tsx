@@ -42,7 +42,7 @@ const MyInvestments: NextPage = () => {
           ))}
         </Tab.List>
         <Tab.Panels className="mt-2">
-          {Object.values(categories).map((posts, idx) => (
+          {Object.values(categories).map((investments, idx) => (
             <Tab.Panel
               key={idx}
               className={classNames(
@@ -51,23 +51,30 @@ const MyInvestments: NextPage = () => {
               )}
             >
               <ul className="grid  sm:grid-cols-2 grid-cols-1 gap-2">
-                {posts.map((post) => (
+                {investments.map((investment) => (
                   <li
-                    key={post.id}
-                    className="relative rounded-md p-3 border  flex  flex-col  justify-around hover:bg-gray-100"
+                    key={investment.id}
+                    className="relative rounded-md p-3 border  flex  flex-col gap-3 justify-around hover:bg-gray-100"
                   >
                     <h3 className="text-sm font-medium leading-5 pb-3">
-                      <Link href={`/investment/${post.id}`}>{post.title}</Link>
+                      <Link href={`/investment/${investment.id}`}>
+                        {investment.title}
+                      </Link>
                     </h3>
-                    {post.phase !== "Withdraw" ? (
-                      <button className="border p-2 text-xs rounded-md">
-                        {post.phase}
-                      </button>
+                    {investment.phase !== "Withdraw" ? (
+                      <div className="border p-2 text-xs rounded-md">
+                        {investment.phase}
+                      </div>
                     ) : (
                       <button className="border p-2 text-xs rounded-md bg-slate-500 text-slate-100">
                         Withdraw
                       </button>
                     )}
+                    <Link href={`/investment/${investment.id}/monitor`}>
+                      <a className="border p-2 text-xs rounded-md bg-slate-500 text-slate-100 text-center">
+                        Monitor Investment
+                      </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
