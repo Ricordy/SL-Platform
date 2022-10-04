@@ -92,18 +92,17 @@ export default function ProfileMenu(props: MenuProps) {
             <div className="px-1 py-1">
               <Menu.Item>
                 {({ active }) => (
-                  <MyLink href="/my-puzzle">
-                    <a
-                      className={`${
-                        active ? "bg-gray-500 text-white" : "text-gray-900"
-                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                    >
-                      <PuzzleIcon
-                        className="mr-2 h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      My Puzzle
-                    </a>
+                  <MyLink
+                    href="/my-puzzle"
+                    className={`${
+                      active ? "bg-gray-500 text-white" : "text-gray-900"
+                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                  >
+                    <PuzzleIcon
+                      className="mr-2 h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                    My Puzzle
                   </MyLink>
                 )}
               </Menu.Item>

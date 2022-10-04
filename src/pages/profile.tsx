@@ -71,7 +71,8 @@ const Profile: NextPage = () => {
         <title>Something Legendary | Profile</title>
       </Head>
 
-      <main className="container mx-auto flex flex-col max-w-4xl p-4">
+      <main className="container mx-auto flex flex-col max-w-4xl px-6 lg:px-3 mt-16 md:mt-0">
+        <h2 className="text-2xl py-6">Profile</h2>
         <ProfileDetails />
       </main>
     </>

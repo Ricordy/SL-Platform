@@ -154,7 +154,7 @@ const MyPuzzle: NextPage = () => {
   });
 
   return (
-    <div className="w-full px-2 py-16 sm:px-0">
+    <div className="w-full px-6 lg:px-3">
       <h2 className="text-2xl py-6">My Puzzle</h2>
       <Tab.Group>
         <Tab.List className="flex space-x-1 rounded-xl bg-gray-900/20 p-1">
