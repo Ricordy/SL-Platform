@@ -30,6 +30,8 @@ const PuzzleItem: React.FC<PuzzleItemData> = ({
           <NumericFormat
             value={amount}
             displayType="text"
+            fixedDecimalScale={true}
+            decimalSeparator="."
             thousandSeparator=","
             decimalScale={2}
             prefix="$ "

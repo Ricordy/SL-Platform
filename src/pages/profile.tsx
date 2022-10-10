@@ -39,7 +39,7 @@ const Profile: NextPage = () => {
               <div className="flex gap-6">
                 <PuzzleItem
                   level={1}
-                  amount="$ 5000.00 / $ 5000.00"
+                  amount="$ 5,000.00 / $ 5,000.00"
                   progress="100"
                   showProgressInsideBar={true}
                 />
