@@ -24,7 +24,7 @@ const PuzzleItem: React.FC<PuzzleItemData> = ({
     <div className={classNames("w-full", className ?? "")}>
       {level && <h2 className="">{`Level ${level}`}</h2>}
       <div className="w-full text-center">
-        {amount.indexOf("/") > -1 ? (
+        {amount?.indexOf("/") > -1 ? (
           amount
         ) : (
           <NumericFormat
