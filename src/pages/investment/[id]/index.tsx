@@ -42,7 +42,7 @@ const Investment = () => {
             phase={investment?.phase}
           />
           <InvestmentHistory
-            className="grid  place-self-start grid-cols-2 gap-12 pt-6 justify-start"
+            className=" place-self-start flex gap-12 pt-6 justify-start"
             totalInvested={500000}
             showExpectedReturn={true}
           />

@@ -11,12 +11,12 @@ type historyProps = {
 const InvestmentHistory = (props: historyProps) => {
   return (
     <div className={props.className}>
-      <div className="flex flex-col">
+      <div className="flex flex-col w-2/3">
         <Disclosure>
           {({ open }) => (
             <>
               <Disclosure.Button className="flex w-full justify-between items-center rounded-lg bg-gray-100 px-4 py-2 text-left text-sm font-medium text-gray-900 hover:bg-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75">
-                <span className="flex items-center justify-center gap-2">
+                <span className="flex items-center justify-center gap-2 flex-wrap">
                   Total Invested:
                   <NumericFormat
                     className="text-bold text-xl"
@@ -38,6 +38,7 @@ const InvestmentHistory = (props: historyProps) => {
                   <thead>
                     <tr>
                       <th className="text-center">Amount</th>
+                      <th className="text-center">Currency</th>
                       <th className="text-center">Date</th>
                       <th className="text-center">Transaction Id</th>
                     </tr>
@@ -45,16 +46,19 @@ const InvestmentHistory = (props: historyProps) => {
                   <tbody>
                     <tr>
                       <td>3,000</td>
+                      <td>USDC</td>
                       <td>2022-03-01</td>
                       <td>0x999999999</td>
                     </tr>
                     <tr className="bg-gray-100">
                       <td>1,500</td>
+                      <td>USDC</td>
                       <td>2022-02-22</td>
                       <td>0x999999998</td>
                     </tr>
                     <tr>
                       <td>500</td>
+                      <td>USDC</td>
                       <td>2022-01-04</td>
                       <td>0x999999997</td>
                     </tr>
@@ -67,8 +71,8 @@ const InvestmentHistory = (props: historyProps) => {
         <h2 className="text-xs pb-3"></h2>
       </div>
       {props.showExpectedReturn && (
-        <div className="flex flex-col justify-between ">
-          <h2 className="text-xs pb-3">
+        <div className="flex flex-col w-1/3 justify-between">
+          <h2 className="text-xs pb-3 flex flex-col">
             Expected Return: <span className="text-bold text-xl">$ 100.00</span>
           </h2>
           <button className="border rounded-md p-2 bg-slate-800 text-slate-50">
