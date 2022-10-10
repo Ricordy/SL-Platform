@@ -9,6 +9,10 @@ type PuzzleItemData = {
   className?: string;
 };
 
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+
 const PuzzleItem: React.FC<PuzzleItemData> = ({
   level,
   amount,
@@ -17,16 +21,20 @@ const PuzzleItem: React.FC<PuzzleItemData> = ({
   className,
 }) => {
   return (
-    <div className={className}>
+    <div className={classNames("w-full", className ?? "")}>
       {level && <h2 className="">{`Level ${level}`}</h2>}
       <div className="w-full text-center">
-        <NumericFormat
-          value={amount}
-          displayType="text"
-          thousandSeparator=","
-          decimalScale={2}
-          prefix="$ "
-        />
+        {amount.indexOf("/") > -1 ? (
+          amount
+        ) : (
+          <NumericFormat
+            value={amount}
+            displayType="text"
+            thousandSeparator=","
+            decimalScale={2}
+            prefix="$ "
+          />
+        )}
       </div>
 
       <div className="w-full bg-gray-200 rounded-full">

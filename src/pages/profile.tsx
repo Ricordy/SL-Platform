@@ -35,7 +35,7 @@ const Profile: NextPage = () => {
           <div className="flex flex-col">
             <InvestmentHistory totalInvested={100} showExpectedReturn={false} />
             <div className="font-bold py-6">Puzzle Progress</div>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col w-full gap-6">
               <div className="flex gap-6">
                 <PuzzleItem
                   level={1}
