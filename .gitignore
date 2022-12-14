@@ -38,3 +38,10 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+typechain
+typechain-types
+
+# hardhat
+cache
+artifacts

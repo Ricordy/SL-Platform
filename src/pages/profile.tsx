@@ -4,8 +4,11 @@ import PuzzleItem from "../components/PuzzleItem";
 import Link from "next/link";
 import { FiExternalLink } from "react-icons/fi";
 import InvestmentHistory from "../components/InvestmentHistory";
+import { useAccount } from "wagmi";
 
 const Profile: NextPage = () => {
+  const { address, isDisconnected } = useAccount();
+
   const ProfileDetails = () => {
     return (
       <div className="">
@@ -27,7 +30,7 @@ const Profile: NextPage = () => {
           </div>
           <Link href="#">
             <a className="flex align-middle gap-2">
-              0x0c7...1Be <FiExternalLink />
+              {address} <FiExternalLink />
             </a>
           </Link>
         </div>

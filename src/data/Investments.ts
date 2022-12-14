@@ -1,7 +1,7 @@
 export const investmentData = [
   {
     id: 1,
-    address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    address: "0xCafac3dD18aC6c6e92c921884f9E4176737C052c",
     title: "Mercedes-benz 280sl Pagoda 1969",
     amount: "129000",
     percentage: "100",
