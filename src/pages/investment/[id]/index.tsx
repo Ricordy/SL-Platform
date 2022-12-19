@@ -12,6 +12,205 @@ import { GetStaticProps, GetStaticPaths, GetServerSideProps } from "next";
 import factoryJson from "../../../artifacts/contracts/Factory.sol/Factory.json";
 import { useEffect } from "react";
 
+const factoryAbi = [
+  {
+    inputs: [],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "ContractID",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "conAddress",
+        type: "address",
+      },
+    ],
+    name: "ContractCreated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "OwnershipTransferred",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "counter",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_totalInvestment",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "_paymentTokenAddress",
+        type: "address",
+      },
+    ],
+    name: "deployNew",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "deployedContracts",
+    outputs: [
+      {
+        internalType: "contract Investment",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "contractAddress",
+        type: "address",
+      },
+    ],
+    name: "getAddressOnContract",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "userTotal",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+    ],
+    name: "getAddressTotal",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "userTotal",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getLastDeployedContract",
+    outputs: [
+      {
+        internalType: "address",
+        name: "contractAddress",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_lgentry",
+        type: "address",
+      },
+    ],
+    name: "setEntryAddress",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+] as const;
+
 const Investment = ({ investment }) => {
   const { address } = useAccount();
   // const data = readContract({
@@ -29,11 +228,10 @@ const Investment = ({ investment }) => {
   // };
   const { data: factoryBalance } = useContractRead({
     address: "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+    abi: factoryAbi,
     functionName: "getAddressOnContract",
     args: ["0xCafac3dD18aC6c6e92c921884f9E4176737C052c"],
-    overrides: { from: address },
     enabled: true,
-    suspense: true,
     watch: true,
     onError(error) {
       console.log("Error", error);
@@ -42,9 +240,9 @@ const Investment = ({ investment }) => {
       console.log(data);
     },
   });
-  useEffect(() => {
-    if (!factoryBalance) return;
-  }, [factoryBalance]);
+  // useEffect(() => {
+  //   if (!factoryBalance) return;
+  // }, [factoryBalance]);
   return (
     <>
       <Head>
@@ -67,7 +265,7 @@ const Investment = ({ investment }) => {
             className="md:row-start-1 md:col-start-2 md:row-span-3 flex flex-col align-middle justify-between"
             title={investment?.title}
             chassis={investment?.chassis}
-            address={address}
+            address={investment?.address}
             totalProduction={investment?.totalProduction}
             totalModelProduction={investment?.totalModelProduction}
             colorCombination={investment?.colorCombination}
