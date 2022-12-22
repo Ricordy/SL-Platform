@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useRef } from "react";
 import { FiExternalLink } from "react-icons/fi";
 import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { BigNumber, BigNumberish } from "ethers";
-import {abi as InvestAbi} from "/Users/alexandracativoquintas/Desktop/Rodrigo/Platform/src/artifacts/contracts/Investment.sol/Investment.json"
+import {abi as InvestAbi} from "../artifacts/contracts/Investment.sol/Investment.json"
+import {abi as CoinTestAbi} from "../artifacts/contracts/CoinTest.sol/CoinTest.json"
 
 
 
@@ -28,17 +29,37 @@ export const InvestmentSidebar =  (props: investmentProps) => {
   
   const [isOpen, setIsOpen] = useState(false);
   const [approveInvestment, setApproveInvestment] = useState(false);
+  const [valueApprovalAndInvestment , setApprovalandInvestment ] = useState(0);
+
+  const handleChange = (event) => {
+    
+    //setApprovalandInvestment (event.target.value);
+  };
 
 
 
-  const { config } = usePrepareContractWrite({
+  /**
+   * Write in the blockchain the invest function called by the user 
+   * TODO: Dymanicalize 
+   */
+  const { config: investCallConfig } = usePrepareContractWrite({
     address: '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
     abi: InvestAbi,
     functionName: 'invest',
-    args: [100],
+    args: [200],
   })
-  const { write }  = useContractWrite(config)
+  const { write: writeInvest }  = useContractWrite(investCallConfig)
 
+  /**
+   * AWrite in the blockchain the approve function called by the user
+   */
+  const { config: approveCallConfig } = usePrepareContractWrite({
+    address: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+    abi: CoinTestAbi,
+    functionName: 'approve',
+    args: ["0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9" , 200],
+  })
+  const { write: writeApprove } = useContractWrite(approveCallConfig)
 
 
 
@@ -55,22 +76,25 @@ export const InvestmentSidebar =  (props: investmentProps) => {
   }
 
   function handleClick(e) {
+
+
+    console.log(valueApprovalAndInvestment);
+    
+
     if (approveInvestment) {
+        
+      writeInvest()
       closeModal();
-      console.log("Invest Button clicked");
-      
-      console.log("Trying to writie to contract");
-      
-      
-      write()
-      
 
       
       
     } else {
+      writeApprove()
+
       e.preventDefault();
       setApproveInvestment(true);
       console.log("Approve Button clicked");
+      
     }
   }
 
@@ -138,6 +162,7 @@ export const InvestmentSidebar =  (props: investmentProps) => {
                     <div className="mt-4 flex flex-col gap-3">
                       <input
                         className="border p-2 rounded-md"
+                        onChange={handleChange}
                         type="number"
                         name=""
                         id=""
@@ -148,7 +173,7 @@ export const InvestmentSidebar =  (props: investmentProps) => {
                         className="inline-flex justify-center rounded-md border border-transparent bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
                         onClick={handleClick}
                       >
-                        {approveInvestment ? "Invest now" : "Approve USDC"}
+                        Approve USDC/Invest now
                       </button>
                     </div>
                   </div>

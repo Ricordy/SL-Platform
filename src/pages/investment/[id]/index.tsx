@@ -277,7 +277,7 @@ const Investment = ({ investment }) => {
             totalProduction={investment?.totalProduction}
             totalModelProduction={investment?.totalModelProduction}
             colorCombination={investment?.colorCombination}
-            amount={investment?.amount.toString()}
+            amount={investment?.amount}
             phase={investment?.phase}
           />
           <InvestmentHistory
