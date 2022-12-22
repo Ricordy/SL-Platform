@@ -8,7 +8,8 @@ import Slider from "../../../components/Slider";
 import { investmentData } from "../../../data/Investments";
 import { useAccount, useContractRead } from "wagmi";
 import { GetStaticProps, GetStaticPaths, GetServerSideProps } from "next";
-
+import {abi as InvestAbi} from "../../../artifacts/contracts/Investment.sol/Investment.json"
+import {abi as CoinTestAbi} from "../../../artifacts/contracts/CoinTest.sol/CoinTest.json"
 import factoryJson from "../../../artifacts/contracts/Factory.sol/Factory.json";
 import { useEffect } from "react";
 
@@ -227,19 +228,26 @@ const Investment = ({ investment }) => {
   //   contractInterface: factoryJson.abi,
   // };
   const { data: factoryBalance } = useContractRead({
-    address: "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
-    abi: factoryAbi,
-    functionName: "getAddressOnContract",
-    args: ["0xCafac3dD18aC6c6e92c921884f9E4176737C052c"],
-    enabled: true,
-    watch: true,
-    onError(error) {
-      console.log("Error", error);
-    },
-    onSuccess(data) {
-      console.log(data);
-    },
+    address: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+    abi: CoinTestAbi,
+    functionName: 'balanceOf',
+    args: ["0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"],
   });
+
+  console.log(factoryBalance?.toString());
+  
+
+  
+  const { data: totInvestment } = useContractRead({
+      address: '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
+      abi: InvestAbi,
+      functionName: 'totalInvestment',
+  })
+
+
+    
+
+  
   // useEffect(() => {
   //   if (!factoryBalance) return;
   // }, [factoryBalance]);
@@ -254,7 +262,7 @@ const Investment = ({ investment }) => {
           {}
           <PuzzleItem
             className="w-full md:col-start-1"
-            amount={investment?.amount.toString()}
+            amount={totInvestment?.toString()}
             progress={investment?.percentage}
             showProgressInsideBar={true}
           />

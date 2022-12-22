@@ -3,6 +3,11 @@ import { FiExternalLink } from "react-icons/fi";
 import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
+import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { BigNumber, BigNumberish } from "ethers";
+import {abi as InvestAbi} from "/Users/alexandracativoquintas/Desktop/Rodrigo/Platform/src/artifacts/contracts/Investment.sol/Investment.json"
+
+
 
 type investmentProps = {
   address: string;
@@ -17,9 +22,29 @@ type investmentProps = {
   className: string;
 };
 
-export const InvestmentSidebar = (props: investmentProps) => {
+
+
+export const InvestmentSidebar =  (props: investmentProps) => {
+  
   const [isOpen, setIsOpen] = useState(false);
   const [approveInvestment, setApproveInvestment] = useState(false);
+
+
+
+  const { config } = usePrepareContractWrite({
+    address: '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
+    abi: InvestAbi,
+    functionName: 'invest',
+    args: [100],
+  })
+  const { write }  = useContractWrite(config)
+
+
+
+
+  //Wagmi for contract communication
+  //Prepare contract writting
+  
 
   function closeModal() {
     setIsOpen(false);
@@ -32,11 +57,27 @@ export const InvestmentSidebar = (props: investmentProps) => {
   function handleClick(e) {
     if (approveInvestment) {
       closeModal();
+      console.log("Invest Button clicked");
+      
+      console.log("Trying to writie to contract");
+      
+      
+      write()
+      
+
+      
+      
     } else {
       e.preventDefault();
       setApproveInvestment(true);
+      console.log("Approve Button clicked");
     }
   }
+
+  
+    
+    
+  
 
   function formatAddress(address: string) {
     if (address) {
