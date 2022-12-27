@@ -28,11 +28,14 @@ async function main() {
     factoryContract.address,
     paymentTokenContract.address
   );
-  const investmentContract: Investment = await investmentFactory.deploy(
+  await factoryContract.deployNew(
     100000,
-    puzzleContract.address,
     paymentTokenContract.address
   );
+  const investmentAddress = await factoryContract.getLastDeployedContract()
+  const investmentContract: Investment = investmentFactory.attach(investmentAddress)
+
+
   console.log(
     "Payment Token address deployed at: ",
     paymentTokenContract.address

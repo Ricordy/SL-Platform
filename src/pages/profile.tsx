@@ -5,9 +5,11 @@ import Link from "next/link";
 import { FiExternalLink } from "react-icons/fi";
 import InvestmentHistory from "../components/InvestmentHistory";
 import { useAccount } from "wagmi";
+import { useEffect } from "react";
 
 const Profile: NextPage = () => {
   const { address, isDisconnected } = useAccount();
+
 
   const ProfileDetails = () => {
     return (

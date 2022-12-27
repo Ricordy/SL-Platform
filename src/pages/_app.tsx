@@ -4,6 +4,7 @@ import Layout from "../components/Layout";
 import { WagmiConfig, createClient, mainnet } from "wagmi";
 import { goerli, hardhat } from "wagmi/chains";
 import { ConnectKitProvider, getDefaultClient } from "connectkit";
+import { useEffect, useState } from "react";
 
 const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY;
 
@@ -15,12 +16,22 @@ const client = createClient(
   })
 );
 
+
+
+
 const MyApp: AppType = ({ Component, pageProps }) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  })
+  
+
   return (
     <WagmiConfig client={client}>
       <ConnectKitProvider>
         <Layout>
-          <Component {...pageProps} />
+          {isMounted && <Component {...pageProps} />}
         </Layout>
       </ConnectKitProvider>
     </WagmiConfig>

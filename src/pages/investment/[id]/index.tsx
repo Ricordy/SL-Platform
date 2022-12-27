@@ -10,8 +10,10 @@ import { useAccount, useContractRead } from "wagmi";
 import { GetStaticProps, GetStaticPaths, GetServerSideProps } from "next";
 import {abi as InvestAbi} from "../../../artifacts/contracts/Investment.sol/Investment.json"
 import {abi as CoinTestAbi} from "../../../artifacts/contracts/CoinTest.sol/CoinTest.json"
-import factoryJson from "../../../artifacts/contracts/Factory.sol/Factory.json";
-import { useEffect } from "react";
+import {abi as FactoryAbi} from "../../../artifacts/contracts/Factory.sol/Factory.json"
+import { useEffect, useState } from "react";
+import { BigNumber } from "ethers";
+
 
 const factoryAbi = [
   {
@@ -214,6 +216,9 @@ const factoryAbi = [
 
 const Investment = ({ investment }) => {
   const { address } = useAccount();
+
+
+
   // const data = readContract({
   //   address: "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
   //   abi: factoryJson.abi,
@@ -227,30 +232,43 @@ const Investment = ({ investment }) => {
   //   addressOrName: "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
   //   contractInterface: factoryJson.abi,
   // };
-  const { data: factoryBalance } = useContractRead({
+  const { data: contractTotal } = useContractRead({
     address: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
     abi: CoinTestAbi,
     functionName: 'balanceOf',
     args: ["0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"],
+    watch: true
   });
-
-  console.log(factoryBalance?.toString());
-  
-
   
   const { data: totInvestment } = useContractRead({
-      address: '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
+      address: '0xCafac3dD18aC6c6e92c921884f9E4176737C052c',
       abi: InvestAbi,
       functionName: 'totalInvestment',
   })
 
+  const { data: userTotalInvestment } = useContractRead({
+      address: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
+      abi: FactoryAbi,
+      functionName: 'getAddressTotal',
+      args: ["0x70997970C51812dc3A010C7d01b50e0d17dc79C8"],
+      watch: true,
+  })
 
-    
+  //console.log(address);
+  
+
+  //console.log(Number(userTotalInvestment));
+  
 
   
   // useEffect(() => {
-  //   if (!factoryBalance) return;
-  // }, [factoryBalance]);
+  //   if (!test) return;
+    
+  //   console.log(test);
+    
+  // }, [test]);
+
+
   return (
     <>
       <Head>
@@ -266,7 +284,7 @@ const Investment = ({ investment }) => {
             progress={investment?.percentage}
             showProgressInsideBar={true}
           />
-          {`Contract balance: ${factoryBalance}`}
+          {`Contract balance: ${contractTotal}`}
           <InvestmentNumbers />
 
           <InvestmentSidebar
@@ -282,7 +300,7 @@ const Investment = ({ investment }) => {
           />
           <InvestmentHistory
             className=" place-self-start flex gap-12 pt-6 justify-start"
-            totalInvested={500000}
+            totalInvested={Number(userTotalInvestment)}
             showExpectedReturn={true}
           />
         </div>
