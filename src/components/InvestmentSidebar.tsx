@@ -969,7 +969,6 @@ const coinTestAbi = [
 export const InvestmentSidebar =  (props: investmentProps) => {
   
   const [isOpen, setIsOpen] = useState(false);
-  const [approveInvestment, setApproveInvestment] = useState(false);
   const [valueApprovalAndInvestment , setApprovalandInvestment ] = useState(0);
 
   const handleChange = (event) => {
@@ -985,9 +984,9 @@ export const InvestmentSidebar =  (props: investmentProps) => {
    */
   const { config: investCallConfig } = usePrepareContractWrite({
     address: '0xCafac3dD18aC6c6e92c921884f9E4176737C052c',
-    abi: investAbi,
-    functionName: 'invest',
-    args: [200],
+    abi: InvestAbi,
+    functionName: "invest",
+    args: [valueApprovalAndInvestment],
   })
   const { write: writeInvest }  = useContractWrite(investCallConfig)
 
@@ -996,9 +995,9 @@ export const InvestmentSidebar =  (props: investmentProps) => {
    */
   const { config: approveCallConfig } = usePrepareContractWrite({
     address: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
-    abi: coinTestAbi,
+    abi: CoinTestAbi,
     functionName: 'approve',
-    args: ["0xCafac3dD18aC6c6e92c921884f9E4176737C052c" , 200],
+    args: ["0xCafac3dD18aC6c6e92c921884f9E4176737C052c" , valueApprovalAndInvestment],
   })
   const { write: writeApprove } = useContractWrite(approveCallConfig)
 
@@ -1017,26 +1016,10 @@ export const InvestmentSidebar =  (props: investmentProps) => {
   }
 
   function handleClick(e) {
-
-
-    console.log(valueApprovalAndInvestment);
-    
-
-    if (approveInvestment) {
-        
+      e.preventDefault();
+      writeApprove();
       writeInvest();
       closeModal();
-
-      
-      
-    } else {
-      writeApprove()
-
-      e.preventDefault();
-      setApproveInvestment(true);
-      console.log("Approve Button clicked");
-      
-    }
   }
 
   
@@ -1114,7 +1097,7 @@ export const InvestmentSidebar =  (props: investmentProps) => {
                         className="inline-flex justify-center rounded-md border border-transparent bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
                         onClick={handleClick}
                       >
-                        {approveInvestment ? "Invest now" : "Approve USDC"}
+                        Invest now
                       </button>
                       {valueApprovalAndInvestment}
                     </div>
@@ -1125,6 +1108,7 @@ export const InvestmentSidebar =  (props: investmentProps) => {
           </div>
         </Dialog>
       </Transition>
+      
     );
   }
 
@@ -1172,9 +1156,28 @@ export const InvestmentSidebar =  (props: investmentProps) => {
           >
             Invest Now
           </button>
+          <div className="mt-4 flex flex-col gap-3">
+                      <input
+                        className="border p-2 rounded-md"
+                        onChange={handleChange}
+                        type="number"
+                        name=""
+                        id=""
+                        placeholder="100"
+                      />
+                      <button
+                        type="button"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
+                        onClick={handleClick}
+                      >
+                        Invest now 2
+                      </button>
+                      {valueApprovalAndInvestment}
+                    </div>
         </div>
       </aside>
       <ModalInvestNow />
+
     </>
   );
 };

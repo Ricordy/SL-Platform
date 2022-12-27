@@ -236,7 +236,7 @@ const Investment = ({ investment }) => {
     address: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
     abi: CoinTestAbi,
     functionName: 'balanceOf',
-    args: ["0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"],
+    args: ["0xCafac3dD18aC6c6e92c921884f9E4176737C052c"],
     watch: true
   });
   
@@ -244,6 +244,7 @@ const Investment = ({ investment }) => {
       address: '0xCafac3dD18aC6c6e92c921884f9E4176737C052c',
       abi: InvestAbi,
       functionName: 'totalInvestment',
+      watch: true,
   })
 
   const { data: userTotalInvestment } = useContractRead({

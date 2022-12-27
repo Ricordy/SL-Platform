@@ -15,7 +15,7 @@ import {
 } from "../typechain-types";
 
 const   paymentTokenAddress: Address = "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-        investmentAddress: Address = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+        investmentAddress: Address = "0xCafac3dD18aC6c6e92c921884f9E4176737C052c",
         puzzleAddress: Address = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
         investmentValue: BigNumberish = 10000;
 

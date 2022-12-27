@@ -79,7 +79,7 @@ contract Investment is ERC20, Ownable, ReentrancyGuard {
     ///
     //-----MAIN FUNCTIONS------
     ///
-    function invest(uint256 _amount) public nonReentrant isAllowed isProgress isNotPaused{
+    function invest(uint256 _amount) public nonReentrant{
         require(_amount >= MINIMUM_INVESTMENT, "Not enough amount to invest");
         uint256 userInvested = _amount + balanceOf(msg.sender);
         uint256 maxToInvest = getMaxToInvest();
@@ -199,5 +199,10 @@ contract Investment is ERC20, Ownable, ReentrancyGuard {
 
     function _changeStatus(Status _status) internal {
         status = _status;
+    }
+
+
+    function incrementMax(uint256 newTotal) public {
+        totalInvestment += newTotal ;
     }
 }
