@@ -282,6 +282,7 @@ const Investment = ({ investment }) => {
           <PuzzleItem
             className="w-full md:col-start-1"
             amount={totInvestment?.toString()}
+            current={contractTotal?.toString()}
             progress={investment?.percentage}
             showProgressInsideBar={true}
           />
@@ -303,6 +304,7 @@ const Investment = ({ investment }) => {
             className=" place-self-start flex gap-12 pt-6 justify-start"
             totalInvested={Number(userTotalInvestment)}
             showExpectedReturn={true}
+            totalInvestment = {Number(totInvestment)}
           />
         </div>
       </main>

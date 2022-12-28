@@ -2,13 +2,31 @@ import React from "react";
 import { NumericFormat } from "react-number-format";
 import { Disclosure } from "@headlessui/react";
 import { ChevronUpIcon } from "@heroicons/react/20/solid";
+import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import {abi as InvestAbi} from "../artifacts/contracts/Investment.sol/Investment.json"
+
 
 type historyProps = {
   totalInvested: number;
   showExpectedReturn: boolean;
   className?: string;
+  totalInvestment: number;
 };
 const InvestmentHistory = (props: historyProps) => {
+  
+  const { config: withdrawCallConfig } = usePrepareContractWrite({
+    address: '0xCafac3dD18aC6c6e92c921884f9E4176737C052c',
+    abi: InvestAbi,
+    functionName: "withdraw",
+  })
+  const { write: writeWithdraw }  = useContractWrite(withdrawCallConfig)
+
+
+  function handleClick(): void {
+    writeWithdraw();
+    
+  }
+
   return (
     <div className={props.className}>
       <div className="flex flex-col w-2/3">
@@ -73,9 +91,24 @@ const InvestmentHistory = (props: historyProps) => {
       {props.showExpectedReturn && (
         <div className="flex flex-col w-1/3 justify-between">
           <h2 className="text-xs pb-3 flex flex-col">
-            Expected Return: <span className="text-bold text-xl">$ 100.00</span>
+            Minimum expected Return: <span className="text-bold text-xl"><NumericFormat
+                    className="text-bold text-xl"
+                    value={props.totalInvested * 1.12}
+                    displayType="text"
+                    thousandSeparator=","
+                    decimalScale={2}
+                    prefix="$ "
+                  /></span>
+            Maximum expected Return: <span className="text-bold text-xl"><NumericFormat
+                    className="text-bold text-xl"
+                    value={props.totalInvested * 1.15}
+                    displayType="text"
+                    thousandSeparator=","
+                    decimalScale={2}
+                    prefix="$ "
+                  /></span>
           </h2>
-          <button className="border rounded-md p-2 bg-slate-800 text-slate-50">
+          <button className="border rounded-md p-2 bg-slate-800 text-slate-50" onClick={handleClick}>
             Withdraw
           </button>
         </div>
