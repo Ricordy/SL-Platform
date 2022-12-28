@@ -38,13 +38,14 @@ const Profile: NextPage = () => {
         </div>
         <div className="">
           <div className="flex flex-col">
-            <InvestmentHistory totalInvested={100} showExpectedReturn={false} />
+            <InvestmentHistory totalInvested={100} showExpectedReturn={false} totalInvestment={100000} />
             <div className="font-bold py-6">Puzzle Progress</div>
             <div className="flex flex-col w-full gap-6">
               <div className="flex gap-6">
                 <PuzzleItem
                   level={1}
                   amount="$ 5,000.00 / $ 5,000.00"
+                  current="420"
                   progress="100"
                   showProgressInsideBar={true}
                 />
@@ -56,6 +57,7 @@ const Profile: NextPage = () => {
                 <PuzzleItem
                   level={2}
                   amount="N/A"
+                  current="N/A"
                   progress="0"
                   showProgressInsideBar={true}
                 />

@@ -976,7 +976,7 @@ export const InvestmentSidebar =  (props: investmentProps) => {
     setApprovalandInvestment (event.target.value);
   };
 
-
+  
 
   /**
    * Write in the blockchain the invest function called by the user 
@@ -989,7 +989,7 @@ export const InvestmentSidebar =  (props: investmentProps) => {
         {
           "internalType": "uint256",
           "name": "_amount",
-          "type": "uint256"
+          "type": "uint32"
         }
       ],
       "name": "invest",
@@ -998,7 +998,7 @@ export const InvestmentSidebar =  (props: investmentProps) => {
       "type": "function"
     }],
     functionName: "invest",
-    args: [(valueApprovalAndInvestment)],
+    args: [valueApprovalAndInvestment],
   })
   const { write: writeInvest }  = useContractWrite(investCallConfig)
 
