@@ -984,9 +984,21 @@ export const InvestmentSidebar =  (props: investmentProps) => {
    */
   const { config: investCallConfig } = usePrepareContractWrite({
     address: '0xCafac3dD18aC6c6e92c921884f9E4176737C052c',
-    abi: InvestAbi,
+    abi: [{
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "invest",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }],
     functionName: "invest",
-    args: [valueApprovalAndInvestment],
+    args: [(valueApprovalAndInvestment)],
   })
   const { write: writeInvest }  = useContractWrite(investCallConfig)
 

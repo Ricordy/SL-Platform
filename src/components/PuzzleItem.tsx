@@ -56,10 +56,10 @@ const PuzzleItem: React.FC<PuzzleItemData> = ({
       <div className="w-full bg-gray-200 rounded-full">
         <div
           className="bg-gray-600 text-xs font-medium text-black-100 text-center p-0.5 leading-none rounded-full"
-          style={{ width: `${Number(current)/Number(amount)}%` }}
+          style={{ width: `${Number(current)/Number(amount) * 100}%` }}
         >
           {showProgressInsideBar && (
-            <div className="w-full text-center">{Number(current)/Number(amount)}%</div>
+            <div className="w-full text-center">{Number(current)/Number(amount)* 100}%</div>
           )}
         </div>
       </div>
