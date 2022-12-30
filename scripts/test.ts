@@ -25,16 +25,16 @@ async function main() {
     const owner: SignerWithAddress = accounts[0];
     const firstInvestor: SignerWithAddress = accounts[1];
   
-    const factoryFactory = new Factory__factory(owner);
-    const investFactory = new Investment__factory(owner);
+
+    const PuzzleFactory = new Puzzle__factory(owner);
 
   
-    const FactoryContract: Factory =  factoryFactory.attach(factoryAddress);
-    const InvestmentContract: Investment =  investFactory.attach(investmentAddress);
+    const PuzzleContract: Puzzle =  PuzzleFactory.attach(puzzleAddress);
 
-    await InvestmentContract.connect(firstInvestor).invest(200);
 
-    console.log(await FactoryContract.getAddressTotal(firstInvestor.address));
+    await PuzzleContract.connect(firstInvestor).mintTest();
+
+
 
   }
   

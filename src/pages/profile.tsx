@@ -4,11 +4,48 @@ import PuzzleItem from "../components/PuzzleItem";
 import Link from "next/link";
 import { FiExternalLink } from "react-icons/fi";
 import InvestmentHistory from "../components/InvestmentHistory";
-import { useAccount } from "wagmi";
+import { useAccount, useContractRead } from "wagmi";
 import { useEffect } from "react";
+import {abi as FactoryAbi} from "../artifacts/contracts/Factory.sol/Factory.json"
+import {abi as InvestAbi} from "../artifacts/contracts/Investment.sol/Investment.json"
+import {abi as PuzzleAbi} from "../artifacts/contracts/Puzzle.sol/Puzzle.json"
 
-const Profile: NextPage = () => {
-  const { address, isDisconnected } = useAccount();
+
+
+
+  const Profile: NextPage = () => {
+    const { address, isDisconnected } = useAccount();
+    const tokenCollectionIds = [0,1,2,3,4,5,6,7,8,9]
+    const userArray = [address,address,address,address,address,address,address,address,address,address]
+  
+    const { data: userBalancePuzzle } = useContractRead({
+      address: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+      abi: PuzzleAbi,
+      functionName: 'balanceOfBatch',
+      args: [userArray,tokenCollectionIds],
+      watch: true,
+    });
+    const { data: userTotalInvestment } = useContractRead({
+      address: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
+      abi: FactoryAbi,
+      functionName: 'getAddressTotal',
+      args: [address],
+      watch: true,
+    })
+    const { data: totInvestment } = useContractRead({
+      address: '0xCafac3dD18aC6c6e92c921884f9E4176737C052c',
+      abi: InvestAbi,
+      functionName: 'totalInvestment',
+      watch: true,
+    })
+
+    function howMany(){
+      let total = 0
+      for(let i = 0; i < 10; i++){
+        userBalancePuzzle[i] != 0? total++:total
+      }
+      return (Number(userTotalInvestment)/total*5000)
+    }
 
 
   const ProfileDetails = () => {
@@ -38,26 +75,25 @@ const Profile: NextPage = () => {
         </div>
         <div className="">
           <div className="flex flex-col">
-            <InvestmentHistory totalInvested={100} showExpectedReturn={false} totalInvestment={100000} />
+            <InvestmentHistory totalInvested={Number(userTotalInvestment)} showExpectedReturn={false} totalInvestment={Number(totInvestment)} />
             <div className="font-bold py-6">Puzzle Progress</div>
             <div className="flex flex-col w-full gap-6">
               <div className="flex gap-6">
                 <PuzzleItem
                   level={1}
-                  amount="$ 5,000.00 / $ 5,000.00"
-                  current="420"
-                  progress="100"
+                  amount = "5000"
+                  current= {userTotalInvestment.toString()}
                   showProgressInsideBar={true}
                 />
-                <button className="border rounded-md self-end p-2 bg-slate-800 text-slate-50">
+               {howMany() > 5000 && (<button className="border rounded-md self-end p-2 bg-slate-800 text-slate-50">
                   Claim
-                </button>
+                </button>)}
               </div>
               <div className="flex gap-6">
                 <PuzzleItem
                   level={2}
-                  amount="N/A"
-                  current="N/A"
+                  amount="100"
+                  current="10"
                   progress="0"
                   showProgressInsideBar={true}
                 />

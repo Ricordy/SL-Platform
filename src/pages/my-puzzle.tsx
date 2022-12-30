@@ -1,11 +1,47 @@
 import type { NextPage } from "next";
 import { useState } from "react";
 import { Tab } from "@headlessui/react";
+import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi";
+import {abi as PuzzleAbi} from "../artifacts/contracts/Puzzle.sol/Puzzle.json"
+import { count } from "console";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
+
+
 const MyPuzzle: NextPage = () => {
+
+
+  const { address, isDisconnected } = useAccount();
+  const tokenCollectionIds = [0,1,2,3,4,5,6,7,8,9]
+  const userArray = [address,address,address,address,address,address,address,address,address,address]
+
+  const { data: userBalancePuzzle } = useContractRead({
+    address: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+    abi: PuzzleAbi,
+    functionName: 'balanceOfBatch',
+    args: [userArray,tokenCollectionIds],
+    watch: true,
+  });
+
+  const { config: burnCallConfig } = usePrepareContractWrite({
+    address: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+    abi: PuzzleAbi,
+    functionName: 'burn',
+  })
+  const { write: writeBurn } = useContractWrite(burnCallConfig)
+
+  const { data: userBalanceLevel2 } = useContractRead({
+    address: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+    abi: PuzzleAbi,
+    functionName: 'balanceOf',
+    args: [address,11],
+    watch: true,
+  });
+
+  
+
   const [categories] = useState({
     "Level 1": [
       {
@@ -13,70 +49,70 @@ const MyPuzzle: NextPage = () => {
         title: "Wheel",
         date: "5h ago",
         commentCount: 5,
-        nft: false,
+        nft: userBalancePuzzle[0] == 1? true: false,
       },
       {
         id: 2,
         title: "Engine",
         date: "2h ago",
         commentCount: 3,
-        nft: true,
+        nft: userBalancePuzzle[1] == 1? true: false,
       },
       {
         id: 3,
         title: "Box",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
+        nft: userBalancePuzzle[2] == 1? true: false,
       },
       {
         id: 4,
         title: "Body",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
+        nft: userBalancePuzzle[3] == 1? true: false,
       },
       {
         id: 5,
         title: "Seat",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
+        nft: userBalancePuzzle[4] == 1? true: false,
       },
       {
         id: 6,
         title: "Sterring Wheel",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
+        nft: userBalancePuzzle[5] == 1? true: false,
       },
       {
         id: 7,
         title: "Grill",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
+        nft: userBalancePuzzle[6] == 1? true: false,
       },
       {
         id: 8,
         title: "Glass",
         date: "2h ago",
         commentCount: 3,
-        nft: true,
+        nft: userBalancePuzzle[7] == 1? true: false,
       },
       {
         id: 9,
         title: "Chassis",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
+        nft: userBalancePuzzle[8] == 1? true: false,
       },
       {
         id: 10,
         title: "Exhaust",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
+        nft: userBalancePuzzle[9] == 1? true: false,
       },
     ],
     "Level 2": [
@@ -153,6 +189,26 @@ const MyPuzzle: NextPage = () => {
     ],
   });
 
+  function countDifferents() {
+    let total = 0
+    for(let i = 0; i < 10; i++){
+      userBalancePuzzle[i] != 0? total++:total
+    }
+    return total
+  }
+
+  console.log(Number(userBalanceLevel2));
+  
+
+
+
+
+  function handleClick(e) {
+    e.preventDefault()
+    writeBurn()
+    
+  }
+
   return (
     <div className="w-full px-6 lg:px-3">
       <h2 className="text-2xl py-6">My Puzzle</h2>
@@ -216,8 +272,8 @@ const MyPuzzle: NextPage = () => {
                 ))}
               </ul>
               {idx == 0 && (
-                <button className="border mt-6 self-center rounded-md p-2">
-                  Claim NFT Level 2 (2/10)
+                <button className="border mt-6 self-center rounded-md p-2" onClick={() => (countDifferents() == 10? handleClick:console.log("less than 10"))}>
+                  Claim NFT Level 2 ({countDifferents().toString()}/10)
                 </button>
               )}
             </Tab.Panel>
