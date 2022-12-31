@@ -4,8 +4,7 @@ import PuzzleItem from "../components/PuzzleItem";
 import Link from "next/link";
 import { FiExternalLink } from "react-icons/fi";
 import InvestmentHistory from "../components/InvestmentHistory";
-import { useAccount, useContractRead } from "wagmi";
-import { useEffect } from "react";
+import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi";
 import {abi as FactoryAbi} from "../artifacts/contracts/Factory.sol/Factory.json"
 import {abi as InvestAbi} from "../artifacts/contracts/Investment.sol/Investment.json"
 import {abi as PuzzleAbi} from "../artifacts/contracts/Puzzle.sol/Puzzle.json"
@@ -38,17 +37,34 @@ import {abi as PuzzleAbi} from "../artifacts/contracts/Puzzle.sol/Puzzle.json"
       functionName: 'totalInvestment',
       watch: true,
     })
-
+    const { config: claimCallConfig } = usePrepareContractWrite({
+      address: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+      abi: PuzzleAbi,
+      functionName: 'claim',
+    })
+    const { write: writeClaim } = useContractWrite(claimCallConfig)
+    
+    
     function howMany(){
       let total = 0
       for(let i = 0; i < 10; i++){
-        userBalancePuzzle[i] != 0? total++:total
+        total += userBalancePuzzle[i]
       }
-      return (Number(userTotalInvestment)/total*5000)
+      console.log("total = " , total);
+      
+      return Number( (Number(userTotalInvestment) - total*5000))
     }
 
+  
+      console.log(howMany());
+      
 
   const ProfileDetails = () => {
+    function handleClick(event) {
+      event.preventDefault()
+      writeClaim()
+    }
+
     return (
       <div className="">
         <div className="flex pb-6 gap-6">
@@ -85,7 +101,7 @@ import {abi as PuzzleAbi} from "../artifacts/contracts/Puzzle.sol/Puzzle.json"
                   current= {userTotalInvestment.toString()}
                   showProgressInsideBar={true}
                 />
-               { (<button className="border rounded-md self-end p-2 bg-slate-800 text-slate-50">
+               { (<button className="border rounded-md self-end p-2 bg-slate-800 text-slate-50" onClick={handleClick}>
                   Claim
                 </button>)}
               </div>
@@ -97,7 +113,7 @@ import {abi as PuzzleAbi} from "../artifacts/contracts/Puzzle.sol/Puzzle.json"
                   progress="0"
                   showProgressInsideBar={true}
                 />
-                <button disabled className="border rounded-md self-end p-2">
+                <button disabled className="border rounded-md self-end p-2" >
                   Claim
                 </button>
               </div>

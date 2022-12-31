@@ -27,15 +27,20 @@ async function main() {
   
 
     const PuzzleFactory = new Puzzle__factory(owner);
+    const CoinTestFactory = new CoinTest__factory(owner);
     const InvestFactory = new Investment__factory(owner);
 
 
   
     const PuzzleContract: Puzzle =  PuzzleFactory.attach(puzzleAddress);
     const InvestContract: Investment =  InvestFactory.attach(investmentAddress);
+    const CoinContract: CoinTest =  CoinTestFactory.attach(paymentTokenAddress);
+
     
     await PuzzleContract.connect(firstInvestor).mintTest();
-    await InvestContract.connect(firstInvestor).invest(100);
+    await CoinContract.connect(firstInvestor).mint(10000);
+    await CoinContract.connect(firstInvestor).approve(InvestContract.address,10000);
+    await InvestContract.connect(firstInvestor).invest(10000);
 
 
 

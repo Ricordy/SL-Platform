@@ -194,10 +194,12 @@ const MyPuzzle: NextPage = () => {
     for(let i = 0; i < 10; i++){
       userBalancePuzzle[i] != 0? total++:total
     }
+    console.log(total);
+    
     return total
   }
 
-  console.log(Number(userBalanceLevel2));
+
   
 
 
@@ -272,7 +274,7 @@ const MyPuzzle: NextPage = () => {
                 ))}
               </ul>
               {idx == 0 && (
-                <button className="border mt-6 self-center rounded-md p-2" onClick={() => (countDifferents() == 10? handleClick:console.log("less than 10"))}>
+                <button className="border mt-6 self-center rounded-md p-2" onClick={handleClick}>
                   Claim NFT Level 2 ({countDifferents().toString()}/10)
                 </button>
               )}

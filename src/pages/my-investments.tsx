@@ -3,6 +3,10 @@ import { useState } from "react";
 import { Tab } from "@headlessui/react";
 import Link from "next/link";
 import { investmentData } from "../data/Investments";
+import {abi as InvestAbi} from "../artifacts/contracts/Investment.sol/Investment.json"
+import { useAccount, useContractRead } from "wagmi";
+
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -13,11 +17,33 @@ const selectedInvestments = investmentData.filter(
   (i) => userInvestments.indexOf(i.id) > -1
 );
 
+
+
 const MyInvestments: NextPage = () => {
   const [categories] = useState({
     "Level 1": selectedInvestments,
     "Level 2": [],
   });
+
+  investmentData.forEach(function(element) { 
+    const { data: phase } = useContractRead({
+      address: element.address,
+      abi: InvestAbi,
+      functionName: 'status',
+    })
+    if(phase == 0)
+      element.phase= "Paused"
+    if(phase == 1)
+      element.phase= "On Progress"
+    if(phase == 2)
+      element.phase= "On Process"
+    if(phase == 3)
+      element.phase= "On Withdraw"
+    if(phase == 4)
+      element.phase= "On Withdraw"
+    });
+
+  console.log(investmentData);
 
   return (
     <div className="flex flex-col w-full px-6 lg:px-3 mt-16 md:mt-0">
@@ -52,6 +78,7 @@ const MyInvestments: NextPage = () => {
             >
               <ul className="grid  sm:grid-cols-2 grid-cols-1 gap-2">
                 {investments.map((investment) => (
+                  
                   <li
                     key={investment.id}
                     className="relative rounded-md p-3 border  flex  flex-col gap-3 justify-around hover:bg-gray-100"
@@ -61,6 +88,7 @@ const MyInvestments: NextPage = () => {
                         {investment.title}
                       </Link>
                     </h3>
+                    
                     {investment.phase !== "Withdraw" ? (
                       <div className="border p-2 text-xs rounded-md">
                         {investment.phase}
