@@ -85,7 +85,7 @@ import {abi as PuzzleAbi} from "../artifacts/contracts/Puzzle.sol/Puzzle.json"
                   current= {userTotalInvestment.toString()}
                   showProgressInsideBar={true}
                 />
-               {howMany() > 5000 && (<button className="border rounded-md self-end p-2 bg-slate-800 text-slate-50">
+               { (<button className="border rounded-md self-end p-2 bg-slate-800 text-slate-50">
                   Claim
                 </button>)}
               </div>

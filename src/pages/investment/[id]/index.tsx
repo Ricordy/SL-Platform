@@ -286,7 +286,6 @@ const Investment = ({ investment }) => {
             progress={investment?.percentage}
             showProgressInsideBar={true}
           />
-          {`Contract balance: ${contractTotal}`}
           <InvestmentNumbers />
 
           <InvestmentSidebar
