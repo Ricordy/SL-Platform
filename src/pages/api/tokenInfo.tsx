@@ -15,14 +15,14 @@ export default async function handler(
   const provider = new ethers.providers.JsonRpcProvider();
   const walletPrivateKey = process.env.PRIVATE_KEY;
   const paymentTokenAddress = process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS;
-  const puzzleContractAddress = "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0";
+  const puzzleContractAddress = "0xF0C5cC4C5792DFE7996A363A5539021933559CF1";
   const wallet = new Wallet(walletPrivateKey);
   const signer = wallet.connect(provider);
 
   const factoryContractFactory = new Factory__factory(signer);
 
   const factoryContract = await factoryContractFactory.attach(
-    "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+    "0xDaEF5954a79A560c95728de005A456BdC08608e0"
   );
 
   await factoryContract.deployNew(paymentTokenAddress, puzzleContractAddress);

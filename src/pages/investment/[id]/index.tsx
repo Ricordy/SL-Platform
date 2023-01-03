@@ -233,22 +233,22 @@ const Investment = ({ investment }) => {
   //   contractInterface: factoryJson.abi,
   // };
   const { data: contractTotal } = useContractRead({
-    address: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+    address: '0xEDa3c4158BF33beFb6629A21514bf0e999786251',
     abi: CoinTestAbi,
     functionName: 'balanceOf',
-    args: ["0xCafac3dD18aC6c6e92c921884f9E4176737C052c"],
+    args: ["0xDaEF5954a79A560c95728de005A456BdC08608e0"],
     watch: true
   });
   
   const { data: totInvestment } = useContractRead({
-      address: '0xCafac3dD18aC6c6e92c921884f9E4176737C052c',
+      address: '0xDaEF5954a79A560c95728de005A456BdC08608e0',
       abi: InvestAbi,
       functionName: 'totalInvestment',
       watch: true,
   })
 
   const { data: userTotalInvestment } = useContractRead({
-      address: '0xCafac3dD18aC6c6e92c921884f9E4176737C052c',
+      address: '0xDaEF5954a79A560c95728de005A456BdC08608e0',
       abi: InvestAbi,
       functionName: 'balanceOf',
       args: [address],

@@ -18,27 +18,27 @@ import {abi as PuzzleAbi} from "../artifacts/contracts/Puzzle.sol/Puzzle.json"
     const userArray = [address,address,address,address,address,address,address,address,address,address]
   
     const { data: userBalancePuzzle } = useContractRead({
-      address: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+      address: '0xF0C5cC4C5792DFE7996A363A5539021933559CF1',
       abi: PuzzleAbi,
       functionName: 'balanceOfBatch',
       args: [userArray,tokenCollectionIds],
       watch: true,
     });
     const { data: userTotalInvestment } = useContractRead({
-      address: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
+      address: '0xA4ff7828146e8570D810235602DfA12f5FFC9d38',
       abi: FactoryAbi,
       functionName: 'getAddressTotal',
       args: [address],
       watch: true,
     })
     const { data: totInvestment } = useContractRead({
-      address: '0xCafac3dD18aC6c6e92c921884f9E4176737C052c',
+      address: '0xDaEF5954a79A560c95728de005A456BdC08608e0',
       abi: InvestAbi,
       functionName: 'totalInvestment',
       watch: true,
     })
     const { config: claimCallConfig } = usePrepareContractWrite({
-      address: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+      address: '0xF0C5cC4C5792DFE7996A363A5539021933559CF1',
       abi: PuzzleAbi,
       functionName: 'claim',
     })

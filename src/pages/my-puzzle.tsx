@@ -18,22 +18,23 @@ const MyPuzzle: NextPage = () => {
   const userArray = [address,address,address,address,address,address,address,address,address,address]
 
   const { data: userBalancePuzzle } = useContractRead({
-    address: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+    address: '0xF0C5cC4C5792DFE7996A363A5539021933559CF1',
     abi: PuzzleAbi,
     functionName: 'balanceOfBatch',
-    args: [userArray,tokenCollectionIds],
+    args: [userArray,
+    ],
     watch: true,
   });
 
   const { config: burnCallConfig } = usePrepareContractWrite({
-    address: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+    address: '0xF0C5cC4C5792DFE7996A363A5539021933559CF1',
     abi: PuzzleAbi,
     functionName: 'burn',
   })
   const { write: writeBurn } = useContractWrite(burnCallConfig)
 
   const { data: userBalanceLevel2 } = useContractRead({
-    address: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+    address: '0xF0C5cC4C5792DFE7996A363A5539021933559CF1',
     abi: PuzzleAbi,
     functionName: 'balanceOf',
     args: [address,11],
@@ -49,7 +50,7 @@ const MyPuzzle: NextPage = () => {
         title: "Wheel",
         date: "5h ago",
         commentCount: 5,
-        nft: userBalancePuzzle[0] == 1? true: false,
+        nft: (userBalancePuzzle[0] == 1? true: false)? null: 0,
       },
       {
         id: 2,
@@ -91,7 +92,7 @@ const MyPuzzle: NextPage = () => {
         title: "Grill",
         date: "2h ago",
         commentCount: 3,
-        nft: userBalancePuzzle[6] == 1? true: false,
+        nft: (userBalancePuzzle[6] == 1? true: false)? null: 0,
       },
       {
         id: 8,
@@ -192,6 +193,7 @@ const MyPuzzle: NextPage = () => {
   function countDifferents() {
     let total = 0
     for(let i = 0; i < 10; i++){
+      if(userBalancePuzzle[i] != null)
       userBalancePuzzle[i] != 0? total++:total
     }
     console.log(total);

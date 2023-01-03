@@ -1,4 +1,5 @@
 import { HardhatUserConfig } from "hardhat/config";
+import "@nomiclabs/hardhat-etherscan";
 import "@nomicfoundation/hardhat-toolbox";
 import * as dotenv from "dotenv";
 import { hardhat } from "wagmi/chains";
@@ -26,6 +27,11 @@ const config: HardhatUserConfig = {
       url: ALCHEMY_API_KEY_URL,
       accounts: [PRIVATE_KEY ?? ""],
     },
+  },
+  etherscan: {
+    apiKey: {
+      goerli: ETHERSCAN_API_KEY
+    }
   },
   defaultNetwork: "hardhat",
 };

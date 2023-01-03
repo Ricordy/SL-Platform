@@ -8,7 +8,7 @@ import {abi as InvestAbi} from "../artifacts/contracts/Investment.sol/Investment
 export const investmentData = [
   {
     id: 1,
-    address: "0xCafac3dD18aC6c6e92c921884f9E4176737C052c",
+    address: "0xDaEF5954a79A560c95728de005A456BdC08608e0",
     title: "Mercedes-benz 280sl Pagoda 1969",
     amount: "129000",
     percentage: "100",

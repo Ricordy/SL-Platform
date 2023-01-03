@@ -1,5 +1,9 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ethers } from "hardhat";
+import "@nomiclabs/hardhat-etherscan";
+import hre from "hardhat";
+
+
 
 import {
   CoinTest,
@@ -11,6 +15,8 @@ import {
   Investment,
   Investment__factory,
 } from "../typechain-types";
+
+
 
 async function main() {
   const accounts: SignerWithAddress[] = await ethers.getSigners();
@@ -43,7 +49,36 @@ async function main() {
   console.log("Puzzle deployed at: ", puzzleContract.address);
   console.log("Factory deployed at: ", factoryContract.address);
   console.log("Investment deployed at: ", investmentContract.address);
+  
+  
+  console.log(
+    "Verifying contracts on Goerli:"
+  );
+  sleep(10000)
+  await hre.run("verify:verify", {
+    address: paymentTokenContract.address,
+    
+  })
+  await hre.run("verify:verify", {
+    address: puzzleContract.address,
+    arguments: [factoryContract.address, paymentTokenContract.address],
+  })
+  await hre.run("verify:verify", {
+    address: factoryContract.address,
+  })
+  await hre.run("verify:verify", {
+    address: investmentContract.address,
+    arguments: [100000, paymentTokenContract.address],
+  })
+
 }
+
+function sleep(ms: number) {
+  return new Promise( resolve => setTimeout(resolve, ms) );
+}
+
+  
+
 
 main().catch((error) => {
   console.error(error);
