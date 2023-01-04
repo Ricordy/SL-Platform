@@ -34,13 +34,13 @@ const MyInvestments: NextPage = () => {
     if(phase == 0)
       element.phase= "Paused"
     if(phase == 1)
-      element.phase= "On Progress"
+      element.phase= "In Progress"
     if(phase == 2)
-      element.phase= "On Process"
+      element.phase= "In Process"
     if(phase == 3)
-      element.phase= "On Withdraw"
+      element.phase= "In Withdraw"
     if(phase == 4)
-      element.phase= "On Withdraw"
+      element.phase= "In Withdraw"
     });
 
   console.log(investmentData);

@@ -3,10 +3,13 @@ import { FiExternalLink } from "react-icons/fi";
 import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
-import { ContractResultDecodeError, useContractWrite, usePrepareContractWrite } from "wagmi";
+import { ContractResultDecodeError, useContract, useContractWrite, usePrepareContractWrite, useAccount, useSigner } from "wagmi";
 import { BigNumber, BigNumberish } from "ethers";
 import {abi as InvestAbi} from "../artifacts/contracts/Investment.sol/Investment.json"
 import {abi as CoinTestAbi} from "../artifacts/contracts/CoinTest.sol/CoinTest.json"
+import { setSamplerParameters } from "twgl.js";
+import { watch } from "fs";
+import useDebounce from "../hooks/useDebounce";
 
 
 
@@ -26,23 +29,74 @@ type investmentProps = {
 
 
 
+
 export const InvestmentSidebar =  (props: investmentProps) => {
   
+  const {data} = useSigner();
   const [isOpen, setIsOpen] = useState(false);
+  const [isApprovable, setIsApprovable] = useState(false);
+  const [isWritable, setIsWritable] = useState(false);
   const [valueApprovalAndInvestment , setApprovalandInvestment ] = useState(0);
+  const debouncedValue = useDebounce<number>(valueApprovalAndInvestment, 500)
 
+//   const { data, isError, isLoading } = useWaitForTransaction({
+//     hash: approveCallConfig,
+//   })
+// // 
+  
+  /**
+   * Write in the blockchain the approve function called by the user
+   */
+    const { config: approveCallConfig } = usePrepareContractWrite({
+        address: '0xEDa3c4158BF33beFb6629A21514bf0e999786251',
+        abi: CoinTestAbi,
+        functionName: 'approve',
+        args: ["0xDaEF5954a79A560c95728de005A456BdC08608e0" , debouncedValue],
+        enabled: true,
+        onSuccess(data) {
+            console.log(data);
+            
+        },
+      })
+    /**
+     * Write in the blockchain the invest function called by the user 
+     */
+    const { config: investCallConfig } =  usePrepareContractWrite({
+      address: '0xDaEF5954a79A560c95728de005A456BdC08608e0',
+      abi: InvestAbi,
+      functionName: "invest",
+      args: [debouncedValue],
+      enabled: true,
+      onSettled(data, error) {
+        console.log('Settled', { data, error })
+      },
+      onError(error){
+        console.warn("ERROR: ", {error});
+      },
+            
+    })
+   
+    const paymentTokenContract = useContract({
+        address: '0xEDa3c4158BF33beFb6629A21514bf0e999786251',
+        abi: CoinTestAbi,
+        signerOrProvider: data
+    })
+
+    const investContract = useContract({
+      address: '0xDaEF5954a79A560c95728de005A456BdC08608e0',
+      abi: InvestAbi,
+      signerOrProvider: data
+    })
+    
+
+    const { write: writeApprove } = useContractWrite(approveCallConfig)
+    const { write: writeInvest}  = useContractWrite(investCallConfig)
+  
+  
   const handleChange = (event) => {
     event.preventDefault();
     setApprovalandInvestment (event.target.value);
   };
-
-  
-
-
-  
-
-
-
 
   //Wagmi for contract communication
   //Prepare contract writting
@@ -56,41 +110,16 @@ export const InvestmentSidebar =  (props: investmentProps) => {
     setIsOpen(true);
   }
 
-  function handleClick(e) {
+  async function handleClick(e) {
       e.preventDefault();
-      writeApprove?.()
-      writeInvest?.()
-      closeModal();
+      const results = await paymentTokenContract.connect(data).approve("0xDaEF5954a79A560c95728de005A456BdC08608e0", debouncedValue);
+      await results.wait()
+      const results2 = await paymentTokenContract.connect(data).invest(debouncedValue);
+      await results2.wait()
+
   }
 
 
-      /**
-   * Write in the blockchain the approve function called by the user
-   */
-      const { config: approveCallConfig } = usePrepareContractWrite({
-        address: '0xEDa3c4158BF33beFb6629A21514bf0e999786251',
-        abi: CoinTestAbi,
-        functionName: 'approve',
-        args: ["0xDaEF5954a79A560c95728de005A456BdC08608e0" , valueApprovalAndInvestment],
-      })
-      const { write: writeApprove } = useContractWrite(approveCallConfig)
-
-
-    /**
-     * Write in the blockchain the invest function called by the user 
-     */
-    const { config: investCallConfig } = usePrepareContractWrite({
-      address: '0xDaEF5954a79A560c95728de005A456BdC08608e0',
-      abi: InvestAbi,
-      functionName: "invest",
-      args: [valueApprovalAndInvestment],
-      chainId: 5,
-      cacheTime: 2,
-      onSettled(data, error) {
-        console.log('Settled', { data, error })
-      },
-    })
-    const { write: writeInvest, data, isError}  = useContractWrite(investCallConfig)
 
     
   
@@ -169,6 +198,7 @@ export const InvestmentSidebar =  (props: investmentProps) => {
                         type="button"
                         className="inline-flex justify-center rounded-md border border-transparent bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
                         onClick={handleClick}
+                        
                       >
                         Invest now
                       </button>
@@ -243,10 +273,21 @@ export const InvestmentSidebar =  (props: investmentProps) => {
                         className="inline-flex justify-center rounded-md border border-transparent bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
                         onClick={handleClick}
                       >
+                        approve now 2
+                      </button>
+                      <button
+                        type="button"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
+                        onClick={() => writeInvest?.()}
+                      >
                         Invest now 2
                       </button>
                       {valueApprovalAndInvestment}
+
+                      {(isApprovable? "true": "false")};
                     </div>
+                    
+                    
         </div>
       </aside>
       <ModalInvestNow />
@@ -254,3 +295,9 @@ export const InvestmentSidebar =  (props: investmentProps) => {
     </>
   );
 };
+
+
+function sleep(ms: number) {
+  return new Promise( resolve => setTimeout(resolve, ms) );
+}
+

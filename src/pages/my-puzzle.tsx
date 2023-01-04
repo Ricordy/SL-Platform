@@ -5,7 +5,7 @@ import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite 
 import {abi as PuzzleAbi} from "../artifacts/contracts/Puzzle.sol/Puzzle.json"
 import { count } from "console";
 
-function classNames(...classes) {
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
@@ -21,8 +21,7 @@ const MyPuzzle: NextPage = () => {
     address: '0xF0C5cC4C5792DFE7996A363A5539021933559CF1',
     abi: PuzzleAbi,
     functionName: 'balanceOfBatch',
-    args: [userArray,
-    ],
+    args: [userArray],
     watch: true,
   });
 
@@ -42,6 +41,8 @@ const MyPuzzle: NextPage = () => {
   });
 
   
+  console.log(userBalancePuzzle);
+  
 
   const [categories] = useState({
     "Level 1": [
@@ -50,7 +51,7 @@ const MyPuzzle: NextPage = () => {
         title: "Wheel",
         date: "5h ago",
         commentCount: 5,
-        nft: (userBalancePuzzle[0] == 1? true: false)? null: 0,
+        nft: (userBalancePuzzle[0] == 1? true: false) ||  false,
       },
       {
         id: 2,
@@ -194,7 +195,7 @@ const MyPuzzle: NextPage = () => {
     let total = 0
     for(let i = 0; i < 10; i++){
       if(userBalancePuzzle[i] != null)
-      userBalancePuzzle[i] != 0? total++:total
+        (userBalancePuzzle[i] != 0? total++:total) || 0
     }
     console.log(total);
     

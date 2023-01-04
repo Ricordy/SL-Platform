@@ -25,7 +25,7 @@ export const investmentData = [
     title: "Porsche 911 1963",
     amount: "250000",
     percentage: "25",
-    phase: "In progress",
+    phase: "In Progress",
     status: "Active",
     chassis: "",
     totalProduction: 0,
