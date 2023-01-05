@@ -4,65 +4,79 @@ import PuzzleItem from "../components/PuzzleItem";
 import Link from "next/link";
 import { FiExternalLink } from "react-icons/fi";
 import InvestmentHistory from "../components/InvestmentHistory";
-import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi";
-import {abi as FactoryAbi} from "../artifacts/contracts/Factory.sol/Factory.json"
-import {abi as InvestAbi} from "../artifacts/contracts/Investment.sol/Investment.json"
-import {abi as PuzzleAbi} from "../artifacts/contracts/Puzzle.sol/Puzzle.json"
+import {
+  useAccount,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+} from "wagmi";
+import { abi as FactoryAbi } from "../artifacts/contracts/Factory.sol/Factory.json";
+import { abi as InvestAbi } from "../artifacts/contracts/Investment.sol/Investment.json";
+import { abi as PuzzleAbi } from "../artifacts/contracts/Puzzle.sol/Puzzle.json";
 
+const Profile: NextPage = () => {
+  const { address, isDisconnected } = useAccount();
+  const tokenCollectionIds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const userArray = [
+    address,
+    address,
+    address,
+    address,
+    address,
+    address,
+    address,
+    address,
+    address,
+    address,
+  ];
 
+  const { data: userBalancePuzzle } = useContractRead({
+    address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS,
+    abi: PuzzleAbi,
+    functionName: "balanceOfBatch",
+    args: [userArray, tokenCollectionIds],
+    watch: true,
+  });
+  const { data: userTotalInvestment } = useContractRead({
+    address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS,
+    abi: FactoryAbi,
+    functionName: "getAddressTotal",
+    args: [address],
+    watch: true,
+  });
+  const { data: totInvestment } = useContractRead({
+    address: process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS,
+    abi: InvestAbi,
+    functionName: "totalInvestment",
+    watch: true,
+  });
+  const { config: claimCallConfig } = usePrepareContractWrite({
+    address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS,
+    abi: PuzzleAbi,
+    functionName: "claim",
+  });
+  const { write: writeClaim } = useContractWrite(claimCallConfig);
 
-
-  const Profile: NextPage = () => {
-    const { address, isDisconnected } = useAccount();
-    const tokenCollectionIds = [0,1,2,3,4,5,6,7,8,9]
-    const userArray = [address,address,address,address,address,address,address,address,address,address]
-  
-    const { data: userBalancePuzzle } = useContractRead({
-      address: '0xF0C5cC4C5792DFE7996A363A5539021933559CF1',
-      abi: PuzzleAbi,
-      functionName: 'balanceOfBatch',
-      args: [userArray,tokenCollectionIds],
-      watch: true,
-    });
-    const { data: userTotalInvestment } = useContractRead({
-      address: '0xA4ff7828146e8570D810235602DfA12f5FFC9d38',
-      abi: FactoryAbi,
-      functionName: 'getAddressTotal',
-      args: [address],
-      watch: true,
-    })
-    const { data: totInvestment } = useContractRead({
-      address: '0xDaEF5954a79A560c95728de005A456BdC08608e0',
-      abi: InvestAbi,
-      functionName: 'totalInvestment',
-      watch: true,
-    })
-    const { config: claimCallConfig } = usePrepareContractWrite({
-      address: '0xF0C5cC4C5792DFE7996A363A5539021933559CF1',
-      abi: PuzzleAbi,
-      functionName: 'claim',
-    })
-    const { write: writeClaim } = useContractWrite(claimCallConfig)
-    
-    
-    function howMany(){
-      let total = 0
-      for(let i = 0; i < 10; i++){
-        total += userBalancePuzzle[i]
+  function howMany() {
+    let total = 0;
+    if (userBalancePuzzle) {
+      for (let i = 0; i < 10; i++) {
+        total += userBalancePuzzle[i];
       }
-      console.log("total = " , total);
-      
-      return Number( (Number(userTotalInvestment) - total*5000))
-    }
+      console.log("total = ", total);
 
-  
-      console.log(howMany());
-      
+      return Number(Number(userTotalInvestment) - total * 5000);
+    } else {
+      return 0;
+    }
+  }
+
+  console.log(howMany());
 
   const ProfileDetails = () => {
     function handleClick(event) {
-      event.preventDefault()
-      writeClaim()
+      event.preventDefault();
+      writeClaim();
     }
 
     return (
@@ -91,19 +105,28 @@ import {abi as PuzzleAbi} from "../artifacts/contracts/Puzzle.sol/Puzzle.json"
         </div>
         <div className="">
           <div className="flex flex-col">
-            <InvestmentHistory totalInvested={Number(userTotalInvestment)} showExpectedReturn={false} totalInvestment={Number(totInvestment)} />
+            <InvestmentHistory
+              totalInvested={Number(userTotalInvestment)}
+              showExpectedReturn={false}
+              totalInvestment={Number(totInvestment)}
+            />
             <div className="font-bold py-6">Puzzle Progress</div>
             <div className="flex flex-col w-full gap-6">
               <div className="flex gap-6">
                 <PuzzleItem
                   level={1}
-                  amount = "5000"
-                  current= {userTotalInvestment.toString()}
+                  amount="5000"
+                  current={userTotalInvestment?.toString()}
                   showProgressInsideBar={true}
                 />
-               { (<button className="border rounded-md self-end p-2 bg-slate-800 text-slate-50" onClick={handleClick}>
-                  Claim
-                </button>)}
+                {
+                  <button
+                    className="border rounded-md self-end p-2 bg-slate-800 text-slate-50"
+                    onClick={handleClick}
+                  >
+                    Claim
+                  </button>
+                }
               </div>
               <div className="flex gap-6">
                 <PuzzleItem
@@ -113,7 +136,7 @@ import {abi as PuzzleAbi} from "../artifacts/contracts/Puzzle.sol/Puzzle.json"
                   progress="0"
                   showProgressInsideBar={true}
                 />
-                <button disabled className="border rounded-md self-end p-2" >
+                <button disabled className="border rounded-md self-end p-2">
                   Claim
                 </button>
               </div>

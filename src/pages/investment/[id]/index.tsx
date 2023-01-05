@@ -8,12 +8,11 @@ import Slider from "../../../components/Slider";
 import { investmentData } from "../../../data/Investments";
 import { useAccount, useContractRead } from "wagmi";
 import { GetStaticProps, GetStaticPaths, GetServerSideProps } from "next";
-import {abi as InvestAbi} from "../../../artifacts/contracts/Investment.sol/Investment.json"
-import {abi as CoinTestAbi} from "../../../artifacts/contracts/CoinTest.sol/CoinTest.json"
-import {abi as FactoryAbi} from "../../../artifacts/contracts/Factory.sol/Factory.json"
+import { abi as InvestAbi } from "../../../artifacts/contracts/Investment.sol/Investment.json";
+import { abi as CoinTestAbi } from "../../../artifacts/contracts/CoinTest.sol/CoinTest.json";
+import { abi as FactoryAbi } from "../../../artifacts/contracts/Factory.sol/Factory.json";
 import { useEffect, useState } from "react";
 import { BigNumber } from "ethers";
-
 
 const factoryAbi = [
   {
@@ -217,8 +216,6 @@ const factoryAbi = [
 const Investment = ({ investment }) => {
   const { address } = useAccount();
 
-
-
   // const data = readContract({
   //   address: "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
   //   abi: factoryJson.abi,
@@ -233,42 +230,38 @@ const Investment = ({ investment }) => {
   //   contractInterface: factoryJson.abi,
   // };
   const { data: contractTotal } = useContractRead({
-    address: '0xEDa3c4158BF33beFb6629A21514bf0e999786251',
+    address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS,
     abi: CoinTestAbi,
-    functionName: 'balanceOf',
-    args: ["0xDaEF5954a79A560c95728de005A456BdC08608e0"],
-    watch: true
+    functionName: "balanceOf",
+    args: [process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS],
+    watch: true,
   });
-  
+
   const { data: totInvestment } = useContractRead({
-      address: '0xDaEF5954a79A560c95728de005A456BdC08608e0',
-      abi: InvestAbi,
-      functionName: 'totalInvestment',
-      watch: true,
-  })
+    address: investment?.address,
+    abi: InvestAbi,
+    functionName: "totalInvestment",
+    watch: true,
+  });
 
   const { data: userTotalInvestment } = useContractRead({
-      address: '0xDaEF5954a79A560c95728de005A456BdC08608e0',
-      abi: InvestAbi,
-      functionName: 'balanceOf',
-      args: [address],
-      watch: true,
-  })
+    address: investment?.address,
+    abi: InvestAbi,
+    functionName: "balanceOf",
+    args: [address],
+    watch: true,
+  });
 
   //console.log(address);
-  
 
   //console.log(Number(userTotalInvestment));
-  
 
-  
   // useEffect(() => {
   //   if (!test) return;
-    
-  //   console.log(test);
-    
-  // }, [test]);
 
+  //   console.log(test);
+
+  // }, [test]);
 
   return (
     <>
@@ -303,7 +296,7 @@ const Investment = ({ investment }) => {
             className=" place-self-start flex gap-12 pt-6 justify-start"
             totalInvested={Number(userTotalInvestment)}
             showExpectedReturn={true}
-            totalInvestment = {Number(totInvestment)}
+            totalInvestment={Number(totInvestment)}
           />
         </div>
       </main>
@@ -321,7 +314,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props: { investment },
   };
 };
-
-
 
 export default Investment;

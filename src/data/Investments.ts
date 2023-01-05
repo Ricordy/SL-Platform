@@ -1,14 +1,11 @@
 import { useState } from "react";
 import { useContractRead } from "wagmi";
-import {abi as InvestAbi} from "../artifacts/contracts/Investment.sol/Investment.json"
-
-
-
+import { abi as InvestAbi } from "../artifacts/contracts/Investment.sol/Investment.json";
 
 export const investmentData = [
   {
     id: 1,
-    address: "0xDaEF5954a79A560c95728de005A456BdC08608e0",
+    address: "0xCafac3dD18aC6c6e92c921884f9E4176737C052c",
     title: "Mercedes-benz 280sl Pagoda 1969",
     amount: "129000",
     percentage: "100",
@@ -112,20 +109,11 @@ export const investmentData = [
   },
 ];
 
-
-
-
 //   const { data } = useContractRead({
 //     address: '0xCafac3dD18aC6c6e92c921884f9E4176737C052c',
 //     abi: InvestAbi,
 //     functionName: 'status',
 //   })
-  
-  
-
-
-
-
 
 // investmentData[0].phase = String(data)
 // console.log(investmentData[0].phase);
