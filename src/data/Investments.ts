@@ -1,11 +1,14 @@
+import { useState } from "react";
+import { useContractRead } from "wagmi";
+
 export const investmentData = [
   {
     id: 1,
-    address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    address: "0xCafac3dD18aC6c6e92c921884f9E4176737C052c",
     title: "Mercedes-benz 280sl Pagoda 1969",
     amount: "129000",
     percentage: "100",
-    phase: "Withdraw",
+    phase: "phase1",
     status: "Active",
     chassis: "113044-10-010413",
     totalProduction: 23885,
@@ -18,7 +21,7 @@ export const investmentData = [
     title: "Porsche 911 1963",
     amount: "250000",
     percentage: "25",
-    phase: "In progress",
+    phase: "In Progress",
     status: "Active",
     chassis: "",
     totalProduction: 0,
@@ -104,3 +107,12 @@ export const investmentData = [
     colorCombination: "",
   },
 ];
+
+//   const { data } = useContractRead({
+//     address: '0xCafac3dD18aC6c6e92c921884f9E4176737C052c',
+//     abi: InvestAbi,
+//     functionName: 'status',
+//   })
+
+// investmentData[0].phase = String(data)
+// console.log(investmentData[0].phase);

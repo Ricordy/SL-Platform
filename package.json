@@ -1,25 +1,32 @@
 {
-  "name": "my-t3-app",
+  "name": "something-legendary",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "hardhat run scripts/deploy.ts --network localhost && hardhat run scripts/mimicCoinReady.ts --network localhost"
   },
   "dependencies": {
     "@headlessui/react": "^1.6.6",
     "@heroicons/react": "^2.0.10",
+    "connectkit": "^1.1.1",
+    "dotenv": "^16.0.3",
+    "ethers": "^5.7.2",
     "next": "12.2.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.4.0",
     "react-number-format": "^5.0.0-beta.4",
     "react-responsive-carousel": "^3.2.23",
+    "wagmi": "^0.9.2",
     "zod": "^3.18.0"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "@openzeppelin/contracts": "^4.8.0",
     "@types/node": "18.0.0",
     "@types/react": "18.0.14",
     "@types/react-dom": "18.0.5",
@@ -28,8 +35,10 @@
     "autoprefixer": "^10.4.8",
     "eslint": "8.22.0",
     "eslint-config-next": "12.2.5",
+    "hardhat": "^2.12.4",
     "postcss": "^8.4.16",
     "tailwindcss": "^3.1.8",
+    "ts-node": "^10.9.1",
     "typescript": "4.7.4"
   },
   "ct3aMetadata": {

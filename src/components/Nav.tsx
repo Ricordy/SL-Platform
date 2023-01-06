@@ -3,6 +3,10 @@ import Link from "next/link";
 import Image from "next/image";
 import logo from "../../public/logo-black.svg";
 import ProfileMenu from "./ProfileMenu";
+import { ConnectKitButton } from "connectkit";
+import { useAccount } from "wagmi";
+import { disconnect } from "@wagmi/core";
+import { useIsMounted } from "../hooks/useIsMounted";
 
 interface MenuItemProps {
   link: string;
@@ -10,7 +14,8 @@ interface MenuItemProps {
 }
 
 const Nav = () => {
-  const [walletConnected, setWalletConnected] = useState(false);
+  const { isConnected, isConnecting, isDisconnected } = useAccount();
+  const mounted = useIsMounted();
 
   const [navbar, setNavbar] = useState(false);
   const menuItems: MenuItemProps[] = [
@@ -27,9 +32,6 @@ const Nav = () => {
       text: "FAQ",
     },
   ];
-  const toggleWallet = () => {
-    setWalletConnected(!walletConnected);
-  };
 
   return (
     <>
@@ -48,17 +50,8 @@ const Nav = () => {
         <Link href="/faq">
           <a className="px-4 py-2">FAQ</a>
         </Link>
-        {walletConnected && <ProfileMenu logout={toggleWallet} />}
-        {!walletConnected && (
-          <Link className=" self-end" href="#connect">
-            <a
-              className="px-4 py-2 border rounded-md bg-slate-800 text-slate-50"
-              onClick={toggleWallet}
-            >
-              Connect Wallet
-            </a>
-          </Link>
-        )}
+        {mounted && isConnected && <ProfileMenu logout={disconnect} />}
+        {!isConnected && mounted && <ConnectKitButton />}
       </nav>
       <nav className="bg-white shadow-sm flex fixed w-full z-20 md:hidden  drop-shadow-md px-3 py-0 items-center justify-around">
         <div className="justify-between px-4 w-full md:items-center md:flex md:px-8 ">
@@ -131,7 +124,7 @@ const Nav = () => {
                   FAQ
                 </a>
               </Link>
-              {walletConnected && (
+              {mounted && isConnected && (
                 <>
                   <Link className="flex " href="/profile">
                     <a
@@ -160,23 +153,14 @@ const Nav = () => {
                   <Link className="flex " href="#connect">
                     <a
                       className="flex w-fit px-4 py-2 border rounded-md bg-slate-800 text-slate-50"
-                      onClick={toggleWallet}
+                      onClick={disconnect}
                     >
                       Disconnect Wallet
                     </a>
                   </Link>
                 </>
               )}
-              {!walletConnected && (
-                <Link className="flex " href="#connect">
-                  <a
-                    className="flex w-fit px-4 py-2 border rounded-md bg-slate-800 text-slate-50"
-                    onClick={toggleWallet}
-                  >
-                    Connect Wallet
-                  </a>
-                </Link>
-              )}
+              {!isConnected && mounted && <ConnectKitButton />}
             </div>
           </div>
         </div>

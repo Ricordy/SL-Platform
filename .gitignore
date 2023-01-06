@@ -15,6 +15,7 @@
 # next.js
 /.next/
 /out/
+package-lock.json
 
 # production
 /build
@@ -30,11 +31,20 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # local env files
-.env
-.env*.local
+
 
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
+
+typechain
+typechain-types
+
+# hardhat
+cache
+artifacts
+
+/torunbuild
+/tests 
