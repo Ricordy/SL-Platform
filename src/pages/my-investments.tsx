@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Tab } from "@headlessui/react";
 import Link from "next/link";
 import { investmentData } from "../data/Investments";
-import {abi as InvestAbi} from "../artifacts/contracts/Investment.sol/Investment.json"
 import { useAccount, useContractRead } from "wagmi";
 
 
