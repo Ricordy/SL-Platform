@@ -15,7 +15,7 @@ type historyProps = {
 const InvestmentHistory = (props: historyProps) => {
   
   const { config: withdrawCallConfig } = usePrepareContractWrite({
-    address: '0xDaEF5954a79A560c95728de005A456BdC08608e0',
+    address: process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS,
     abi: InvestAbi,
     functionName: "withdraw",
   })

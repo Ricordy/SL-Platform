@@ -6,7 +6,7 @@ import { hardhat } from "wagmi/chains";
 
 dotenv.config();
 
-const ALCHEMY_API_KEY_URL = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY;
+const ALCHEMY_API_KEY_URL = process.env.ALCHEMY_URL_ID;
 
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
 

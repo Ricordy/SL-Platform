@@ -6,15 +6,18 @@ import { FiExternalLink } from "react-icons/fi";
 import InvestmentHistory from "../components/InvestmentHistory";
 import {
   useAccount,
+  useContract,
   useContractRead,
   useContractWrite,
   usePrepareContractWrite,
+  useSigner,
 } from "wagmi";
 import { abi as FactoryAbi } from "../artifacts/contracts/Factory.sol/Factory.json";
 import { abi as InvestAbi } from "../artifacts/contracts/Investment.sol/Investment.json";
 import { abi as PuzzleAbi } from "../artifacts/contracts/Puzzle.sol/Puzzle.json";
 
 const Profile: NextPage = () => {
+  const { data: signerData } = useSigner();
   const { address, isDisconnected } = useAccount();
   const tokenCollectionIds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   const userArray = [
@@ -50,33 +53,46 @@ const Profile: NextPage = () => {
     functionName: "totalInvestment",
     watch: true,
   });
-  const { config: claimCallConfig } = usePrepareContractWrite({
-    address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS,
-    abi: PuzzleAbi,
-    functionName: "claim",
-  });
-  const { write: writeClaim } = useContractWrite(claimCallConfig);
-
+  
   function howMany() {
     let total = 0;
     if (userBalancePuzzle) {
-      for (let i = 0; i < 10; i++) {
-        total += userBalancePuzzle[i];
+      for (let i = 0; i < 10; i++) {        
+        total += Number(userBalancePuzzle[i]);
+        
+        
       }
       console.log("total = ", total);
 
-      return Number(Number(userTotalInvestment) - total * 5000);
+      return (Number(userTotalInvestment) / 10 ** 6) - (total * 5000);
     } else {
       return 0;
     }
   }
 
-  console.log(howMany());
+  console.log("how many: ", howMany());
 
   const ProfileDetails = () => {
-    function handleClick(event) {
+    
+    const puzzleContract = useContract({
+      address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS,
+      abi: PuzzleAbi,
+      signerOrProvider: signerData,
+    });
+    
+    
+    async function handleClick(event) {
       event.preventDefault();
-      writeClaim();
+      try {
+        const results = await puzzleContract
+        .connect(signerData)
+        .claim();
+      await results.wait();
+        
+      } catch (error) {
+        console.log(error.data);
+        
+      }
     }
 
     return (
@@ -106,9 +122,9 @@ const Profile: NextPage = () => {
         <div className="">
           <div className="flex flex-col">
             <InvestmentHistory
-              totalInvested={Number(userTotalInvestment)}
+              totalInvested={Number(userTotalInvestment)/ 10 ** 6}
               showExpectedReturn={false}
-              totalInvestment={Number(totInvestment)}
+              totalInvestment={Number(totInvestment)/ 10 ** 6}
             />
             <div className="font-bold py-6">Puzzle Progress</div>
             <div className="flex flex-col w-full gap-6">
@@ -116,8 +132,9 @@ const Profile: NextPage = () => {
                 <PuzzleItem
                   level={1}
                   amount="5000"
-                  current={userTotalInvestment?.toString()}
+                  current={(howMany() < 5000? howMany(): 5000)?.toString()}
                   showProgressInsideBar={true}
+                  
                 />
                 {
                   <button

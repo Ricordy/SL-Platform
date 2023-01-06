@@ -14,204 +14,6 @@ import { abi as FactoryAbi } from "../../../artifacts/contracts/Factory.sol/Fact
 import { useEffect, useState } from "react";
 import { BigNumber } from "ethers";
 
-const factoryAbi = [
-  {
-    inputs: [],
-    stateMutability: "nonpayable",
-    type: "constructor",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "ContractID",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "conAddress",
-        type: "address",
-      },
-    ],
-    name: "ContractCreated",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "previousOwner",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
-    name: "OwnershipTransferred",
-    type: "event",
-  },
-  {
-    inputs: [],
-    name: "counter",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_totalInvestment",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "_paymentTokenAddress",
-        type: "address",
-      },
-    ],
-    name: "deployNew",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "deployedContracts",
-    outputs: [
-      {
-        internalType: "contract Investment",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "contractAddress",
-        type: "address",
-      },
-    ],
-    name: "getAddressOnContract",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "userTotal",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "user",
-        type: "address",
-      },
-    ],
-    name: "getAddressTotal",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "userTotal",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getLastDeployedContract",
-    outputs: [
-      {
-        internalType: "address",
-        name: "contractAddress",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "owner",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "renounceOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_lgentry",
-        type: "address",
-      },
-    ],
-    name: "setEntryAddress",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
-    name: "transferOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-] as const;
 
 const Investment = ({ investment }) => {
   const { address } = useAccount();
@@ -238,14 +40,14 @@ const Investment = ({ investment }) => {
   });
 
   const { data: totInvestment } = useContractRead({
-    address: investment?.address,
+    address: process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS,
     abi: InvestAbi,
     functionName: "totalInvestment",
     watch: true,
   });
 
   const { data: userTotalInvestment } = useContractRead({
-    address: investment?.address,
+    address: process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS,
     abi: InvestAbi,
     functionName: "balanceOf",
     args: [address],
@@ -274,8 +76,8 @@ const Investment = ({ investment }) => {
           {}
           <PuzzleItem
             className="w-full md:col-start-1"
-            amount={totInvestment?.toString()}
-            current={contractTotal?.toString()}
+            amount={(Number(totInvestment) / 10 ** 6)?.toString()}
+            current={(Number(contractTotal) / 10 ** 6)?.toString()}
             progress={investment?.percentage}
             showProgressInsideBar={true}
           />
@@ -294,9 +96,9 @@ const Investment = ({ investment }) => {
           />
           <InvestmentHistory
             className=" place-self-start flex gap-12 pt-6 justify-start"
-            totalInvested={Number(userTotalInvestment)}
+            totalInvested={(Number(userTotalInvestment) / 10 ** 6)}
             showExpectedReturn={true}
-            totalInvestment={Number(totInvestment)}
+            totalInvestment={(Number(totInvestment) / 10 ** 6)}
           />
         </div>
       </main>

@@ -25,25 +25,26 @@ const MyInvestments: NextPage = () => {
     "Level 2": [],
   });
 
-  investmentData.forEach(function(element) { 
-    const { data: phase } = useContractRead({
-      address: element.address,
-      abi: InvestAbi,
-      functionName: 'status',
-    })
-    if(phase == 0)
-      element.phase= "Paused"
-    if(phase == 1)
-      element.phase= "In Progress"
-    if(phase == 2)
-      element.phase= "In Process"
-    if(phase == 3)
-      element.phase= "In Withdraw"
-    if(phase == 4)
-      element.phase= "In Withdraw"
-    });
+  // investmentData.forEach(function(element) { 
+  //   const { data: phase } = useContractRead({
+  //     address: element.address,
+  //     abi: InvestAbi,
+  //     functionName: 'status',
+  //   })
+    
+  //   if(phase == 0)
+  //     element.phase= "Paused"
+  //   if(phase == 1)
+  //     element.phase= "In Progress"
+  //   if(phase == 2)
+  //     element.phase= "In Process"
+  //   if(phase == 3)
+  //     element.phase= "In Withdraw"
+  //   if(phase == 4)
+  //     element.phase= "In Withdraw"
+  //   });
 
-  console.log(investmentData);
+  // console.log(investmentData);
 
   return (
     <div className="flex flex-col w-full px-6 lg:px-3 mt-16 md:mt-0">

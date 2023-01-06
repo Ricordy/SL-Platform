@@ -6,6 +6,8 @@ import {
   useContractRead,
   useContractWrite,
   usePrepareContractWrite,
+  useContract,
+  useSigner,
 } from "wagmi";
 import { abi as PuzzleAbi } from "../artifacts/contracts/Puzzle.sol/Puzzle.json";
 
@@ -14,6 +16,7 @@ function classNames(...classes: string[]) {
 }
 
 const MyPuzzle: NextPage = () => {
+  const { data: signerData } = useSigner();
   const { address, isDisconnected } = useAccount();
   const tokenCollectionIds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   const userArray = [
@@ -29,6 +32,12 @@ const MyPuzzle: NextPage = () => {
     address,
   ];
 
+  const puzzleContract = useContract({
+    address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS,
+    abi: PuzzleAbi,
+    signerOrProvider: signerData,
+  });
+
   const { data: userBalancePuzzle } = useContractRead({
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS,
     abi: PuzzleAbi,
@@ -37,12 +46,12 @@ const MyPuzzle: NextPage = () => {
     watch: true,
   });
 
-  const { config: burnCallConfig } = usePrepareContractWrite({
-    address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS,
-    abi: PuzzleAbi,
-    functionName: "burn",
-  });
-  const { write: writeBurn } = useContractWrite(burnCallConfig);
+  // const { config: burnCallConfig } = usePrepareContractWrite({
+  //   address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS,
+  //   abi: PuzzleAbi,
+  //   functionName: "burn",
+  // });
+  // const { write: writeBurn } = useContractWrite(burnCallConfig);
 
   const { data: userBalanceLevel2 } = useContractRead({
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS,
@@ -61,8 +70,8 @@ const MyPuzzle: NextPage = () => {
         title: "Wheel",
         date: "5h ago",
         commentCount: 5,
-        // nft: false,
-        nft: (userBalancePuzzle[0] == 1 ? true : false) || false,
+    
+        nft: (userBalancePuzzle[0] > 0 ? true : false),
       },
       {
         id: 2,
@@ -70,71 +79,64 @@ const MyPuzzle: NextPage = () => {
         date: "2h ago",
         commentCount: 3,
         // nft: true,
-        nft: userBalancePuzzle[1] == 1 ? true : false,
+        nft: userBalancePuzzle[1] > 0 ? true : false,
       },
       {
         id: 3,
         title: "Box",
         date: "2h ago",
         commentCount: 3,
-        // nft: false,
-        nft: userBalancePuzzle[2] == 1 ? true : false,
+    
+        nft: userBalancePuzzle[2] > 0 ? true : false,
       },
       {
         id: 4,
         title: "Body",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
-        // nft: userBalancePuzzle[3] == 1 ? true : false,
+        nft: userBalancePuzzle[3] > 0 ? true : false,
       },
       {
         id: 5,
         title: "Seat",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
-        // nft: userBalancePuzzle[4] == 1 ? true : false,
+        nft: userBalancePuzzle[4] > 0 ? true : false,
       },
       {
         id: 6,
         title: "Sterring Wheel",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
-        // nft: userBalancePuzzle[5] == 1 ? true : false,
+        nft: userBalancePuzzle[5] > 0 ? true : false,
       },
       {
         id: 7,
         title: "Grill",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
-        // nft: (userBalancePuzzle[6] == 1 ? true : false) ? null : 0,
+        nft: (userBalancePuzzle[6] > 0 ? true : false),
       },
       {
         id: 8,
         title: "Glass",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
-        // nft: userBalancePuzzle[7] == 1 ? true : false,
+        nft: userBalancePuzzle[7] > 0 ? true : false,
       },
       {
         id: 9,
         title: "Chassis",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
-        // nft: userBalancePuzzle[8] == 1 ? true : false,
+        nft: userBalancePuzzle[8] > 0 ? true : false,
       },
       {
         id: 10,
         title: "Exhaust",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
-        // nft: userBalancePuzzle[9] == 1 ? true : false,
+        nft: userBalancePuzzle[9] > 0 ? true : false,
       },
     ],
     "Level 2": [
@@ -143,70 +145,60 @@ const MyPuzzle: NextPage = () => {
         title: "Wheel",
         date: "5h ago",
         commentCount: 5,
-        nft: false,
       },
       {
         id: 2,
         title: "Engine",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
       },
       {
         id: 3,
         title: "Box",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
       },
       {
         id: 4,
         title: "Body",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
       },
       {
         id: 5,
         title: "Seat",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
       },
       {
         id: 6,
         title: "Sterring Wheel",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
       },
       {
         id: 7,
         title: "Grill",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
       },
       {
         id: 8,
         title: "Glass",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
       },
       {
         id: 9,
         title: "Chassis",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
       },
       {
         id: 10,
         title: "Exhaust",
         date: "2h ago",
         commentCount: 3,
-        nft: false,
       },
     ],
   });
@@ -216,14 +208,21 @@ const MyPuzzle: NextPage = () => {
     for (let i = 0; i < 10; i++) {
       if (userBalancePuzzle) userBalancePuzzle[i] != 0 ? total++ : total;
     }
-    console.log(total);
-
     return total;
   }
 
-  function handleClick(e) {
+  async function handleClick(e) {
     e.preventDefault();
-    writeBurn();
+    try {
+      const results = await puzzleContract
+      .connect(signerData)
+      .burn();
+    await results.wait();
+      
+    } catch (error) {
+      console.log(error.data);
+      
+    }
   }
 
   useEffect(() => {
@@ -297,6 +296,7 @@ const MyPuzzle: NextPage = () => {
                 <button
                   className="border mt-6 self-center rounded-md p-2"
                   onClick={handleClick}
+                  disabled = {countDifferents() < 10}
                 >
                   Claim NFT Level 2 ({countDifferents().toString()}/10)
                 </button>

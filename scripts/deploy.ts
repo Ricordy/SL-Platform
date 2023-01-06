@@ -43,21 +43,21 @@ async function main() {
   console.log("Factory deployed at: ", factoryContract.address);
   console.log("Investment deployed at: ", investmentContract.address);
 
-  // console.log(
-  //   "Verifying contracts on Goerli:"
-  // );
-  // sleep(10000)
-  // await hre.run("verify:verify", {
-  //   address: paymentTokenContract.address,
+  console.log(
+    "Verifying contracts on Goerli:"
+  );
+  sleep(20000)
+  await hre.run("verify:verify", {
+    address: paymentTokenContract.address,
 
-  // })
-  // await hre.run("verify:verify", {
-  //   address: puzzleContract.address,
-  //   arguments: [factoryContract.address, paymentTokenContract.address],
-  // })
-  // await hre.run("verify:verify", {
-  //   address: factoryContract.address,
-  // })
+  })
+  await hre.run("verify:verify", {
+    address: puzzleContract.address,
+    arguments: [factoryContract.address, paymentTokenContract.address],
+  })
+  await hre.run("verify:verify", {
+    address: factoryContract.address,
+  })
   // await hre.run("verify:verify", {
   //   address: investmentContract.address,
   //   arguments: [100000, paymentTokenContract.address],

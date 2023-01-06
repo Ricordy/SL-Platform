@@ -10,6 +10,8 @@ import {
   usePrepareContractWrite,
   useAccount,
   useSigner,
+  useSwitchNetwork,
+  useNetwork,
 } from "wagmi";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { abi as InvestAbi } from "../artifacts/contracts/Investment.sol/Investment.json";
@@ -33,11 +35,14 @@ export const InvestmentSidebar = (props: investmentProps) => {
   const { data: signerData } = useSigner();
   const { address } = useAccount();
   const [isOpen, setIsOpen] = useState(false);
-  const [isApprovable, setIsApprovable] = useState(false);
+  const [isApproving, setIsApproving] = useState(false);
+  const [isInvesting, setisInvesting] = useState(false);
   const [isWritable, setIsWritable] = useState(false);
   const [valueApprovalAndInvestment, setApprovalandInvestment] = useState(0);
   const [msg, setMsg] = useState("");
   const debouncedValue = useDebounce<number>(valueApprovalAndInvestment, 500);
+  const { chain } = useNetwork()
+
 
   //   const { data, isError, isLoading } = useWaitForTransaction({
   //     hash: approveCallConfig,
@@ -47,32 +52,32 @@ export const InvestmentSidebar = (props: investmentProps) => {
   /**
    * Write in the blockchain the approve function called by the user
    */
-  const { config: approveCallConfig } = usePrepareContractWrite({
-    address: "0xEDa3c4158BF33beFb6629A21514bf0e999786251",
-    abi: CoinTestAbi,
-    functionName: "approve",
-    args: ["0xDaEF5954a79A560c95728de005A456BdC08608e0", debouncedValue],
-    enabled: true,
-    // onSuccess(data) {
-    //   console.log(data);
-    // },
-  });
+  // const { config: approveCallConfig } = usePrepareContractWrite({
+  //   address: "0xEDa3c4158BF33beFb6629A21514bf0e999786251",
+  //   abi: CoinTestAbi,
+  //   functionName: "approve",
+  //   args: ["0xDaEF5954a79A560c95728de005A456BdC08608e0", debouncedValue],
+  //   enabled: true,
+  //   // onSuccess(data) {
+  //   //   console.log(data);
+  //   // },
+  // });
   /**
    * Write in the blockchain the invest function called by the user
    */
-  const { config: investCallConfig } = usePrepareContractWrite({
-    address: "0xDaEF5954a79A560c95728de005A456BdC08608e0",
-    abi: InvestAbi,
-    functionName: "invest",
-    args: [debouncedValue],
-    enabled: true,
-    // onSettled(data, error) {
-    //   console.log("Settled", { data, error });
-    // },
-    onError(error) {
-      console.warn("ERROR: ", { error });
-    },
-  });
+  // const { config: investCallConfig } = usePrepareContractWrite({
+  //   address: "0xDaEF5954a79A560c95728de005A456BdC08608e0",
+  //   abi: InvestAbi,
+  //   functionName: "invest",
+  //   args: [debouncedValue],
+  //   enabled: true,
+  //   // onSettled(data, error) {
+  //   //   console.log("Settled", { data, error });
+  //   // },
+  //   onError(error) {
+  //     console.warn("ERROR: ", { error });
+  //   },
+  // });
 
   const paymentTokenContract = useContract({
     address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS,
@@ -89,14 +94,14 @@ export const InvestmentSidebar = (props: investmentProps) => {
     address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS,
     abi: CoinTestAbi,
     functionName: "mint",
-    args: [1000],
+    args: [ethers.utils.parseUnits("1000", 6)],
     onError(err) {
       console.log(err);
     },
   });
 
-  const { write: writeApprove } = useContractWrite(approveCallConfig);
-  const { write: writeInvest } = useContractWrite(investCallConfig);
+  // const { write: writeApprove } = useContractWrite(approveCallConfig);
+  // const { write: writeInvest } = useContractWrite(investCallConfig);
 
   const { write: mint, isLoading: mintLoading } = useContractWrite(mintConfig);
 
@@ -121,12 +126,16 @@ export const InvestmentSidebar = (props: investmentProps) => {
     try {
       const results = await paymentTokenContract
         .connect(signerData)
-        .approve(process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS, debouncedValue);
-      // await results.wait();
+        .approve(process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS, ethers.utils.parseUnits(debouncedValue.toString(), 6));
+        setIsApproving(true);
+      await results.wait();
+      setIsApproving(false);
+      setisInvesting(true);
       const results2 = await investContract
         .connect(signerData)
         .invest(debouncedValue);
       await results2.wait();
+      setisInvesting(false);
     } catch (error) {
       console.error(error);
       if (error.reason) {
@@ -289,8 +298,10 @@ export const InvestmentSidebar = (props: investmentProps) => {
               Invest now 2
             </button>
             {valueApprovalAndInvestment}
-            {isApprovable ? "true" : "false"}
+            {isApproving && <div>Approving {valueApprovalAndInvestment} to be spend...</div>}
+            {isInvesting && <div>Investing {valueApprovalAndInvestment} into the smartcontract...</div>}
             {msg && <div className="bg-red-200">{msg}</div>}
+            {chain && <div>Connected to {chain.name}</div>}
           </div>
         </div>
       </aside>
