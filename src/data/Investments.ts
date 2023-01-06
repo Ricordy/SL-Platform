@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useContractRead } from "wagmi";
-import { abi as InvestAbi } from "../artifacts/contracts/Investment.sol/Investment.json";
 
 export const investmentData = [
   {
