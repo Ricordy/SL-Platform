@@ -14,7 +14,9 @@ const Puzzle = () => {
         </div>
 
         <div className="flex flex-col items-center  justify-center bg-gray-200 p-6 rounded-md md:w-1/3">
-          <div className="">Buy on Open Sea</div>
+          <a onClick={()=> window.open("https://testnets.opensea.io/collection/unidentified-contract-slm5tudv7n", "_blank")}>
+            <div className="">Buy on OpenSea </div>
+          </a>
           <div className="text-xs">Available Soon</div>
         </div>
       </div>

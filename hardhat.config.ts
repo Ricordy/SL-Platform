@@ -28,11 +28,11 @@ const config: HardhatUserConfig = {
       accounts: [PRIVATE_KEY ?? ""],
     },
   },
-  // etherscan: {
-  //   apiKey: {
-  //     goerli: ETHERSCAN_API_KEY
-  //   }
-  // },
+  etherscan: {
+    apiKey: {
+      goerli: ETHERSCAN_API_KEY
+    }
+  },
   //defaultNetwork: "hardhat",
 };
 

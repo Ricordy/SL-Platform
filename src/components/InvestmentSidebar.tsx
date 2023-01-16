@@ -4,17 +4,17 @@ import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import {
-  ContractResultDecodeError,
   useContract,
   useContractWrite,
   usePrepareContractWrite,
   useAccount,
   useSigner,
-  useSwitchNetwork,
   useNetwork,
 } from "wagmi";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { ethers } from "ethers";
 import useDebounce from "../hooks/useDebounce";
+
+
 
 type investmentProps = {
   address: string;
@@ -2012,6 +2012,7 @@ export const InvestmentSidebar = (props: investmentProps) => {
   const [isApproving, setIsApproving] = useState(false);
   const [isInvesting, setisInvesting] = useState(false);
   const [isWritable, setIsWritable] = useState(false);
+  const inputRef = useRef(null);
   const [valueApprovalAndInvestment, setApprovalandInvestment] = useState(0);
   const [msg, setMsg] = useState("");
   const debouncedValue = useDebounce<number>(valueApprovalAndInvestment, 500);
@@ -2068,7 +2069,7 @@ export const InvestmentSidebar = (props: investmentProps) => {
     address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS,
     abi: CoinTestAbi,
     functionName: "mint",
-    args: [ethers.utils.parseUnits("1000", 6)],
+    args: [ethers.utils.parseUnits("10000", 6)],
     onError(err) {
       console.log(err);
     },
@@ -2080,8 +2081,8 @@ export const InvestmentSidebar = (props: investmentProps) => {
   const { write: mint, isLoading: mintLoading } = useContractWrite(mintConfig);
 
   const handleChange = (event) => {
-    event.preventDefault();
-    setApprovalandInvestment(event.target.value);
+    // event.preventDefault();
+    // setApprovalandInvestment(event.target.value);
   };
 
   //Wagmi for contract communication
@@ -2097,17 +2098,20 @@ export const InvestmentSidebar = (props: investmentProps) => {
 
   async function handleClick(e) {
     e.preventDefault();
+    setApprovalandInvestment(inputRef.current.value)
+    closeModal();
     try {
+      const toInvestAmount = debouncedValue;
       const results = await paymentTokenContract
         .connect(signerData)
-        .approve(process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS, ethers.utils.parseUnits(debouncedValue.toString(), 6));
+        .approve(process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS, ethers.utils.parseUnits(toInvestAmount.toString(), 6));
         setIsApproving(true);
       await results.wait();
       setIsApproving(false);
       setisInvesting(true);
       const results2 = await investContract
         .connect(signerData)
-        .invest(debouncedValue);
+        .invest(toInvestAmount);
       await results2.wait();
       setisInvesting(false);
     } catch (error) {
@@ -2118,6 +2122,7 @@ export const InvestmentSidebar = (props: investmentProps) => {
         setMsg(JSON.stringify(error));
       }
     }
+    
   }
 
   function formatAddress(address: string) {
@@ -2179,11 +2184,12 @@ export const InvestmentSidebar = (props: investmentProps) => {
                     <div className="mt-4 flex flex-col gap-3">
                       <input
                         className="border p-2 rounded-md"
-                        onChange={handleChange}
+                        //onChange={handleChange}
                         type="number"
                         name=""
                         id=""
                         placeholder="100"
+                        ref={inputRef}
                       />
                       <button
                         type="button"
@@ -2203,6 +2209,7 @@ export const InvestmentSidebar = (props: investmentProps) => {
       </Transition>
     );
   }
+
 
   return (
     <>
@@ -2232,7 +2239,7 @@ export const InvestmentSidebar = (props: investmentProps) => {
           <div className="pb-6">
             <h3 className="text-xs text-slate-700">Contract address:</h3>
             <Link href="#">
-              <a className="flex align-middle gap-2">
+              <a className="flex align-middle gap-2" onClick={()=> window.open("https://goerli.etherscan.io/address/"+ String(props.address), "_blank")}>
                 {formatAddress(props.address)} <FiExternalLink />
               </a>
             </Link>
@@ -2248,21 +2255,22 @@ export const InvestmentSidebar = (props: investmentProps) => {
           >
             Invest Now
           </button>
-          <div className="mt-4 flex flex-col gap-3">
+          {/* <div className="mt-4 flex flex-col gap-3">
             <input
               className="border p-2 rounded-md"
-              onChange={handleChange}
+              //onChange={handleChange}
               type="number"
               name=""
               id=""
               placeholder="100"
+              ref={inputRef}
             />
             <button
               type="button"
               className="inline-flex justify-center rounded-md border border-transparent bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
               onClick={() => mint?.()}
             >
-              Mint $1000
+              Mint $10000
             </button>
             <button
               type="button"
@@ -2270,12 +2278,11 @@ export const InvestmentSidebar = (props: investmentProps) => {
               onClick={(e) => handleClick(e)}
             >
               Invest now 2
-            </button>
-            {valueApprovalAndInvestment}
-            {isApproving && <div>Approving {valueApprovalAndInvestment} to be spend...</div>}
-            {isInvesting && <div>Investing {valueApprovalAndInvestment} into the smartcontract...</div>}
-            {msg && <div className="bg-red-200">{msg}</div>}
-            {chain && <div>Connected to {chain.name}</div>}
+            </button> */}
+          <div>
+            {isApproving && <div>Approving {valueApprovalAndInvestment} to be spend... (This will be a box)</div>}
+            {isInvesting && <div>Investing {valueApprovalAndInvestment} into the smartcontract... (This will be a box)</div>}
+            
           </div>
         </div>
       </aside>
