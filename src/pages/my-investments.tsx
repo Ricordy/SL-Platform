@@ -698,7 +698,7 @@ const InvestAbi = [
 
 
 const MyInvestments: NextPage = () => {
-  let investContracts = new Array(); 
+  //let investContracts = new Array(); 
   const [categories] = useState({
     "Level 1": selectedInvestments,
     "Level 2": [],
@@ -706,53 +706,53 @@ const MyInvestments: NextPage = () => {
 
   const { data: signerData } = useSigner();
 
-  investmentData.forEach(function(element) { 
-    console.log(element.address);
+  // investmentData.forEach(function(element) { 
+  //   console.log(element.address);
     
-    const contract ={
-      address: element.address,
-      abi: InvestAbi,
-    }
-    investContracts.push(contract);
-  });
-  const { data, isError, isLoading } = useContractReads({
-    contracts: [
-      {
-      ...investContracts[0],
-      functionName: "status", 
-      },
-      {
-      ...investContracts[1],
-      functionName: "status", 
-      },
-      {
-      ...investContracts[2],
-      functionName: "status", 
-      },
-    ],
+  //   const contract ={
+  //     address: element.address,
+  //     abi: InvestAbi,
+  //   }
+  //   investContracts.push(contract);
+  // });
+  // const { data, isError, isLoading } = useContractReads({
+  //   contracts: [
+  //     {
+  //     ...investContracts[0],
+  //     functionName: "status", 
+  //     },
+  //     {
+  //     ...investContracts[1],
+  //     functionName: "status", 
+  //     },
+  //     {
+  //     ...investContracts[2],
+  //     functionName: "status", 
+  //     },
+  //   ],
     
-  })
+  // })
 
-    console.log(data)
+  //   console.log(data)
 
-    let counter = 0;
-    investmentData.map(function(element) { 
+  //   let counter = 0;
+  //   investmentData.map(function(element) { 
       
-      if(data?.[counter] == 0)
-        element.phase = "Paused"
-      if(data?.[counter] == 1)
-        element.phase = "In Progress"
-      if(data?.[counter] == 2)
-        element.phase= "In Process"
-      if(data?.[counter] == 3)
-        element.phase= "In Withdraw"
-      if(data?.[counter] == 4)
-        element.phase= "In Withdraw"
+  //     if(data?.[counter] == 0)
+  //       element.phase = "Paused"
+  //     if(data?.[counter] == 1)
+  //       element.phase = "In Progress"
+  //     if(data?.[counter] == 2)
+  //       element.phase= "In Process"
+  //     if(data?.[counter] == 3)
+  //       element.phase= "In Withdraw"
+  //     if(data?.[counter] == 4)
+  //       element.phase= "In Withdraw"
 
-      counter++;
+  //     counter++;
 
       
-      })
+      // })
 
   
   
