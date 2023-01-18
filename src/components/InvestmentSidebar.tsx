@@ -2099,9 +2099,20 @@ export const InvestmentSidebar = (props: investmentProps) => {
   async function handleClick(e) {
     e.preventDefault();
     setApprovalandInvestment(inputRef.current.value)
+    console.log("inoput: ", inputRef.current.value);
+    
+    let toInvestAmount = valueApprovalAndInvestment;
+    if(toInvestAmount != inputRef.current.value){    
+      toInvestAmount = inputRef.current.value;
+    }
     closeModal();
+    invest(toInvestAmount)
+    
+    
+  }
+
+  async function  invest(toInvestAmount) {
     try {
-      const toInvestAmount = debouncedValue;
       const results = await paymentTokenContract
         .connect(signerData)
         .approve(process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS, ethers.utils.parseUnits(toInvestAmount.toString(), 6));
@@ -2111,7 +2122,7 @@ export const InvestmentSidebar = (props: investmentProps) => {
       setisInvesting(true);
       const results2 = await investContract
         .connect(signerData)
-        .invest(toInvestAmount);
+        .invest(ethers.utils.parseUnits(toInvestAmount.toString(), 0));
       await results2.wait();
       setisInvesting(false);
     } catch (error) {

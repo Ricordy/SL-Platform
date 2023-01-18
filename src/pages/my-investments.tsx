@@ -13,8 +13,9 @@ function classNames(...classes) {
 
 
 // TODO: Get from user wallet
-const userInvestments = [1, 2, 3];
-const selectedInvestments = investmentData.filter(
+let userInvestmentsHelper = [];
+let userInvestments = [];
+let selectedInvestments = investmentData.filter(
   (i) => userInvestments.indexOf(i.id) > -1
 );
 const InvestAbi = [
@@ -693,11 +694,13 @@ const InvestAbi = [
   }
 ]
 
- 
+
 
 
 
 const MyInvestments: NextPage = () => {
+  const { address } = useAccount();
+
   let investContracts = new Array(); 
   const [categories] = useState({
     "Level 1": selectedInvestments,
@@ -729,6 +732,21 @@ const MyInvestments: NextPage = () => {
       ...investContracts[2],
       functionName: "status", 
       },
+      {
+      ...investContracts[0],
+      functionName: "balanceOf", 
+      args: [address],
+      },
+      {
+      ...investContracts[1],
+      functionName: "balanceOf", 
+      args: [address],
+      },
+      {
+      ...investContracts[2],
+      functionName: "balanceOf", 
+      args: [address],
+      },
     ],
     
   })
@@ -737,7 +755,19 @@ const MyInvestments: NextPage = () => {
 
     let counter = 0;
     investmentData.map(function(element) { 
-      
+      if(Number(data?.[3+ counter]) > 0){
+        
+        userInvestmentsHelper.push(counter +1);
+        console.log("balance of contract",counter ,": ",Number( data?.[3+ counter]));
+        console.log("userInvestments: ", userInvestments);
+        userInvestments = userInvestmentsHelper.filter((n, i) => userInvestmentsHelper.indexOf(n) === i);
+        selectedInvestments = investmentData.filter(
+          (i) => userInvestments.indexOf(i.id) > -1
+        );
+        
+        
+      }
+ 
       if(data?.[counter] == 0)
         element.phase = "Paused"
       if(data?.[counter] == 1)
@@ -749,6 +779,7 @@ const MyInvestments: NextPage = () => {
       if(data?.[counter] == 4)
         element.phase= "In Withdraw"
 
+      
       counter++;
 
       
