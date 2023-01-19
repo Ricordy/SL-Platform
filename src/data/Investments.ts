@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useContractRead } from "wagmi";
 
+
 export const investmentData = [
   {
     id: 1,
-    address: "0xCafac3dD18aC6c6e92c921884f9E4176737C052c",
+    address: "0x889c0Fa782F102a72F7Ccb6C2953F7Fe6555cc93",
     title: "Mercedes-benz 280sl Pagoda 1969",
     amount: "129000",
     percentage: "100",
-    phase: "phase1",
+    phase: "Gonçalo",
     status: "Active",
     chassis: "113044-10-010413",
     totalProduction: 23885,
@@ -17,7 +18,7 @@ export const investmentData = [
   },
   {
     id: 2,
-    address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB49",
+    address: "0xabc1443332982d5211921c5b748ee84609f7b813",
     title: "Porsche 911 1963",
     amount: "250000",
     percentage: "25",
@@ -30,7 +31,7 @@ export const investmentData = [
   },
   {
     id: 3,
-    address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB50",
+    address: "0xdea07f054b8be910aa10171c3a8b867021bbbbeb",
     title: "Volkswagen Beetle",
     amount: "400000",
     percentage: "100",

@@ -2060,7 +2060,7 @@ const Investment = ({ investment }) => {
             className="md:row-start-1 md:col-start-2 md:row-span-3 flex flex-col align-middle justify-between"
             title={investment?.title}
             chassis={investment?.chassis}
-            address={investment?.address}
+            address={process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS}
             totalProduction={investment?.totalProduction}
             totalModelProduction={investment?.totalModelProduction}
             colorCombination={investment?.colorCombination}

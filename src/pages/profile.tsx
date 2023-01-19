@@ -1798,7 +1798,7 @@ const Profile: NextPage = () => {
             </svg>
           </div>
           <Link href="#">
-            <a className="flex align-middle gap-2">
+            <a className="flex align-middle gap-2" onClick={()=> window.open("https://goerli.etherscan.io/address/"+ String(address), "_blank")}>
               {address} <FiExternalLink />
             </a>
           </Link>
@@ -1832,8 +1832,8 @@ const Profile: NextPage = () => {
               <div className="flex gap-6">
                 <PuzzleItem
                   level={2}
-                  amount="100"
-                  current="10"
+                  amount="10000"
+                  current="0"
                   progress="0"
                   showProgressInsideBar={true}
                 />
