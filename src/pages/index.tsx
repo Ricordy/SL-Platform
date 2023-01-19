@@ -9,7 +9,7 @@ import { useContractReads } from "wagmi";
 
 
 const Home: NextPage = () => {
-  let investContracts = new Array(); 
+  const investContracts = []; 
 
   const InvestAbi = [
     {

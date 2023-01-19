@@ -13,7 +13,7 @@ function classNames(...classes) {
 
 
 // TODO: Get from user wallet
-let userInvestmentsHelper = [];
+const userInvestmentsHelper = [];
 let userInvestments = [];
 let selectedInvestments = investmentData.filter(
   (i) => userInvestments.indexOf(i.id) > -1
@@ -701,7 +701,7 @@ const InvestAbi = [
 const MyInvestments: NextPage = () => {
   const { address } = useAccount();
 
-  let investContracts = new Array(); 
+  const investContracts = []; 
   const [categories] = useState({
     "Level 1": selectedInvestments,
     "Level 2": [],
