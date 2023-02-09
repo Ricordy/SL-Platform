@@ -16,23 +16,17 @@ const client = createClient(
   })
 );
 
-
-
-
 const MyApp: AppType = ({ Component, pageProps }) => {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
-  })
-  
+  }, []);
 
   return (
     <WagmiConfig client={client}>
       <ConnectKitProvider>
-        <Layout>
-          {isMounted && <Component {...pageProps} />}
-        </Layout>
+        <Layout>{isMounted && <Component {...pageProps} />}</Layout>
       </ConnectKitProvider>
     </WagmiConfig>
   );

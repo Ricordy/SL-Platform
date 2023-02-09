@@ -10,7 +10,7 @@
     "deploy": "hardhat run scripts/deploy.ts --network localhost && hardhat run scripts/mimicCoinReady.ts --network localhost"
   },
   "dependencies": {
-    "@headlessui/react": "^1.6.6",
+    "@headlessui/react": "^0.0.0-insiders.5051fff",
     "@heroicons/react": "^2.0.10",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.2",
