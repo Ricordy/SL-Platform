@@ -1,10 +1,12 @@
 import Nav from "./Nav";
 import Footer from "./Footer";
+import { Toaster } from "react-hot-toast";
 
 export default function Layout({ children }) {
   return (
     <div className="flex flex-col items-stretch min-h-screen">
       <Nav />
+      <Toaster position="top-right" reverseOrder={true} />
       <main className="flex w-full max-w-4xl mx-auto grow shrink-0">
         {children}
       </main>

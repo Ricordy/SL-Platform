@@ -52,6 +52,7 @@ export default function Investments() {
                     >
                       <h3 className="text-sm font-medium leading-5">
                         {investment.title}
+                        {/* {JSON.stringify(investment)} */}
                       </h3>
 
                       <ul className="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500">
