@@ -3,8 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import logo from "../../public/logo-black.svg";
 import ProfileMenu from "./ProfileMenu";
-import { ChainIcon, ConnectKitButton } from "connectkit";
-import { useAccount, useNetwork } from "wagmi";
+import { ConnectKitButton } from "connectkit";
+import { useAccount } from "wagmi";
 import { disconnect } from "@wagmi/core";
 import { useIsMounted } from "../hooks/useIsMounted";
 
