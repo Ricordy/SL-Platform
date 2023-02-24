@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { useContractRead } from "wagmi";
 
-
 export const investmentData = [
   {
     id: 1,
-    address: "0x889c0Fa782F102a72F7Ccb6C2953F7Fe6555cc93",
+    address: {
+      5: "0x889c0Fa782F102a72F7Ccb6C2953F7Fe6555cc93",
+      31337: "0xCafac3dD18aC6c6e92c921884f9E4176737C052c",
+    },
     title: "Mercedes-benz 280sl Pagoda 1969",
     amount: "129000",
     percentage: "100",
-    phase: "Gonçalo",
+    phase: "Gonçalo2",
     status: "Active",
     chassis: "113044-10-010413",
     totalProduction: 23885,
@@ -18,7 +20,10 @@ export const investmentData = [
   },
   {
     id: 2,
-    address: "0xabc1443332982d5211921c5b748ee84609f7b813",
+    address: {
+      5: "0xabc1443332982d5211921c5b748ee84609f7b813",
+      31337: "0x9f1ac54BEF0DD2f6f3462EA0fa94fC62300d3a8e",
+    },
     title: "Porsche 911 1963",
     amount: "250000",
     percentage: "25",
@@ -31,7 +36,10 @@ export const investmentData = [
   },
   {
     id: 3,
-    address: "0xdea07f054b8be910aa10171c3a8b867021bbbbeb",
+    address: {
+      5: "0xdea07f054b8be910aa10171c3a8b867021bbbbeb",
+      31337: "0xbf9fBFf01664500A33080Da5d437028b07DFcC55",
+    },
     title: "Volkswagen Beetle",
     amount: "400000",
     percentage: "100",
@@ -44,11 +52,14 @@ export const investmentData = [
   },
   {
     id: 4,
-    address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB51",
+    address: {
+      5: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB51",
+      31337: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+    },
     title: "Ford Mustang Shelby GT350 1965",
-    amount: "25000000",
+    amount: "2500000",
     percentage: "25",
-    phase: "In process",
+    phase: "In Process",
     status: "Active",
     chassis: "",
     totalProduction: 0,
@@ -57,7 +68,10 @@ export const investmentData = [
   },
   {
     id: 5,
-    address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB52",
+    address: {
+      5: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB52",
+      31337: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+    },
     title: "Bugatti Type 57 Atlantic 1938",
     amount: "15000000",
     percentage: "65",
@@ -70,7 +84,10 @@ export const investmentData = [
   },
   {
     id: 6,
-    address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB53",
+    address: {
+      5: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB53",
+      31337: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+    },
     title: "Jaguar E-Type 1961",
     amount: "10000000",
     percentage: "50",
@@ -83,7 +100,10 @@ export const investmentData = [
   },
   {
     id: 7,
-    address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB54",
+    address: {
+      5: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB54",
+      31337: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+    },
     title: "Ferrari 250 GTO 1962",
     amount: "10000000",
     percentage: "50",
@@ -96,7 +116,10 @@ export const investmentData = [
   },
   {
     id: 8,
-    address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB55",
+    address: {
+      5: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB55",
+      31337: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+    },
     title: "Ford F-100",
     amount: "10000000",
     percentage: "50",

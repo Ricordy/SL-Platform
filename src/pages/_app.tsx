@@ -1,5 +1,6 @@
 import "../styles/globals.css";
 import type { AppType } from "next/dist/shared/lib/utils";
+import type { AppProps } from "next/app";
 import Layout from "../components/Layout";
 import { WagmiConfig, createClient, mainnet } from "wagmi";
 import { goerli, hardhat } from "wagmi/chains";
@@ -16,7 +17,7 @@ const client = createClient(
   })
 );
 
-const MyApp: AppType = ({ Component, pageProps }) => {
+const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {

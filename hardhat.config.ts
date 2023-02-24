@@ -20,7 +20,7 @@ const config: HardhatUserConfig = {
       accounts: {
         count: 16,
       },
-      chainId: 31337,
+      chainId: 1337,
       blockGasLimit: 1000000004297200,
     },
     goerli: {
@@ -30,8 +30,8 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      goerli: ETHERSCAN_API_KEY
-    }
+      goerli: ETHERSCAN_API_KEY,
+    },
   },
   //defaultNetwork: "hardhat",
 };
