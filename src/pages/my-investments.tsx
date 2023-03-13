@@ -1,20 +1,40 @@
 import type { NextPage } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tab } from "@headlessui/react";
 import Link from "next/link";
 import { investmentData } from "../data/Investments";
-import { useAccount, useContractReads, useSigner } from "wagmi";
+import {
+  Address,
+  useAccount,
+  useContract,
+  useContractRead,
+  useContractReads,
+  useSigner,
+} from "wagmi";
 import useCheckEntryNFT from "../hooks/useCheckEntryNFT";
-import { InvestAbi } from "../data/ABIs";
+import { InvestAbi, FactoryAbi } from "../data/ABIs";
+import { classNames } from "../utils/css";
+import { BigNumber } from "ethers";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
+interface InvestmentBlockchainType {
+  id: number;
+  address: Address;
+  amount?: string;
+  phase?: string;
+  status?: string;
 }
+interface InvestmentDbType {
+  address: Address;
+  title: string;
+  chassis: string;
+  totalProduction: number;
+  totalModelProduction: number;
+  colorCombination: string;
+}
+interface InvestmentType extends InvestmentDbType, InvestmentBlockchainType {}
 
-// TODO: Get from user wallet
-const userInvestmentsHelper = [];
-let userInvestments = [];
-let selectedInvestments = investmentData.filter(
+const userInvestments = [1, 2, 3];
+const selectedInvestments = investmentData.filter(
   (i) => userInvestments.indexOf(i.id) > -1
 );
 
@@ -25,87 +45,925 @@ const MyInvestments: NextPage = () => {
     nftId: 10,
   });
 
+  const [userContracts, setUserContracts] = useState<InvestmentType[]>([]);
   const investContracts = [];
   const [categories] = useState({
-    "Level 1": selectedInvestments,
+    "Level 1": [],
     "Level 2": [],
   });
 
   const { data: signerData } = useSigner();
-
-  investmentData.forEach(function (element) {
-    console.log(element.address);
-
-    const contract = {
-      address:
-        process.env.NODE_ENV == "development"
-          ? process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS
-          : element.address,
-      abi: InvestAbi,
-    };
-    investContracts.push(contract);
-  });
-  const { data, isError, isLoading } = useContractReads({
-    contracts: [
+  const factoryContract = useContract({
+    address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS,
+    abi: [
       {
-        ...investContracts[0],
-        functionName: "status",
+        inputs: [],
+        stateMutability: "nonpayable",
+        type: "constructor",
       },
       {
-        ...investContracts[1],
-        functionName: "status",
+        anonymous: false,
+        inputs: [
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "ContractID",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "address",
+            name: "conAddress",
+            type: "address",
+          },
+        ],
+        name: "ContractCreated",
+        type: "event",
       },
       {
-        ...investContracts[2],
-        functionName: "status",
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
+            internalType: "address",
+            name: "previousOwner",
+            type: "address",
+          },
+          {
+            indexed: true,
+            internalType: "address",
+            name: "newOwner",
+            type: "address",
+          },
+        ],
+        name: "OwnershipTransferred",
+        type: "event",
       },
       {
-        ...investContracts[0],
-        functionName: "balanceOf",
-        args: [address],
+        inputs: [
+          {
+            internalType: "address",
+            name: "contractAddress",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "_amount",
+            type: "uint256",
+          },
+        ],
+        name: "addUserInvestment",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
       },
       {
-        ...investContracts[1],
-        functionName: "balanceOf",
-        args: [address],
+        inputs: [],
+        name: "counter",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
       },
       {
-        ...investContracts[2],
-        functionName: "balanceOf",
-        args: [address],
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "_totalInvestment",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "_paymentTokenAddress",
+            type: "address",
+          },
+        ],
+        name: "deployNew",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        name: "deployedContracts",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "contractAddress",
+            type: "address",
+          },
+        ],
+        name: "getAddressOnContract",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "userTotal",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+        ],
+        name: "getAddressTotal",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "userTotal",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "index",
+            type: "uint256",
+          },
+        ],
+        name: "getContractDeployed",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "getContractDeployedCount",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "count",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "getInvestments",
+        outputs: [
+          {
+            components: [
+              {
+                internalType: "address",
+                name: "contractAddress",
+                type: "address",
+              },
+              {
+                internalType: "uint256",
+                name: "balance",
+                type: "uint256",
+              },
+            ],
+            internalType: "struct Factory.UserInvestment[]",
+            name: "",
+            type: "tuple[]",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "getLastDeployedContract",
+        outputs: [
+          {
+            internalType: "address",
+            name: "contractAddress",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "_id",
+            type: "uint256",
+          },
+        ],
+        name: "getUserInvestment",
+        outputs: [
+          {
+            components: [
+              {
+                internalType: "address",
+                name: "contractAddress",
+                type: "address",
+              },
+              {
+                internalType: "uint256",
+                name: "balance",
+                type: "uint256",
+              },
+            ],
+            internalType: "struct Factory.UserInvestment",
+            name: "",
+            type: "tuple",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "getUserInvestmentCount",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "_userInvestmentCount",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "owner",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "renounceOwnership",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "_lgentry",
+            type: "address",
+          },
+        ],
+        name: "setEntryAddress",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "newOwner",
+            type: "address",
+          },
+        ],
+        name: "transferOwnership",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        name: "userInvestmentCount",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        name: "userInvestmentHistory",
+        outputs: [
+          {
+            internalType: "address",
+            name: "contractAddress",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "balance",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
       },
     ],
+    signerOrProvider: signerData,
   });
-
-  console.log(data);
-
-  let counter = 0;
-  investmentData.map(function (element) {
-    if (Number(data?.[3 + counter]) > 0) {
-      userInvestmentsHelper.push(counter + 1);
-      console.log(
-        "balance of contract",
-        counter,
-        ": ",
-        Number(data?.[3 + counter])
-      );
-      console.log("userInvestments: ", userInvestments);
-      userInvestments = userInvestmentsHelper.filter(
-        (n, i) => userInvestmentsHelper.indexOf(n) === i
-      );
-      selectedInvestments = investmentData.filter(
-        (i) => userInvestments.indexOf(i.id) > -1
-      );
-    }
-
-    if (data?.[counter] == 0) element.phase = "Paused";
-    if (data?.[counter] == 1) element.phase = "In Progress";
-    if (data?.[counter] == 2) element.phase = "In Process";
-    if (data?.[counter] == 3) element.phase = "In Withdraw";
-    if (data?.[counter] == 4) element.phase = "In Withdraw";
-
-    counter++;
+  const { data: userInvestments } = useContractRead({
+    address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
+    abi: [
+      {
+        inputs: [],
+        stateMutability: "nonpayable",
+        type: "constructor",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "ContractID",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "address",
+            name: "conAddress",
+            type: "address",
+          },
+        ],
+        name: "ContractCreated",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
+            internalType: "address",
+            name: "previousOwner",
+            type: "address",
+          },
+          {
+            indexed: true,
+            internalType: "address",
+            name: "newOwner",
+            type: "address",
+          },
+        ],
+        name: "OwnershipTransferred",
+        type: "event",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "contractAddress",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "_amount",
+            type: "uint256",
+          },
+        ],
+        name: "addUserInvestment",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "counter",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "_totalInvestment",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "_paymentTokenAddress",
+            type: "address",
+          },
+        ],
+        name: "deployNew",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        name: "deployedContracts",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "contractAddress",
+            type: "address",
+          },
+        ],
+        name: "getAddressOnContract",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "userTotal",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+        ],
+        name: "getAddressTotal",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "userTotal",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "index",
+            type: "uint256",
+          },
+        ],
+        name: "getContractDeployed",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "getContractDeployedCount",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "count",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "getInvestments",
+        outputs: [
+          {
+            components: [
+              {
+                internalType: "address",
+                name: "contractAddress",
+                type: "address",
+              },
+              {
+                internalType: "uint256",
+                name: "balance",
+                type: "uint256",
+              },
+            ],
+            internalType: "struct Factory.UserInvestment[]",
+            name: "",
+            type: "tuple[]",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "getLastDeployedContract",
+        outputs: [
+          {
+            internalType: "address",
+            name: "contractAddress",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "_id",
+            type: "uint256",
+          },
+        ],
+        name: "getUserInvestment",
+        outputs: [
+          {
+            components: [
+              {
+                internalType: "address",
+                name: "contractAddress",
+                type: "address",
+              },
+              {
+                internalType: "uint256",
+                name: "balance",
+                type: "uint256",
+              },
+            ],
+            internalType: "struct Factory.UserInvestment",
+            name: "",
+            type: "tuple",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "getUserInvestmentCount",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "_userInvestmentCount",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "owner",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "renounceOwnership",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "_lgentry",
+            type: "address",
+          },
+        ],
+        name: "setEntryAddress",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "newOwner",
+            type: "address",
+          },
+        ],
+        name: "transferOwnership",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        name: "userInvestmentCount",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        name: "userInvestmentHistory",
+        outputs: [
+          {
+            internalType: "address",
+            name: "contractAddress",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "balance",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+    ],
+    functionName: "getInvestments",
+    overrides: { from: address },
+    // select: (data) => convertData(data),
+    // onSuccess(data) {
+    //   data.map((investment) =>
+    //     Object.assign(
+    //       investment,
+    //       investmentData.find(
+    //         (i) => i.address[3177] == investment.contractAddress
+    //       )
+    //     )
+    //   );
+    //   console.log(data);
+    // },
   });
+  // {
+  //       ...investContracts[0],
+  //       functionName: "getContractDeployed",
+  //       args: []
+  //     },
+
+  const [contractsToRead, setContractsToRead] = useState([]);
+  // for (let i = 0; i < contractCount.toNumber(); i++) {
+  //   contractsToRead.push({
+  //     abi: InvestAbi,
+  //     functionName: "status",
+  //     args: [i],
+  //   });
+  // }
+
+  // console.log("deployedContracts>>>", contractCount.toString());
+  // console.log("userInvestments>>", userInvestments);
+
+  useEffect(() => {
+    (async () => {
+      if (userInvestments) {
+        const fullInvestment = [];
+        userInvestments.forEach((element) => {
+          // const newInvestment: InvestmentType = {};
+          // newInvestment.title = element.title;
+        });
+        userInvestments.map((ui) => {
+          const id = investmentData.find(
+            (i) => i.address[31337] == ui.contractAddress
+          );
+          const uc: InvestmentType = {
+            id: id.id,
+            title: id.title,
+            address: ui.contractAddress,
+            chassis: id.chassis,
+            totalProduction: id.totalProduction,
+            totalModelProduction: id.totalModelProduction,
+            colorCombination: id.colorCombination,
+          };
+          setUserContracts([...userContracts, uc]);
+        });
+        console.log(userInvestments);
+      }
+    })();
+    /*
+    const getFactory = async () => {
+      try {
+        let contractAddress: Address;
+        const contractsToAdd = [];
+        let userInvested: BigNumber;
+        for (let i = 0; i < contractCount.toNumber(); i++) {
+          contractAddress = await factoryContract
+            ?.connect(signerData)
+            .getContractDeployed(BigNumber.from(i));
+          console.log(contractAddress);
+
+          userInvested = await factoryContract
+            .connect(signerData)
+            .getAddressOnContract(contractAddress);
+          if (userInvested.gt(0)) {
+            console.log("adding", contractAddress);
+
+            contractsToAdd.push({
+              id: i + 1,
+              title: `title-${i}`,
+              address: contractAddress,
+              abi: InvestAbi,
+              phase: "none",
+              functionName: "status",
+              args: [i],
+            });
+          }
+
+          // categories["Level 1"].push();
+        }
+
+        setContractsToRead(contractsToAdd);
+        // console.log(contractsToRead);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getFactory();
+    */
+  }, [userInvestments]);
+
+  //address: investment.address[process.env.NEXT_PUBLIC_CHAIN_ID as Address],
+
+  // investmentData.forEach(function (element) {
+
+  //   const contract = {
+  //     address:
+  //       process.env.NODE_ENV == "development"
+  //         ? process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS
+  //         : element.address,
+  //     abi: InvestAbi,
+  //   };
+  //   investContracts.push(contract);
+  // });
+  // const { data, isError, isLoading } = useContractReads({
+  //   contracts: [
+  //     {
+  //       ...investContracts[0],
+  //       functionName: "status",
+  //     },
+  //     {
+  //       ...investContracts[1],
+  //       functionName: "status",
+  //     },
+  //     {
+  //       ...investContracts[2],
+  //       functionName: "status",
+  //     },
+  //     {
+  //       ...investContracts[0],
+  //       functionName: "balanceOf",
+  //       args: [address],
+  //     },
+  //     {
+  //       ...investContracts[1],
+  //       functionName: "balanceOf",
+  //       args: [address],
+  //     },
+  //     {
+  //       ...investContracts[2],
+  //       functionName: "balanceOf",
+  //       args: [address],
+  //     },
+  //   ],
+  // });
+
+  // console.log(data);
+
+  // let counter = 0;
+  // investmentData.map(function (element) {
+  //   if (Number(data?.[3 + counter]) > 0) {
+  //     userInvestmentsHelper.push(counter + 1);
+  //     console.log(
+  //       "balance of contract",
+  //       counter,
+  //       ": ",
+  //       Number(data?.[3 + counter])
+  //     );
+  //     console.log("userInvestments: ", userInvestments);
+  //     userInvestments = userInvestmentsHelper.filter(
+  //       (n, i) => userInvestmentsHelper.indexOf(n) === i
+  //     );
+  //     selectedInvestments = investmentData.filter(
+  //       (i) => userInvestments.indexOf(i.id) > -1
+  //     );
+  //   }
+
+  //   if (data?.[counter] == 0) element.phase = "Paused";
+  //   if (data?.[counter] == 1) element.phase = "In Progress";
+  //   if (data?.[counter] == 2) element.phase = "In Process";
+  //   if (data?.[counter] == 3) element.phase = "In Withdraw";
+  //   if (data?.[counter] == 4) element.phase = "In Withdraw";
+
+  //   counter++;
+  // });
 
   // console.log(investmentData);
   if (!hasEntryNFT)
@@ -123,6 +981,7 @@ const MyInvestments: NextPage = () => {
   return (
     <div className="flex flex-col w-full px-6 lg:px-3 mt-16 md:mt-0">
       <h2 className="text-2xl py-6">My Investments</h2>
+
       <Tab.Group>
         <Tab.List className="flex space-x-1 rounded-xl bg-gray-900/20 p-1">
           {Object.keys(categories).map((category) => (
@@ -151,28 +1010,29 @@ const MyInvestments: NextPage = () => {
                 "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-400 focus:outline-none focus:ring-2"
               )}
             >
+              {/* {userContracts && JSON.stringify(userContracts)} */}
               <ul className="grid  sm:grid-cols-2 grid-cols-1 gap-2">
-                {investments.map((investment) => (
+                {Object.values(userContracts).map((investment) => (
                   <li
-                    key={investment.id}
+                    key={investment.address}
                     className="relative rounded-md p-3 border  flex  flex-col gap-3 justify-around hover:bg-gray-100"
                   >
                     <h3 className="text-sm font-medium leading-5 pb-3">
-                      <Link href={`/investment/${investment.id}`}>
-                        {investment.title}
+                      <Link href={`/investment/${investment.address}`}>
+                        {investment.title ?? "none"}
                       </Link>
                     </h3>
 
-                    {investment.phase !== "Withdraw" ? (
+                    {investment?.phase !== "Withdraw" ? (
                       <div className="border p-2 text-xs rounded-md">
-                        {investment.phase}
+                        {investment?.phase}
                       </div>
                     ) : (
                       <button className="border p-2 text-xs rounded-md bg-slate-500 text-slate-100">
                         Withdraw
                       </button>
                     )}
-                    <Link href={`/investment/${investment.id}/monitor`}>
+                    <Link href={`/investment/${investment.address}/monitor`}>
                       <a className="border p-2 text-xs rounded-md bg-slate-500 text-slate-100 text-center">
                         Monitor Investment
                       </a>

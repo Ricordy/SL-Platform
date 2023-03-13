@@ -6,7 +6,7 @@ export default function Layout({ children }) {
   return (
     <div className="flex flex-col items-stretch min-h-screen">
       <Nav />
-      <Toaster position="top-right" reverseOrder={true} />
+      <Toaster position="top-center" reverseOrder={false} />
       <main className="flex w-full max-w-4xl mx-auto grow shrink-0">
         {children}
       </main>

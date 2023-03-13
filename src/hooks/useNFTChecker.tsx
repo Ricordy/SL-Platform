@@ -6,17 +6,20 @@ interface HookProps {
   contractAddress: Address;
   walletAddress: Address;
   nftId: number;
+  watch?: boolean;
 }
 const useNFTChecker = ({
   contractAddress,
   walletAddress,
   nftId,
+  watch = false,
 }: HookProps) => {
   const { data, error } = useContractRead({
     address: contractAddress,
     abi: PuzzleAbi,
     functionName: "balanceOf",
     args: [walletAddress, nftId],
+    watch,
   });
 
   const [hasNFT, setHasNFT] = useState(false);

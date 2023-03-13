@@ -1,26 +1,18 @@
 import React, { useRef } from "react";
 import { FiExternalLink } from "react-icons/fi";
 import Link from "next/link";
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
-import {
-  useContract,
-  useContractWrite,
-  usePrepareContractWrite,
-  useAccount,
-  useSigner,
-  useNetwork,
-  Address,
-} from "wagmi";
+import { useState } from "react";
+import { Address, useContract, useSigner } from "wagmi";
 import { ethers } from "ethers";
 import useDebounce from "../hooks/useDebounce";
 import toast from "react-hot-toast";
-import { CoinTestAbi, InvestAbi } from "../data/ABIs";
+import { CoinTestAbi, FactoryAbi, InvestAbi } from "../data/ABIs";
 import Modal from "./Modal";
 import useModal from "../hooks/useModal";
+import { NumericFormat } from "react-number-format";
 
 type investmentProps = {
-  address: string;
+  contractAddress: string;
   title: string;
   amount: string; // Check type
   percentageInvested?: string;
@@ -29,6 +21,8 @@ type investmentProps = {
   totalProduction: number;
   totalModelProduction: number;
   totalInvestment: number;
+  maxToInvest: number;
+  minToInvest: number;
   colorCombination: string;
   className: string;
   hasEntryNFT: boolean;
@@ -36,7 +30,7 @@ type investmentProps = {
 };
 
 export const InvestmentSidebar = ({
-  address,
+  contractAddress,
   title,
   amount,
   percentageInvested,
@@ -45,20 +39,28 @@ export const InvestmentSidebar = ({
   totalProduction,
   totalModelProduction,
   totalInvestment,
+  maxToInvest,
+  minToInvest,
   colorCombination,
   className,
   hasEntryNFT,
   paymentTokenBalance,
 }: investmentProps) => {
-  const { address: walletAddress } = useAccount();
   const { data: signerData } = useSigner();
   const { isOpen: isOpenModalEntryNFT, toggle: toggleModalEntryNFT } =
     useModal();
-  const { isOpen: isOpenModalInvest, toggle: toggleModalInvest } = useModal();
+  const {
+    isOpen: isOpenModalInvest,
+    toggle: toggleModalInvest,
+    toggleBlur: toggleBlurModalInvest,
+    isBlur: isBlurModalInvest,
+  } = useModal();
   const [isApproving, setIsApproving] = useState(false);
   const [isInvesting, setisInvesting] = useState(false);
-  const inputRef = useRef(null);
-  const [valueApprovalAndInvestment, setApprovalandInvestment] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [valueApprovalAndInvestment, setApprovalandInvestment] = useState<
+    number | null
+  >(undefined);
   const [msg, setMsg] = useState("");
   const debouncedValue = useDebounce<number>(valueApprovalAndInvestment, 500);
 
@@ -99,8 +101,13 @@ export const InvestmentSidebar = ({
   });
 
   const investContract = useContract({
-    address: process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS,
+    address: contractAddress,
     abi: InvestAbi,
+    signerOrProvider: signerData,
+  });
+  const factoryContract = useContract({
+    address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
+    abi: FactoryAbi,
     signerOrProvider: signerData,
   });
   // const { config: mintConfig } = usePrepareContractWrite({
@@ -118,52 +125,122 @@ export const InvestmentSidebar = ({
 
   // const { write: mint, isLoading: mintLoading } = useContractWrite(mintConfig);
 
-  // const handleChange = (event) => {
-  // event.preventDefault();
-  // setApprovalandInvestment(event.target.value);
-  // };
+  const handleChange = (event) => {
+    event.preventDefault();
+    setApprovalandInvestment(event.target.value);
+  };
 
   //Wagmi for contract communication
   //Prepare contract writting
 
-  async function handleClick(e) {
+  async function handleClick(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
     e.preventDefault();
+    // toggleBlurModalInvest();
+    // toast.success("Seta blur");
+    // setApprovalandInvestment(Number(inputRef?.current?.value));
 
-    setApprovalandInvestment(inputRef.current.value);
-    console.log("inoput: ", inputRef.current.value);
+    // let toInvestAmount = valueApprovalAndInvestment;
+    // if (toInvestAmount != Number(inputRef?.current?.value)) {
+    //   toInvestAmount = Number(inputRef.current.value);
+    // }
 
-    let toInvestAmount = valueApprovalAndInvestment;
-    if (toInvestAmount != inputRef.current.value) {
-      toInvestAmount = inputRef.current.value;
+    if (valueApprovalAndInvestment < minToInvest) {
+      toast.custom(
+        (t) => (
+          <div
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+          >
+            <div className="flex-1 w-0 p-4">
+              <div className="flex items-start">
+                <div className="flex-shrink-0 pt-0.5">
+                  <img
+                    className="h-10 w-10 rounded-full"
+                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixqx=6GHAjsWpt9&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
+                    alt=""
+                  />
+                </div>
+                <div className="ml-3 flex-1">
+                  <p className="text-sm font-medium text-gray-900">
+                    Emilia Gates
+                  </p>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Sure! 8:30pm works great!
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="flex border-l border-gray-200">
+              <button
+                onClick={() => toast.dismiss(t.id)}
+                className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        ),
+        { duration: 5000 }
+      );
+      return;
     }
-    // setIsOpen(false);
-    invest(toInvestAmount);
-  }
 
-  async function invest(toInvestAmount) {
     try {
+      const investmentAmountWithDecimals = ethers.utils.parseUnits(
+        valueApprovalAndInvestment.toString(),
+        6
+      );
       const results = await paymentTokenContract
         .connect(signerData)
-        .approve(
-          process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS,
-          ethers.utils.parseUnits(toInvestAmount.toString(), 6)
-        );
-      setIsApproving(true);
+        .approve(contractAddress, investmentAmountWithDecimals);
+      //setIsApproving(true);
+      toast.promise(results.wait(), {
+        loading: "Approving...",
+        success: "Approved",
+        error: "Error approving",
+      });
       await results.wait();
-      setIsApproving(false);
-      setisInvesting(true);
+      //setIsApproving(false);
+      // setisInvesting(true);
       const results2 = await investContract
         .connect(signerData)
-        .invest(ethers.utils.parseUnits(toInvestAmount.toString(), 0));
+        .invest(valueApprovalAndInvestment);
+      toast.promise(
+        results2.wait(),
+        {
+          loading: "Investing...",
+          success: "Invested!",
+          error: "Error investing",
+        },
+        {
+          success: {
+            duration: 5000,
+            icon: "🔥",
+          },
+        }
+      );
       await results2.wait();
-      setisInvesting(false);
+      const tx = await factoryContract
+        .connect(signerData)
+        .addUserInvestment(
+          contractAddress,
+          valueApprovalAndInvestment * 10 ** 6
+        );
+
+      toggleModalInvest();
     } catch (error) {
-      console.error(error);
-      toast.error(error.reason);
-      if (error.reason) {
-        setMsg(error.reason);
+      if (
+        typeof error.reason == "string" &&
+        error.reason.indexOf("InvestmentExceedMax") > -1
+      ) {
+        toast.error("You reached the maximum to invest!");
+      } else if (error.reason) {
+        toast.error(error.reason);
       } else {
-        setMsg(JSON.stringify(error));
+        toast.error(JSON.stringify(error));
       }
     }
   }
@@ -182,24 +259,13 @@ export const InvestmentSidebar = ({
         toggle={toggleModalEntryNFT}
         title="Buy an Entry NFT"
       >
-        <div className="flex gap-6 justify-center">
+        <div className="flex justify-between w-full">
           <div className="mt-2">You don&apos;t have an Entry NFT yet.</div>
-          <div className="mt-4 flex flex-col gap-3">
-            <Link
-              className="border border-blue-500 rounded py-1 px-3 bg-blue-500 text-white"
-              href="/mint-entry-nft"
-            >
-              Buy Now 32
-            </Link>
-
-            <button
-              type="button"
-              className="inline-flex justify-center rounded-md border border-transparent bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
-              onClick={handleClick}
-            >
+          <Link href="/mint-entry-nft" passHref>
+            <a className="inline-flex justify-center rounded-md border border-transparent bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2">
               Buy Now
-            </button>
-          </div>
+            </a>
+          </Link>
         </div>
       </Modal>
     );
@@ -209,33 +275,67 @@ export const InvestmentSidebar = ({
       <Modal
         isOpen={isOpenModalInvest}
         toggle={toggleModalInvest}
+        isBlur={isBlurModalInvest}
+        toggleBlur={toggleBlurModalInvest}
         title="Make an Investment"
       >
         <div className="flex gap-6 justify-center">
           <div className="mt-2">
             <div className="text-sm text-gray-500">Token Balance</div>
-            <div className="text-md">{paymentTokenBalance}</div>
+            <div className="text-md">
+              <NumericFormat
+                value={paymentTokenBalance}
+                displayType="text"
+                fixedDecimalScale={true}
+                decimalSeparator="."
+                thousandSeparator=","
+                decimalScale={2}
+                prefix="$ "
+              />
+            </div>
             <div className="text-sm text-gray-500">Minimal investment:</div>
-            <div className="text-md">$ 100.00</div>
+            <div className="text-md">
+              <NumericFormat
+                value={minToInvest}
+                displayType="text"
+                fixedDecimalScale={true}
+                decimalSeparator="."
+                thousandSeparator=","
+                decimalScale={2}
+                prefix="$ "
+              />
+            </div>
             <div className="text-sm text-gray-500">Max. Investment:</div>
             <div className="text-md">
-              {totalInvestment} <span className="text-xs">(10%)</span>
+              <NumericFormat
+                value={maxToInvest}
+                displayType="text"
+                fixedDecimalScale={true}
+                decimalSeparator="."
+                thousandSeparator=","
+                decimalScale={2}
+                prefix="$ "
+              />{" "}
+              <span className="text-xs">(10%)</span>
             </div>
           </div>
           <div className="mt-4 flex flex-col gap-3">
             <input
               className="border p-2 rounded-md"
-              //onChange={handleChange}
+              onChange={handleChange}
               type="number"
               name=""
               id=""
               placeholder="100"
               ref={inputRef}
+              min={100}
+              value={valueApprovalAndInvestment}
             />
             <button
               type="button"
-              className="inline-flex justify-center rounded-md border border-transparent bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
-              onClick={handleClick}
+              disabled={Number(inputRef?.current?.value) < 100}
+              className="inline-flex justify-center rounded-md border border-transparent bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:bg-slate-400"
+              onClick={(e) => handleClick(e)}
             >
               Invest now
             </button>
@@ -279,12 +379,13 @@ export const InvestmentSidebar = ({
                 className="flex align-middle gap-2"
                 onClick={() =>
                   window.open(
-                    "https://goerli.etherscan.io/address/" + String(address),
+                    "https://goerli.etherscan.io/address/" +
+                      String(contractAddress),
                     "_blank"
                   )
                 }
               >
-                {formatAddress(address)} <FiExternalLink />
+                {formatAddress(contractAddress)} <FiExternalLink />
               </a>
             </Link>
           </div>
@@ -306,30 +407,6 @@ export const InvestmentSidebar = ({
             Invest Now
           </button>
 
-          {/* <div className="mt-4 flex flex-col gap-3">
-            <input
-              className="border p-2 rounded-md"
-              //onChange={handleChange}
-              type="number"
-              name=""
-              id=""
-              placeholder="100"
-              ref={inputRef}
-            />
-            <button
-              type="button"
-              className="inline-flex justify-center rounded-md border border-transparent bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
-              onClick={() => mint?.()}
-            >
-              Mint $10000
-            </button>
-            <button
-              type="button"
-              className="inline-flex justify-center rounded-md border border-transparent bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
-              onClick={(e) => handleClick(e)}
-            >
-              Invest now 2
-            </button> */}
           <div>
             {isApproving && (
               <div>
@@ -351,7 +428,3 @@ export const InvestmentSidebar = ({
     </>
   );
 };
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}

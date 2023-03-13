@@ -43,6 +43,24 @@ export const FactoryAbi = [
     type: "event",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "contractAddress",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "addUserInvestment",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "counter",
     outputs: [
@@ -90,7 +108,7 @@ export const FactoryAbi = [
     name: "deployedContracts",
     outputs: [
       {
-        internalType: "contract Investment",
+        internalType: "address",
         name: "",
         type: "address",
       },
@@ -137,6 +155,63 @@ export const FactoryAbi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "index",
+        type: "uint256",
+      },
+    ],
+    name: "getContractDeployed",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getContractDeployedCount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "count",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getInvestments",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "contractAddress",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "balance",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct Factory.UserInvestment[]",
+        name: "",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "getLastDeployedContract",
     outputs: [
@@ -144,6 +219,50 @@ export const FactoryAbi = [
         internalType: "address",
         name: "contractAddress",
         type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_id",
+        type: "uint256",
+      },
+    ],
+    name: "getUserInvestment",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "contractAddress",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "balance",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct Factory.UserInvestment",
+        name: "",
+        type: "tuple",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getUserInvestmentCount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "_userInvestmentCount",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -193,6 +312,54 @@ export const FactoryAbi = [
     name: "transferOwnership",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "userInvestmentCount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "userInvestmentHistory",
+    outputs: [
+      {
+        internalType: "address",
+        name: "contractAddress",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "balance",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
 ];
@@ -413,19 +580,6 @@ export const InvestAbi = [
   },
   {
     inputs: [],
-    name: "DECIMALSUSDC",
-    outputs: [
-      {
-        internalType: "uint8",
-        name: "",
-        type: "uint8",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "LEVEL1",
     outputs: [
       {
@@ -521,7 +675,7 @@ export const InvestAbi = [
     inputs: [
       {
         internalType: "enum Investment.Status",
-        name: "_status",
+        name: "_newStatus",
         type: "uint8",
       },
     ],
@@ -540,7 +694,7 @@ export const InvestAbi = [
         type: "uint8",
       },
     ],
-    stateMutability: "view",
+    stateMutability: "pure",
     type: "function",
   },
   {
@@ -614,19 +768,6 @@ export const InvestAbi = [
         type: "bool",
       },
     ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "newTotal",
-        type: "uint256",
-      },
-    ],
-    name: "incrementMax",
-    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -747,13 +888,7 @@ export const InvestAbi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "contract ERC20",
-        name: "_token",
-        type: "address",
-      },
-    ],
+    inputs: [],
     name: "totalContractBalanceStable",
     outputs: [
       {
@@ -1601,7 +1736,7 @@ export const PuzzleAbi = [
         type: "string",
       },
     ],
-    stateMutability: "view",
+    stateMutability: "pure",
     type: "function",
   },
   {

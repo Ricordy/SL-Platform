@@ -3,10 +3,7 @@ import { Tab } from "@headlessui/react";
 import { investmentData } from "../data/Investments";
 import { investmentStatusesData } from "../data/InvestmentStatuses";
 import { NumericFormat } from "react-number-format";
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNames } from "../utils/css";
 
 export default function Investments() {
   const [investmentStatuses] = useState(investmentStatusesData);
