@@ -223,12 +223,6 @@ export const InvestmentSidebar = ({
         }
       );
       await results2.wait();
-      const tx = await factoryContract
-        .connect(signerData)
-        .addUserInvestment(
-          contractAddress,
-          valueApprovalAndInvestment * 10 ** 6
-        );
 
       toggleModalInvest();
     } catch (error) {

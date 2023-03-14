@@ -33,10 +33,10 @@ interface InvestmentDbType {
 }
 interface InvestmentType extends InvestmentDbType, InvestmentBlockchainType {}
 
-const userInvestments = [1, 2, 3];
-const selectedInvestments = investmentData.filter(
-  (i) => userInvestments.indexOf(i.id) > -1
-);
+// const userInvestments = [1, 2, 3];
+// const selectedInvestments = investmentData.filter(
+//   (i) => userInvestments.indexOf(i.id) > -1
+// );
 
 const MyInvestments: NextPage = () => {
   const { address } = useAccount();
@@ -52,376 +52,376 @@ const MyInvestments: NextPage = () => {
     "Level 2": [],
   });
 
-  const { data: signerData } = useSigner();
-  const factoryContract = useContract({
-    address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS,
-    abi: [
-      {
-        inputs: [],
-        stateMutability: "nonpayable",
-        type: "constructor",
-      },
-      {
-        anonymous: false,
-        inputs: [
-          {
-            indexed: false,
-            internalType: "uint256",
-            name: "ContractID",
-            type: "uint256",
-          },
-          {
-            indexed: false,
-            internalType: "address",
-            name: "conAddress",
-            type: "address",
-          },
-        ],
-        name: "ContractCreated",
-        type: "event",
-      },
-      {
-        anonymous: false,
-        inputs: [
-          {
-            indexed: true,
-            internalType: "address",
-            name: "previousOwner",
-            type: "address",
-          },
-          {
-            indexed: true,
-            internalType: "address",
-            name: "newOwner",
-            type: "address",
-          },
-        ],
-        name: "OwnershipTransferred",
-        type: "event",
-      },
-      {
-        inputs: [
-          {
-            internalType: "address",
-            name: "contractAddress",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "_amount",
-            type: "uint256",
-          },
-        ],
-        name: "addUserInvestment",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "counter",
-        outputs: [
-          {
-            internalType: "uint256",
-            name: "",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "_totalInvestment",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "_paymentTokenAddress",
-            type: "address",
-          },
-        ],
-        name: "deployNew",
-        outputs: [
-          {
-            internalType: "address",
-            name: "",
-            type: "address",
-          },
-        ],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "",
-            type: "uint256",
-          },
-        ],
-        name: "deployedContracts",
-        outputs: [
-          {
-            internalType: "address",
-            name: "",
-            type: "address",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "address",
-            name: "contractAddress",
-            type: "address",
-          },
-        ],
-        name: "getAddressOnContract",
-        outputs: [
-          {
-            internalType: "uint256",
-            name: "userTotal",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "address",
-            name: "user",
-            type: "address",
-          },
-        ],
-        name: "getAddressTotal",
-        outputs: [
-          {
-            internalType: "uint256",
-            name: "userTotal",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "index",
-            type: "uint256",
-          },
-        ],
-        name: "getContractDeployed",
-        outputs: [
-          {
-            internalType: "address",
-            name: "",
-            type: "address",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "getContractDeployedCount",
-        outputs: [
-          {
-            internalType: "uint256",
-            name: "count",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "getInvestments",
-        outputs: [
-          {
-            components: [
-              {
-                internalType: "address",
-                name: "contractAddress",
-                type: "address",
-              },
-              {
-                internalType: "uint256",
-                name: "balance",
-                type: "uint256",
-              },
-            ],
-            internalType: "struct Factory.UserInvestment[]",
-            name: "",
-            type: "tuple[]",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "getLastDeployedContract",
-        outputs: [
-          {
-            internalType: "address",
-            name: "contractAddress",
-            type: "address",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "_id",
-            type: "uint256",
-          },
-        ],
-        name: "getUserInvestment",
-        outputs: [
-          {
-            components: [
-              {
-                internalType: "address",
-                name: "contractAddress",
-                type: "address",
-              },
-              {
-                internalType: "uint256",
-                name: "balance",
-                type: "uint256",
-              },
-            ],
-            internalType: "struct Factory.UserInvestment",
-            name: "",
-            type: "tuple",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "getUserInvestmentCount",
-        outputs: [
-          {
-            internalType: "uint256",
-            name: "_userInvestmentCount",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "owner",
-        outputs: [
-          {
-            internalType: "address",
-            name: "",
-            type: "address",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "renounceOwnership",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "address",
-            name: "_lgentry",
-            type: "address",
-          },
-        ],
-        name: "setEntryAddress",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "address",
-            name: "newOwner",
-            type: "address",
-          },
-        ],
-        name: "transferOwnership",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "address",
-            name: "",
-            type: "address",
-          },
-        ],
-        name: "userInvestmentCount",
-        outputs: [
-          {
-            internalType: "uint256",
-            name: "",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "address",
-            name: "",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "",
-            type: "uint256",
-          },
-        ],
-        name: "userInvestmentHistory",
-        outputs: [
-          {
-            internalType: "address",
-            name: "contractAddress",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "balance",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-    ],
-    signerOrProvider: signerData,
-  });
+  // const { data: signerData } = useSigner();
+  // const factoryContract = useContract({
+  //   address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS,
+  //   abi: [
+  //     {
+  //       inputs: [],
+  //       stateMutability: "nonpayable",
+  //       type: "constructor",
+  //     },
+  //     {
+  //       anonymous: false,
+  //       inputs: [
+  //         {
+  //           indexed: false,
+  //           internalType: "uint256",
+  //           name: "ContractID",
+  //           type: "uint256",
+  //         },
+  //         {
+  //           indexed: false,
+  //           internalType: "address",
+  //           name: "conAddress",
+  //           type: "address",
+  //         },
+  //       ],
+  //       name: "ContractCreated",
+  //       type: "event",
+  //     },
+  //     {
+  //       anonymous: false,
+  //       inputs: [
+  //         {
+  //           indexed: true,
+  //           internalType: "address",
+  //           name: "previousOwner",
+  //           type: "address",
+  //         },
+  //         {
+  //           indexed: true,
+  //           internalType: "address",
+  //           name: "newOwner",
+  //           type: "address",
+  //         },
+  //       ],
+  //       name: "OwnershipTransferred",
+  //       type: "event",
+  //     },
+  //     {
+  //       inputs: [
+  //         {
+  //           internalType: "address",
+  //           name: "contractAddress",
+  //           type: "address",
+  //         },
+  //         {
+  //           internalType: "uint256",
+  //           name: "_amount",
+  //           type: "uint256",
+  //         },
+  //       ],
+  //       name: "addUserInvestment",
+  //       outputs: [],
+  //       stateMutability: "nonpayable",
+  //       type: "function",
+  //     },
+  //     {
+  //       inputs: [],
+  //       name: "counter",
+  //       outputs: [
+  //         {
+  //           internalType: "uint256",
+  //           name: "",
+  //           type: "uint256",
+  //         },
+  //       ],
+  //       stateMutability: "view",
+  //       type: "function",
+  //     },
+  //     {
+  //       inputs: [
+  //         {
+  //           internalType: "uint256",
+  //           name: "_totalInvestment",
+  //           type: "uint256",
+  //         },
+  //         {
+  //           internalType: "address",
+  //           name: "_paymentTokenAddress",
+  //           type: "address",
+  //         },
+  //       ],
+  //       name: "deployNew",
+  //       outputs: [
+  //         {
+  //           internalType: "address",
+  //           name: "",
+  //           type: "address",
+  //         },
+  //       ],
+  //       stateMutability: "nonpayable",
+  //       type: "function",
+  //     },
+  //     {
+  //       inputs: [
+  //         {
+  //           internalType: "uint256",
+  //           name: "",
+  //           type: "uint256",
+  //         },
+  //       ],
+  //       name: "deployedContracts",
+  //       outputs: [
+  //         {
+  //           internalType: "address",
+  //           name: "",
+  //           type: "address",
+  //         },
+  //       ],
+  //       stateMutability: "view",
+  //       type: "function",
+  //     },
+  //     {
+  //       inputs: [
+  //         {
+  //           internalType: "address",
+  //           name: "contractAddress",
+  //           type: "address",
+  //         },
+  //       ],
+  //       name: "getAddressOnContract",
+  //       outputs: [
+  //         {
+  //           internalType: "uint256",
+  //           name: "userTotal",
+  //           type: "uint256",
+  //         },
+  //       ],
+  //       stateMutability: "view",
+  //       type: "function",
+  //     },
+  //     {
+  //       inputs: [
+  //         {
+  //           internalType: "address",
+  //           name: "user",
+  //           type: "address",
+  //         },
+  //       ],
+  //       name: "getAddressTotal",
+  //       outputs: [
+  //         {
+  //           internalType: "uint256",
+  //           name: "userTotal",
+  //           type: "uint256",
+  //         },
+  //       ],
+  //       stateMutability: "view",
+  //       type: "function",
+  //     },
+  //     {
+  //       inputs: [
+  //         {
+  //           internalType: "uint256",
+  //           name: "index",
+  //           type: "uint256",
+  //         },
+  //       ],
+  //       name: "getContractDeployed",
+  //       outputs: [
+  //         {
+  //           internalType: "address",
+  //           name: "",
+  //           type: "address",
+  //         },
+  //       ],
+  //       stateMutability: "view",
+  //       type: "function",
+  //     },
+  //     {
+  //       inputs: [],
+  //       name: "getContractDeployedCount",
+  //       outputs: [
+  //         {
+  //           internalType: "uint256",
+  //           name: "count",
+  //           type: "uint256",
+  //         },
+  //       ],
+  //       stateMutability: "view",
+  //       type: "function",
+  //     },
+  //     {
+  //       inputs: [],
+  //       name: "getInvestments",
+  //       outputs: [
+  //         {
+  //           components: [
+  //             {
+  //               internalType: "address",
+  //               name: "contractAddress",
+  //               type: "address",
+  //             },
+  //             {
+  //               internalType: "uint256",
+  //               name: "balance",
+  //               type: "uint256",
+  //             },
+  //           ],
+  //           internalType: "struct Factory.UserInvestment[]",
+  //           name: "",
+  //           type: "tuple[]",
+  //         },
+  //       ],
+  //       stateMutability: "view",
+  //       type: "function",
+  //     },
+  //     {
+  //       inputs: [],
+  //       name: "getLastDeployedContract",
+  //       outputs: [
+  //         {
+  //           internalType: "address",
+  //           name: "contractAddress",
+  //           type: "address",
+  //         },
+  //       ],
+  //       stateMutability: "view",
+  //       type: "function",
+  //     },
+  //     {
+  //       inputs: [
+  //         {
+  //           internalType: "uint256",
+  //           name: "_id",
+  //           type: "uint256",
+  //         },
+  //       ],
+  //       name: "getUserInvestment",
+  //       outputs: [
+  //         {
+  //           components: [
+  //             {
+  //               internalType: "address",
+  //               name: "contractAddress",
+  //               type: "address",
+  //             },
+  //             {
+  //               internalType: "uint256",
+  //               name: "balance",
+  //               type: "uint256",
+  //             },
+  //           ],
+  //           internalType: "struct Factory.UserInvestment",
+  //           name: "",
+  //           type: "tuple",
+  //         },
+  //       ],
+  //       stateMutability: "view",
+  //       type: "function",
+  //     },
+  //     {
+  //       inputs: [],
+  //       name: "getUserInvestmentCount",
+  //       outputs: [
+  //         {
+  //           internalType: "uint256",
+  //           name: "_userInvestmentCount",
+  //           type: "uint256",
+  //         },
+  //       ],
+  //       stateMutability: "view",
+  //       type: "function",
+  //     },
+  //     {
+  //       inputs: [],
+  //       name: "owner",
+  //       outputs: [
+  //         {
+  //           internalType: "address",
+  //           name: "",
+  //           type: "address",
+  //         },
+  //       ],
+  //       stateMutability: "view",
+  //       type: "function",
+  //     },
+  //     {
+  //       inputs: [],
+  //       name: "renounceOwnership",
+  //       outputs: [],
+  //       stateMutability: "nonpayable",
+  //       type: "function",
+  //     },
+  //     {
+  //       inputs: [
+  //         {
+  //           internalType: "address",
+  //           name: "_lgentry",
+  //           type: "address",
+  //         },
+  //       ],
+  //       name: "setEntryAddress",
+  //       outputs: [],
+  //       stateMutability: "nonpayable",
+  //       type: "function",
+  //     },
+  //     {
+  //       inputs: [
+  //         {
+  //           internalType: "address",
+  //           name: "newOwner",
+  //           type: "address",
+  //         },
+  //       ],
+  //       name: "transferOwnership",
+  //       outputs: [],
+  //       stateMutability: "nonpayable",
+  //       type: "function",
+  //     },
+  //     {
+  //       inputs: [
+  //         {
+  //           internalType: "address",
+  //           name: "",
+  //           type: "address",
+  //         },
+  //       ],
+  //       name: "userInvestmentCount",
+  //       outputs: [
+  //         {
+  //           internalType: "uint256",
+  //           name: "",
+  //           type: "uint256",
+  //         },
+  //       ],
+  //       stateMutability: "view",
+  //       type: "function",
+  //     },
+  //     {
+  //       inputs: [
+  //         {
+  //           internalType: "address",
+  //           name: "",
+  //           type: "address",
+  //         },
+  //         {
+  //           internalType: "uint256",
+  //           name: "",
+  //           type: "uint256",
+  //         },
+  //       ],
+  //       name: "userInvestmentHistory",
+  //       outputs: [
+  //         {
+  //           internalType: "address",
+  //           name: "contractAddress",
+  //           type: "address",
+  //         },
+  //         {
+  //           internalType: "uint256",
+  //           name: "balance",
+  //           type: "uint256",
+  //         },
+  //       ],
+  //       stateMutability: "view",
+  //       type: "function",
+  //     },
+  //   ],
+  //   signerOrProvider: signerData,
+  // });
   const { data: userInvestments } = useContractRead({
     address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
     abi: [
@@ -469,10 +469,34 @@ const MyInvestments: NextPage = () => {
         type: "event",
       },
       {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: false,
+            internalType: "bool",
+            name: "success",
+            type: "bool",
+          },
+          {
+            indexed: false,
+            internalType: "bytes",
+            name: "data",
+            type: "bytes",
+          },
+        ],
+        name: "UserInvested",
+        type: "event",
+      },
+      {
         inputs: [
           {
             internalType: "address",
-            name: "contractAddress",
+            name: "_contractAddress",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "_userAddress",
             type: "address",
           },
           {
@@ -810,7 +834,7 @@ const MyInvestments: NextPage = () => {
   //       args: []
   //     },
 
-  const [contractsToRead, setContractsToRead] = useState([]);
+  // const [contractsToRead, setContractsToRead] = useState([]);
   // for (let i = 0; i < contractCount.toNumber(); i++) {
   //   contractsToRead.push({
   //     abi: InvestAbi,
@@ -820,34 +844,32 @@ const MyInvestments: NextPage = () => {
   // }
 
   // console.log("deployedContracts>>>", contractCount.toString());
-  // console.log("userInvestments>>", userInvestments);
+  console.log("userInvestments>>", userInvestments);
 
   useEffect(() => {
-    (async () => {
-      if (userInvestments) {
-        const fullInvestment = [];
-        userInvestments.forEach((element) => {
-          // const newInvestment: InvestmentType = {};
-          // newInvestment.title = element.title;
-        });
-        userInvestments.map((ui) => {
-          const id = investmentData.find(
-            (i) => i.address[31337] == ui.contractAddress
-          );
-          const uc: InvestmentType = {
-            id: id.id,
-            title: id.title,
-            address: ui.contractAddress,
-            chassis: id.chassis,
-            totalProduction: id.totalProduction,
-            totalModelProduction: id.totalModelProduction,
-            colorCombination: id.colorCombination,
-          };
-          setUserContracts([...userContracts, uc]);
-        });
-        console.log(userInvestments);
-      }
-    })();
+    const populateInvestment = async () => {
+      if (!userInvestments || !investmentData) return;
+      userInvestments.map((ui, idx) => {
+        if (ui) {
+          const inv = investmentData?.find((i) => i.address[31337] == ui[idx]);
+          if (inv) {
+            console.log(ui[idx]);
+
+            const uc: InvestmentType = {
+              id: inv.id,
+              title: inv.title,
+              address: ui[idx] as Address,
+              chassis: inv.chassis,
+              totalProduction: inv.totalProduction,
+              totalModelProduction: inv.totalModelProduction,
+              colorCombination: inv.colorCombination,
+            };
+            setUserContracts([...userContracts, uc]);
+          }
+        }
+      });
+    };
+    populateInvestment();
     /*
     const getFactory = async () => {
       try {
@@ -888,7 +910,8 @@ const MyInvestments: NextPage = () => {
     };
     getFactory();
     */
-  }, [userInvestments]);
+    return () => console.log("Cleanup..");
+  }, []);
 
   //address: investment.address[process.env.NEXT_PUBLIC_CHAIN_ID as Address],
 

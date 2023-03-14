@@ -43,10 +43,34 @@ export const FactoryAbi = [
     type: "event",
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "bool",
+        name: "success",
+        type: "bool",
+      },
+      {
+        indexed: false,
+        internalType: "bytes",
+        name: "data",
+        type: "bytes",
+      },
+    ],
+    name: "UserInvested",
+    type: "event",
+  },
+  {
     inputs: [
       {
         internalType: "address",
-        name: "contractAddress",
+        name: "_contractAddress",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_userAddress",
         type: "address",
       },
       {
@@ -382,6 +406,11 @@ export const InvestAbi = [
         name: "_paymentTokenAddress",
         type: "address",
       },
+      {
+        internalType: "address",
+        name: "_factoryAddress",
+        type: "address",
+      },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
@@ -674,6 +703,25 @@ export const InvestAbi = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "balanceReceived",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "enum Investment.Status",
         name: "_newStatus",
         type: "uint8",
@@ -729,6 +777,38 @@ export const InvestAbi = [
         internalType: "address",
         name: "",
         type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "factoryAddress",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_user",
+        type: "address",
+      },
+    ],
+    name: "getBalanceReceived",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "_investmentCount",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
