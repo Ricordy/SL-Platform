@@ -10,7 +10,7 @@ import {
   useSigner,
   Address,
 } from "wagmi";
-import { classNames } from "../utils/css";
+import { classNames } from "../lib/utils";
 import NftCheckedIcon from "../components/NftCheckedIcon";
 import toast from "react-hot-toast";
 import useNFTChecker from "../hooks/useNFTChecker";

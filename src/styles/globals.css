@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+h3 {
+  @apply text-3xl font-medium;
+}
+p {
+  @apply font-light;
+}

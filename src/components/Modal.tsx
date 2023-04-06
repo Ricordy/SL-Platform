@@ -1,6 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, ReactNode, useState } from "react";
-import { classNames } from "../utils/css";
+import { classNames } from "../lib/utils";
 
 interface ModalType {
   title: string;

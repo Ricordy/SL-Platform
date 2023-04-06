@@ -2,6 +2,8 @@ import { Menu, Transition } from "@headlessui/react";
 import { forwardRef, Fragment } from "react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
+import Image from "next/image";
+import { useAccount } from "wagmi";
 
 type MenuProps = {
   logout: () => void;
@@ -29,16 +31,26 @@ function classNames(...classes) {
 }
 
 export default function ProfileMenu(props: MenuProps) {
+  const { address } = useAccount();
   return (
-    <div className="top-16 w-56 md:text-right">
+    <>
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button className="inline-flex w-full justify-center rounded-md bg-black bg-opacity-0 px-4 py-2 font-medium hover:bg-opacity-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            <ProfileIcon className="mr-2 h-5 w-5" aria-hidden="true" />
-            <ChevronDownIcon
+          <Menu.Button className="inline-flex items-center border-white border-2 gap-3 w-full justify-center rounded-full bg-black bg-opacity-0 p-1 hover:bg-opacity-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+            <Image
+              src="/icons/avatar.svg"
+              width={27}
+              height={27}
+              alt="Profile icon"
+            />
+            {/* <ProfileIcon className="mr-2 h-5 w-5" aria-hidden="true" /> */}
+            {/* <ChevronDownIcon
               className="ml-2 -mr-1 h-5 w-5 text-gray-300 hover:text-gray-100"
               aria-hidden="true"
-            />
+            /> */}
+            <span className="text-white text-xs pr-2">
+              {address.slice(0, 10)}
+            </span>
           </Menu.Button>
         </div>
         <Transition
@@ -61,7 +73,7 @@ export default function ProfileMenu(props: MenuProps) {
                       } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                     >
                       <ProfileIcon
-                        className="mr-2 h-5 w-5 text-gray-400"
+                        className="h-5 w-5 text-gray-400"
                         aria-hidden="true"
                       />
                       Profile
@@ -128,7 +140,7 @@ export default function ProfileMenu(props: MenuProps) {
           </Menu.Items>
         </Transition>
       </Menu>
-    </div>
+    </>
   );
 }
 

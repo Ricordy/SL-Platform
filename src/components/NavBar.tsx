@@ -1,27 +1,25 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import logo from "../../public/logo-black.svg";
+import logo from "../../public/logo-white.svg";
 import ProfileMenu from "./ProfileMenu";
 import { ChainIcon, ConnectKitButton } from "connectkit";
 import { useAccount, useNetwork } from "wagmi";
 import { disconnect } from "@wagmi/core";
-import { useIsMounted } from "../hooks/useIsMounted";
 
 interface MenuItemProps {
   link: string;
   text: string;
 }
 
-const Nav = () => {
+const NavBar = () => {
   const { isConnected, isConnecting, isDisconnected } = useAccount();
-  const mounted = useIsMounted();
 
   const [navbar, setNavbar] = useState(false);
   const menuItems: MenuItemProps[] = [
     {
       link: "/#investments",
-      text: "Investments",
+      text: "MyInvestments",
     },
     {
       link: "/#puzzle",
@@ -35,23 +33,52 @@ const Nav = () => {
 
   return (
     <>
-      <nav className="md:flex hidden justify-between w-full max-w-4xl mx-auto p-6 lg:px-0 shrink-0">
+      <nav className="md:flex max-w-screen-lg relative z-50 hidden justify-between w-full mx-auto lg:px-0 shrink-0 py-6">
         <Link href="/">
           <a>
             <Image src={logo} alt="Something Legendary logo" />
           </a>
         </Link>
-        <Link href="/#investments">
-          <a className="px-4 py-2">Investments</a>
-        </Link>
-        <Link href="/#puzzle">
-          <a className="px-4 py-2">Puzzle</a>
-        </Link>
-        <Link href="/faq">
-          <a className="px-4 py-2">FAQ</a>
-        </Link>
-        {mounted && isConnected && <ProfileMenu logout={disconnect} />}
-        {!isConnected && mounted && <ConnectKitButton />}
+        <div className="flex justify-center gap-6 items-center">
+          {isConnected && (
+            <>
+              <Link href="/#investments">
+                <a className="text-white">my Investments</a>
+              </Link>
+              <Link href="/#investments">
+                <a className=" text-white">
+                  <Image
+                    src="/icons/alert.svg"
+                    width={16}
+                    height={19}
+                    alt="Alert"
+                  />
+                </a>
+              </Link>
+              <ProfileMenu logout={disconnect} />
+              <Link href="#">
+                <a className="py-2" onClick={disconnect}>
+                  <Image
+                    src="/icons/logout.svg"
+                    alt="Logout"
+                    width={20}
+                    height={18}
+                  />
+                </a>
+              </Link>
+            </>
+          )}
+          {!isConnected && (
+            <ConnectKitButton
+              customTheme={{
+                "--ck-connectbutton-color": "rgba(0, 0, 0)",
+                "--ck-connectbutton-background": "rgb(255,255,255)",
+                "--ck-connectbutton-hover-background": "rgb(230,230,230)",
+                "--ck-connectbutton-hover-color": "rgba(0,0,0,0.8)",
+              }}
+            />
+          )}
+        </div>
       </nav>
       <nav className="bg-white shadow-sm flex fixed w-full z-20 md:hidden  drop-shadow-md px-3 py-0 items-center justify-around">
         <div className="justify-between px-4 w-full md:items-center md:flex md:px-8 ">
@@ -124,7 +151,7 @@ const Nav = () => {
                   FAQ
                 </a>
               </Link>
-              {mounted && isConnected && (
+              {isConnected && (
                 <>
                   <Link className="flex " href="/profile">
                     <a
@@ -160,7 +187,7 @@ const Nav = () => {
                   </Link>
                 </>
               )}
-              {!isConnected && mounted && <ConnectKitButton />}
+              {!isConnected && <ConnectKitButton />}
             </div>
           </div>
         </div>
@@ -169,4 +196,4 @@ const Nav = () => {
   );
 };
 
-export default Nav;
+export default NavBar;

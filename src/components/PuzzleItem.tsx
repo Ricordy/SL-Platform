@@ -1,6 +1,6 @@
 import React from "react";
 import { NumericFormat } from "react-number-format";
-import { classNames } from "../utils/css";
+import { classNames } from "../lib/utils";
 
 type PuzzleItemData = {
   level?: number;

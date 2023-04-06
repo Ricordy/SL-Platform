@@ -13,7 +13,7 @@ import {
 } from "wagmi";
 import useCheckEntryNFT from "../hooks/useCheckEntryNFT";
 import { InvestAbi, FactoryAbi } from "../data/ABIs";
-import { classNames } from "../utils/css";
+import { classNames } from "../lib/utils";
 import { BigNumber } from "ethers";
 
 interface InvestmentBlockchainType {
