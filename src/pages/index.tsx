@@ -7,6 +7,7 @@ import Puzzle from "../components/Puzzle";
 import NavBar from "../components/NavBar";
 import { Button } from "../components/ui/Button";
 import Link from "next/link";
+import Carousel from "../components/Carousel";
 
 const Home: NextPage = (props) => {
   return (
@@ -38,10 +39,10 @@ const Home: NextPage = (props) => {
               </Link>
             </div>
           </div>
-          {/* <Slider /> */}
         </div>
-        <div className="min-h-[500px] -mt-[300px] relative z-20 max-w-screen-lg mx-auto">
-          <h3 className="text-white">Our cars</h3>
+        <div className="min-h-[500px] -mt-[300px] relative z-20 left-1/2 -ml-[570px]  max-w-[1338px] mx-auto">
+          <h3 className="text-white self-start ml-[58px] pb-6">Our cars</h3>
+          <Carousel id="1" />
         </div>
       </section>
       <main className="mx-auto flex flex-col">
