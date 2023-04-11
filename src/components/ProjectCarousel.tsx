@@ -10,28 +10,52 @@ import "swiper/css";
 import "swiper/css/pagination";
 // import "swiper/css/navigation";
 
-interface CarouselItemProps {
+export interface CarouselItemProps {
   title: string;
   image: string;
+  status: string;
   price: string;
+  progress: string;
 }
 
-const CarouselItem = ({ title, image, price }: CarouselItemProps) => {
+const CarouselItem = ({
+  title,
+  image,
+  status,
+  price,
+  progress,
+}: CarouselItemProps) => {
   return (
-    <div className="flex flex-col w-full rounded-md">
+    <div className=" w-full rounded-md">
       <div
         className={cn(
-          "flex flex-col justify-end items-center min-h-[394px] rounded-md bg-cover relative gap-3",
+          "flex flex-col w-full  justify-end items-center min-h-[394px] rounded-md bg-cover relative gap-3",
           image
         )}
       >
-        <h4 className="z-10 uppercase text-3xl text-white">{title}</h4>
+        <h4 className="z-10 uppercase text-2xl text-white">{title}</h4>
         <div className="flex z-10 relative gap-3 pb-6 justify-center w-full">
-          <div className="flex">
-            <div className="flex gap-3">
+          <div className="flex gap-3 items-center">
+            <div className="flex flex-col">
+              <h4 className="text-white">Status:</h4>
+              <span className="font-light text-white">{status}</span>
+            </div>
+            <div className="flex flex-col">
+              <h4 className="text-white">Price:</h4>
               <span className="font-light text-white">{price}</span>
             </div>
+            <div className="flex gap-3">
+              <span className="font-light text-white">
+                {progress}% Finished
+              </span>
+            </div>
           </div>
+        </div>
+        <div className="bg-[#DCDCDC] h-3 w-full flex z-10 absolute bottom-0 left-0 rounded-b-md">
+          <div
+            className={` bg-progressHighlight rounded-bl-md`}
+            style={{ width: `${progress}%` }}
+          ></div>
         </div>
         <div className="flex z-0 absolute rounded-b-md w-full min-h-[200px] bg-[url('/projects/car-gradient.svg')] bg-cover"></div>
       </div>
@@ -44,43 +68,56 @@ interface CarouselProps {
   className?: string;
   title?: ReactNode;
   prevNavWhite?: boolean;
+  items?: CarouselItemProps[];
 }
 
-const items = [
+const localItems = [
   {
     title: "Maserati 3500 GT",
     image: "bg-[url('/projects/car-1.jpg')]",
     price: "US$350.000",
+    status: "Renewing",
+    progress: "25",
   },
   {
     title: "Chevrolet 200",
     image: "bg-[url('/projects/car-2.jpg')]",
     price: "US$350.000",
+    status: "Renewing",
+    progress: "15",
   },
 
   {
     title: "Chevrolet 300",
     image: "bg-[url('/projects/car-3.jpg')]",
     price: "US$350.000",
+    status: "Renewing",
+    progress: "10",
   },
   {
     title: "Maserati 3500 GT",
     image: "bg-[url('/projects/car-1.jpg')]",
     price: "US$350.000",
+    status: "Renewing",
+    progress: "25",
   },
   {
     title: "Chevrolet 200",
     image: "bg-[url('/projects/car-2.jpg')]",
     price: "US$350.000",
+    status: "Renewing",
+    progress: "15",
   },
 ];
 
-const Carousel: FC<CarouselProps> = ({
+const ProjectCarousel: FC<CarouselProps> = ({
   id,
   className,
   title,
   prevNavWhite,
+  items,
 }) => {
+  items = items ?? localItems;
   return (
     <div className={className ?? ""}>
       {title && (
@@ -103,13 +140,13 @@ const Carousel: FC<CarouselProps> = ({
         </div>
         <section
           className={cn(
-            " ml-[58px] z-10  relative items-center flex flex-col w-full"
+            " ml-[58px] z-10 relative items-center flex flex-col w-full"
           )}
         >
-          <div className="flex relative z-10 w-1/2 swiper-wrapper ">
+          <div className="relative w-full z-10 swiper-wrapper ">
             <Swiper
               modules={[Navigation, A11y]}
-              className="swiper "
+              className="swiper w-full"
               spaceBetween={24}
               slidesPerView={4}
               navigation={{
@@ -128,6 +165,8 @@ const Carousel: FC<CarouselProps> = ({
                     title={item.title}
                     image={item.image}
                     price={item.price}
+                    progress={item.progress}
+                    status={item.status}
                   />
                 </SwiperSlide>
               ))}
@@ -149,4 +188,4 @@ const Carousel: FC<CarouselProps> = ({
   );
 };
 
-export default Carousel;
+export default ProjectCarousel;
