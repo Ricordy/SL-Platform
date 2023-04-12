@@ -10,12 +10,12 @@ const buttonVariants = cva(
         default:
           "bg-slate-900 text-white hover:bg-primaryGreen dark:bg-slate-50 dark:text-slate-900",
         outline:
-          "bg-transparent border-2 border-white hover:bg-primaryGreen dark:border-white dark:text-slate-100",
+          "bg-transparent text-black border-2 border-black hover:bg-primaryGreen hover:border-white",
       },
       size: {
         big: "h-20 py-20 px-20",
-        default: "h-9 py-1 px-8",
-        sm: "h-8 px-4",
+        default: "h-8 py-1 px-8",
+        sm: "h-7 px-4",
       },
     },
     defaultVariants: {

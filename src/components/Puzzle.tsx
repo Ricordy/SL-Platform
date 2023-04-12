@@ -1,25 +1,158 @@
 import React from "react";
 import Link from "next/link";
+import { Tab } from "@headlessui/react";
+import { classNames } from "../lib/utils";
+import Carousel from "./Carousel";
+import Image from "next/image";
+import { Button } from "./ui/Button";
 
 const Puzzle = () => {
-  return (
-    <section id="puzzle">
-      <h2 className="text-2xl pb-6">Puzzle</h2>
-      <div className="flex flex-col sm:flex-row gap-2 justify-between">
-        <div className="flex flex-col items-center  justify-center bg-gray-200 p-6 rounded-md md:w-1/3">
-          <Link href="/my-puzzle">View My Puzzle</Link>
-        </div>
-        <div className="flex flex-col items-center  justify-center bg-gray-200 p-6 rounded-md md:w-1/3">
-          <Link href="/profile">Claim NFT Puzzle</Link>
-        </div>
+  const NFTs: number[][] = [
+    Array.from({ length: 10 }, (_, k) => k),
+    Array(10).fill(0),
+  ];
+  const levels = [
+    {
+      title: "Level 1",
+      locked: false,
+      profitRange: "12-15",
+      description:
+        "Don't be afraid to invest with lower margins, here the most important margin is the profit margin that naturally accompanies the investment ratio.",
 
-        <div className="flex flex-col items-center  justify-center bg-gray-200 p-6 rounded-md md:w-1/3">
-          <a onClick={()=> window.open("https://testnets.opensea.io/collection/unidentified-contract-slm5tudv7n", "_blank")}>
-            <div className="">Buy on OpenSea </div>
-          </a>
-          <div className="text-xs">Available Soon</div>
-        </div>
-      </div>
+      progress: 42,
+      invested: 20000,
+      collected: 2,
+    },
+    {
+      title: "Level 2",
+      locked: true,
+      profitRange: "15-18",
+      description:
+        "The path is made by walking and you are one step closer to having the intended return! Level 2 of the puzzle takes you to an investment level never before explored with a tailor-made financial return!",
+      progress: 0,
+      invested: 0,
+      collected: 0,
+    },
+    {
+      title: "Level 3",
+      locked: true,
+      profitRange: "18-20",
+      description:
+        "There is no going back, you are at the highest point of your investment with the highest profit margins. Nothing ventured, nothing gained, and if risk is your middle name, you're on the right track!",
+      progress: 0,
+      invested: 0,
+      collected: 0,
+    },
+  ];
+
+  return (
+    <section
+      id="puzzle"
+      className="w-full  mx-auto max-w-[1338px] flex flex-col"
+    >
+      <h2 className="text-2xl uppercase pb-6 ml-[124px]">My Puzzle</h2>
+      <Tab.Group>
+        <Tab.List className="flex ml-[124px] w-full border-b border-b-gray-900/20">
+          {levels.map((level) => (
+            <Tab
+              key={level.title}
+              className={({ selected }) =>
+                classNames(
+                  " min-w-fit flex justify-center gap-3 px-6 py-6 text-lg font-light  leading-5 text-tabInactive",
+                  "focus:outline-none",
+                  selected
+                    ? "bg-white text-primaryGreen border-b-2 font-medium border-primaryGreen"
+                    : " hover:bg-white/[0.12] hover:text-tabInactive/80"
+                )
+              }
+            >
+              {level.title}{" "}
+              {level.locked && (
+                <Image
+                  alt="Locked"
+                  src="/icons/locked.svg"
+                  width={20}
+                  height={20}
+                />
+              )}
+            </Tab>
+          ))}
+        </Tab.List>
+        <Tab.Panels className="mt-2 ml-[58px]">
+          {levels.map((level, idx) => {
+            return (
+              <Tab.Panel
+                key={idx}
+                className={classNames(
+                  "rounded-xl bg-white py-6",
+                  "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2"
+                )}
+              >
+                <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-6 ml-[58px]">
+                    <div className="flex  flex-col gap-6 bg-puzzleProfitNotice p-6 rounded-md">
+                      <h3 className="uppercase ml-[124px]tracking-wider text-2xl">
+                        You have{" "}
+                        <span className="text-primaryGold">
+                          {level.profitRange.split("-")[0]} to{" "}
+                          {level.profitRange.split("-")[1]} profit
+                        </span>
+                      </h3>
+
+                      <p className="font-light">{level.description}</p>
+                      {idx < 2 && (
+                        <span className="uppercase text-xs font-medium">
+                          Next level:{" "}
+                          {levels.at(idx + 1).profitRange.split("-")[0]}% to{" "}
+                          {levels.at(idx + 1).profitRange.split("-")[1]}%{" "}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex gap-6">
+                      <div className="flex gap-3">
+                        <p className="text-md">
+                          Progress:{" "}
+                          <span className="font-medium">{level.progress}%</span>
+                        </p>
+                      </div>
+                      <div className="flex gap-3">
+                        <p className="text-md">
+                          Invested:{" "}
+                          <span className="font-medium">{level.invested}$</span>
+                        </p>
+                      </div>
+                      <div className="flex gap-3">
+                        <p className="text-md">
+                          Collected:{" "}
+                          <span className="font-medium">{level.collected}</span>{" "}
+                          | 10
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex justify-center items-center gap-6">
+                      <div className="bg-progressBackground h-2 w-full flex bottom-0 left-0 rounded-md">
+                        <div
+                          className={` bg-progressHighlight rounded-md`}
+                          style={{ width: `${level.progress}%` }}
+                        ></div>
+                      </div>
+                      <Button variant="outline">Claim</Button>
+                    </div>
+                  </div>
+                  {!level.locked && (
+                    <Carousel
+                      id={idx.toString()}
+                      // items={investmentData.filter(
+                      //   (i) => i.status == investmentStatus
+                      // )}
+                    />
+                  )}
+                </div>
+              </Tab.Panel>
+            );
+          })}
+        </Tab.Panels>
+      </Tab.Group>
     </section>
   );
 };
