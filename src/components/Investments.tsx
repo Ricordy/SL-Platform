@@ -15,7 +15,7 @@ export default function Investments() {
       id="investments"
       className="relative max-w-[1338px] w-full overflow-hidden flex flex-col"
     >
-      <h2 className="text-2xl ml-[58px] my-6 uppercase">My Investments</h2>
+      <h2 className="text-2xl ml-[58px] mb-6 uppercase">My Investments</h2>
       <Tab.Group>
         <Tab.List className="flex ml-[58px] w-fit border-b border-b-gray-900/20">
           {investmentStatuses.map((investmentStatus) => (
@@ -41,7 +41,7 @@ export default function Investments() {
               <Tab.Panel
                 key={idx}
                 className={classNames(
-                  "rounded-xl bg-white py-6",
+                  " pt-6",
                   "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2"
                 )}
               >

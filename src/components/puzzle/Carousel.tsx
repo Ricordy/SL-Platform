@@ -1,40 +1,57 @@
 import Image from "next/image";
-import Link from "next/link";
 import { FC, ReactNode } from "react";
-import { cn } from "../lib/utils";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { cn } from "../../lib/utils";
+import { Navigation, A11y } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
 import "swiper/css";
-import "swiper/css/pagination";
-// import "swiper/css/navigation";
 
 interface CarouselItemProps {
   title: string;
   image: string;
-  price: string;
+  amount: number;
 }
 
-const CarouselItem = ({ title, image, price }: CarouselItemProps) => {
+const CarouselItem = ({ title, image, amount }: CarouselItemProps) => {
   return (
-    <div className="flex flex-col w-full rounded-md">
-      <div
-        className={cn(
-          "flex flex-col justify-end items-center min-h-[394px] rounded-md bg-cover relative gap-3",
-          image
-        )}
-      >
-        <h4 className="z-10 uppercase text-3xl text-white">{title}</h4>
-        <div className="flex z-10 relative gap-3 pb-6 justify-center w-full">
-          <div className="flex">
-            <div className="flex gap-3">
-              <span className="font-light text-white">{price}</span>
+    <div className="flex group justify-center items-center flex-col w-full rounded-md">
+      <div className="w-full min-h-full justify-center text-white items-center flex-col flex z-20 absolute rounded-md opacity-0 bg-primaryGold group-hover:opacity-100">
+        <span className="font-normal tracking-widest  uppercase text-center text-md">
+          {title}
+        </span>
+        <span className="font-medium text-xl">LOREM</span>
+      </div>
+      {amount > 0 ? (
+        <div
+          className={cn(
+            "flex flex-col w-full justify-start items-center min-h-[396px] rounded-md bg-center bg-cover relative gap-3",
+            image
+          )}
+        >
+          <div className="flex z-10 relative gap-3 pb-6 justify-end items-start w-full">
+            <div className="flex gap-3 text-primaryGold justify-center items-center p-3">
+              <div className="font-normal flex justify-center items-center text-center text-lg h-10 w-10 border border-primaryGold rounded-full">
+                {amount}
+                <span className="text-md">x</span>
+              </div>
             </div>
           </div>
         </div>
-        <div className="flex z-0 absolute rounded-b-md w-full min-h-[200px] bg-[url('/projects/car-gradient.svg')] bg-cover"></div>
-      </div>
+      ) : (
+        <div
+          className={cn(
+            "flex w-full flex-col justify-center hover:text-white bg-contactBackground items-center min-h-[396px] rounded-md gap-3"
+          )}
+        >
+          <div className="flex gap-3 justify-center items-center w-full">
+            <div className="font-normal tracking-widest text-black uppercase flex flex-col justify-center items-center text-center text-md">
+              Next NFT
+              <span className="font-medium text-xl">{title}</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -49,30 +66,29 @@ interface CarouselProps {
 
 const items = [
   {
-    title: "Maserati 3500 GT",
-    image: "bg-[url('/projects/car-1.jpg')]",
-    price: "US$350.000",
+    title: "Engine",
+    image: "bg-[url('/nfts/puzzle-1.png')]",
+    amount: 1,
+  },
+  {
+    title: "Wheel",
+    image: "bg-[url('/nfts/puzzle-2.png')]",
+    amount: 2,
+  },
+  {
+    title: "Grill",
+    image: "bg-[url('/nfts/puzzle-2.png')]",
+    amount: 5,
+  },
+  {
+    title: "Body",
+    image: "bg-[url('/nfts/puzzle-2.png')]",
+    amount: 0,
   },
   {
     title: "Chevrolet 200",
-    image: "bg-[url('/projects/car-2.jpg')]",
-    price: "US$350.000",
-  },
-
-  {
-    title: "Chevrolet 300",
-    image: "bg-[url('/projects/car-3.jpg')]",
-    price: "US$350.000",
-  },
-  {
-    title: "Maserati 3500 GT",
-    image: "bg-[url('/projects/car-1.jpg')]",
-    price: "US$350.000",
-  },
-  {
-    title: "Chevrolet 200",
-    image: "bg-[url('/projects/car-2.jpg')]",
-    price: "US$350.000",
+    image: "bg-[url('/nfts/puzzle-2.png')]",
+    amount: 0,
   },
 ];
 
@@ -128,7 +144,7 @@ const Carousel: FC<CarouselProps> = ({
                   <CarouselItem
                     title={item.title}
                     image={item.image}
-                    price={item.price}
+                    amount={item.amount}
                   />
                 </SwiperSlide>
               ))}

@@ -56,9 +56,9 @@ const Home: NextPage = (props) => {
       <div className="min-h-[500px] w-full relative z-20 left-1/2 -ml-[570px] max-w-[1338px] mx-auto">
         <Investments />
       </div>
-      <main className="mx-auto  max-w-screen-xl flex flex-col">
-        <Puzzle />
-      </main>
+      <div className="mx-auto w-full relative left-1/2 -ml-[570px] max-w-[1338px]">
+        <Puzzle className="relative max-w-[1338px] w-full  flex flex-col pt-[132px]" />
+      </div>
     </>
   );
 };

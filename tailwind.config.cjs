@@ -23,8 +23,9 @@ module.exports = {
         primaryGrey: "#757C79",
         secondaryGrey: "#535955",
         progressHighlight: "#2BDA9F",
-        progressBackground: "#DCDCDC",
+        progressBackground: "#F2F5F7",
         contactBackground: "#F7F7F7",
+
         // tabInactive: "#757C79",
         tabInactive: "#8C9592",
         puzzleProfitNotice: "#F6F9F8",
