@@ -87,7 +87,7 @@ const Puzzle: FC<PuzzleProps> = ({ className }) => {
               <Tab.Panel
                 key={idx}
                 className={classNames(
-                  "rounded-xl py-8 w-full",
+                  "rounded-xl pt-8 pb-[132px] w-full",
                   "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2"
                 )}
               >

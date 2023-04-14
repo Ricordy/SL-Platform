@@ -8,6 +8,47 @@ import NavBar from "../components/NavBar";
 import { Button } from "../components/ui/Button";
 import Link from "next/link";
 import Carousel from "../components/Carousel";
+import Posts from "../components/Posts";
+import { PostItemProps } from "../@types/post";
+
+const posts: PostItemProps[] = [
+  {
+    title: "Lorem Ipsum Dolor sit amet elit eiusmod",
+    image: "/posts/post-1.jpg",
+    slug: "lorem-1",
+    children: (
+      <p className="text-primaryGrey">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam...
+      </p>
+    ),
+  },
+  {
+    title: "Lorem Ipsum Dolor sit amet elit eiusmod",
+    image: "/posts/post-2.jpg",
+    slug: "lorem-2",
+    children: (
+      <p className="text-primaryGrey">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam...
+      </p>
+    ),
+  },
+  {
+    title: "Lorem Ipsum Dolor sit amet elit eiusmod",
+    image: "/posts/post-3.jpg",
+    slug: "lorem-3",
+    children: (
+      <p className="text-primaryGrey">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam...
+      </p>
+    ),
+  },
+];
 
 const Home: NextPage = (props) => {
   return (
@@ -58,6 +99,15 @@ const Home: NextPage = (props) => {
       </div>
       <div className="mx-auto w-full relative left-1/2 -ml-[570px] max-w-[1338px]">
         <Puzzle className="relative max-w-[1338px] w-full  flex flex-col pt-[132px]" />
+      </div>
+      <div className="flex bg-black w-full rounded-t-3xl pb-[132px] pt-[72px]">
+        <Posts
+          posts={posts}
+          title="Learn More"
+          titleColor="text-white"
+          buttonMoreLink="https://beta.somethinglegendary.com/learn"
+          buttonMoreText="See More"
+        />
       </div>
     </>
   );
