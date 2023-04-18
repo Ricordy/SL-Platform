@@ -23,10 +23,10 @@ export default function Investments() {
               key={investmentStatus}
               className={({ selected }) =>
                 classNames(
-                  "w-full  px-6 py-6 text-lg font-light  leading-5 text-tabInactive",
+                  "flex min-w-fit justify-center gap-3 px-6 pb-4  text-2xl font-normal  leading-5 text-tabInactive",
                   "focus:outline-none",
                   selected
-                    ? "bg-white text-primaryGreen border-b-2 font-medium border-primaryGreen"
+                    ? "bg-white text-primaryGreen border-b-4 font-semibold border-primaryGreen"
                     : " hover:bg-white/[0.12] hover:text-tabInactive/80"
                 )
               }

@@ -21,12 +21,12 @@ const CarouselItem = ({ title, image, price }: CarouselItemProps) => {
     <div className="flex flex-col w-full rounded-md">
       <div
         className={cn(
-          "flex flex-col justify-end items-center min-h-[394px] rounded-md bg-cover relative gap-3",
+          "flex flex-col justify-end items-center min-h-[394px] rounded-md bg-cover bg-center relative gap-4",
           image
         )}
       >
         <h4 className="z-10 uppercase text-3xl text-white">{title}</h4>
-        <div className="flex z-10 relative gap-3 pb-6 justify-center w-full">
+        <div className="flex z-10 relative gap-3 pb-8 justify-center w-full">
           <div className="flex">
             <div className="flex gap-3">
               <span className="font-light text-white">{price}</span>
@@ -45,6 +45,8 @@ interface CarouselProps {
   title?: ReactNode;
   prevNavWhite?: boolean;
   items?: ReactNode;
+  seeMoreLabel?: string;
+  seeMoreLink?: string;
 }
 
 const items = [
@@ -81,12 +83,27 @@ const Carousel: FC<CarouselProps> = ({
   className,
   title,
   prevNavWhite,
+  seeMoreLabel,
+  seeMoreLink,
 }) => {
   return (
     <div className={className ?? ""}>
-      {title && (
-        <div className="self-start ml-[58px] pb-6 uppercase">{title ?? ""}</div>
-      )}
+      <div className="flex justify-between mx-auto">
+        {title && (
+          <div className="self-start font-medium ml-[58px] pb-[52px] uppercase">
+            {title ?? ""}
+          </div>
+        )}
+        {seeMoreLink && seeMoreLabel && (
+          <div className=" mr-[58px]">
+            <Link href={seeMoreLink}>
+              <a className="border-b-2 border-white text-white uppercase text-sm">
+                {seeMoreLabel}
+              </a>
+            </Link>
+          </div>
+        )}
+      </div>
       <div className="relative max-w-[1338px] overflow-hidden flex items-center">
         <div
           className={`flex  absolute items-center justify-center left-0 z-20 swiper-prev-${id}`}

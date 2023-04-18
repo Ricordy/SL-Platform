@@ -97,8 +97,8 @@ const Puzzle: FC<PuzzleProps> = ({ className }) => {
                       <h3 className="uppercase ml-[124px]tracking-wider text-2xl pb-4">
                         You have{" "}
                         <span className="text-primaryGold">
-                          {level.profitRange.split("-")[0]} to{" "}
-                          {level.profitRange.split("-")[1]} profit
+                          {level.profitRange.split("-")[0]}% to{" "}
+                          {level.profitRange.split("-")[1]}% profit
                         </span>
                       </h3>
 

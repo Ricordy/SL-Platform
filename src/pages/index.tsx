@@ -86,6 +86,8 @@ const Home: NextPage = (props) => {
             id="1"
             prevNavWhite={true}
             title={<h2 className="text-white text-2xl">Our cars</h2>}
+            seeMoreLabel="See more"
+            seeMoreLink="/our-cars"
           />
           <Carousel
             id="2"
