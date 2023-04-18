@@ -53,8 +53,8 @@ const posts: PostItemProps[] = [
 const Home: NextPage = (props) => {
   return (
     <>
-      <section className="w-full mx-auto">
-        <div className="flex flex-col w-full relative rounded-bl-[56px] min-h-screen bg-cover bg-right bg-no-repeat bg-opacity-80 bg-[url('/bg/bg-home.jpg')]">
+      <section className="w-full mx-auto bg-white">
+        <div className="flex flex-col w-full relative rounded-bl-[56px] min-h-screen bg-cover bg-right bg-no-repeat bg-black bg-opacity-80 bg-[url('/bg/bg-home.jpg')]">
           <div className="absolute flex z-0 top-0 w-full min-h-[83px] bg-[url('/bg/bg-navbar.svg')]"></div>
           <div className="absolute flex z-10 left-0 w-full min-h-screen bg-bottom bg-no-repeat bg-contain bg-[url('/bg/gradient-vertical-header.svg')]"></div>
           <div className="absolute rounded-bl-[56px] flex z-0 bottom-0 w-full min-h-screen bg-left bg-no-repeat bg-cover bg-[url('/bg/gradient-horizontal-header.svg')]"></div>
@@ -95,22 +95,23 @@ const Home: NextPage = (props) => {
             title={<h2 className="text-2xl">My Favourites</h2>}
           />
         </div>
+
+        <div className="min-h-[500px] w-full relative z-20 left-1/2 -ml-[570px] max-w-[1338px] mx-auto">
+          <Investments />
+        </div>
+        <div className="mx-auto w-full relative left-1/2 -ml-[570px] max-w-[1338px]">
+          <Puzzle className="relative max-w-[1338px] w-full  flex flex-col pt-[132px]" />
+        </div>
+        <div className="flex bg-black w-full rounded-t-3xl pb-[132px] pt-[72px]">
+          <Posts
+            posts={posts}
+            title="Learn More"
+            titleColor="text-white"
+            buttonMoreLink="https://beta.somethinglegendary.com/learn"
+            buttonMoreText="See More"
+          />
+        </div>
       </section>
-      <div className="min-h-[500px] w-full relative z-20 left-1/2 -ml-[570px] max-w-[1338px] mx-auto">
-        <Investments />
-      </div>
-      <div className="mx-auto w-full relative left-1/2 -ml-[570px] max-w-[1338px]">
-        <Puzzle className="relative max-w-[1338px] w-full  flex flex-col pt-[132px]" />
-      </div>
-      <div className="flex bg-black w-full rounded-t-3xl pb-[132px] pt-[72px]">
-        <Posts
-          posts={posts}
-          title="Learn More"
-          titleColor="text-white"
-          buttonMoreLink="https://beta.somethinglegendary.com/learn"
-          buttonMoreText="See More"
-        />
-      </div>
     </>
   );
 };

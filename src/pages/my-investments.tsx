@@ -15,6 +15,9 @@ import useCheckEntryNFT from "../hooks/useCheckEntryNFT";
 import { InvestAbi, FactoryAbi } from "../data/ABIs";
 import { classNames } from "../lib/utils";
 import { BigNumber } from "ethers";
+import NavBar from "../components/NavBar";
+import Image from "next/image";
+import { Button } from "../components/ui/Button";
 
 interface InvestmentBlockchainType {
   id: number;
@@ -991,13 +994,57 @@ const MyInvestments: NextPage = () => {
   // console.log(investmentData);
   if (!hasEntryNFT)
     return (
-      <div className="flex flex-col">
-        <h1>You don&apos;t have the Entry NFT</h1>
-        <Link href="/mint-entry-nft">
-          <a className="border text-center rounded py-1 px-3 bg-slate-800 text-white">
-            Buy Now
-          </a>
-        </Link>
+      <div className="flex flex-col min-h-screen mx-auto w-full">
+        <NavBar />
+        <div className="flex flex-col gap-[96px] pt-[52px] max-w-screen-lg w-full mx-auto">
+          <div className="grid grid-cols-2 w-full gap-4 items-start justify-center">
+            <div className="flex flex-col gap-8 w-[434px]">
+              <div className="flex flex-col rounded-xl  py-[72px] px-10 bg-white">
+                <div className="flex flex-col gap-[52px]">
+                  <h1 className="text-primaryGold text-5xl font-semibold uppercase">
+                    Buy your
+                    <br />
+                    <span className="text-black font-medium">Entry NFT!</span>
+                  </h1>
+                  <p className=" text-sm">
+                    Sed ut perspiciatis unde omnis iste natus error sit
+                    voluptatem accusantium doloremque laudantium, totam rem
+                    aperiam, eaque ipsa quae ab illo inventore veritatis et
+                    quasi architecto beatae vitae dicta sunt explicabo. .
+                  </p>
+                </div>
+              </div>
+              <Link href="/mint-entry-nft">
+                <a className="text-center rounded-xl py-1.5 uppercase font-medium px-3 bg-primaryGold text-white dark:text-white dark:bg-primaryGold">
+                  Buy it for 100$
+                </a>
+              </Link>
+            </div>
+            <div className="flex w-full h-full bg-center bg-contain bg-no-repeat relative bg-[url('/bg/bg-buy-entry-nft.jpg')]"></div>
+          </div>
+          <div className="flex justify-center gap-12">
+            <div className="flex flex-col">
+              <span className="text-primaryGold">
+                Total Invested until now:
+              </span>
+              <span className="font-semibold text-4xl text-white">
+                $504.600
+              </span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-primaryGold">Return expected</span>
+              <span className="font-semibold text-4xl text-white">
+                $504.600
+              </span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-primaryGold">NFTs sold until now:</span>
+              <span className="font-semibold text-4xl text-white">
+                $504.600
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     );
 

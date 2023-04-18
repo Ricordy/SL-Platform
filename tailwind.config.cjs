@@ -25,6 +25,7 @@ module.exports = {
         progressHighlight: "#2BDA9F",
         progressBackground: "#F2F5F7",
         contactBackground: "#F7F7F7",
+        buyNFTBackground: "#1E1B16",
 
         // tabInactive: "#757C79",
         tabInactive: "#8C9592",

@@ -42,7 +42,7 @@ const NavBar = () => {
         <div className="flex justify-center gap-6 items-center">
           {isConnected && (
             <>
-              <Link href="/#investments">
+              <Link href="/my-investments">
                 <a className="text-white">my Investments</a>
               </Link>
               <Link href="/#investments">
