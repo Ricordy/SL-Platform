@@ -16,7 +16,7 @@ interface CarouselItemProps {
   price: string;
 }
 
-const CarouselItem = ({ title, image, price }: CarouselItemProps) => {
+export const CarouselItem = ({ title, image, price }: CarouselItemProps) => {
   return (
     <div className="flex flex-col w-full rounded-md">
       <div
@@ -49,7 +49,7 @@ interface CarouselProps {
   seeMoreLink?: string;
 }
 
-const items = [
+export const carouselItems = [
   {
     title: "Maserati 3500 GT",
     image: "bg-[url('/projects/car-1.jpg')]",
@@ -140,7 +140,7 @@ const Carousel: FC<CarouselProps> = ({
               initialSlide={0}
               loop={true}
             >
-              {items.map((item, index) => (
+              {carouselItems.map((item, index) => (
                 <SwiperSlide key={index}>
                   <CarouselItem
                     title={item.title}

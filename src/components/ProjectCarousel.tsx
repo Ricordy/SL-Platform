@@ -121,7 +121,9 @@ const ProjectCarousel: FC<CarouselProps> = ({
   return (
     <div className={className ?? ""}>
       {title && (
-        <div className="self-start ml-[58px] pb-6 uppercase">{title ?? ""}</div>
+        <div className="self-start ml-[58px] pb-[52px] uppercase">
+          {title ?? ""}
+        </div>
       )}
       <div className="relative max-w-[1338px] overflow-hidden flex items-center">
         <div

@@ -4,18 +4,18 @@ import Carousel from "../components/Carousel";
 
 const ourCars = () => {
   return (
-    <section className="w-full mx-auto">
-      <div className="flex flex-col w-full relative rounded-bl-[56px] min-h-screen bg-cover bg-right bg-no-repeat bg-opacity-80 bg-[url('/bg/bg-our-cars.jpg')]">
+    <section className="w-full mx-auto bg-white">
+      <div className="flex flex-col w-full relative rounded-bl-[56px] min-h-screen bg-contain bg-right bg-no-repeat bg-opacity-80 bg-[url('/bg/bg-our-cars.jpg')]">
         <div className="absolute flex z-0 top-0 w-full min-h-[83px] bg-[url('/bg/bg-navbar.svg')]"></div>
         <div className="absolute flex z-10 left-0 w-full min-h-screen bg-bottom bg-no-repeat bg-contain bg-[url('/bg/gradient-vertical-header.svg')]"></div>
         <div className="absolute rounded-bl-[56px] flex z-0 bottom-0 w-full min-h-screen bg-left bg-no-repeat bg-cover bg-[url('/bg/gradient-horizontal-header.svg')]"></div>
         <NavBar />
         <div className="flex flex-col justify-center w-full z-20 mx-auto max-w-screen-lg">
           <div className="flex flex-col gap-4 pt-8">
-            <h3 className="text-white uppercase mb-8 text-3xl tracking-widest">
+            <h3 className="text-white uppercase mb-16 text-3xl tracking-widest">
               Our Cars
             </h3>
-            <span className="text-primaryGold flex self-start rounded-full px-3 border border-primaryGold">
+            <span className="text-primaryGold uppercase flex self-start rounded-full px-3 border border-primaryGold">
               New
             </span>
             <h3 className="text-white uppercase mb-4 text-5xl tracking-widest">

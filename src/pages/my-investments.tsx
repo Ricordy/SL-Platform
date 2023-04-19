@@ -18,6 +18,8 @@ import { BigNumber } from "ethers";
 import NavBar from "../components/NavBar";
 import Image from "next/image";
 import { Button } from "../components/ui/Button";
+import Carousel, { CarouselItem, carouselItems } from "../components/Carousel";
+import ProjectCarousel from "../components/ProjectCarousel";
 
 interface InvestmentBlockchainType {
   id: number;
@@ -992,6 +994,31 @@ const MyInvestments: NextPage = () => {
   // });
 
   // console.log(investmentData);
+  const TransactionItem = () => {
+    return (
+      <div className="flex items-center justify-between">
+        <Image
+          className="rounded-md"
+          src="/projects/car-1.jpg"
+          width={64}
+          height={53}
+          alt="Car"
+        />
+        <span>Maserati 3500 GT</span>
+        <span>$200.000</span>
+        <span className="text-primaryGold text-xs">$200.000</span>
+        <span>9 jun 2022</span>
+        <Link href="/">
+          <Image
+            src="/icons/external-link.svg"
+            width={10}
+            height={10}
+            alt="External link"
+          />
+        </Link>
+      </div>
+    );
+  };
   if (!hasEntryNFT)
     return (
       <div className="flex flex-col min-h-screen mx-auto w-full">
@@ -1049,72 +1076,167 @@ const MyInvestments: NextPage = () => {
     );
 
   return (
-    <div className="flex flex-col w-full px-6 lg:px-3 mt-16 md:mt-0">
-      <h2 className="text-2xl py-6">My Investments</h2>
+    <section className="w-full mx-auto bg-white">
+      <div className="flex flex-col w-full relative rounded-bl-[56px] ">
+        <div className="absolute rounded-bl-[56px] top-0 w-full bg-black h-[1092px]"></div>
+        <NavBar />
+        <div className="flex flex-col justify-center w-full z-20 mx-auto max-w-screen-lg">
+          <div className="flex flex-col gap-4 pt-8">
+            <h3 className="text-white uppercase mb-8 text-3xl tracking-widest">
+              My Investments
+            </h3>
+            <h2 className="mb-12 text-white text-5xl uppercase">
+              Welcome{" "}
+              <span className="text-primaryGold font-medium">Home, sir</span>
+            </h2>
+            <div className="grid grid-cols-2 auto-rows-[1fr] text-white gap-12">
+              <div className="flex flex-col  gap-4">
+                <span>Overview:</span>
+                <div className="flex flex-col flex-1 gap-8 bg-myInvestmentsBackground rounded-md py-8 px-12">
+                  <div className="flex flex-col">
+                    <h5 className="text-primaryGold text-base">
+                      Total Invested:
+                    </h5>
+                    <span className="text-4xl font-semibold tracking-widest">
+                      $403.600
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <h5 className="text-primaryGold text-base">
+                      Total Invested:
+                    </h5>
+                    <span className="text-4xl font-semibold tracking-widest">
+                      $403.600
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col gap-4">
+                <span>Last transactions:</span>
+                <div className="flex flex-col flex-1 gap-2 bg-myInvestmentsBackground rounded-md py-8 px-4">
+                  <TransactionItem />
+                  <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
+                  <TransactionItem />
+                  <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
+                  <TransactionItem />
+                  <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
+                  <TransactionItem />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="min-h-[500px] mt-[52px] relative z-20 left-1/2 -ml-[570px]  max-w-[1338px] mx-auto">
+        <ProjectCarousel
+          id="1"
+          prevNavWhite={true}
+          title={<h2 className="text-white text-2xl">Active</h2>}
+        />
+        <ProjectCarousel
+          id="2"
+          className="pt-[132px]"
+          title={<h2 className="text-2xl">Upcoming</h2>}
+        />
+        <Carousel
+          id="3"
+          className="pt-[132px]"
+          title={<h2 className="text-2xl">My favorites</h2>}
+        />
+        <ProjectCarousel
+          id="4"
+          className="py-[132px]"
+          title={<h2 className="text-2xl">Finished</h2>}
+        />
+      </div>
+      <div className="flex text-white bg-black relative pb-[128px] pt-[72px] z-20 rounded-t-[56px] mx-auto">
+        <div className="flex w-full max-w-screen-lg flex-col gap-[52px] mx-auto">
+          <h3 className="uppercase text-2xl">Our suggestion for you</h3>
+          <div className="flex gap-6 mx-auto max-w-screen-lg w-full">
+            {carouselItems.slice(0, 3).map((item, idx) => (
+              <CarouselItem
+                key={idx}
+                title={item.title}
+                image={item.image}
+                price={item.price}
+              />
+            ))}
+          </div>
+        </div>
 
-      <Tab.Group>
-        <Tab.List className="flex space-x-1 rounded-xl bg-gray-900/20 p-1">
-          {Object.keys(categories).map((category) => (
-            <Tab
-              key={category}
-              className={({ selected }) =>
-                classNames(
-                  "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-gray-700",
-                  "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-400 focus:outline-none focus:ring-2",
-                  selected
-                    ? "bg-white shadow"
-                    : "text-gray-100 hover:bg-white/[0.12] hover:text-white"
-                )
-              }
-            >
-              {category}
-            </Tab>
-          ))}
-        </Tab.List>
-        <Tab.Panels className="mt-2">
-          {Object.values(categories).map((investments, idx) => (
-            <Tab.Panel
-              key={idx}
-              className={classNames(
-                "rounded-xl bg-white p-3",
-                "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-400 focus:outline-none focus:ring-2"
-              )}
-            >
-              {/* {userContracts && JSON.stringify(userContracts)} */}
-              <ul className="grid  sm:grid-cols-2 grid-cols-1 gap-2">
-                {Object.values(userContracts).map((investment) => (
-                  <li
-                    key={investment.address}
-                    className="relative rounded-md p-3 border  flex  flex-col gap-3 justify-around hover:bg-gray-100"
-                  >
-                    <h3 className="text-sm font-medium leading-5 pb-3">
-                      <Link href={`/investment/${investment.address}`}>
-                        {investment.title ?? "none"}
-                      </Link>
-                    </h3>
+        {/* <Carousel
+          id="3"
+          className="pt-[72px]"
+          title={<h2 className="text-2xl">My favorites</h2>}
+        /> */}
+      </div>
+    </section>
+    // <div className="flex flex-col w-full px-6 lg:px-3 mt-16 md:mt-0">
+    //   <h2 className="text-2xl py-6">My Investments</h2>
 
-                    {investment?.phase !== "Withdraw" ? (
-                      <div className="border p-2 text-xs rounded-md">
-                        {investment?.phase}
-                      </div>
-                    ) : (
-                      <button className="border p-2 text-xs rounded-md bg-slate-500 text-slate-100">
-                        Withdraw
-                      </button>
-                    )}
-                    <Link href={`/investment/${investment.address}/monitor`}>
-                      <a className="border p-2 text-xs rounded-md bg-slate-500 text-slate-100 text-center">
-                        Monitor Investment
-                      </a>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </Tab.Panel>
-          ))}
-        </Tab.Panels>
-      </Tab.Group>
-    </div>
+    //   <Tab.Group>
+    //     <Tab.List className="flex space-x-1 rounded-xl bg-gray-900/20 p-1">
+    //       {Object.keys(categories).map((category) => (
+    //         <Tab
+    //           key={category}
+    //           className={({ selected }) =>
+    //             classNames(
+    //               "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-gray-700",
+    //               "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-400 focus:outline-none focus:ring-2",
+    //               selected
+    //                 ? "bg-white shadow"
+    //                 : "text-gray-100 hover:bg-white/[0.12] hover:text-white"
+    //             )
+    //           }
+    //         >
+    //           {category}
+    //         </Tab>
+    //       ))}
+    //     </Tab.List>
+    //     <Tab.Panels className="mt-2">
+    //       {Object.values(categories).map((investments, idx) => (
+    //         <Tab.Panel
+    //           key={idx}
+    //           className={classNames(
+    //             "rounded-xl bg-white p-3",
+    //             "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-400 focus:outline-none focus:ring-2"
+    //           )}
+    //         >
+    //           {/* {userContracts && JSON.stringify(userContracts)} */}
+    //           <ul className="grid  sm:grid-cols-2 grid-cols-1 gap-2">
+    //             {Object.values(userContracts).map((investment) => (
+    //               <li
+    //                 key={investment.address}
+    //                 className="relative rounded-md p-3 border  flex  flex-col gap-3 justify-around hover:bg-gray-100"
+    //               >
+    //                 <h3 className="text-sm font-medium leading-5 pb-3">
+    //                   <Link href={`/investment/${investment.address}`}>
+    //                     {investment.title ?? "none"}
+    //                   </Link>
+    //                 </h3>
+
+    //                 {investment?.phase !== "Withdraw" ? (
+    //                   <div className="border p-2 text-xs rounded-md">
+    //                     {investment?.phase}
+    //                   </div>
+    //                 ) : (
+    //                   <button className="border p-2 text-xs rounded-md bg-slate-500 text-slate-100">
+    //                     Withdraw
+    //                   </button>
+    //                 )}
+    //                 <Link href={`/investment/${investment.address}/monitor`}>
+    //                   <a className="border p-2 text-xs rounded-md bg-slate-500 text-slate-100 text-center">
+    //                     Monitor Investment
+    //                   </a>
+    //                 </Link>
+    //               </li>
+    //             ))}
+    //           </ul>
+    //         </Tab.Panel>
+    //       ))}
+    //     </Tab.Panels>
+    //   </Tab.Group>
+    // </div>
   );
 };
 
