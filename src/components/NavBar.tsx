@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import logo from "../../public/logo-white.svg";
+import logoBlack from "../../public/logo-black.svg";
+import logoWhite from "../../public/logo-white.svg";
 import ProfileMenu from "./ProfileMenu";
 import { ChainIcon, ConnectKitButton } from "connectkit";
 import { useAccount, useNetwork } from "wagmi";
 import { disconnect } from "@wagmi/core";
+import { cn } from "../lib/utils";
 
 interface MenuItemProps {
   link: string;
   text: string;
 }
 
-const NavBar = () => {
+const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
   const { isConnected, isConnecting, isDisconnected } = useAccount();
 
   const [navbar, setNavbar] = useState(false);
@@ -36,30 +38,41 @@ const NavBar = () => {
       <nav className="md:flex max-w-screen-lg relative z-50 hidden justify-between w-full mx-auto lg:px-0 shrink-0 py-6">
         <Link href="/">
           <a>
-            <Image src={logo} alt="Something Legendary logo" />
+            <Image
+              src={bgWhite ? logoBlack : logoWhite}
+              alt="Something Legendary logo"
+            />
           </a>
         </Link>
         <div className="flex justify-center gap-6 items-center">
           {isConnected && (
             <>
               <Link href="/my-investments">
-                <a className="text-white">my Investments</a>
+                <a className={bgWhite ? "text-black" : "text-white"}>
+                  my Investments
+                </a>
               </Link>
               <Link href="/#investments">
                 <a className=" text-white">
                   <Image
-                    src="/icons/alert.svg"
+                    src={
+                      bgWhite
+                        ? "/icons/notification-grey.svg"
+                        : "/icons/notification-white.svg"
+                    }
                     width={16}
                     height={19}
                     alt="Alert"
                   />
                 </a>
               </Link>
-              <ProfileMenu logout={disconnect} />
+              <ProfileMenu bgWhite={bgWhite} logout={disconnect} />
               <Link href="#">
                 <a className="py-2" onClick={disconnect}>
                   <Image
-                    src="/icons/logout.svg"
+                    src={
+                      bgWhite ? "/icons/logout-black.svg" : "/icons/logout.svg"
+                    }
                     alt="Logout"
                     width={20}
                     height={18}
@@ -86,7 +99,10 @@ const NavBar = () => {
             <div className="flex items-center justify-between py-3 md:py-2 md:block w-full">
               <Link href="/">
                 <a>
-                  <Image src={logo} alt="Something Legendary logo" />
+                  <Image
+                    src={bgWhite ? logoBlack : logoWhite}
+                    alt="Something Legendary logo"
+                  />
                 </a>
               </Link>
               <div className="md:hidden">
@@ -134,7 +150,10 @@ const NavBar = () => {
           >
             <div className="items-center justify-items-end space-y-4 md:flex  md:space-x-6 md:space-y-0 ">
               <Link href="/#investments">
-                <a onClick={() => setNavbar(false)} className="flex px-4 py-2">
+                <a
+                  onClick={() => setNavbar(false)}
+                  className={cn("flex px-4 py-2", bgWhite ? "text-black" : "")}
+                >
                   Investments
                 </a>
               </Link>

@@ -14,7 +14,7 @@ const useNFTChecker = ({
   nftId,
   watch = false,
 }: HookProps) => {
-  const { data, error } = useContractRead({
+  const { data, error, isLoading } = useContractRead({
     address: contractAddress,
     abi: PuzzleAbi,
     functionName: "balanceOf",
@@ -29,7 +29,7 @@ const useNFTChecker = ({
       setHasNFT((data as number) > 0);
     }
   }, [data]);
-  return { hasNFT, error };
+  return { hasNFT, error, isLoading };
 };
 
 export default useNFTChecker;

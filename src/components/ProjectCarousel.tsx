@@ -11,6 +11,7 @@ import "swiper/css/pagination";
 // import "swiper/css/navigation";
 
 export interface CarouselItemProps {
+  id?: string;
   title: string;
   image: string;
   status: string;
@@ -19,6 +20,7 @@ export interface CarouselItemProps {
 }
 
 const CarouselItem = ({
+  id = "1",
   title,
   image,
   status,
@@ -57,6 +59,13 @@ const CarouselItem = ({
             style={{ width: `${progress}%` }}
           ></div>
         </div>
+        <a
+          href={`/investment/${id}`}
+          className={cn(
+            "absolute inset-0 rounded-md",
+            "focus:z-10 focus:outline-none focus:ring-2"
+          )}
+        />
         <div className="flex z-0 absolute rounded-b-md w-full min-h-[200px] bg-[url('/projects/car-gradient.svg')] bg-cover"></div>
       </div>
     </div>
@@ -164,6 +173,7 @@ const ProjectCarousel: FC<CarouselProps> = ({
               {items.map((item, index) => (
                 <SwiperSlide key={index}>
                   <CarouselItem
+                    id={(index + 1).toString()}
                     title={item.title}
                     image={item.image}
                     price={item.price}

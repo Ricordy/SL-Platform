@@ -10,6 +10,15 @@ import { GetServerSideProps } from "next";
 import { InvestAbi, CoinTestAbi, FactoryAbi } from "../../../data/ABIs";
 import useCheckEntryNFT from "../../../hooks/useCheckEntryNFT";
 import ExpectedReturn from "../../../components/ExpectedReturn";
+import NavBar from "../../../components/NavBar";
+import Image from "next/image";
+import ProgressBar from "../../../components/ui/ProgressBar";
+import { cn, formatAddress } from "../../../lib/utils";
+import Link from "next/link";
+import { FiExternalLink } from "react-icons/fi";
+import { Tab } from "@headlessui/react";
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 
 const Investment = ({ investment }) => {
   const { address: walletAddress } = useAccount();
@@ -66,28 +75,384 @@ const Investment = ({ investment }) => {
     watch: true,
   });
 
-  console.log(contractTotal.toString());
-  console.log(totalInvestment.toString());
+  const progress =
+    (Number(contractTotal) / 10 ** 6 / (Number(totalInvestment) / 10 ** 6)) *
+    100;
+
+  const badges = {
+    inprogress: {
+      icon: "/badges/in-progress.svg",
+      label: "In Progress",
+      text: "text-badgeInProgressText",
+      bg: "bg-badgeInProgressBackground",
+    },
+    done: {
+      icon: "/badges/done.svg",
+      label: "Done",
+      text: "text-primaryGreen",
+      bg: "bg-puzzleProfitNotice",
+    },
+  };
+
+  const phases = [
+    {
+      status: "done",
+      title: "Disassembling and Inspection",
+      deadline: "august 25",
+      estimatedCost: "3.050.000$",
+      currentCost: "250.000$",
+      gallery: [{ url: "/slider/car1.jpg" }, { url: "/slider/car2.jpg" }],
+      updates: [
+        {
+          date: "9 jun 2022",
+          title: "Delay on something related with some other thing",
+        },
+        {
+          date: "2 jun 2022",
+          title: "Problems with something",
+        },
+        {
+          date: "12 nov 2022",
+          title: "Finished something very especific about the car",
+        },
+        {
+          date: "12 nov 2022",
+          title: "Finished something very especific about the car",
+        },
+      ],
+    },
+    {
+      status: "inprogress",
+      title: "Blasting",
+      deadline: "august 20",
+      estimatedCost: "3.050.000$",
+      currentCost: "250.000$",
+      gallery: [{ url: "/slider/car1.jpg" }, { url: "/slider/car2.jpg" }],
+      updates: [
+        {
+          date: "9 jun 2022",
+          title: "Delay on something related with some other thing",
+        },
+        {
+          date: "2 jun 2022",
+          title: "Problems with something",
+        },
+        {
+          date: "12 nov 2022",
+          title: "Finished something very especific about the car",
+        },
+        {
+          date: "12 nov 2022",
+          title: "Finished something very especific about the car",
+        },
+      ],
+    },
+  ];
 
   return (
     <>
       <Head>
         <title>Something Legendary | Investment</title>
       </Head>
-      <main className="flex max-w-4xl  gap-6 px-3 md:px-0 mt-24 md:mt-0">
-        <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-3">
-          <Slider className="flex flex-col  " />
-          {}
-          <PuzzleItem
-            className="w-full md:col-start-1"
-            amount={(Number(totalInvestment) / 10 ** 6)?.toString()}
-            current={(Number(contractTotal) / 10 ** 6)?.toString()}
-            progress={investment?.percentage}
-            showProgressInsideBar={true}
-          />
-          <InvestmentNumbers />
+      <main className="flex flex-col bg-white w-full min-h-screen  gap-8 px-3 md:px-0 mt-24 md:mt-0">
+        <NavBar bgWhite={true} />
+        <div className="max-w-screen-lg w-full mx-auto gap-4 flex flex-col">
+          <h2 className="text-4xl font-medium">
+            {investment?.title}{" "}
+            <Image
+              src="/icons/heart-full.svg"
+              width={25}
+              height={20}
+              alt="Like"
+            />
+          </h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor
+          </p>
+          <div className="grid grid-cols-1 mb-9 gap-3 md:grid-cols-[2fr_1fr]">
+            <div className="flex">
+              <Image
+                src="/projects/car-1-detail.jpg"
+                width={765}
+                height={400}
+                alt={investment?.title}
+                className="rounded-md"
+              />
+            </div>
+            <div className="flex flex-col gap-3">
+              <Image
+                src="/projects/car-1-detail.jpg"
+                width={248}
+                height={193}
+                alt={investment?.title}
+                className="rounded-md"
+              />
+              <Image
+                src="/projects/car-1-detail.jpg"
+                width={248}
+                height={193}
+                alt={investment?.title}
+                className="rounded-md"
+              />
+            </div>
+          </div>
+          <div className="flex justify-between items-start gap-6">
+            <div className="flex flex-col w-3/5 ">
+              <h3 className="tracking-widest items-center flex gap-6 pb-[52px]">
+                <Image
+                  src="/icons/keys.svg"
+                  width={35}
+                  height={38}
+                  alt="General Information"
+                />
+                General Information
+              </h3>
+              <div className="flex pb-4 relative gap-4">
+                <div className="flex gap-2 relative pr-4">
+                  <span>Status:</span>
+                  <span className="font-medium">Renewing</span>
+                  <div className="absolute right-0 top-0 hidden h-full min-h-[1em] w-px self-stretch border-t-0 bg-gradient-to-tr from-transparent via-black to-transparent opacity-25 dark:opacity-100 lg:block"></div>
+                </div>
 
-          <InvestmentSidebar
+                <div className="flex gap-2 relative pr-4">
+                  <span>Price:</span>
+                  <span className="font-medium">250.000$</span>
+                  <div className="absolute right-0 top-0 hidden h-full min-h-[1em] w-px self-stretch border-t-0 bg-gradient-to-tr from-transparent via-black to-transparent opacity-25 dark:opacity-100 lg:block"></div>
+                </div>
+                <div className="flex gap-2 relative">
+                  <span>Progress:</span>
+                  <span className="font-medium">{progress}% Finished</span>
+                </div>
+              </div>
+              <ProgressBar
+                color="bg-progressActiveBackground"
+                progress={progress}
+              />
+              <h3 className="pt-[52px] pb-8">Description</h3>
+              <p className="font-normal text-ogBlack">
+                Mercedes-Benz introduced the 280SL less than a year after the
+                250SL arrived on the scene, and closed out the
+                &quot;pagoda&quot; SL line in 1971 after nearly 24,000 were
+                built. The 280 was very similar, to its predecessor, using
+                clean, elegant lines, intelligent placement of the wheels in
+                proportion to the rest of the design, and a tall,
+                &quot;pagoda&quot; removable hard top that allowed...
+              </p>
+            </div>
+            <div className="flex flex-col gap-8 w-2/5">
+              <div className="flex flex-col gap-2 py-2 border border-tabInactive pl-24 rounded-md">
+                <h4>Total Invested until now</h4>
+                <span className="text-3xl font-medium tracking-wider text-primaryGreen">
+                  $5.004.600
+                </span>
+                <h4>
+                  Investing here:{" "}
+                  <Image
+                    src="/icons/mini-avatar.svg"
+                    alt="Avatar"
+                    width={12}
+                    height={12}
+                  />{" "}
+                  <span className="text-primaryGold ">1024</span>
+                </h4>
+              </div>
+              <div className="flex flex-col gap-2 px-24 py-2 text-ogBlack rounded-md">
+                <h3 className="text-black">Especifications</h3>
+                <span>Contract Address:</span>
+                <span className="text-primaryGreen">
+                  <Link
+                    href={`https://etherscan.io/address/${
+                      investment?.address[
+                        process.env.NEXT_PUBLIC_CHAIN_ID as Address
+                      ]
+                    }`}
+                  >
+                    <a className="flex items-center gap-3">
+                      {formatAddress(
+                        investment?.address[
+                          process.env.NEXT_PUBLIC_CHAIN_ID as Address
+                        ]
+                      )}{" "}
+                      <FiExternalLink />
+                    </a>
+                  </Link>
+                </span>
+                <span>Chassis NR:</span>
+                <span className="font-normal text-black pb-2">
+                  {investment?.chassis}
+                </span>
+                <div className="flex w-full justify-between pb-2">
+                  <div className="flex flex-col ">
+                    <span>Total Production</span>
+                    <span className="text-black">
+                      {investment?.totalProduction}
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span>Total Model Prouction</span>
+                    <span className="text-black">
+                      {investment?.totalModelProduction}
+                    </span>
+                  </div>
+                </div>
+                <span>Color Combination:</span>
+                <span className="font-normal text-black pb-8">
+                  {investment?.colorCombination}
+                </span>
+              </div>
+            </div>
+          </div>
+          <section>
+            <h3 className="flex py-[52px] items-center gap-4">
+              <Image
+                src="/icons/tasks.svg"
+                width={39}
+                height={38}
+                alt="Tasks"
+              />{" "}
+              Tasks
+            </h3>
+          </section>
+          <section>
+            <Tab.Group>
+              <Tab.List className="flex p-1">
+                {phases.map((phase) => (
+                  <Tab
+                    key={phase.title}
+                    className={({ selected }) =>
+                      cn(
+                        "w-full gap-4 flex flex-col justify-between items-center py-2.5 font-light  border-b-4 text-xl  leading-5 text-primaryGreen",
+                        "  focus:outline-none focus:ring-2",
+                        selected
+                          ? "bg-white font-medium ring-transparent border-b-4 border-primaryGreen"
+                          : "text-tabInactive hover:bg-black/5 hover:border-b-4 hover:border-primaryGreen hover:text-primaryGreen"
+                      )
+                    }
+                  >
+                    <div
+                      className={cn(
+                        "flex gap-2 text-xs py-1 px-2 rounded-full",
+                        badges[phase.status].bg,
+                        badges[phase.status].text
+                      )}
+                    >
+                      <Image
+                        src={badges[phase.status].icon}
+                        width={12}
+                        height={12}
+                        alt={badges[phase.status].label}
+                      />
+                      {badges[phase.status].label}
+                    </div>
+                    {phase.title}
+                  </Tab>
+                ))}
+              </Tab.List>
+              <Tab.Panels className="mt-[52px]">
+                {phases.map((phase, idx) => (
+                  <Tab.Panel
+                    key={idx}
+                    className={cn(
+                      " bg-white mx-4",
+                      "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 gap-4 flex flex-col"
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        "flex gap-1 text-xs self-start py-1 px-2 rounded-full",
+                        badges[phase.status].bg,
+                        badges[phase.status].text
+                      )}
+                    >
+                      <Image
+                        src={badges[phase.status].icon}
+                        width={12}
+                        height={12}
+                        alt={badges[phase.status].label}
+                      />
+                      {badges[phase.status].label}
+                    </span>
+                    <h3>{phase.title}</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-4">
+                        <div className="flex justify-around">
+                          <div className="flex flex-col">
+                            <span>Deadline:</span>
+                            <span>{phase.deadline}</span>
+                          </div>
+                          <div className="flex flex-col">
+                            <span>Cost Expectation:</span>
+                            <span>{phase.estimatedCost}</span>
+                          </div>
+                          <div className="flex flex-col">
+                            <span>Current Cost:</span>
+                            <span>{phase.currentCost}</span>
+                          </div>
+                        </div>
+                        <div className="flex flex-col">
+                          <h4 className="flex gap-3 pb-4">
+                            <Image
+                              src="/icons/updates.svg"
+                              width={20}
+                              height={20}
+                              alt="Updates"
+                            />
+                            <span>Updates</span>
+                          </h4>
+                          <div className="flex flex-col gap-2">
+                            {phase.updates.map((update, idx) => (
+                              <div
+                                className={cn(
+                                  "text-tabInactive  flex flex-col",
+                                  idx > 0 ? "border-t border-tabInactive" : ""
+                                )}
+                                key={update.title}
+                              >
+                                <span className="">{update.date}</span>
+                                <span className="text-black">
+                                  {update.title}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex w-full relative">
+                        <Carousel showStatus={false} showThumbs={false}>
+                          {phase.gallery.map((image, idx) => (
+                            <div key={idx} className="w-full relative">
+                              <Image
+                                src={image.url}
+                                width={960}
+                                height={400}
+                                // objectFit={"contain"}
+                                // layout="fill"
+                                alt="car"
+                              />
+                            </div>
+                          ))}
+                        </Carousel>
+                      </div>
+                    </div>
+                  </Tab.Panel>
+                ))}
+              </Tab.Panels>
+            </Tab.Group>
+          </section>
+          <section>
+            <h3 className="flex py-[52px] items-center gap-4">
+              <Image
+                src="/icons/investments.svg"
+                width={39}
+                height={38}
+                alt="Investments"
+              />{" "}
+              Investments
+            </h3>
+          </section>
+
+          {/* <InvestmentSidebar
             className="md:row-start-1 md:col-start-2 md:row-span-3 flex flex-col align-middle justify-between"
             title={investment?.title}
             chassis={investment?.chassis}
@@ -104,7 +469,7 @@ const Investment = ({ investment }) => {
             maxToInvest={Number(maxToInvest) / 10 ** 6}
             minToInvest={Number(minToInvest)}
             paymentTokenBalance={Number(paymentTokenBalance?.formatted)}
-          />
+          /> */}
           {hasEntryNFT && (
             <div className="flex w-full gap-6">
               <InvestmentHistory

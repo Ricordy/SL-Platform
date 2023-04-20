@@ -45,7 +45,7 @@ interface InvestmentType extends InvestmentDbType, InvestmentBlockchainType {}
 
 const MyInvestments: NextPage = () => {
   const { address } = useAccount();
-  const { hasEntryNFT } = useCheckEntryNFT({
+  const { hasEntryNFT, hasEntryNFTLoading } = useCheckEntryNFT({
     address,
     nftId: 10,
   });
@@ -1008,7 +1008,7 @@ const MyInvestments: NextPage = () => {
         <span>$200.000</span>
         <span className="text-primaryGold text-xs">$200.000</span>
         <span>9 jun 2022</span>
-        <Link href="/">
+        <Link href="#">
           <Image
             src="/icons/external-link.svg"
             width={10}
@@ -1019,7 +1019,9 @@ const MyInvestments: NextPage = () => {
       </div>
     );
   };
-  if (!hasEntryNFT)
+  if (hasEntryNFTLoading) return <div>Loading...</div>;
+
+  if (!hasEntryNFTLoading && !hasEntryNFT)
     return (
       <div className="flex flex-col min-h-screen mx-auto w-full">
         <NavBar />

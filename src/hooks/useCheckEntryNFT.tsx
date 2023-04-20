@@ -10,14 +10,18 @@ const useCheckEntryNFT = ({
   nftId: number;
   watch?: boolean;
 }) => {
-  const { hasNFT: hasEntryNFT, error: hasEntryNFTError } = useNFTChecker({
+  const {
+    hasNFT: hasEntryNFT,
+    error: hasEntryNFTError,
+    isLoading: hasEntryNFTLoading,
+  } = useNFTChecker({
     contractAddress: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
     walletAddress: address,
     nftId,
     watch,
   });
 
-  return { hasEntryNFT, hasEntryNFTError };
+  return { hasEntryNFT, hasEntryNFTError, hasEntryNFTLoading };
 };
 
 export default useCheckEntryNFT;

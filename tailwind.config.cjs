@@ -13,6 +13,8 @@ module.exports = {
         ogBlack: "#535955",
         dreamBlack: "#011013",
         pureWhite: "#ffffff",
+        badgeInProgressBackground: "#FFF4CF",
+        badgeInProgressText: "#C78F00",
         offSand: "c1b7aa",
         classicLeather: "#443933",
         classicGreen: "#3a4842",
@@ -27,7 +29,7 @@ module.exports = {
         contactBackground: "#F7F7F7",
         buyNFTBackground: "#1E1B16",
         myInvestmentsBackground: "#161616",
-
+        progressActiveBackground: "#2BDA9F",
         // tabInactive: "#757C79",
         tabInactive: "#8C9592",
         puzzleProfitNotice: "#F6F9F8",

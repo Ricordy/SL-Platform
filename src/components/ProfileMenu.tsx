@@ -4,8 +4,10 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import Image from "next/image";
 import { useAccount } from "wagmi";
+import { cn } from "../lib/utils";
 
 type MenuProps = {
+  bgWhite?: boolean;
   logout: () => void;
 };
 type MyLinkProps = {
@@ -30,15 +32,20 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function ProfileMenu(props: MenuProps) {
+export default function ProfileMenu({ logout, bgWhite }: MenuProps) {
   const { address } = useAccount();
   return (
     <>
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button className="inline-flex items-center border-white border-2 gap-3 w-full justify-center rounded-full bg-black bg-opacity-0 p-1 hover:bg-opacity-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <Menu.Button
+            className={cn(
+              "inline-flex items-center border-2 gap-3 w-full justify-center rounded-full bg-black bg-opacity-0 p-1 hover:bg-opacity-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75",
+              bgWhite ? "border-primaryGrey" : "border-white"
+            )}
+          >
             <Image
-              src="/icons/avatar.svg"
+              src={bgWhite ? "/icons/avatar-grey.svg" : "/icons/avatar.svg"}
               width={27}
               height={27}
               alt="Profile icon"
@@ -48,7 +55,12 @@ export default function ProfileMenu(props: MenuProps) {
               className="ml-2 -mr-1 h-5 w-5 text-gray-300 hover:text-gray-100"
               aria-hidden="true"
             /> */}
-            <span className="text-white text-xs pr-2">
+            <span
+              className={cn(
+                " text-xs pr-2",
+                bgWhite ? "text-secondaryGrey" : "text-white"
+              )}
+            >
               {address.slice(0, 10)}
             </span>
           </Menu.Button>
@@ -123,7 +135,7 @@ export default function ProfileMenu(props: MenuProps) {
               <Menu.Item>
                 {({ active }) => (
                   <button
-                    onClick={props.logout}
+                    onClick={logout}
                     className={`${
                       active ? "bg-gray-500 text-white" : "text-gray-900"
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
