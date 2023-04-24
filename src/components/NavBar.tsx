@@ -35,7 +35,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
 
   return (
     <>
-      <nav className="md:flex max-w-screen-lg relative z-50 hidden justify-between w-full mx-auto lg:px-0 shrink-0 py-6">
+      <nav className="md:flex max-w-screen-lg relative z-20 hidden justify-between w-full mx-auto lg:px-0 shrink-0 py-6">
         <Link href="/">
           <a>
             <Image

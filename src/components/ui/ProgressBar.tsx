@@ -29,7 +29,7 @@ const ProgressBar = ({
           )}
         </div>
       ) : (
-        <div>&nbsp;</div>
+        <div className="h-2"></div>
       )}
     </div>
   );

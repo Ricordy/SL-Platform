@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import Link from "next/link";
 import { Tab } from "@headlessui/react";
 import { classNames, cn } from "../lib/utils";
@@ -47,6 +47,7 @@ const Puzzle: FC<PuzzleProps> = ({ className }) => {
       collected: 0,
     },
   ];
+  const [profitNotification, setProfitNotification] = useState(true);
 
   return (
     <section
@@ -93,26 +94,38 @@ const Puzzle: FC<PuzzleProps> = ({ className }) => {
               >
                 <div className="flex flex-col gap-8">
                   <div className="flex flex-col gap-8 ml-[58px] mr-[256px]">
-                    <div className="flex  flex-col bg-puzzleProfitNotice p-8 rounded-md">
-                      <h3 className="uppercase ml-[124px]tracking-wider text-2xl pb-4">
-                        You have{" "}
-                        <span className="text-primaryGold">
-                          {level.profitRange.split("-")[0]}% to{" "}
-                          {level.profitRange.split("-")[1]}% profit
-                        </span>
-                      </h3>
+                    {profitNotification && (
+                      <div className="flex relative w-full justify-end items-start flex-col bg-puzzleProfitNotice p-8 rounded-md">
+                        <div className=" absolute flex items top-4 right-4">
+                          <Image
+                            onClick={() => setProfitNotification(false)}
+                            src="/icons/close.svg"
+                            width={18}
+                            height={18}
+                            alt="Close"
+                            className=" cursor-pointer"
+                          />
+                        </div>
+                        <h3 className="uppercase ml-[124px]tracking-wider text-2xl pb-4">
+                          You have{" "}
+                          <span className="text-primaryGold">
+                            {level.profitRange.split("-")[0]}% to{" "}
+                            {level.profitRange.split("-")[1]}% profit
+                          </span>
+                        </h3>
 
-                      <p className="font-light pb-4 max-w-xl">
-                        {level.description}
-                      </p>
-                      {idx < 2 && (
-                        <span className="uppercase text-xs font-medium">
-                          Next level:{" "}
-                          {levels.at(idx + 1).profitRange.split("-")[0]}% to{" "}
-                          {levels.at(idx + 1).profitRange.split("-")[1]}%{" "}
-                        </span>
-                      )}
-                    </div>
+                        <p className="font-light pb-4 max-w-xl">
+                          {level.description}
+                        </p>
+                        {idx < 2 && (
+                          <span className="uppercase text-xs font-medium">
+                            Next level:{" "}
+                            {levels.at(idx + 1).profitRange.split("-")[0]}% to{" "}
+                            {levels.at(idx + 1).profitRange.split("-")[1]}%{" "}
+                          </span>
+                        )}
+                      </div>
+                    )}
                     <div className="flex gap-6">
                       <div className="flex gap-3">
                         <p className="text-md">

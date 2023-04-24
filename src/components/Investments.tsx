@@ -6,6 +6,7 @@ import { NumericFormat } from "react-number-format";
 import { classNames } from "../lib/utils";
 import ProjectCarousel from "./ProjectCarousel";
 import { CarouselItemProps } from "./ProjectCarousel";
+import Link from "next/link";
 
 export default function Investments() {
   const [investmentStatuses] = useState(investmentStatusesData);
@@ -15,7 +16,16 @@ export default function Investments() {
       id="investments"
       className="relative max-w-[1338px] w-full overflow-hidden flex flex-col"
     >
-      <h2 className="text-2xl ml-[58px] mb-6 uppercase">My Investments</h2>
+      <div className="flex ml-[58px] w-full justify-between mx-auto">
+        <h2 className="text-2xl  mb-[52px] uppercase">My Investments</h2>
+        <div className="mr-[116px]">
+          <Link href="/my-investments">
+            <a className="border-b-2 border-primaryGreen text-primaryGreen uppercase text-sm">
+              See more
+            </a>
+          </Link>
+        </div>
+      </div>
       <Tab.Group>
         <Tab.List className="flex ml-[58px] w-fit border-b border-b-gray-900/20">
           {investmentStatuses.map((investmentStatus) => (

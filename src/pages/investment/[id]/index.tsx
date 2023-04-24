@@ -1,15 +1,16 @@
 import Head from "next/head";
-import InvestmentHistory from "../../../components/InvestmentHistory";
-import InvestmentNumbers from "../../../components/InvestmentNumbers";
-import { InvestmentSidebar } from "../../../components/InvestmentSidebar";
-import PuzzleItem from "../../../components/PuzzleItem";
-import Slider from "../../../components/Slider";
 import { investmentData } from "../../../data/Investments";
-import { Address, useAccount, useBalance, useContractRead } from "wagmi";
+import {
+  Address,
+  useAccount,
+  useBalance,
+  useContract,
+  useContractRead,
+  useSigner,
+} from "wagmi";
 import { GetServerSideProps } from "next";
 import { InvestAbi, CoinTestAbi, FactoryAbi } from "../../../data/ABIs";
 import useCheckEntryNFT from "../../../hooks/useCheckEntryNFT";
-import ExpectedReturn from "../../../components/ExpectedReturn";
 import NavBar from "../../../components/NavBar";
 import Image from "next/image";
 import ProgressBar from "../../../components/ui/ProgressBar";
@@ -19,9 +20,41 @@ import { FiExternalLink } from "react-icons/fi";
 import { Tab } from "@headlessui/react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { ExternalLink } from "../../../components/ui/icons/External";
+import { Button } from "../../../components/ui/Button";
+import { NumericFormat } from "react-number-format";
+import { CarouselItem, carouselItems } from "../../../components/Carousel";
+import Modal from "../../../components/Modal";
+import useModal from "../../../hooks/useModal";
+import { useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { ethers } from "ethers";
+import { InvestmentModal } from "../../../components/modal/InvestmentModal";
 
+const TransactionItem = () => {
+  return (
+    <div className="flex items-center justify-between">
+      <span>$200.000</span>
+      <span className="text-primaryGreen text-xs">$200.000</span>
+      <span>9 jun 2022</span>
+      <Link href="/#">
+        <a>
+          <ExternalLink className="w-3 h-3" />
+        </a>
+      </Link>
+    </div>
+  );
+};
 const Investment = ({ investment }) => {
+  // const {
+  //   isOpen: isOpenModalInvest,
+  //   toggle: toggleModalInvest,
+  //   toggleBlur: toggleBlurModalInvest,
+  //   isBlur: isBlurModalInvest,
+  // } = useModal();
+
   const { address: walletAddress } = useAccount();
+  const { data: signerData } = useSigner();
   const { hasEntryNFT } = useCheckEntryNFT({
     address: walletAddress as Address,
     nftId: 10,
@@ -75,9 +108,23 @@ const Investment = ({ investment }) => {
     watch: true,
   });
 
+  const paymentTokenContract = useContract({
+    address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS,
+    abi: CoinTestAbi,
+    signerOrProvider: signerData,
+  });
+
+  const investContract = useContract({
+    address: investment?.address[process.env.NEXT_PUBLIC_CHAIN_ID as Address],
+    abi: InvestAbi,
+    signerOrProvider: signerData,
+  });
+
   const progress =
     (Number(contractTotal) / 10 ** 6 / (Number(totalInvestment) / 10 ** 6)) *
     100;
+
+  const userInvested = (userTotalInvestment as number) > 0 ? true : false;
 
   const badges = {
     inprogress: {
@@ -117,7 +164,7 @@ const Investment = ({ investment }) => {
         },
         {
           date: "12 nov 2022",
-          title: "Finished something very especific about the car",
+          title: "Finished something especific about the car",
         },
       ],
     },
@@ -154,23 +201,45 @@ const Investment = ({ investment }) => {
       <Head>
         <title>Something Legendary | Investment</title>
       </Head>
-      <main className="flex flex-col bg-white w-full min-h-screen  gap-8 px-3 md:px-0 mt-24 md:mt-0">
+      <main className="flex flex-col bg-white w-full min-h-screen  px-3 md:px-0 md:mt-0">
         <NavBar bgWhite={true} />
-        <div className="max-w-screen-lg w-full mx-auto gap-4 flex flex-col">
-          <h2 className="text-4xl font-medium">
-            {investment?.title}{" "}
-            <Image
-              src="/icons/heart-full.svg"
-              width={25}
-              height={20}
-              alt="Like"
+        <div className="max-w-screen-lg w-full mx-auto flex flex-col">
+          <div className="sticky top-0 flex justify-between items-center z-20 bg-white py-4 w-full mx-auto">
+            <div className="flex flex-col ">
+              <h2 className="text-4xl font-medium">
+                {investment?.title}{" "}
+                <Image
+                  src="/icons/heart-full.svg"
+                  width={25}
+                  height={20}
+                  alt="Like"
+                />
+              </h2>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor
+              </p>
+            </div>
+
+            <InvestmentModal
+              className="flex flex-col align-middle justify-between"
+              title={investment?.title}
+              chassis={investment?.chassis}
+              contractAddress={
+                investment?.address[process.env.NEXT_PUBLIC_CHAIN_ID as Address]
+              }
+              totalProduction={investment?.totalProduction}
+              totalModelProduction={investment?.totalModelProduction}
+              colorCombination={investment?.colorCombination}
+              amount={investment?.amount}
+              phase={investment?.phase}
+              totalInvestment={Number(totalInvestment) / 10 ** 6}
+              maxToInvest={Number(maxToInvest) / 10 ** 6}
+              minToInvest={Number(minToInvest)}
+              paymentTokenBalance={Number(paymentTokenBalance?.formatted)}
             />
-          </h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor
-          </p>
-          <div className="grid grid-cols-1 mb-9 gap-3 md:grid-cols-[2fr_1fr]">
+          </div>
+          <div className="grid relative grid-cols-1 mb-9 gap-3 md:grid-cols-[2fr_1fr]">
             <div className="flex">
               <Image
                 src="/projects/car-1-detail.jpg"
@@ -241,22 +310,32 @@ const Investment = ({ investment }) => {
               </p>
             </div>
             <div className="flex flex-col gap-8 w-2/5">
-              <div className="flex flex-col gap-2 py-2 border border-tabInactive pl-24 rounded-md">
-                <h4>Total Invested until now</h4>
-                <span className="text-3xl font-medium tracking-wider text-primaryGreen">
-                  $5.004.600
-                </span>
-                <h4>
-                  Investing here:{" "}
-                  <Image
-                    src="/icons/mini-avatar.svg"
-                    alt="Avatar"
-                    width={12}
-                    height={12}
-                  />{" "}
-                  <span className="text-primaryGold ">1024</span>
-                </h4>
-              </div>
+              {userInvested && (
+                <div className="flex flex-col gap-2 py-2 border border-tabInactive pl-24 rounded-md">
+                  <h4 className="text-ogBlack">Total Invested until now</h4>
+                  <span className="text-3xl font-medium tracking-wider text-primaryGreen">
+                    <NumericFormat
+                      value={Number(userTotalInvestment) / 10 ** 6}
+                      displayType="text"
+                      fixedDecimalScale={true}
+                      decimalSeparator=","
+                      thousandSeparator="."
+                      decimalScale={2}
+                      prefix="$ "
+                    />
+                  </span>
+                  <h4 className="text-primaryGrey">
+                    Investing here:{" "}
+                    <Image
+                      src="/icons/mini-avatar.svg"
+                      alt="Avatar"
+                      width={12}
+                      height={12}
+                    />{" "}
+                    <span className="text-primaryGold ">1024</span>
+                  </h4>
+                </div>
+              )}
               <div className="flex flex-col gap-2 px-24 py-2 text-ogBlack rounded-md">
                 <h3 className="text-black">Especifications</h3>
                 <span>Contract Address:</span>
@@ -349,99 +428,107 @@ const Investment = ({ investment }) => {
                   </Tab>
                 ))}
               </Tab.List>
-              <Tab.Panels className="mt-[52px]">
-                {phases.map((phase, idx) => (
-                  <Tab.Panel
-                    key={idx}
-                    className={cn(
-                      " bg-white mx-4",
-                      "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 gap-4 flex flex-col"
-                    )}
-                  >
-                    <span
+              {userInvested && (
+                <Tab.Panels className="mt-[52px]">
+                  {phases.map((phase, idx) => (
+                    <Tab.Panel
+                      key={idx}
                       className={cn(
-                        "flex gap-1 text-xs self-start py-1 px-2 rounded-full",
-                        badges[phase.status].bg,
-                        badges[phase.status].text
+                        " bg-white mx-4",
+                        "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 gap-4 flex flex-col"
                       )}
                     >
-                      <Image
-                        src={badges[phase.status].icon}
-                        width={12}
-                        height={12}
-                        alt={badges[phase.status].label}
-                      />
-                      {badges[phase.status].label}
-                    </span>
-                    <h3>{phase.title}</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="flex flex-col gap-4">
-                        <div className="flex justify-around">
-                          <div className="flex flex-col">
-                            <span>Deadline:</span>
-                            <span>{phase.deadline}</span>
+                      <span
+                        className={cn(
+                          "flex gap-1 text-xs self-start py-1 px-2 rounded-full",
+                          badges[phase.status].bg,
+                          badges[phase.status].text
+                        )}
+                      >
+                        <Image
+                          src={badges[phase.status].icon}
+                          width={12}
+                          height={12}
+                          alt={badges[phase.status].label}
+                        />
+                        {badges[phase.status].label}
+                      </span>
+                      <h3>{phase.title}</h3>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-4">
+                          <div className="flex justify-around divide-x divide-primaryGrey text-primaryGrey pb-8">
+                            <div className="flex flex-col">
+                              <span>Deadline:</span>
+                              <span className="text-black">
+                                {phase.deadline}
+                              </span>
+                            </div>
+                            <div className="flex flex-col px-4">
+                              <span>Cost Expectation:</span>
+                              <span className="text-black">
+                                {phase.estimatedCost}
+                              </span>
+                            </div>
+                            <div className="flex flex-col px-4">
+                              <span>Current Cost:</span>
+                              <span className="text-black">
+                                {phase.currentCost}
+                              </span>
+                            </div>
                           </div>
                           <div className="flex flex-col">
-                            <span>Cost Expectation:</span>
-                            <span>{phase.estimatedCost}</span>
-                          </div>
-                          <div className="flex flex-col">
-                            <span>Current Cost:</span>
-                            <span>{phase.currentCost}</span>
+                            <h4 className="flex gap-3 pb-4">
+                              <Image
+                                src="/icons/updates.svg"
+                                width={20}
+                                height={20}
+                                alt="Updates"
+                              />
+                              <span>Updates</span>
+                            </h4>
+                            <div className="flex flex-col gap-2">
+                              {phase.updates.map((update, idx) => (
+                                <div
+                                  className={cn(
+                                    "text-tabInactive  flex flex-col",
+                                    idx > 0 ? "border-t border-tabInactive" : ""
+                                  )}
+                                  key={update.title}
+                                >
+                                  <span className="">{update.date}</span>
+                                  <span className="text-black">
+                                    {update.title}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         </div>
-                        <div className="flex flex-col">
-                          <h4 className="flex gap-3 pb-4">
-                            <Image
-                              src="/icons/updates.svg"
-                              width={20}
-                              height={20}
-                              alt="Updates"
-                            />
-                            <span>Updates</span>
-                          </h4>
-                          <div className="flex flex-col gap-2">
-                            {phase.updates.map((update, idx) => (
-                              <div
-                                className={cn(
-                                  "text-tabInactive  flex flex-col",
-                                  idx > 0 ? "border-t border-tabInactive" : ""
-                                )}
-                                key={update.title}
-                              >
-                                <span className="">{update.date}</span>
-                                <span className="text-black">
-                                  {update.title}
-                                </span>
+                        <div className="flex w-full relative">
+                          <Carousel showStatus={false} showThumbs={false}>
+                            {phase.gallery.map((image, idx) => (
+                              <div key={idx} className="w-full relative">
+                                <Image
+                                  src={image.url}
+                                  width={960}
+                                  height={400}
+                                  // objectFit={"contain"}
+                                  // layout="fill"
+                                  alt="car"
+                                />
                               </div>
                             ))}
-                          </div>
+                          </Carousel>
                         </div>
                       </div>
-                      <div className="flex w-full relative">
-                        <Carousel showStatus={false} showThumbs={false}>
-                          {phase.gallery.map((image, idx) => (
-                            <div key={idx} className="w-full relative">
-                              <Image
-                                src={image.url}
-                                width={960}
-                                height={400}
-                                // objectFit={"contain"}
-                                // layout="fill"
-                                alt="car"
-                              />
-                            </div>
-                          ))}
-                        </Carousel>
-                      </div>
-                    </div>
-                  </Tab.Panel>
-                ))}
-              </Tab.Panels>
+                    </Tab.Panel>
+                  ))}
+                </Tab.Panels>
+              )}
             </Tab.Group>
           </section>
-          <section>
-            <h3 className="flex py-[52px] items-center gap-4">
+          <section className="">
+            <h3 className="flex pt-[132px] pb-[52px] items-center gap-4">
               <Image
                 src="/icons/investments.svg"
                 width={39}
@@ -450,27 +537,122 @@ const Investment = ({ investment }) => {
               />{" "}
               Investments
             </h3>
+            <div className="grid grid-cols-2 gap-8">
+              <div className="flex flex-col gap-4">
+                <div className="flex">Total Invested:</div>
+                <span className="text-primaryGreen text-4xl font-semibold tracking-widest pb-2">
+                  <NumericFormat
+                    value={Number(userTotalInvestment) / 10 ** 6}
+                    displayType="text"
+                    fixedDecimalScale={true}
+                    decimalSeparator=","
+                    thousandSeparator="."
+                    decimalScale={2}
+                    prefix="$ "
+                  />
+                </span>
+                <div className="flex">Return expected:</div>
+                <div className="flex gap-6 pb-2">
+                  <div className="flex flex-col">
+                    <div className="flex">Minimum:</div>
+                    <div className="flex text-2xl font-medium gap-3 items-center">
+                      $410.500{" "}
+                      <span className="text-sm text-primaryGreen">(10%)</span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="flex">Maximum:</div>
+                    <div className="flex text-2xl font-medium gap-3 items-center">
+                      $480.500{" "}
+                      <span className="text-sm text-primaryGreen">(12%)</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col pb-[52px]">
+                  <div className="flex text-secondaryGrey">Sales end:</div>
+                  <div className="flex gap-6">
+                    <div className="flex flex-col text-2xl font-medium ">
+                      <span className="">8 Sep 2022</span>
+                      <span>9:00 pm</span>
+                    </div>
+                    <div className="flex flex-col text-primaryGrey justify-between">
+                      <div className="flex gap-3">
+                        <div className="flex ">Sales Began:</div>
+                        <span className="font-medium">10 Jun 2021</span>
+                      </div>
+                      <div className="flex gap-3">
+                        <div className="flex">Estimate Claming:</div>
+                        <span className="font-medium">10 Sep 2021</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-8 pb-8 justify-center">
+                  <InvestmentModal
+                    className="flex flex-col align-middle justify-between"
+                    title={investment?.title}
+                    chassis={investment?.chassis}
+                    contractAddress={
+                      investment?.address[
+                        process.env.NEXT_PUBLIC_CHAIN_ID as Address
+                      ]
+                    }
+                    totalProduction={investment?.totalProduction}
+                    totalModelProduction={investment?.totalModelProduction}
+                    colorCombination={investment?.colorCombination}
+                    amount={investment?.amount}
+                    phase={investment?.phase}
+                    totalInvestment={Number(totalInvestment) / 10 ** 6}
+                    maxToInvest={Number(maxToInvest) / 10 ** 6}
+                    minToInvest={Number(minToInvest)}
+                    paymentTokenBalance={Number(paymentTokenBalance?.formatted)}
+                  />
+                  <Button variant="outline">Withdraw</Button>
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <h3>Transactions:</h3>
+                <div className="flex flex-col flex-1 gap-2 rounded-md py-8 px-4">
+                  <TransactionItem />
+                  <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
+                  <TransactionItem />
+                  <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
+                  <TransactionItem />
+                  <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
+                  <TransactionItem />
+                </div>
+              </div>
+            </div>
+          </section>
+          <section>
+            <h3 className="flex pt-[132px] pb-[52px] items-center gap-4">
+              <Image
+                src="/icons/car.svg"
+                width={39}
+                height={38}
+                alt="Car details"
+              />{" "}
+              Car details
+            </h3>
+            <div className="grid grid-cols-2 gap-8 mb-[132px]">
+              <div className="flex flex-col">
+                <h4 className="font-medium text-2xl pb-8">
+                  {investment?.title}
+                </h4>
+                {investment?.description}
+              </div>
+              <div className="flex">
+                <Image
+                  src="/projects/car-details-graph.jpg"
+                  width={592}
+                  height={498}
+                  alt="Graph"
+                />
+              </div>
+            </div>
           </section>
 
-          {/* <InvestmentSidebar
-            className="md:row-start-1 md:col-start-2 md:row-span-3 flex flex-col align-middle justify-between"
-            title={investment?.title}
-            chassis={investment?.chassis}
-            contractAddress={
-              investment?.address[process.env.NEXT_PUBLIC_CHAIN_ID as Address]
-            }
-            totalProduction={investment?.totalProduction}
-            totalModelProduction={investment?.totalModelProduction}
-            colorCombination={investment?.colorCombination}
-            amount={investment?.amount}
-            phase={investment?.phase}
-            hasEntryNFT={hasEntryNFT}
-            totalInvestment={Number(totalInvestment) / 10 ** 6}
-            maxToInvest={Number(maxToInvest) / 10 ** 6}
-            minToInvest={Number(minToInvest)}
-            paymentTokenBalance={Number(paymentTokenBalance?.formatted)}
-          /> */}
-          {hasEntryNFT && (
+          {/* {hasEntryNFT && (
             <div className="flex w-full gap-6">
               <InvestmentHistory
                 contractAddress={
@@ -491,8 +673,25 @@ const Investment = ({ investment }) => {
                 totalInvested={Number(userTotalInvestment) / 10 ** 6}
               />
             </div>
-          )}
+          )} */}
         </div>
+        <section>
+          <div className="flex text-white bg-black relative pb-[128px] pt-[72px] z-20 rounded-t-[56px] mx-auto">
+            <div className="flex w-full max-w-screen-lg flex-col gap-[52px] mx-auto">
+              <h3 className="uppercase text-2xl">Our suggestion for you</h3>
+              <div className="flex gap-6 mx-auto max-w-screen-lg w-full">
+                {carouselItems.slice(0, 3).map((item, idx) => (
+                  <CarouselItem
+                    key={idx}
+                    title={item.title}
+                    image={item.image}
+                    price={item.price}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
     </>
   );

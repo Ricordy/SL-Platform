@@ -7,8 +7,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          "bg-slate-900 text-white hover:bg-primaryGreen dark:bg-slate-50 dark:text-slate-900",
+        default: "bg-slate-900 text-white hover:bg-primaryGreen",
         outline:
           "bg-transparent text-black border-2 border-black hover:bg-primaryGreen hover:border-white",
       },
@@ -35,6 +34,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ size, variant, className, children, onClick, ...props }, ref) => {
     return (
       <button
+        onClick={onClick}
         className={cn(buttonVariants({ variant, size }), className)}
         ref={ref}
         {...props}

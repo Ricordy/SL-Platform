@@ -64,14 +64,12 @@ const Home: NextPage = (props) => {
               <h3 className="text-white uppercase text-5xl tracking-widest">
                 New Classic
                 <br />
-                Available
+                in town!
               </h3>
               <p className="text-white">
-                Discover the world of{" "}
-                <span className="font-medium">investment in the classics</span>
+                There&apos;s a new classic ready to be invested!
                 <br />
-                and follow the process in{" "}
-                <span className="font-medium">real time</span>.
+                Don&apos;t miss your limited opportunity to get on this boat.
               </p>
               <Link href="/investments">
                 <a className="dark:hover:bg-white dark:hover:text-black text-center uppercase text-sm bg-white text-black rounded-md px-12 py-1.5 self-start">
@@ -91,7 +89,7 @@ const Home: NextPage = (props) => {
           />
           <Carousel
             id="2"
-            className="py-12"
+            className="py-[132px]"
             title={<h2 className="text-2xl">My Favourites</h2>}
           />
         </div>

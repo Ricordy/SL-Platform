@@ -42,6 +42,31 @@ interface InvestmentType extends InvestmentDbType, InvestmentBlockchainType {}
 // const selectedInvestments = investmentData.filter(
 //   (i) => userInvestments.indexOf(i.id) > -1
 // );
+export const TransactionItem = () => {
+  return (
+    <div className="flex items-center justify-between">
+      <Image
+        className="rounded-md"
+        src="/projects/car-1.jpg"
+        width={64}
+        height={53}
+        alt="Car"
+      />
+      <span>Maserati 3500 GT</span>
+      <span>$200.000</span>
+      <span className="text-primaryGold text-xs">$200.000</span>
+      <span>9 jun 2022</span>
+      <Link href="#">
+        <Image
+          src="/icons/external-link.svg"
+          width={10}
+          height={10}
+          alt="External link"
+        />
+      </Link>
+    </div>
+  );
+};
 
 const MyInvestments: NextPage = () => {
   const { address } = useAccount();
@@ -994,31 +1019,7 @@ const MyInvestments: NextPage = () => {
   // });
 
   // console.log(investmentData);
-  const TransactionItem = () => {
-    return (
-      <div className="flex items-center justify-between">
-        <Image
-          className="rounded-md"
-          src="/projects/car-1.jpg"
-          width={64}
-          height={53}
-          alt="Car"
-        />
-        <span>Maserati 3500 GT</span>
-        <span>$200.000</span>
-        <span className="text-primaryGold text-xs">$200.000</span>
-        <span>9 jun 2022</span>
-        <Link href="#">
-          <Image
-            src="/icons/external-link.svg"
-            width={10}
-            height={10}
-            alt="External link"
-          />
-        </Link>
-      </div>
-    );
-  };
+
   if (hasEntryNFTLoading) return <div>Loading...</div>;
 
   if (!hasEntryNFTLoading && !hasEntryNFT)
@@ -1165,12 +1166,6 @@ const MyInvestments: NextPage = () => {
             ))}
           </div>
         </div>
-
-        {/* <Carousel
-          id="3"
-          className="pt-[72px]"
-          title={<h2 className="text-2xl">My favorites</h2>}
-        /> */}
       </div>
     </section>
     // <div className="flex flex-col w-full px-6 lg:px-3 mt-16 md:mt-0">
