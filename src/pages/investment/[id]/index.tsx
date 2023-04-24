@@ -31,6 +31,27 @@ import toast from "react-hot-toast";
 import { ethers } from "ethers";
 import { InvestmentModal } from "../../../components/modal/InvestmentModal";
 
+export const ProjectInfo = ({ progress }: { progress: number }) => {
+  return (
+    <div className="flex pb-4 relative gap-4">
+      <div className="flex gap-2 relative pr-4">
+        <span>Status:</span>
+        <span className="font-medium">Renewing</span>
+        <div className="absolute right-0 top-0 hidden h-full min-h-[1em] w-px self-stretch border-t-0 bg-gradient-to-tr from-transparent via-black to-transparent opacity-25 dark:opacity-100 lg:block"></div>
+      </div>
+
+      <div className="flex gap-2 relative pr-4">
+        <span>Price:</span>
+        <span className="font-medium">250.000$</span>
+        <div className="absolute right-0 top-0 hidden h-full min-h-[1em] w-px self-stretch border-t-0 bg-gradient-to-tr from-transparent via-black to-transparent opacity-25 dark:opacity-100 lg:block"></div>
+      </div>
+      <div className="flex gap-2 relative">
+        <span>Progress:</span>
+        <span className="font-medium">{progress}% Finished</span>
+      </div>
+    </div>
+  );
+};
 const TransactionItem = () => {
   return (
     <div className="flex items-center justify-between">
@@ -45,6 +66,75 @@ const TransactionItem = () => {
     </div>
   );
 };
+export const phases = [
+  {
+    status: "done",
+    title: "Disassembling and Inspection",
+    deadline: "august 25",
+    estimatedCost: "3.050.000$",
+    currentCost: "250.000$",
+    gallery: [{ url: "/slider/car1.jpg" }, { url: "/slider/car2.jpg" }],
+    updates: [
+      {
+        date: "9 jun 2022",
+        title: "Delay on something related with some other thing",
+      },
+      {
+        date: "2 jun 2022",
+        title: "Problems with something",
+      },
+      {
+        date: "12 nov 2022",
+        title: "Finished something very especific about the car",
+      },
+      {
+        date: "12 nov 2022",
+        title: "Finished something especific about the car",
+      },
+    ],
+  },
+  {
+    status: "inprogress",
+    title: "Blasting",
+    deadline: "august 20",
+    estimatedCost: "3.050.000$",
+    currentCost: "250.000$",
+    gallery: [{ url: "/slider/car1.jpg" }, { url: "/slider/car2.jpg" }],
+    updates: [
+      {
+        date: "9 jun 2022",
+        title: "Delay on something related with some other thing",
+      },
+      {
+        date: "2 jun 2022",
+        title: "Problems with something",
+      },
+      {
+        date: "12 nov 2022",
+        title: "Finished something very especific about the car",
+      },
+      {
+        date: "12 nov 2022",
+        title: "Finished something very especific about the car",
+      },
+    ],
+  },
+];
+export const badges = {
+  inprogress: {
+    icon: "/badges/in-progress.svg",
+    label: "In Progress",
+    text: "text-badgeInProgressText",
+    bg: "bg-badgeInProgressBackground",
+  },
+  done: {
+    icon: "/badges/done.svg",
+    label: "Done",
+    text: "text-primaryGreen",
+    bg: "bg-puzzleProfitNotice",
+  },
+};
+
 const Investment = ({ investment }) => {
   // const {
   //   isOpen: isOpenModalInvest,
@@ -125,76 +215,6 @@ const Investment = ({ investment }) => {
     100;
 
   const userInvested = (userTotalInvestment as number) > 0 ? true : false;
-
-  const badges = {
-    inprogress: {
-      icon: "/badges/in-progress.svg",
-      label: "In Progress",
-      text: "text-badgeInProgressText",
-      bg: "bg-badgeInProgressBackground",
-    },
-    done: {
-      icon: "/badges/done.svg",
-      label: "Done",
-      text: "text-primaryGreen",
-      bg: "bg-puzzleProfitNotice",
-    },
-  };
-
-  const phases = [
-    {
-      status: "done",
-      title: "Disassembling and Inspection",
-      deadline: "august 25",
-      estimatedCost: "3.050.000$",
-      currentCost: "250.000$",
-      gallery: [{ url: "/slider/car1.jpg" }, { url: "/slider/car2.jpg" }],
-      updates: [
-        {
-          date: "9 jun 2022",
-          title: "Delay on something related with some other thing",
-        },
-        {
-          date: "2 jun 2022",
-          title: "Problems with something",
-        },
-        {
-          date: "12 nov 2022",
-          title: "Finished something very especific about the car",
-        },
-        {
-          date: "12 nov 2022",
-          title: "Finished something especific about the car",
-        },
-      ],
-    },
-    {
-      status: "inprogress",
-      title: "Blasting",
-      deadline: "august 20",
-      estimatedCost: "3.050.000$",
-      currentCost: "250.000$",
-      gallery: [{ url: "/slider/car1.jpg" }, { url: "/slider/car2.jpg" }],
-      updates: [
-        {
-          date: "9 jun 2022",
-          title: "Delay on something related with some other thing",
-        },
-        {
-          date: "2 jun 2022",
-          title: "Problems with something",
-        },
-        {
-          date: "12 nov 2022",
-          title: "Finished something very especific about the car",
-        },
-        {
-          date: "12 nov 2022",
-          title: "Finished something very especific about the car",
-        },
-      ],
-    },
-  ];
 
   return (
     <>
@@ -277,23 +297,7 @@ const Investment = ({ investment }) => {
                 />
                 General Information
               </h3>
-              <div className="flex pb-4 relative gap-4">
-                <div className="flex gap-2 relative pr-4">
-                  <span>Status:</span>
-                  <span className="font-medium">Renewing</span>
-                  <div className="absolute right-0 top-0 hidden h-full min-h-[1em] w-px self-stretch border-t-0 bg-gradient-to-tr from-transparent via-black to-transparent opacity-25 dark:opacity-100 lg:block"></div>
-                </div>
-
-                <div className="flex gap-2 relative pr-4">
-                  <span>Price:</span>
-                  <span className="font-medium">250.000$</span>
-                  <div className="absolute right-0 top-0 hidden h-full min-h-[1em] w-px self-stretch border-t-0 bg-gradient-to-tr from-transparent via-black to-transparent opacity-25 dark:opacity-100 lg:block"></div>
-                </div>
-                <div className="flex gap-2 relative">
-                  <span>Progress:</span>
-                  <span className="font-medium">{progress}% Finished</span>
-                </div>
-              </div>
+              <ProjectInfo progress={progress} />
               <ProgressBar
                 color="bg-progressActiveBackground"
                 progress={progress}

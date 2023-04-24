@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import Head from "next/head";
+import { investmentData } from "../data/Investments";
 import Slider from "../components/Slider";
 import Hero from "../components/Hero";
 import Investments from "../components/Investments";
@@ -10,6 +10,12 @@ import Link from "next/link";
 import Carousel from "../components/Carousel";
 import Posts from "../components/Posts";
 import { PostItemProps } from "../@types/post";
+import { Address, useAccount, useContractRead } from "wagmi";
+import { ProjectInfo, badges, phases } from "./investment/[id]";
+import { Carousel as C2 } from "react-responsive-carousel";
+import Image from "next/image";
+import { CoinTestAbi, InvestAbi } from "../data/ABIs";
+import { cn } from "../lib/utils";
 
 const posts: PostItemProps[] = [
   {
@@ -51,6 +57,36 @@ const posts: PostItemProps[] = [
 ];
 
 const Home: NextPage = (props) => {
+  const { isConnected, isDisconnected } = useAccount();
+  const highlightContractAddress = investmentData.find(
+    (investment) => investment.id === 1
+  );
+
+  const { data: contractTotal } = useContractRead({
+    address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
+    abi: CoinTestAbi,
+    functionName: "balanceOf",
+    args: [
+      highlightContractAddress.address[
+        process.env.NEXT_PUBLIC_CHAIN_ID as Address
+      ],
+    ],
+    watch: true,
+  });
+
+  const { data: totalInvestment } = useContractRead({
+    address:
+      highlightContractAddress.address[
+        process.env.NEXT_PUBLIC_CHAIN_ID as Address
+      ],
+    abi: InvestAbi,
+    functionName: "totalInvestment",
+  });
+
+  const progress =
+    (Number(contractTotal) / 10 ** 6 / (Number(totalInvestment) / 10 ** 6)) *
+    100;
+
   return (
     <>
       <section className="w-full mx-auto bg-white">
@@ -87,11 +123,69 @@ const Home: NextPage = (props) => {
             seeMoreLabel="See more"
             seeMoreLink="/our-cars"
           />
-          <Carousel
-            id="2"
-            className="py-[132px]"
-            title={<h2 className="text-2xl">My Favourites</h2>}
-          />
+          {isDisconnected && (
+            <div className="flex flex-col ml-[58px] py-[132px]">
+              <h2 className="mb-[52px] text-2xl uppercase">Highlight</h2>
+              <div className="flex gap-6">
+                <div className="flex w-full relative">
+                  <C2 showStatus={false} showThumbs={false}>
+                    {[
+                      "/projects/car-1-detail.jpg",
+                      "/projects/car-1-detail.jpg",
+                    ].map((image, idx) => (
+                      <div key={idx} className="w-full relative">
+                        <Image src={image} width={528} height={405} alt="car" />
+                      </div>
+                    ))}
+                  </C2>
+                </div>
+                <div className="flex flex-col">
+                  <ProjectInfo progress={progress} />
+                  <p>
+                    Mercedes-Benz introduced the 280SL less than a year after
+                    the 250SL arrived on the scene, and closed out the “pagoda”
+                    SL line in 1971 after nearly 24,000 were built. The 280 was
+                    very similar, to its predecessor, using clean, elegant
+                    lines, intelligent placement of the wheels in ...
+                  </p>
+                  <div className="flex gap-4 py-8">
+                    <Image
+                      src="/icons/tasks.svg"
+                      width={22}
+                      height={22}
+                      alt="Tasks"
+                    />
+                    <span className="pr-2 font-medium text-xl">Blasting</span>
+                    <span
+                      className={cn(
+                        "flex gap-2 text-xs py-1 px-2 rounded-full",
+                        badges["inprogress"].bg,
+                        badges["inprogress"].text
+                      )}
+                    >
+                      <Image
+                        src={badges["inprogress"].icon}
+                        width={12}
+                        height={12}
+                        alt={badges["inprogress"].label}
+                      />
+                      {badges["inprogress"].label}
+                    </span>
+                  </div>
+                  <Button variant="outline" className="self-start">
+                    Know more
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+          {isConnected && (
+            <Carousel
+              id="2"
+              className="py-[132px]"
+              title={<h2 className="text-2xl">My Favourites</h2>}
+            />
+          )}
         </div>
 
         <div className="min-h-[500px] w-full relative z-20 left-1/2 -ml-[570px] max-w-[1338px] mx-auto">
