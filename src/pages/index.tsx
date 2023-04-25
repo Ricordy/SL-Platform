@@ -125,7 +125,9 @@ const Home: NextPage = (props) => {
           />
           {isDisconnected && (
             <div className="flex flex-col ml-[58px] py-[132px]">
-              <h2 className="mb-[52px] text-2xl uppercase">Highlight</h2>
+              <h2 className="mb-[52px] text-2xl font-medium uppercase">
+                Highlight
+              </h2>
               <div className="flex gap-6">
                 <div className="flex w-full relative">
                   <C2 showStatus={false} showThumbs={false}>
@@ -134,12 +136,15 @@ const Home: NextPage = (props) => {
                       "/projects/car-1-detail.jpg",
                     ].map((image, idx) => (
                       <div key={idx} className="w-full relative">
-                        <Image src={image} width={528} height={405} alt="car" />
+                        <Image src={image} width={528} height={396} alt="car" />
                       </div>
                     ))}
                   </C2>
                 </div>
                 <div className="flex flex-col">
+                  <h2 className="text-3xl pb-8 text-primaryGreen font-medium">
+                    Mercedes Benz 280 Sl
+                  </h2>
                   <ProjectInfo progress={progress} />
                   <p>
                     Mercedes-Benz introduced the 280SL less than a year after
@@ -188,11 +193,14 @@ const Home: NextPage = (props) => {
           )}
         </div>
 
-        <div className="min-h-[500px] w-full relative z-20 left-1/2 -ml-[570px] max-w-[1338px] mx-auto">
-          <Investments />
+        <div className=" w-full relative z-20 left-1/2 -ml-[570px] max-w-[1338px] mx-auto">
+          <Investments isConnected={isConnected} />
         </div>
         <div className="mx-auto w-full relative left-1/2 -ml-[570px] max-w-[1338px]">
-          <Puzzle className="relative max-w-[1338px] w-full  flex flex-col pt-[132px]" />
+          <Puzzle
+            isConnected={isConnected}
+            className="relative max-w-[1338px] w-full  flex flex-col pt-[132px]"
+          />
         </div>
         <div className="flex bg-black w-full rounded-t-3xl pb-[132px] pt-[72px]">
           <Posts

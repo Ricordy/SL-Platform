@@ -7,8 +7,13 @@ import { classNames } from "../lib/utils";
 import ProjectCarousel from "./ProjectCarousel";
 import { CarouselItemProps } from "./ProjectCarousel";
 import Link from "next/link";
+import Image from "next/image";
+import { ConnectKitButton } from "connectkit";
 
-export default function Investments() {
+interface InvestmentsProps {
+  isConnected: boolean;
+}
+export default function Investments({ isConnected }: InvestmentsProps) {
   const [investmentStatuses] = useState(investmentStatusesData);
 
   return (
@@ -17,51 +22,56 @@ export default function Investments() {
       className="relative max-w-[1338px] w-full overflow-hidden flex flex-col"
     >
       <div className="flex ml-[58px] w-full justify-between mx-auto">
-        <h2 className="text-2xl  mb-[52px] uppercase">My Investments</h2>
-        <div className="mr-[116px]">
-          <Link href="/my-investments">
-            <a className="border-b-2 border-primaryGreen text-primaryGreen uppercase text-sm">
-              See more
-            </a>
-          </Link>
-        </div>
+        <h2 className="text-2xl font-medium mb-[52px] uppercase">
+          My Investments
+        </h2>
+        {isConnected && (
+          <div className="mr-[116px]">
+            <Link href="/my-investments">
+              <a className="border-b-2 border-primaryGreen text-primaryGreen uppercase text-sm">
+                See more
+              </a>
+            </Link>
+          </div>
+        )}
       </div>
-      <Tab.Group>
-        <Tab.List className="flex ml-[58px] w-fit border-b border-b-gray-900/20">
-          {investmentStatuses.map((investmentStatus) => (
-            <Tab
-              key={investmentStatus}
-              className={({ selected }) =>
-                classNames(
-                  "flex min-w-fit justify-center gap-3 px-6 pb-4  text-2xl font-normal  leading-5 text-tabInactive",
-                  "focus:outline-none",
-                  selected
-                    ? "bg-white text-primaryGreen border-b-4 font-semibold border-primaryGreen"
-                    : " hover:bg-white/[0.12] hover:text-tabInactive/80"
-                )
-              }
-            >
-              {investmentStatus}
-            </Tab>
-          ))}
-        </Tab.List>
-        <Tab.Panels className="mt-2">
-          {investmentStatuses.map((investmentStatus, idx) => {
-            return (
-              <Tab.Panel
-                key={idx}
-                className={classNames(
-                  " pt-6",
-                  "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2"
-                )}
+      {isConnected && (
+        <Tab.Group>
+          <Tab.List className="flex ml-[58px] w-fit border-b border-b-gray-900/20">
+            {investmentStatuses.map((investmentStatus) => (
+              <Tab
+                key={investmentStatus}
+                className={({ selected }) =>
+                  classNames(
+                    "flex min-w-fit justify-center gap-3 px-6 pb-4  text-2xl font-normal  leading-5 text-tabInactive",
+                    "focus:outline-none",
+                    selected
+                      ? "bg-white text-primaryGreen border-b-4 font-semibold border-primaryGreen"
+                      : " hover:bg-white/[0.12] hover:text-tabInactive/80"
+                  )
+                }
               >
-                <ProjectCarousel
-                  id={idx.toString()}
-                  // items={investmentData.filter(
-                  //   (i) => i.status == investmentStatus
-                  // )}
-                />
-                {/* <ul className="grid sm:grid-cols-2 grid-cols-1 gap-2">
+                {investmentStatus}
+              </Tab>
+            ))}
+          </Tab.List>
+          <Tab.Panels className="mt-2">
+            {investmentStatuses.map((investmentStatus, idx) => {
+              return (
+                <Tab.Panel
+                  key={idx}
+                  className={classNames(
+                    " pt-6",
+                    "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2"
+                  )}
+                >
+                  <ProjectCarousel
+                    id={idx.toString()}
+                    // items={investmentData.filter(
+                    //   (i) => i.status == investmentStatus
+                    // )}
+                  />
+                  {/* <ul className="grid sm:grid-cols-2 grid-cols-1 gap-2">
                 {investmentData
                   .filter((i) => i.status == investmentStatus)
                   .map((investment) => (
@@ -99,11 +109,47 @@ export default function Investments() {
                     </li>
                   ))}
               </ul> */}
-              </Tab.Panel>
-            );
-          })}
-        </Tab.Panels>
-      </Tab.Group>
+                </Tab.Panel>
+              );
+            })}
+          </Tab.Panels>
+        </Tab.Group>
+      )}
+      {!isConnected && (
+        <div className="grid ml-[58px] grid-cols-3 grid-flow-row auto-rows-auto justify-center gap-4 ">
+          <div className="flex flex-col items-center rounded-md p-8 bg-puzzleProfitNotice">
+            <h4 className="mb-4 text-primaryGreen font-medium text-2xl">
+              Start your investments
+            </h4>
+            <p className="mb-8 text-ogBlack">
+              Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+              accusantium doloremque laudantium, totam.
+            </p>
+            {!isConnected && (
+              <ConnectKitButton
+                label="CONNECT WALLET"
+                customTheme={{
+                  "--ck-focus-color": "rgb(15, 85, 62)",
+                  "--ck-connectbutton-font-size": "14px",
+                  "--ck-connectbutton-color": "rgb(20,116,84)",
+                  "--ck-connectbutton-background": "rgb(255,255,255)",
+                  "--ck-connectbutton-hover-background": "rgb(20,116,84)",
+                  "--ck-connectbutton-hover-color": "rgb(255,255,255)",
+                  "--ck-connectbutton-border-radius": "6px",
+                  "--ck-connectbutton-box-shadow":
+                    "inset 0 0 0 1px rgb(20,116,84)",
+                }}
+              />
+            )}
+          </div>
+          <div className="flex justify-center rounded-md bg-puzzleProfitNotice">
+            <Image src="/icons/add.svg" width={63} height={63} alt="Add" />
+          </div>
+          <div className="flex justify-center rounded-md bg-puzzleProfitNotice">
+            <Image src="/icons/add.svg" width={63} height={63} alt="Add" />
+          </div>
+        </div>
+      )}
     </section>
   );
 }

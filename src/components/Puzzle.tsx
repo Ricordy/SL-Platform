@@ -7,9 +7,10 @@ import Image from "next/image";
 import { Button } from "./ui/Button";
 interface PuzzleProps {
   className?: string;
+  isConnected: boolean;
 }
 
-const Puzzle: FC<PuzzleProps> = ({ className }) => {
+const Puzzle: FC<PuzzleProps> = ({ className, isConnected }) => {
   const NFTs: number[][] = [
     Array.from({ length: 10 }, (_, k) => k),
     Array(10).fill(0),
@@ -54,7 +55,9 @@ const Puzzle: FC<PuzzleProps> = ({ className }) => {
       id="puzzle"
       className={cn("w-full mx-auto max-w-[1338px] flex flex-col", className)}
     >
-      <h2 className="text-2xl uppercase pb-12 ml-[58px]">My Puzzle</h2>
+      <h2 className="text-2xl font-medium uppercase pb-12 ml-[58px]">
+        My Puzzle
+      </h2>
       <Tab.Group>
         <Tab.List className="flex ml-[58px] w-full border-b border-b-gray-900/20">
           {levels.map((level) => (
@@ -62,16 +65,15 @@ const Puzzle: FC<PuzzleProps> = ({ className }) => {
               key={level.title}
               className={({ selected }) =>
                 classNames(
-                  "flex min-w-fit justify-center gap-3 px-6 pb-4  text-2xl font-normal  leading-5 text-tabInactive",
+                  "flex min-w-fit justify-center gap-3 px-6 pb-4  text-2xl font-normal leading-5 ",
                   "focus:outline-none",
                   selected
                     ? "bg-white text-primaryGreen border-b-4 font-semibold border-primaryGreen"
-                    : " hover:bg-white/[0.12] hover:text-tabInactive/80"
+                    : " hover:bg-white/[0.12] hover:text-tabInactive/80 text-tabInactive"
                 )
               }
             >
-              {level.title}{" "}
-              {level.locked && (
+              {(level.locked || !isConnected) && (
                 <Image
                   alt="Locked"
                   src="/icons/locked.svg"
@@ -79,6 +81,7 @@ const Puzzle: FC<PuzzleProps> = ({ className }) => {
                   height={20}
                 />
               )}
+              {level.title}{" "}
             </Tab>
           ))}
         </Tab.List>
@@ -93,76 +96,85 @@ const Puzzle: FC<PuzzleProps> = ({ className }) => {
                 )}
               >
                 <div className="flex flex-col gap-8">
-                  <div className="flex flex-col gap-8 ml-[58px] mr-[256px]">
-                    {profitNotification && (
-                      <div className="flex relative w-full justify-end items-start flex-col bg-puzzleProfitNotice p-8 rounded-md">
-                        <div className=" absolute flex items top-4 right-4">
-                          <Image
-                            onClick={() => setProfitNotification(false)}
-                            src="/icons/close.svg"
-                            width={18}
-                            height={18}
-                            alt="Close"
-                            className=" cursor-pointer"
-                          />
-                        </div>
-                        <h3 className="uppercase ml-[124px]tracking-wider text-2xl pb-4">
-                          You have{" "}
-                          <span className="text-primaryGold">
-                            {level.profitRange.split("-")[0]}% to{" "}
-                            {level.profitRange.split("-")[1]}% profit
-                          </span>
-                        </h3>
+                  {isConnected && (
+                    <div className="flex flex-col gap-8 ml-[58px] mr-[256px]">
+                      {profitNotification && (
+                        <div className="flex relative w-full justify-end items-start flex-col bg-puzzleProfitNotice p-8 rounded-md">
+                          <div className=" absolute flex items top-4 right-4">
+                            <Image
+                              onClick={() => setProfitNotification(false)}
+                              src="/icons/close.svg"
+                              width={18}
+                              height={18}
+                              alt="Close"
+                              className=" cursor-pointer"
+                            />
+                          </div>
+                          <h3 className="uppercase ml-[124px]tracking-wider text-2xl pb-4">
+                            You have{" "}
+                            <span className="text-primaryGold">
+                              {level.profitRange.split("-")[0]}% to{" "}
+                              {level.profitRange.split("-")[1]}% profit
+                            </span>
+                          </h3>
 
-                        <p className="font-light pb-4 max-w-xl">
-                          {level.description}
-                        </p>
-                        {idx < 2 && (
-                          <span className="uppercase text-xs font-medium">
-                            Next level:{" "}
-                            {levels.at(idx + 1).profitRange.split("-")[0]}% to{" "}
-                            {levels.at(idx + 1).profitRange.split("-")[1]}%{" "}
-                          </span>
-                        )}
+                          <p className="font-light pb-4 max-w-xl">
+                            {level.description}
+                          </p>
+                          {idx < 2 && (
+                            <span className="uppercase text-xs font-medium">
+                              Next level:{" "}
+                              {levels.at(idx + 1).profitRange.split("-")[0]}% to{" "}
+                              {levels.at(idx + 1).profitRange.split("-")[1]}%{" "}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                      <div className="flex gap-6">
+                        <div className="flex gap-3">
+                          <p className="text-md">
+                            Progress:{" "}
+                            <span className="font-medium">
+                              {level.progress}%
+                            </span>
+                          </p>
+                        </div>
+                        <div className="flex gap-3">
+                          <p className="text-md">
+                            Invested:{" "}
+                            <span className="font-medium">
+                              {level.invested}$
+                            </span>
+                          </p>
+                        </div>
+                        <div className="flex gap-3">
+                          <p className="text-md">
+                            Collected:{" "}
+                            <span className="font-medium">
+                              {level.collected}
+                            </span>{" "}
+                            | 10
+                          </p>
+                        </div>
                       </div>
-                    )}
-                    <div className="flex gap-6">
-                      <div className="flex gap-3">
-                        <p className="text-md">
-                          Progress:{" "}
-                          <span className="font-medium">{level.progress}%</span>
-                        </p>
-                      </div>
-                      <div className="flex gap-3">
-                        <p className="text-md">
-                          Invested:{" "}
-                          <span className="font-medium">{level.invested}$</span>
-                        </p>
-                      </div>
-                      <div className="flex gap-3">
-                        <p className="text-md">
-                          Collected:{" "}
-                          <span className="font-medium">{level.collected}</span>{" "}
-                          | 10
-                        </p>
+                      <div className="flex justify-center items-center gap-6">
+                        <div className="bg-progressBackground h-[6px] w-full flex bottom-0 left-0 rounded-md">
+                          <div
+                            className={` bg-progressHighlight rounded-md`}
+                            style={{ width: `${level.progress}%` }}
+                          ></div>
+                        </div>
+                        <Button className="px-12" variant="outline">
+                          Claim
+                        </Button>
                       </div>
                     </div>
-                    <div className="flex justify-center items-center gap-6">
-                      <div className="bg-progressBackground h-[6px] w-full flex bottom-0 left-0 rounded-md">
-                        <div
-                          className={` bg-progressHighlight rounded-md`}
-                          style={{ width: `${level.progress}%` }}
-                        ></div>
-                      </div>
-                      <Button className="px-12" variant="outline">
-                        Claim
-                      </Button>
-                    </div>
-                  </div>
+                  )}
                   {!level.locked && (
                     <Carousel
                       className="pt-5"
                       id={idx.toString()}
+                      isConnected={isConnected}
                       // items={investmentData.filter(
                       //   (i) => i.status == investmentStatus
                       // )}
