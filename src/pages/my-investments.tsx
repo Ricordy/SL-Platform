@@ -1124,6 +1124,13 @@ const MyInvestments: NextPage = () => {
                   <TransactionItem />
                   <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
                   <TransactionItem />
+                  <Link
+                    className="flex self-start"
+                    href="https://etherscan.io/"
+                    target="_blank"
+                  >
+                    See more
+                  </Link>
                 </div>
               </div>
             </div>
