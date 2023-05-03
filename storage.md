@@ -4,6 +4,10 @@
 
 ## S3?
 
+## Db
+
+## API
+
 # From DB/API:
 
 ## Home
@@ -37,13 +41,14 @@
     - Upcoming (Only from DB?)
     - Finished (How we know if the contract is finished or not?)
 
-- My Puzzle
-  - Puzzle Address
-  - Puzzle title
-  - Puzzle Image
-  - Puzzle progress
-  - User invested so far
-  - User collected puzzles (unique)
+### My Puzzle
+
+- Puzzle Address
+- Puzzle title
+- Puzzle Image
+- Puzzle progress
+- User invested so far
+- User collected puzzles (unique)
 - Posts
   - Post image
   - Post title
