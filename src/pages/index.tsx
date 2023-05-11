@@ -17,8 +17,7 @@ import { CoinTestAbi, InvestAbi } from "../data/ABIs";
 import { cn } from "../lib/utils";
 import Slider, { SliderProps } from "../components/ui/Slider";
 import { useEffect, useState } from "react";
-import { GraphQLClient, gql } from 'graphql-request';
-
+import { GraphQLClient, gql } from "graphql-request";
 
 const posts: PostItemProps[] = [
   {
@@ -102,7 +101,6 @@ const Home: NextPage = (props) => {
     return () => clearInterval(interval);
   }, [images.length]);
 
-  
   return (
     <>
       <section className="w-full mx-auto bg-white">
@@ -254,36 +252,30 @@ const Home: NextPage = (props) => {
 
 export default Home;
 
-
-const hygraph = new GraphQLClient(
-  process.env.HYGRAPH_READ_ONLY_KEY,
-  {
-    headers: {
-      Authorization:
-        process.env.HYGRAPH_BEREAR,
-    },
-  }
-);
-
+const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY, {
+  headers: {
+    Authorization: process.env.HYGRAPH_BEARER,
+  },
+});
 
 export async function getStaticProps({ locale, params }) {
   const { posts } = await hygraph.request(
     gql`
-    query MyQuery {
-      posts {
-        id
-        slug
-        title
-        shortDescription {
-          html
+      query MyQuery {
+        posts {
+          id
+          slug
+          title
+          shortDescription {
+            html
+          }
+          image {
+            url
+          }
+          postCategory
+          locale
         }
-        image {
-          url
-        }
-        postCategory
-        locale
       }
-    }
     `
   );
 
