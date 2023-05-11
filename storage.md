@@ -1,10 +1,10 @@
 # Where to store the images?
 
-## IPFS?
+## IPFS? - NFT ENTRY, NFT LEVELS
 
-## S3?
+## S3? 
 
-## Db
+## Db - Website, platform
 
 ## API
 
@@ -12,102 +12,102 @@
 
 ## Home
 
-### Slider
+### Slider - DB
 
-### Image URL
+### Image URL - DB
 
-### Our cars / Favorites
+### Our cars 
 
-### Car Address
+#### Car Address - BLOCKCHAIN/DB
 
-### Car title
+#### Car title - DB
 
-### Car price
+#### Car price - BLOCKCHAIN/DB
 
-### Car Image
+#### Car Image - DB
 
-### Favorite?
+### Favorite? - NA
 
 ### My Investments
 
-    - Active
-      - It will be presented the same info in all statuses?
-      - Car Address
-      - Car title
-      - Car price
-      - Car Image
-      - Car Status
-      - Car progress
-    - Upcoming (Only from DB?)
-    - Finished (How we know if the contract is finished or not?)
+#### Active - HARDCODED
+  - It will be presented the same info in all statuses? - (Active its the same) ; (upcoming, its like our cars) ; (finished have price and sold price if they dont go well, refunded status)
+  - Car Address - BLOCKCHAIN/DB
+  - Car title - DB
+  - Car price - BLOCKCHAIN/DB
+  - Car Image - DB
+  - Car Status - DB 
+  - Car progress - BLOCKCHAIN
+#### Upcoming - DB
+#### Finished - ONCE AFTER REFILL, IT ENTERS FINISHED PHASE WHERE YOU CAN WITHDRAW FUNDS) (If user does not withdraw in 3 months time (still to confirm), money goes to SL fund)
 
 ### My Puzzle
 
-- Puzzle Address
-- Puzzle title
-- Puzzle Image
-- Puzzle progress
-- User invested so far
-- User collected puzzles (unique)
-- Posts
-  - Post image
-  - Post title
-  - Post short description
-  - Post full text
+- Puzzle Address - BLOCKCHAIN/DB
+- Puzzle title - HARDCODED
+- Puzzle Image - IPFS/DB
+- Puzzle progress - BLOCKCHAIN, UPDATES AFTER EVERY PUZZLE CLAIM OR PUZZLE BUY
+- User invested so far - BLOCKCHAIN, UPDATES AFTER EVERY INVESTMENT IF POSSIBLE
+- User collected puzzles (unique) - IPFS
+- Posts - WEBSITE
+  - Post image - DB
+  - Post title - DB
+  - Post short description - DB
+  - Post full text - DB
 - My investments
-  - Upcoming?
+  - Upcoming? - DB
   - Favorites
-    - Car title
-    - Car price
+    - Car title - NA
+    - Car price - NA
   - Our suggestions for you (DB?)
-  - What is the criteria to suggest cars?
+  - What is the criteria to suggest cars? - Active cars, select 3, the ones that the user is not invested in preference - HARDCODED
 - Investment Detail Page
-  - Investment title
-  - Investment subtitle
-  - Investment Description
-  - Investment Address
-  - Investment Chassis
-  - Investment Total Production
-  - Investment Total Model Production
-  - Investment Color Combination
-  - Gallery (3 photos)
-  - Status (renewing)
-  - Price
-  - Progress (%)
-  - Taks(?? When the user has not invested)
-    - Title
-    - Icon
-    - Status (Done, progrees, etc)
-  - Taks(When the user has invested)
-    - Title
-    - Icon
-    - Status (Done, progrees, etc)
-      - Deadline
-      - Cost expectation
-      - Current cost
+  - Investment title - DB
+  - Investment subtitle - DB
+  - Investment Description - DB
+  - Investment Address - BLOCKCHAIN/DB
+  - Investment Chassis - DB
+  - Investment Total Production - DB
+  - Investment Total Model Production - DB 
+  - Investment Color Combination - DB
+  - Gallery (3 photos) - DB
+  - Status (renewing) - DB
+  - Price - BLOCKCHAIN/DB
+  - Progress (%) - BLOCKCHAIN
+  - Tasks( When the user has not invested) - 
+    - Title - DB
+    - Icon - DB
+    - Status (Done, progrees, etc) - DB
+  - Tasks(When the user has invested)
+    - Title - DB
+    - Icon - DB
+    - Status (Done, progrees, etc) - DB
+      - Deadline -  DB
+      - Cost expectation - DB
+      - Current cost - DB
       - Updates
-        - Data
-        - Title
-        - Slider (photos)
+        - Data - DB
+        - Title - DB
+        - Slider (photos)- DB
   - Investments (when user has not invested)
-    - Total invested so far
-    - Number of investors so far
-    - Return range
-    - Sales end
-    - Sales began
-    - Estimate claiming
+    - Total invested so far  - BLOCKCHAIN
+    - Number of investors so far - BLOCKCHAIN (NEEDS TO BE TACKLED)
+    - Return range - BLOCKCHAIN/DB 
+    - Sales end - DB
+    - Sales began - DB
+    - Estimate claiming - DB
   - Investments (when user has invested)
-    - Total invested so far
-    - Number of investors so far
-    - Return range
-    - Sales end
-    - Sales began
-    - Estimate claiming
-    - Transactions (4 last transactions - )
-  - Car details
-  - Car title
-  - Car description (will be the same as the top??)
-  - Car chart
+    - Total invested so far - BLOCKCHAIN
+    - Number of investors so far - BLOCKCHAIN (NEEDS TO BE TACKLED)
+    - Return range - BLOCKCHAIN/DB
+    - Sales end - DB
+    - Sales began - DB
+    - Estimate claiming - DB
+    - Transactions (4 last transactions ) - BLOCKHAIN/DB , UPDATED FOR EVERY TRANSACTION THAT USER MAKES ON THAT SL CONTRACT
+  - Car details - DB
+  - Car title - DB
+  - Car description (will be the same as the top??) - (WILL BE MORE EXTENSE) - DB
+  - Car chart - DB
   - Our suggestions for you (DB?)
   - What is the criteria to suggest cars?
 
@@ -115,58 +115,58 @@
 
 ## Create a new Investment
 
-### Level
+### Level - Blockchain
 
-### Payment Token Address
+### Payment Token Address - Blockchain
 
-### Total Investment
+### Total Investment - Blockchain
 
 ## Create a new Batch
 
-### Cap
+### Cap- Blockchain
 
-### Images (link or the real image that will be uploaded)
+### Images (link or the real image that will be uploaded)- Blockchain/DB
 
-### Price
+### Price - Blockchain
 
-### URI
+### URI - IPFS
 
-## Change Investment status
+## Change Investment status - Blockchain
 
 # From Blockchain:
 
 - Home
   - My Puzzle
-    - Puzzle Address
-    - Puzzle title
-    - Puzzle Image
-    - Puzzle progress
-    - User invested so far
-    - User collected puzzles (unique)
+    - Puzzle Address - Blockchain/DB
+    - Puzzle title - DB
+    - Puzzle Image - IPFS
+    - Puzzle progress - Blockchain
+    - User invested so far - Blockchain/DB
+    - User collected puzzles (unique)- Blockchain
       How the user will mint the puzzle NFT?
-- My Investments (Without Entry NFT)
-  - Total Invested until now
-  - Return expected
-  - NFTs sold until now
+- My Investments (Without Entry NFT) 
+  - Total Invested until now - Blockchain
+  - Return expected - DB
+  - NFTs sold until now - Blockchain
 - My Investments (With Entry NFT)
-  - Total Invested in all investments
-  - Any other info?
-  - Last transactions (It will be the last 4 transactions related to the platform contratcts?)
-  - Active (Status/Phases/Tasks???)
-    - Phase title
-    - Project price
-    - Phase progress
-  - Upcoming (DB?)
-  - Finished (How to grab this info?)
-    - Phase title
-    - Project price
-    - Phase progress
+  - Total Invested in all investments - Blockchain
+  - Any other info? 
+  - Last transactions (It will be the last 4 transactions related to the platform contratcts?) - Blockchain/DB
+  - Active (Status/Phases/Tasks???) 
+    - Phase title - DB
+    - Project price - BlockchaiN/DB
+    - Phase progress - DB
+  - Upcoming - DB
+  - Finished (How to grab this info?) - Blockchain/DB
+    - Phase title - DB
+    - Project price - DB
+    - Phase progress - DB
   - Our suggestions for you (DB?)
-- Investment Detail Page
+- Investment Detail Page 
   - Investments (when user has invested)
-    - Transactions (4 last transactions)
+    - Transactions (4 last transactions) - Blockchain/DB
     - Button - Invest Now
-      - User Payment Token balance
-      - Minimun Investment
-      - Maximum Investment
-    - Button - Withdraw (???)
+      - User Payment Token balance - Blockchain
+      - Minimun Investment - DB
+      - Maximum Investment - Blockchain
+    - Button - Withdraw - Blockchain
