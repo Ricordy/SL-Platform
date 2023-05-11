@@ -3,6 +3,7 @@ import Link from "next/link";
 import { FC } from "react";
 import { PostItemProps, PostProps } from "../@types/post";
 import { cn } from "../lib/utils";
+import DOMPurify from "dompurify";
 
 const PostItem: FC<PostItemProps> = ({
   image,
@@ -11,17 +12,24 @@ const PostItem: FC<PostItemProps> = ({
   children,
   slug,
 }) => {
+
+  const purifiedChildren = () => ({
+    __html: DOMPurify.sanitize(children as string),
+  });
+
   return (
     <div className="flex flex-col gap-6 relative">
       <Image
         className="rounded-md"
-        src={image}
+        src={image.url}
         alt={title}
         width={328}
         height={264}
       />
       <h3 className={cn("text-2xl", titleColor ?? "text-black")}>{title}</h3>
-      {children}
+      <div className="text-white" dangerouslySetInnerHTML={purifiedChildren()}>
+
+      </div>
       <Link href={`/learn/${slug}`}>
         <a className="text-primaryGreen text-center uppercase border-b-2 text-xs border-b-primaryGreen py-1 self-start">
           Know more
@@ -84,7 +92,7 @@ const Posts: FC<PostProps> = ({
               image={post.image}
               slug={post.slug}
             >
-              {post.children}
+              {post.shortDescription.html}
             </PostItem>
           ))}
       </div>

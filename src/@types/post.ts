@@ -11,8 +11,10 @@ export type PostProps = {
   contentPadding?: boolean;
 };
 export type PostItemProps = {
-  image: string;
+  image: {url: string};
   title: string;
+  shortDescription: {html: string};
+  description?: {html: string};
   titleColor?: string;
   slug: string;
   category?: string;
