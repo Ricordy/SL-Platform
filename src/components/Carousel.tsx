@@ -21,9 +21,9 @@ export const CarouselItem = ({ title, image, price }: CarouselItemProps) => {
     <div className="flex flex-col w-full rounded-md">
       <div
         className={cn(
-          "flex flex-col justify-end items-center min-h-[394px] rounded-md bg-cover bg-center relative gap-4",
-          image
+          "flex flex-col justify-end items-center min-h-[394px] rounded-md bg-cover bg-center relative gap-4"
         )}
+        style={{ backgroundImage: `url(${image})` }}
       >
         <h4 className="z-10 uppercase text-3xl text-white">{title}</h4>
         <div className="flex z-10 relative gap-3 pb-8 justify-center w-full">
@@ -85,6 +85,7 @@ const Carousel: FC<CarouselProps> = ({
   prevNavWhite,
   seeMoreLabel,
   seeMoreLink,
+  items,
 }) => {
   return (
     <div className={className ?? ""}>
@@ -143,9 +144,12 @@ const Carousel: FC<CarouselProps> = ({
               {carouselItems.map((item, index) => (
                 <SwiperSlide key={index}>
                   <CarouselItem
-                    title={item.title}
-                    image={item.image}
-                    price={item.price}
+                    title="my title"
+                    image="/projects/car-1.jpg"
+                    price="39595"
+                    // title={item.basicInvestment.car.basicInfo.title}
+                    // image={item.basicInvestment.car.basicInfo.cover.url}
+                    // price={item.basicInvestment.car.basicInfo.price}
                   />
                 </SwiperSlide>
               ))}

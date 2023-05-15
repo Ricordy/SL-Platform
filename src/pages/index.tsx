@@ -152,6 +152,7 @@ const Home: NextPage = (props) => {
         <div className="min-h-[500px] -mt-[300px] relative z-20 left-1/2 -ml-[570px]  max-w-[1338px] mx-auto">
           <Carousel
             id="1"
+            items={props.investments}
             prevNavWhite={true}
             title={<h2 className="text-white text-2xl">Our cars</h2>}
             seeMoreLabel="See more"
@@ -218,13 +219,13 @@ const Home: NextPage = (props) => {
               </div>
             </div>
           )}
-          {isConnected && (
+          {/* {isConnected && (
             <Carousel
               id="2"
               className="py-[132px]"
               title={<h2 className="text-2xl">My Favourites</h2>}
             />
-          )}
+          )} */}
         </div>
 
         <div className=" w-full relative z-20 left-1/2 -ml-[570px] max-w-[1338px] mx-auto">
@@ -237,6 +238,7 @@ const Home: NextPage = (props) => {
           />
         </div>
         <div className="flex bg-black w-full rounded-t-3xl pb-[132px] pt-[72px]">
+          {/* {JSON.stringify(props.posts)} */}
           <Posts
             posts={props.posts}
             title="Learn More"
@@ -265,7 +267,9 @@ export async function getStaticProps({ locale, params }) {
         posts {
           id
           slug
-          title
+          basic {
+            title
+          }
           shortDescription {
             html
           }
@@ -279,9 +283,34 @@ export async function getStaticProps({ locale, params }) {
     `
   );
 
+  const { investments } = await hygraph.request(
+    gql`
+      query {
+        investments {
+          id
+          basicInvestment {
+            id
+            address
+            car {
+              basicInfo {
+                title
+                price
+                cover {
+                  id
+                  url
+                }
+              }
+            }
+          }
+        }
+      }
+    `
+  );
+
   return {
     props: {
       posts,
+      investments,
     },
   };
 }

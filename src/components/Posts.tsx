@@ -7,12 +7,11 @@ import DOMPurify from "dompurify";
 
 const PostItem: FC<PostItemProps> = ({
   image,
-  title,
+  basic,
   titleColor,
   children,
   slug,
 }) => {
-
   const purifiedChildren = () => ({
     __html: DOMPurify.sanitize(children as string),
   });
@@ -22,14 +21,17 @@ const PostItem: FC<PostItemProps> = ({
       <Image
         className="rounded-md"
         src={image.url}
-        alt={title}
+        alt="{basic.title}"
         width={328}
         height={264}
       />
-      <h3 className={cn("text-2xl", titleColor ?? "text-black")}>{title}</h3>
-      <div className="text-white" dangerouslySetInnerHTML={purifiedChildren()}>
-
-      </div>
+      <h3 className={cn("text-2xl", titleColor ?? "text-black")}>
+        {/* {basic.title} */}
+      </h3>
+      <div
+        className="text-white"
+        dangerouslySetInnerHTML={purifiedChildren()}
+      ></div>
       <Link href={`/learn/${slug}`}>
         <a className="text-primaryGreen text-center uppercase border-b-2 text-xs border-b-primaryGreen py-1 self-start">
           Know more
@@ -87,7 +89,8 @@ const Posts: FC<PostProps> = ({
           posts.map((post) => (
             <PostItem
               key={post.slug}
-              title={post.title}
+              shortDescription={post.shortDescription}
+              basic={post.basic}
               titleColor="text-white"
               image={post.image}
               slug={post.slug}
