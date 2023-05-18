@@ -14,16 +14,17 @@ interface CarouselItemProps {
   title: string;
   image: string;
   price: string;
+  address?: string;
 }
 
-export const CarouselItem = ({ title, image, price }: CarouselItemProps) => {
+export const CarouselItem = ({ title, image, price, address}: CarouselItemProps) => {
   return (
-    <div className="flex flex-col w-full rounded-md">
+    <div className=" w-full rounded-md">
       <div
         className={cn(
-          "flex flex-col justify-end items-center min-h-[394px] rounded-md bg-cover bg-center relative gap-4"
+          "flex flex-col w-full justify-end items-center min-h-[394px] rounded-md bg-cover bg-center relative gap-4"
         )}
-        style={{ backgroundImage: `url(${image})` }}
+        style={{backgroundImage: `url(${image})`}}
       >
         <h4 className="z-10 uppercase text-3xl text-white">{title}</h4>
         <div className="flex z-10 relative gap-3 pb-8 justify-center w-full">
@@ -33,6 +34,13 @@ export const CarouselItem = ({ title, image, price }: CarouselItemProps) => {
             </div>
           </div>
         </div>
+        <a
+          href={`/investment/${address}`}
+          className={cn(
+            "absolute inset-0 rounded-md",
+            "focus:z-10 focus:outline-none focus:ring-2"
+          )}
+        />
         <div className="flex z-0 absolute rounded-b-md w-full min-h-[200px] bg-[url('/projects/car-gradient.svg')] bg-cover"></div>
       </div>
     </div>
@@ -126,9 +134,10 @@ const Carousel: FC<CarouselProps> = ({
           )}
         >
           <div className="flex relative z-10 w-1/2 swiper-wrapper ">
+            {/* {JSON.stringify(items)} */}
             <Swiper
               modules={[Navigation, A11y]}
-              className="swiper "
+              className="swiper w-full"
               spaceBetween={24}
               slidesPerView={4}
               navigation={{
@@ -141,15 +150,17 @@ const Carousel: FC<CarouselProps> = ({
               initialSlide={0}
               loop={true}
             >
-              {carouselItems.map((item, index) => (
+              
+              {items.map((item, index) => (
                 <SwiperSlide key={index}>
                   <CarouselItem
-                    title="my title"
-                    image="/projects/car-1.jpg"
-                    price="39595"
-                    // title={item.basicInvestment.car.basicInfo.title}
-                    // image={item.basicInvestment.car.basicInfo.cover.url}
-                    // price={item.basicInvestment.car.basicInfo.price}
+                    // title="my title"
+                    // image="/projects/car-1.jpg"
+                    // price="39595"
+                    title={item.basicInvestment.car.basicInfo.title}
+                    image={item.basicInvestment.car.basicInfo.cover.url}
+                    price={item.basicInvestment.totalInvestment}
+                    address={item.basicInvestment.address}
                   />
                 </SwiperSlide>
               ))}

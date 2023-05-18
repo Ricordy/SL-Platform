@@ -20,6 +20,7 @@ import Image from "next/image";
 import { Button } from "../components/ui/Button";
 import Carousel, { CarouselItem, carouselItems } from "../components/Carousel";
 import ProjectCarousel from "../components/ProjectCarousel";
+import { GraphQLClient, gql } from "graphql-request";
 
 interface InvestmentBlockchainType {
   id: number;
@@ -35,6 +36,10 @@ interface InvestmentDbType {
   totalProduction: number;
   totalModelProduction: number;
   colorCombination: string;
+}
+
+interface InvestmentsProps {
+  userInvestments,
 }
 interface InvestmentType extends InvestmentDbType, InvestmentBlockchainType {}
 
@@ -68,7 +73,12 @@ export const TransactionItem = () => {
   );
 };
 
-const MyInvestments: NextPage = () => {
+const MyInvestments: NextPage = (investments: InvestmentsProps) => {
+  
+
+
+console.log("investment: ", investments);
+
   const { address } = useAccount();
   const { hasEntryNFT, hasEntryNFTLoading } = useCheckEntryNFT({
     address,
@@ -82,376 +92,7 @@ const MyInvestments: NextPage = () => {
     "Level 2": [],
   });
 
-  // const { data: signerData } = useSigner();
-  // const factoryContract = useContract({
-  //   address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS,
-  //   abi: [
-  //     {
-  //       inputs: [],
-  //       stateMutability: "nonpayable",
-  //       type: "constructor",
-  //     },
-  //     {
-  //       anonymous: false,
-  //       inputs: [
-  //         {
-  //           indexed: false,
-  //           internalType: "uint256",
-  //           name: "ContractID",
-  //           type: "uint256",
-  //         },
-  //         {
-  //           indexed: false,
-  //           internalType: "address",
-  //           name: "conAddress",
-  //           type: "address",
-  //         },
-  //       ],
-  //       name: "ContractCreated",
-  //       type: "event",
-  //     },
-  //     {
-  //       anonymous: false,
-  //       inputs: [
-  //         {
-  //           indexed: true,
-  //           internalType: "address",
-  //           name: "previousOwner",
-  //           type: "address",
-  //         },
-  //         {
-  //           indexed: true,
-  //           internalType: "address",
-  //           name: "newOwner",
-  //           type: "address",
-  //         },
-  //       ],
-  //       name: "OwnershipTransferred",
-  //       type: "event",
-  //     },
-  //     {
-  //       inputs: [
-  //         {
-  //           internalType: "address",
-  //           name: "contractAddress",
-  //           type: "address",
-  //         },
-  //         {
-  //           internalType: "uint256",
-  //           name: "_amount",
-  //           type: "uint256",
-  //         },
-  //       ],
-  //       name: "addUserInvestment",
-  //       outputs: [],
-  //       stateMutability: "nonpayable",
-  //       type: "function",
-  //     },
-  //     {
-  //       inputs: [],
-  //       name: "counter",
-  //       outputs: [
-  //         {
-  //           internalType: "uint256",
-  //           name: "",
-  //           type: "uint256",
-  //         },
-  //       ],
-  //       stateMutability: "view",
-  //       type: "function",
-  //     },
-  //     {
-  //       inputs: [
-  //         {
-  //           internalType: "uint256",
-  //           name: "_totalInvestment",
-  //           type: "uint256",
-  //         },
-  //         {
-  //           internalType: "address",
-  //           name: "_paymentTokenAddress",
-  //           type: "address",
-  //         },
-  //       ],
-  //       name: "deployNew",
-  //       outputs: [
-  //         {
-  //           internalType: "address",
-  //           name: "",
-  //           type: "address",
-  //         },
-  //       ],
-  //       stateMutability: "nonpayable",
-  //       type: "function",
-  //     },
-  //     {
-  //       inputs: [
-  //         {
-  //           internalType: "uint256",
-  //           name: "",
-  //           type: "uint256",
-  //         },
-  //       ],
-  //       name: "deployedContracts",
-  //       outputs: [
-  //         {
-  //           internalType: "address",
-  //           name: "",
-  //           type: "address",
-  //         },
-  //       ],
-  //       stateMutability: "view",
-  //       type: "function",
-  //     },
-  //     {
-  //       inputs: [
-  //         {
-  //           internalType: "address",
-  //           name: "contractAddress",
-  //           type: "address",
-  //         },
-  //       ],
-  //       name: "getAddressOnContract",
-  //       outputs: [
-  //         {
-  //           internalType: "uint256",
-  //           name: "userTotal",
-  //           type: "uint256",
-  //         },
-  //       ],
-  //       stateMutability: "view",
-  //       type: "function",
-  //     },
-  //     {
-  //       inputs: [
-  //         {
-  //           internalType: "address",
-  //           name: "user",
-  //           type: "address",
-  //         },
-  //       ],
-  //       name: "getAddressTotal",
-  //       outputs: [
-  //         {
-  //           internalType: "uint256",
-  //           name: "userTotal",
-  //           type: "uint256",
-  //         },
-  //       ],
-  //       stateMutability: "view",
-  //       type: "function",
-  //     },
-  //     {
-  //       inputs: [
-  //         {
-  //           internalType: "uint256",
-  //           name: "index",
-  //           type: "uint256",
-  //         },
-  //       ],
-  //       name: "getContractDeployed",
-  //       outputs: [
-  //         {
-  //           internalType: "address",
-  //           name: "",
-  //           type: "address",
-  //         },
-  //       ],
-  //       stateMutability: "view",
-  //       type: "function",
-  //     },
-  //     {
-  //       inputs: [],
-  //       name: "getContractDeployedCount",
-  //       outputs: [
-  //         {
-  //           internalType: "uint256",
-  //           name: "count",
-  //           type: "uint256",
-  //         },
-  //       ],
-  //       stateMutability: "view",
-  //       type: "function",
-  //     },
-  //     {
-  //       inputs: [],
-  //       name: "getInvestments",
-  //       outputs: [
-  //         {
-  //           components: [
-  //             {
-  //               internalType: "address",
-  //               name: "contractAddress",
-  //               type: "address",
-  //             },
-  //             {
-  //               internalType: "uint256",
-  //               name: "balance",
-  //               type: "uint256",
-  //             },
-  //           ],
-  //           internalType: "struct Factory.UserInvestment[]",
-  //           name: "",
-  //           type: "tuple[]",
-  //         },
-  //       ],
-  //       stateMutability: "view",
-  //       type: "function",
-  //     },
-  //     {
-  //       inputs: [],
-  //       name: "getLastDeployedContract",
-  //       outputs: [
-  //         {
-  //           internalType: "address",
-  //           name: "contractAddress",
-  //           type: "address",
-  //         },
-  //       ],
-  //       stateMutability: "view",
-  //       type: "function",
-  //     },
-  //     {
-  //       inputs: [
-  //         {
-  //           internalType: "uint256",
-  //           name: "_id",
-  //           type: "uint256",
-  //         },
-  //       ],
-  //       name: "getUserInvestment",
-  //       outputs: [
-  //         {
-  //           components: [
-  //             {
-  //               internalType: "address",
-  //               name: "contractAddress",
-  //               type: "address",
-  //             },
-  //             {
-  //               internalType: "uint256",
-  //               name: "balance",
-  //               type: "uint256",
-  //             },
-  //           ],
-  //           internalType: "struct Factory.UserInvestment",
-  //           name: "",
-  //           type: "tuple",
-  //         },
-  //       ],
-  //       stateMutability: "view",
-  //       type: "function",
-  //     },
-  //     {
-  //       inputs: [],
-  //       name: "getUserInvestmentCount",
-  //       outputs: [
-  //         {
-  //           internalType: "uint256",
-  //           name: "_userInvestmentCount",
-  //           type: "uint256",
-  //         },
-  //       ],
-  //       stateMutability: "view",
-  //       type: "function",
-  //     },
-  //     {
-  //       inputs: [],
-  //       name: "owner",
-  //       outputs: [
-  //         {
-  //           internalType: "address",
-  //           name: "",
-  //           type: "address",
-  //         },
-  //       ],
-  //       stateMutability: "view",
-  //       type: "function",
-  //     },
-  //     {
-  //       inputs: [],
-  //       name: "renounceOwnership",
-  //       outputs: [],
-  //       stateMutability: "nonpayable",
-  //       type: "function",
-  //     },
-  //     {
-  //       inputs: [
-  //         {
-  //           internalType: "address",
-  //           name: "_lgentry",
-  //           type: "address",
-  //         },
-  //       ],
-  //       name: "setEntryAddress",
-  //       outputs: [],
-  //       stateMutability: "nonpayable",
-  //       type: "function",
-  //     },
-  //     {
-  //       inputs: [
-  //         {
-  //           internalType: "address",
-  //           name: "newOwner",
-  //           type: "address",
-  //         },
-  //       ],
-  //       name: "transferOwnership",
-  //       outputs: [],
-  //       stateMutability: "nonpayable",
-  //       type: "function",
-  //     },
-  //     {
-  //       inputs: [
-  //         {
-  //           internalType: "address",
-  //           name: "",
-  //           type: "address",
-  //         },
-  //       ],
-  //       name: "userInvestmentCount",
-  //       outputs: [
-  //         {
-  //           internalType: "uint256",
-  //           name: "",
-  //           type: "uint256",
-  //         },
-  //       ],
-  //       stateMutability: "view",
-  //       type: "function",
-  //     },
-  //     {
-  //       inputs: [
-  //         {
-  //           internalType: "address",
-  //           name: "",
-  //           type: "address",
-  //         },
-  //         {
-  //           internalType: "uint256",
-  //           name: "",
-  //           type: "uint256",
-  //         },
-  //       ],
-  //       name: "userInvestmentHistory",
-  //       outputs: [
-  //         {
-  //           internalType: "address",
-  //           name: "contractAddress",
-  //           type: "address",
-  //         },
-  //         {
-  //           internalType: "uint256",
-  //           name: "balance",
-  //           type: "uint256",
-  //         },
-  //       ],
-  //       stateMutability: "view",
-  //       type: "function",
-  //     },
-  //   ],
-  //   signerOrProvider: signerData,
-  // });
+  
   const { data: userInvestments } = useContractRead({
     address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
     abi: [
@@ -858,7 +499,7 @@ const MyInvestments: NextPage = () => {
     //   console.log(data);
     // },
   });
-  // {
+
   //       ...investContracts[0],
   //       functionName: "getContractDeployed",
   //       args: []
@@ -874,7 +515,6 @@ const MyInvestments: NextPage = () => {
   // }
 
   // console.log("deployedContracts>>>", contractCount.toString());
-  console.log("userInvestments>>", userInvestments);
 
   useEffect(() => {
     const populateInvestment = async () => {
@@ -943,83 +583,7 @@ const MyInvestments: NextPage = () => {
     return () => console.log("Cleanup..");
   }, []);
 
-  //address: investment.address[process.env.NEXT_PUBLIC_CHAIN_ID as Address],
-
-  // investmentData.forEach(function (element) {
-
-  //   const contract = {
-  //     address:
-  //       process.env.NODE_ENV == "development"
-  //         ? process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS
-  //         : element.address,
-  //     abi: InvestAbi,
-  //   };
-  //   investContracts.push(contract);
-  // });
-  // const { data, isError, isLoading } = useContractReads({
-  //   contracts: [
-  //     {
-  //       ...investContracts[0],
-  //       functionName: "status",
-  //     },
-  //     {
-  //       ...investContracts[1],
-  //       functionName: "status",
-  //     },
-  //     {
-  //       ...investContracts[2],
-  //       functionName: "status",
-  //     },
-  //     {
-  //       ...investContracts[0],
-  //       functionName: "balanceOf",
-  //       args: [address],
-  //     },
-  //     {
-  //       ...investContracts[1],
-  //       functionName: "balanceOf",
-  //       args: [address],
-  //     },
-  //     {
-  //       ...investContracts[2],
-  //       functionName: "balanceOf",
-  //       args: [address],
-  //     },
-  //   ],
-  // });
-
-  // console.log(data);
-
-  // let counter = 0;
-  // investmentData.map(function (element) {
-  //   if (Number(data?.[3 + counter]) > 0) {
-  //     userInvestmentsHelper.push(counter + 1);
-  //     console.log(
-  //       "balance of contract",
-  //       counter,
-  //       ": ",
-  //       Number(data?.[3 + counter])
-  //     );
-  //     console.log("userInvestments: ", userInvestments);
-  //     userInvestments = userInvestmentsHelper.filter(
-  //       (n, i) => userInvestmentsHelper.indexOf(n) === i
-  //     );
-  //     selectedInvestments = investmentData.filter(
-  //       (i) => userInvestments.indexOf(i.id) > -1
-  //     );
-  //   }
-
-  //   if (data?.[counter] == 0) element.phase = "Paused";
-  //   if (data?.[counter] == 1) element.phase = "In Progress";
-  //   if (data?.[counter] == 2) element.phase = "In Process";
-  //   if (data?.[counter] == 3) element.phase = "In Withdraw";
-  //   if (data?.[counter] == 4) element.phase = "In Withdraw";
-
-  //   counter++;
-  // });
-
-  // console.log(investmentData);
-
+  
   if (hasEntryNFTLoading) return <div>Loading...</div>;
 
   if (!hasEntryNFTLoading && !hasEntryNFT)
@@ -1137,26 +701,33 @@ const MyInvestments: NextPage = () => {
           </div>
         </div>
       </div>
+      
       <div className="min-h-[500px] mt-[52px] relative z-20 left-1/2 -ml-[570px]  max-w-[1338px] mx-auto">
+        
         <ProjectCarousel
           id="1"
           prevNavWhite={true}
           title={<h2 className="text-white text-2xl">Active</h2>}
+          items={investments.investments.filter(investment => investment.basicInvestment.investmentStatus == "Active")}
         />
+        
         <ProjectCarousel
           id="2"
           className="pt-[132px]"
           title={<h2 className="text-2xl">Upcoming</h2>}
+          items={investments.investments.filter(investment => investment.basicInvestment.investmentStatus == "Upcoming")}
         />
         <Carousel
           id="3"
           className="pt-[132px]"
           title={<h2 className="text-2xl">My favorites</h2>}
+          items={investments.investments}
         />
         <ProjectCarousel
           id="4"
           className="py-[132px]"
           title={<h2 className="text-2xl">Finished</h2>}
+          items={investments.investments.filter(investment => investment.basicInvestment.investmentStatus == "Finished")}
         />
       </div>
       <div className="flex text-white bg-black relative pb-[128px] pt-[72px] z-20 rounded-t-[56px] mx-auto">
@@ -1245,3 +816,43 @@ const MyInvestments: NextPage = () => {
 };
 
 export default MyInvestments;
+
+
+const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY, {
+  headers: {
+    Authorization: process.env.HYGRAPH_BEARER,
+  },
+});
+
+export async function getStaticProps({ locale, params }) {
+const { investments } = await hygraph.request(
+  gql`
+  query Investments{
+    investments {
+      id
+      basicInvestment {
+        id
+        address
+        totalInvestment
+        investmentStatus
+        car {
+          basicInfo {
+            title
+            cover {
+              id
+              url
+            }
+          }
+        }
+      }
+    }
+  }
+  `
+);
+
+return {
+  props: {
+    investments,
+  },
+};
+}

@@ -10,7 +10,7 @@ import Carousel from "../components/Carousel";
 import Posts from "../components/Posts";
 import { PostItemProps } from "../@types/post";
 import { Address, useAccount, useContractRead } from "wagmi";
-import { ProjectInfo, badges, phases } from "./investment/[id]";
+import { ProjectInfo, badges, phases } from "./investment/[address]";
 import { Carousel as C2 } from "react-responsive-carousel";
 import Image from "next/image";
 import { CoinTestAbi, InvestAbi } from "../data/ABIs";
@@ -18,6 +18,7 @@ import { cn } from "../lib/utils";
 import Slider, { SliderProps } from "../components/ui/Slider";
 import { useEffect, useState } from "react";
 import { GraphQLClient, gql } from "graphql-request";
+import ProjectCarousel from "../components/ProjectCarousel";
 
 const posts: PostItemProps[] = [
   {
@@ -59,7 +60,7 @@ const posts: PostItemProps[] = [
 ];
 
 const Home: NextPage = (props) => {
-  const { isConnected, isDisconnected } = useAccount();
+  const { isConnected, isDisconnected, address } = useAccount();
   const highlightContractAddress = investmentData.find(
     (investment) => investment.id === 1
   );
@@ -149,14 +150,14 @@ const Home: NextPage = (props) => {
             ))}
           </div>
         </div>
-        <div className="min-h-[500px] -mt-[300px] relative z-20 left-1/2 -ml-[570px]  max-w-[1338px] mx-auto">
+        <div className="min-h-[500px] -mt-[100px] relative z-20 left-1/2 -ml-[570px]  max-w-[1338px] mx-auto">
           <Carousel
             id="1"
-            items={props.investments}
+            items={props.activeInvestments}
             prevNavWhite={true}
             title={<h2 className="text-white text-2xl">Our cars</h2>}
-            seeMoreLabel="See more"
-            seeMoreLink="/our-cars"
+            //seeMoreLabel="See more"
+            //seeMoreLink="/our-cars"
           />
           {isDisconnected && (
             <div className="flex flex-col ml-[58px] py-[132px]">
@@ -229,16 +230,17 @@ const Home: NextPage = (props) => {
         </div>
 
         <div className=" w-full relative z-20 left-1/2 -ml-[570px] max-w-[1338px] mx-auto">
-          <Investments isConnected={isConnected} />
+          <Investments isConnected={isConnected} userInvestments={props.transactions} />
         </div>
         <div className="mx-auto w-full relative left-1/2 -ml-[570px] max-w-[1338px]">
           <Puzzle
             isConnected={isConnected}
             className="relative max-w-[1338px] w-full  flex flex-col pt-[132px]"
+            userAddress={address}
           />
         </div>
         <div className="flex bg-black w-full rounded-t-3xl pb-[132px] pt-[72px]">
-          {/* {JSON.stringify(props.posts)} */}
+           
           <Posts
             posts={props.posts}
             title="Learn More"
@@ -283,34 +285,68 @@ export async function getStaticProps({ locale, params }) {
     `
   );
 
-  const { investments } = await hygraph.request(
+  const { investments:activeInvestments } = await hygraph.request(
     gql`
-      query {
-        investments {
+    query ActiveInvestments{
+      investments(where: {basicInvestment: {investmentStatus: Active}}) {
+        id
+        basicInvestment {
           id
-          basicInvestment {
-            id
-            address
-            car {
-              basicInfo {
-                title
-                price
-                cover {
-                  id
-                  url
-                }
+          address
+          totalInvestment
+          investmentStatus
+          car {
+            basicInfo {
+              title
+              cover {
+                id
+                url
               }
             }
           }
         }
       }
+    }
+    `
+  );
+
+  const { transactions } = await hygraph.request(
+    gql`
+    query UserInvestments {
+      transactions(
+        where: {transactionDetails: {from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"}}
+      ) {
+        investment {
+          id
+          basicInvestment {
+            address
+            totalInvested
+            totalInvestment
+            investmentStatus
+            car {
+              id
+              basicInfo {
+                cover {
+                  url
+                }
+                title
+              }
+            }
+          }
+        }
+        amountInvested
+      }
+    }    
     `
   );
 
   return {
     props: {
       posts,
-      investments,
+      activeInvestments,
+      transactions
     },
   };
 }
+
+

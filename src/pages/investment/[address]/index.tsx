@@ -30,6 +30,7 @@ import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { ethers } from "ethers";
 import { InvestmentModal } from "../../../components/modal/InvestmentModal";
+import { GraphQLClient, gql } from "graphql-request";
 
 export const ProjectInfo = ({ progress }: { progress: number }) => {
   return (
@@ -66,60 +67,60 @@ const TransactionItem = () => {
     </div>
   );
 };
-export const phases = [
-  {
-    status: "done",
-    title: "Disassembling and Inspection",
-    deadline: "august 25",
-    estimatedCost: "3.050.000$",
-    currentCost: "250.000$",
-    gallery: [{ url: "/slider/car1.jpg" }, { url: "/slider/car2.jpg" }],
-    updates: [
-      {
-        date: "9 jun 2022",
-        title: "Delay on something related with some other thing",
-      },
-      {
-        date: "2 jun 2022",
-        title: "Problems with something",
-      },
-      {
-        date: "12 nov 2022",
-        title: "Finished something very especific about the car",
-      },
-      {
-        date: "12 nov 2022",
-        title: "Finished something especific about the car",
-      },
-    ],
-  },
-  {
-    status: "inprogress",
-    title: "Blasting",
-    deadline: "august 20",
-    estimatedCost: "3.050.000$",
-    currentCost: "250.000$",
-    gallery: [{ url: "/slider/car1.jpg" }, { url: "/slider/car2.jpg" }],
-    updates: [
-      {
-        date: "9 jun 2022",
-        title: "Delay on something related with some other thing",
-      },
-      {
-        date: "2 jun 2022",
-        title: "Problems with something",
-      },
-      {
-        date: "12 nov 2022",
-        title: "Finished something very especific about the car",
-      },
-      {
-        date: "12 nov 2022",
-        title: "Finished something very especific about the car",
-      },
-    ],
-  },
-];
+// export const phases = [
+//   {
+//     status: "done",
+//     title: "Disassembling and Inspection",
+//     deadline: "august 25",
+//     estimatedCost: "3.050.000$",
+//     currentCost: "250.000$",
+//     gallery: [{ url: "/slider/car1.jpg" }, { url: "/slider/car2.jpg" }],
+//     updates: [
+//       {
+//         date: "9 jun 2022",
+//         title: "Delay on something related with some other thing",
+//       },
+//       {
+//         date: "2 jun 2022",
+//         title: "Problems with something",
+//       },
+//       {
+//         date: "12 nov 2022",
+//         title: "Finished something very especific about the car",
+//       },
+//       {
+//         date: "12 nov 2022",
+//         title: "Finished something especific about the car",
+//       },
+//     ],
+//   },
+//   {
+//     status: "inprogress",
+//     title: "Blasting",
+//     deadline: "august 20",
+//     estimatedCost: "3.050.000$",
+//     currentCost: "250.000$",
+//     gallery: [{ url: "/slider/car1.jpg" }, { url: "/slider/car2.jpg" }],
+//     updates: [
+//       {
+//         date: "9 jun 2022",
+//         title: "Delay on something related with some other thing",
+//       },
+//       {
+//         date: "2 jun 2022",
+//         title: "Problems with something",
+//       },
+//       {
+//         date: "12 nov 2022",
+//         title: "Finished something very especific about the car",
+//       },
+//       {
+//         date: "12 nov 2022",
+//         title: "Finished something very especific about the car",
+//       },
+//     ],
+//   },
+// ];
 export const badges = {
   inprogress: {
     icon: "/badges/in-progress.svg",
@@ -136,12 +137,8 @@ export const badges = {
 };
 
 const Investment = ({ investment }) => {
-  // const {
-  //   isOpen: isOpenModalInvest,
-  //   toggle: toggleModalInvest,
-  //   toggleBlur: toggleBlurModalInvest,
-  //   isBlur: isBlurModalInvest,
-  // } = useModal();
+
+  investment = investment[0]
 
   const { address: walletAddress } = useAccount();
   const { data: signerData } = useSigner();
@@ -151,7 +148,7 @@ const Investment = ({ investment }) => {
   });
 
   const { data: totalInvestment } = useContractRead({
-    address: investment.address[process.env.NEXT_PUBLIC_CHAIN_ID as Address],
+    address: investment.basicInvestment.address as Address,
     abi: InvestAbi,
     functionName: "totalInvestment",
   });
@@ -160,12 +157,12 @@ const Investment = ({ investment }) => {
     address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
     abi: CoinTestAbi,
     functionName: "balanceOf",
-    args: [investment.address[process.env.NEXT_PUBLIC_CHAIN_ID as Address]],
+    args: [investment.basicInvestment.address as Address],
     watch: true,
   });
 
   const { data: userTotalInvestment } = useContractRead({
-    address: investment.address[process.env.NEXT_PUBLIC_CHAIN_ID as Address],
+    address: investment.basicInvestment.address as Address,
     abi: InvestAbi,
     functionName: "balanceOf",
     args: [walletAddress],
@@ -173,14 +170,14 @@ const Investment = ({ investment }) => {
   });
 
   const { data: maxToInvest } = useContractRead({
-    address: investment.address[process.env.NEXT_PUBLIC_CHAIN_ID as Address],
+    address: investment.basicInvestment.address as Address,
     abi: InvestAbi,
     functionName: "getMaxToInvest",
     watch: true,
   });
 
   const { data: minToInvest } = useContractRead({
-    address: investment.address[process.env.NEXT_PUBLIC_CHAIN_ID as Address],
+    address: investment.basicInvestment.address as Address,
     abi: InvestAbi,
     functionName: "MINIMUM_INVESTMENT",
   });
@@ -205,7 +202,7 @@ const Investment = ({ investment }) => {
   });
 
   const investContract = useContract({
-    address: investment?.address[process.env.NEXT_PUBLIC_CHAIN_ID as Address],
+    address: investment?.basicInvestment.address as Address,
     abi: InvestAbi,
     signerOrProvider: signerData,
   });
@@ -216,6 +213,8 @@ const Investment = ({ investment }) => {
 
   const userInvested = (userTotalInvestment as number) > 0 ? true : false;
 
+  
+  
   return (
     <>
       <Head>
@@ -246,7 +245,7 @@ const Investment = ({ investment }) => {
               title={investment?.title}
               chassis={investment?.chassis}
               contractAddress={
-                investment?.address[process.env.NEXT_PUBLIC_CHAIN_ID as Address]
+                investment?.basicInvestment.address as Address
               }
               totalProduction={investment?.totalProduction}
               totalModelProduction={investment?.totalModelProduction}
@@ -346,16 +345,12 @@ const Investment = ({ investment }) => {
                 <span className="text-primaryGreen">
                   <Link
                     href={`https://etherscan.io/address/${
-                      investment?.address[
-                        process.env.NEXT_PUBLIC_CHAIN_ID as Address
-                      ]
+                      investment?.basicInvestment.address as Address
                     }`}
                   >
                     <a className="flex items-center gap-3">
                       {formatAddress(
-                        investment?.address[
-                          process.env.NEXT_PUBLIC_CHAIN_ID as Address
-                        ]
+                        investment?.basicInvestment.address as Address
                       )}{" "}
                       <FiExternalLink />
                     </a>
@@ -597,9 +592,7 @@ const Investment = ({ investment }) => {
                     title={investment?.title}
                     chassis={investment?.chassis}
                     contractAddress={
-                      investment?.address[
-                        process.env.NEXT_PUBLIC_CHAIN_ID as Address
-                      ]
+                      investment?.basicInvestment.address as Address
                     }
                     totalProduction={investment?.totalProduction}
                     totalModelProduction={investment?.totalModelProduction}
@@ -701,15 +694,81 @@ const Investment = ({ investment }) => {
   );
 };
 
+const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY, {
+  headers: {
+    Authorization: process.env.HYGRAPH_BEARER,
+  },
+});
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { id } = context.query;
-  const [investment] = investmentData.filter(
-    (i) => i.id.toString() === id?.toString()
-  );
+  const { address } = context.query;
+  const { investments:investment } = await hygraph.request(
+        gql`
+        query ActiveInvestments {
+          investments(where: {basicInvestment: {address: "${address}"}}) {
+            id
+            basicInvestment {
+              id
+              address
+              totalInvestment
+              investmentStatus
+              car {
+                basicInfo {
+                  title
+                  cover {
+                    id
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+        
+        `
+      );
+  console.log(context);
 
   return {
     props: { investment },
   };
 };
-
 export default Investment;
+
+
+
+// export async function getStaticProps({ locale, params }) {
+ 
+ 
+//   const { investments:activeInvestments } = await hygraph.request(
+//     gql`
+//     query ActiveInvestments{
+//       investments {
+//         id
+//         basicInvestment {
+//           id
+//           address
+//           totalInvestment
+//           investmentStatus
+//           car {
+//             basicInfo {
+//               title
+//               cover {
+//                 id
+//                 url
+//               }
+//             }
+//           }
+//         }
+//       }
+//     }
+//     `
+//   );
+
+//   return {
+//     props: {
+//       activeInvestments,
+//     },
+//   };
+// }
+

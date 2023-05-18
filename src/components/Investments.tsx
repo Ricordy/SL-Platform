@@ -9,12 +9,16 @@ import { CarouselItemProps } from "./ProjectCarousel";
 import Link from "next/link";
 import Image from "next/image";
 import { ConnectKitButton } from "connectkit";
+import { log } from "console";
 
 interface InvestmentsProps {
   isConnected: boolean;
+  userInvestments,
 }
-export default function Investments({ isConnected }: InvestmentsProps) {
+export default function Investments({ isConnected, userInvestments }: InvestmentsProps) {
   const [investmentStatuses] = useState(investmentStatusesData);
+  console.log("userInvestments", userInvestments);
+  const activeUserInvestments = userInvestments.filter(investment => investment.investment.basicInvestment.investmentStatus == "Active")
 
   return (
     <section
@@ -38,7 +42,7 @@ export default function Investments({ isConnected }: InvestmentsProps) {
       {isConnected && (
         <Tab.Group>
           <Tab.List className="flex ml-[58px] w-fit border-b border-b-gray-900/20">
-            {investmentStatuses.map((investmentStatus) => (
+            {investmentStatusesData.map((investmentStatus) => (
               <Tab
                 key={investmentStatus}
                 className={({ selected }) =>
@@ -52,21 +56,24 @@ export default function Investments({ isConnected }: InvestmentsProps) {
                 }
               >
                 {investmentStatus}
+      
               </Tab>
             ))}
           </Tab.List>
           <Tab.Panels className="mt-2">
-            {investmentStatuses.map((investmentStatus, idx) => {
+            {investmentStatusesData.map((investmentStatus) => {
               return (
                 <Tab.Panel
-                  key={idx}
+                  key={investmentStatus}
                   className={classNames(
                     " pt-6",
                     "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2"
                   )}
                 >
+
                   <ProjectCarousel
-                    id={idx.toString()}
+                    id={investmentStatus}
+                    items={clearQueryForRender(activeUserInvestments)}
                     // items={investmentData.filter(
                     //   (i) => i.status == investmentStatus
                     // )}
@@ -152,4 +159,28 @@ export default function Investments({ isConnected }: InvestmentsProps) {
       )}
     </section>
   );
+}
+function clearQueryForRender(query) {
+  const newQuery = [];
+  query.map((item) => {
+    newQuery.push({
+        id: item.investment.id,
+        basicInvestment: {
+          address: item.investment.basicInvestment.address,
+          totalInvested: item.investment.basicInvestment.totalInvested,
+          totalInvestment: item.investment.basicInvestment.totalInvestment,
+          investmentStatus: item.investment.basicInvestment.investmentStatus,
+          car: {
+            id: item.investment.basicInvestment.car.id,
+            basicInfo: {
+              cover: {
+                url: item.investment.basicInvestment.car.basicInfo.cover.url,
+              },
+              title: item.investment.basicInvestment.car.basicInfo.title,
+            },
+          },
+        },
+    });
+  });
+  return newQuery;
 }

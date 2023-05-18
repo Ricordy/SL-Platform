@@ -31,9 +31,10 @@ const CarouselItem = ({
     <div className=" w-full rounded-md">
       <div
         className={cn(
-          "flex flex-col w-full  justify-end items-center min-h-[394px] rounded-md bg-cover relative gap-3",
-          image
+          "flex flex-col w-full  justify-end items-center min-h-[394px] rounded-md bg-cover relative gap-3"
         )}
+
+        style={{backgroundImage: `url(${image})`}}
       >
         <h4 className="z-10 uppercase text-2xl text-white">{title}</h4>
         <div className="flex z-10 relative gap-3 pb-6 justify-center w-full">
@@ -80,45 +81,6 @@ interface CarouselProps {
   items?: CarouselItemProps[];
 }
 
-const localItems = [
-  {
-    title: "Maserati 3500 GT",
-    image: "bg-[url('/projects/car-1.jpg')]",
-    price: "US$350.000",
-    status: "Renewing",
-    progress: "25",
-  },
-  {
-    title: "Chevrolet 200",
-    image: "bg-[url('/projects/car-2.jpg')]",
-    price: "US$350.000",
-    status: "Renewing",
-    progress: "15",
-  },
-
-  {
-    title: "Chevrolet 300",
-    image: "bg-[url('/projects/car-3.jpg')]",
-    price: "US$350.000",
-    status: "Renewing",
-    progress: "10",
-  },
-  {
-    title: "Maserati 3500 GT",
-    image: "bg-[url('/projects/car-1.jpg')]",
-    price: "US$350.000",
-    status: "Renewing",
-    progress: "25",
-  },
-  {
-    title: "Chevrolet 200",
-    image: "bg-[url('/projects/car-2.jpg')]",
-    price: "US$350.000",
-    status: "Renewing",
-    progress: "15",
-  },
-];
-
 const ProjectCarousel: FC<CarouselProps> = ({
   id,
   className,
@@ -126,7 +88,13 @@ const ProjectCarousel: FC<CarouselProps> = ({
   prevNavWhite,
   items,
 }) => {
-  items = items ?? localItems;
+  items = items ;
+
+
+  console.log("carousel items: ", items);
+
+  
+  
   return (
     <div className={className ?? ""}>
       {title && (
@@ -174,11 +142,11 @@ const ProjectCarousel: FC<CarouselProps> = ({
                 <SwiperSlide key={index}>
                   <CarouselItem
                     id={(index + 1).toString()}
-                    title={item.title}
-                    image={item.image}
-                    price={item.price}
-                    progress={item.progress}
-                    status={item.status}
+                    title={item.basicInvestment.car.basicInfo.title ??  ""}
+                    image={item.basicInvestment.car.basicInfo.cover.url ?? ""}
+                    price={item.basicInvestment.totalInvestment}
+                    progress={(item.basicInvestment.totalInvested) / item.basicInvestment.totalInvestment * 100}
+                    status={item.status ?? "Not woking"}
                   />
                 </SwiperSlide>
               ))}
