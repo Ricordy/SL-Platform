@@ -6,7 +6,6 @@ import Carousel from "./puzzle/Carousel";
 import Image from "next/image";
 import { Button } from "./ui/Button";
 import { Address, useContractRead, useContractReads } from "wagmi";
-import { log } from "console";
 interface PuzzleProps {
   className?: string;
   isConnected: boolean;

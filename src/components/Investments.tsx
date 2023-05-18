@@ -9,7 +9,6 @@ import { CarouselItemProps } from "./ProjectCarousel";
 import Link from "next/link";
 import Image from "next/image";
 import { ConnectKitButton } from "connectkit";
-import { log } from "console";
 
 interface InvestmentsProps {
   isConnected: boolean;
@@ -17,7 +16,6 @@ interface InvestmentsProps {
 }
 export default function Investments({ isConnected, userInvestments }: InvestmentsProps) {
   const [investmentStatuses] = useState(investmentStatusesData);
-  console.log("userInvestments", userInvestments);
   const activeUserInvestments = userInvestments.filter(investment => investment.investment.basicInvestment.investmentStatus == "Active")
 
   return (

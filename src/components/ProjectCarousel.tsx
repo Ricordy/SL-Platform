@@ -89,12 +89,6 @@ const ProjectCarousel: FC<CarouselProps> = ({
   items,
 }) => {
   items = items ;
-
-
-  console.log("carousel items: ", items);
-
-  
-  
   return (
     <div className={className ?? ""}>
       {title && (

@@ -77,7 +77,6 @@ const MyInvestments: NextPage = (investments: InvestmentsProps) => {
   
 
 
-console.log("investment: ", investments);
 
   const { address } = useAccount();
   const { hasEntryNFT, hasEntryNFTLoading } = useCheckEntryNFT({
