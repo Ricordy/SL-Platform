@@ -16,7 +16,7 @@ interface InvestmentsProps {
 }
 export default function Investments({ isConnected, userInvestments }: InvestmentsProps) {
   const [investmentStatuses] = useState(investmentStatusesData);
-  const activeUserInvestments = userInvestments.filter(investment => investment.investment.basicInvestment.investmentStatus == "Active")
+
 
   return (
     <section
@@ -71,7 +71,7 @@ export default function Investments({ isConnected, userInvestments }: Investment
 
                   <ProjectCarousel
                     id={investmentStatus}
-                    items={clearQueryForRender(activeUserInvestments)}
+                    items={clearQueryForRender(userInvestments.filter(investment => investment.investment.basicInvestment.investmentStatus == investmentStatus))}
                     // items={investmentData.filter(
                     //   (i) => i.status == investmentStatus
                     // )}
