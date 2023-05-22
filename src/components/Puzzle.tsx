@@ -1195,7 +1195,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
     abi: FactoryABI,
   }
 
-  const { data } = useContractReads({
+  let { data } = useContractReads({
     contracts: [
       {
         ...SlCoreContract,
@@ -1232,6 +1232,8 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
       console.log('Error', error)
     },
   })
+
+  data = data ?? []
 
   const levels = [
     {
