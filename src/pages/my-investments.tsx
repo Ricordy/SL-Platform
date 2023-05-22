@@ -51,8 +51,8 @@ interface InvestmentType extends InvestmentDbType, InvestmentBlockchainType {}
 export const TransactionItem = (items) => {
   console.log("items inside component",items.items);
   return(items.items.map((item) => 
-      
-  <div className="flex items-center justify-between">
+    <section>
+      <div className="flex items-center justify-between">
     <Image
       className="rounded-md"
       src={item.investment.basicInvestment.car.basicInfo.cover.url}
@@ -72,7 +72,12 @@ export const TransactionItem = (items) => {
         alt="External link"
       />
     </Link>
+    
   </div>
+  <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
+
+    </section>
+  
   )
   );
   
@@ -676,7 +681,7 @@ console.log("investments", props.investments);
                 <span>Last transactions:</span>
                 <div className="flex flex-col flex-1 gap-2 bg-myInvestmentsBackground rounded-md py-8 px-4">
                   <TransactionItem items={props.userTransactions}/>
-                  <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
+                  
                   {/* <TransactionItem />
                   <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
                   <TransactionItem />
