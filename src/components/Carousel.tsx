@@ -17,14 +17,19 @@ interface CarouselItemProps {
   address?: string;
 }
 
-export const CarouselItem = ({ title, image, price, address}: CarouselItemProps) => {
+export const CarouselItem = ({
+  title,
+  image,
+  price,
+  address,
+}: CarouselItemProps) => {
   return (
     <div className=" w-full rounded-md">
       <div
         className={cn(
           "flex flex-col w-full justify-end items-center min-h-[394px] rounded-md bg-cover bg-center relative gap-4"
         )}
-        style={{backgroundImage: `url(${image})`}}
+        style={{ backgroundImage: `url(${image})` }}
       >
         <h4 className="z-10 uppercase text-3xl text-white">{title}</h4>
         <div className="flex z-10 relative gap-3 pb-8 justify-center w-full">
@@ -52,7 +57,7 @@ interface CarouselProps {
   className?: string;
   title?: ReactNode;
   prevNavWhite?: boolean;
-  items?: ReactNode;
+  items?: Object[];
   seeMoreLabel?: string;
   seeMoreLink?: string;
 }
@@ -150,7 +155,6 @@ const Carousel: FC<CarouselProps> = ({
               initialSlide={0}
               loop={true}
             >
-              
               {items.map((item, index) => (
                 <SwiperSlide key={index}>
                   <CarouselItem

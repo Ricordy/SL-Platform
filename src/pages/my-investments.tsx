@@ -39,8 +39,8 @@ interface InvestmentDbType {
 }
 
 interface InvestmentsProps {
-  investments,
-  userTransactions,
+  investments;
+  userTransactions;
 }
 interface InvestmentType extends InvestmentDbType, InvestmentBlockchainType {}
 
@@ -49,48 +49,38 @@ interface InvestmentType extends InvestmentDbType, InvestmentBlockchainType {}
 //   (i) => userInvestments.indexOf(i.id) > -1
 // );
 export const TransactionItem = (items) => {
-  console.log("items inside component",items.items);
-  return(items.items.map((item) => 
-    <section>
+  console.log("items inside component", items.items);
+  return items.items.map((item, idx) => (
+    <section key={idx}>
       <div className="flex items-center justify-between">
-    <Image
-      className="rounded-md"
-      src={item.investment.basicInvestment.car.basicInfo.cover.url}
-      width={64}
-      height={53}
-      alt="Car"
-    />
-    <span>{item.investment.basicInvestment.car.basicInfo.title}</span>
-    <span>{item.investment.basicInvestment.totalInvestment}</span>
-    <span className="text-primaryGold text-xs">{item.amountInvested}</span>
-    <span>{item.date}</span>
-    <Link href="#">
-      <Image
-        src="/icons/external-link.svg"
-        width={10}
-        height={10}
-        alt="External link"
-      />
-    </Link>
-    
-  </div>
-  <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
-
+        <Image
+          className="rounded-md"
+          src={item.investment.basicInvestment.car.basicInfo.cover.url}
+          width={64}
+          height={53}
+          alt="Car"
+        />
+        <span>{item.investment.basicInvestment.car.basicInfo.title}</span>
+        <span>{item.investment.basicInvestment.totalInvestment}</span>
+        <span className="text-primaryGold text-xs">{item.amountInvested}</span>
+        <span>{item.date}</span>
+        <Link href="#">
+          <Image
+            src="/icons/external-link.svg"
+            width={10}
+            height={10}
+            alt="External link"
+          />
+        </Link>
+      </div>
+      <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
     </section>
-  
-  )
-  );
-  
-  
-    
+  ));
 };
 
 const MyInvestments: NextPage = (props) => {
-  
-console.log("userTeansactions", props.userTransactions);
-console.log("investments", props.investments);
-
-
+  console.log("userTeansactions", props.userTransactions);
+  console.log("investments", props.investments);
 
   const { address } = useAccount();
   const { hasEntryNFT, hasEntryNFTLoading } = useCheckEntryNFT({
@@ -105,7 +95,6 @@ console.log("investments", props.investments);
     "Level 2": [],
   });
 
-  
   const { data: userInvestments } = useContractRead({
     address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
     abi: [
@@ -513,7 +502,6 @@ console.log("investments", props.investments);
     // },
   });
 
-
   useEffect(() => {
     const populateInvestment = async () => {
       if (!userInvestments || !investmentData) return;
@@ -581,7 +569,6 @@ console.log("investments", props.investments);
     return () => console.log("Cleanup..");
   }, []);
 
-  
   if (hasEntryNFTLoading) return <div>Loading...</div>;
 
   if (!hasEntryNFTLoading && !hasEntryNFT)
@@ -640,7 +627,6 @@ console.log("investments", props.investments);
       </div>
     );
 
-    
   return (
     <section className="w-full mx-auto bg-white">
       <div className="flex flex-col w-full relative rounded-bl-[56px] ">
@@ -680,8 +666,8 @@ console.log("investments", props.investments);
               <div className="flex flex-col gap-4">
                 <span>Last transactions:</span>
                 <div className="flex flex-col flex-1 gap-2 bg-myInvestmentsBackground rounded-md py-8 px-4">
-                  <TransactionItem items={props.userTransactions}/>
-                  
+                  <TransactionItem items={props.userTransactions} />
+
                   {/* <TransactionItem />
                   <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
                   <TransactionItem />
@@ -700,20 +686,26 @@ console.log("investments", props.investments);
           </div>
         </div>
       </div>
-      
+
       <div className="min-h-[500px] mt-[52px] relative z-20 left-1/2 -ml-[570px]  max-w-[1338px] mx-auto">
         <ProjectCarousel
           id="1"
           prevNavWhite={true}
           title={<h2 className="text-white text-2xl">Active</h2>}
-          items={props.investments.filter(investment => investment.basicInvestment.investmentStatus == "Active")}
+          items={props.investments.filter(
+            (investment) =>
+              investment.basicInvestment.investmentStatus == "Active"
+          )}
         />
-        
+
         <ProjectCarousel
           id="2"
           className="pt-[132px]"
           title={<h2 className="text-2xl">Upcoming</h2>}
-          items={props.investments.filter(investment => investment.basicInvestment.investmentStatus == "Upcoming")}
+          items={props.investments.filter(
+            (investment) =>
+              investment.basicInvestment.investmentStatus == "Upcoming"
+          )}
         />
         <Carousel
           id="3"
@@ -725,7 +717,10 @@ console.log("investments", props.investments);
           id="4"
           className="py-[132px]"
           title={<h2 className="text-2xl">Finished</h2>}
-          items={props.investments.filter(investment => investment.basicInvestment.investmentStatus == "Finished")}
+          items={props.investments.filter(
+            (investment) =>
+              investment.basicInvestment.investmentStatus == "Finished"
+          )}
         />
       </div>
       <div className="flex text-white bg-black relative pb-[128px] pt-[72px] z-20 rounded-t-[56px] mx-auto">
@@ -815,7 +810,6 @@ console.log("investments", props.investments);
 
 export default MyInvestments;
 
-
 const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY, {
   headers: {
     Authorization: process.env.HYGRAPH_BEARER,
@@ -823,63 +817,67 @@ const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY, {
 });
 
 export async function getStaticProps({ locale, params }) {
-const { investments } = await hygraph.request(
-  gql`
-  query Investments{
-    investments {
-      id
-      basicInvestment {
-        id
-        address
-        totalInvestment
-        investmentStatus
-        car {
-          basicInfo {
-            title
-            cover {
-              id
-              url
-            }
-          }
-        }
-      }
-    }
-  }
-  `
-);
-
-const { transactions:userTransactions } = await hygraph.request(
-  gql`
-  query UserTransactions {
-    transactions(where: {transactionDetails: {from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"}}) {
-      amountInvested
-      date
-      investment {
-        basicInvestment {
-          totalInvestment
-          car {
-            basicInfo {
-              cover {
-                url
+  const { investments } = await hygraph.request(
+    gql`
+      query Investments {
+        investments {
+          id
+          basicInvestment {
+            id
+            address
+            totalInvestment
+            investmentStatus
+            car {
+              basicInfo {
+                title
+                cover {
+                  id
+                  url
+                }
               }
-              title
             }
           }
         }
       }
-    }
-  }
-  
-  `
-);
+    `
+  );
 
-console.log("oi", userTransactions);
+  const { transactions: userTransactions } = await hygraph.request(
+    gql`
+      query UserTransactions {
+        transactions(
+          where: {
+            transactionDetails: {
+              from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+            }
+          }
+        ) {
+          amountInvested
+          date
+          investment {
+            basicInvestment {
+              totalInvestment
+              car {
+                basicInfo {
+                  cover {
+                    url
+                  }
+                  title
+                }
+              }
+            }
+          }
+        }
+      }
+    `
+  );
 
+  console.log("oi", userTransactions);
 
-return {
-  props: {
-    investments,
-    userTransactions,
-  },
-};
+  return {
+    props: {
+      investments,
+      userTransactions,
+    },
+  };
 }
