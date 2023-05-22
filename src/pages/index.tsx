@@ -15,7 +15,6 @@ import { Carousel as C2 } from "react-responsive-carousel";
 import Image from "next/image";
 import { CoinTestAbi, InvestAbi } from "../data/ABIs";
 import { cn } from "../lib/utils";
-import Slider, { SliderProps } from "../components/ui/Slider";
 import { useEffect, useState } from "react";
 import { GraphQLClient, gql } from "graphql-request";
 import ProjectCarousel from "../components/ProjectCarousel";
@@ -91,7 +90,9 @@ const Home: NextPage = (props) => {
     100;
 
   // Carousel
-  const images = ["/bg/bg-home.jpg", "/bg/bg-our-cars.jpg"];
+  // const images = ["/bg/bg-home.jpg", "/bg/bg-our-cars.jpg"];
+  const images = props.slider.image;
+
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -112,7 +113,7 @@ const Home: NextPage = (props) => {
               className={`absolute rounded-bl-[56px] w-full h-full bg-right bg-black bg-opacity-80 bg-cover transition-opacity duration-1000 ${
                 activeIndex === index ? "opacity-100" : "opacity-0"
               }`}
-              style={{ backgroundImage: `url(${image})` }}
+              style={{ backgroundImage: `url(${image.url})` }}
             />
           ))}
           <div className="absolute flex z-0 top-0 w-full min-h-[83px] bg-[url('/bg/bg-navbar.svg')]"></div>
@@ -230,7 +231,10 @@ const Home: NextPage = (props) => {
         </div>
 
         <div className=" w-full relative z-20 left-1/2 -ml-[570px] max-w-[1338px] mx-auto">
-          <Investments isConnected={isConnected} userInvestments={props.transactions} />
+          <Investments
+            isConnected={isConnected}
+            userInvestments={props.transactions}
+          />
         </div>
         <div className="mx-auto w-full relative left-1/2 -ml-[570px] max-w-[1338px]">
           <Puzzle
@@ -240,7 +244,6 @@ const Home: NextPage = (props) => {
           />
         </div>
         <div className="flex bg-black w-full rounded-t-3xl pb-[132px] pt-[72px]">
-           
           <Posts
             posts={props.posts}
             title="Learn More"
@@ -285,58 +288,77 @@ export async function getStaticProps({ locale, params }) {
     `
   );
 
-  const { investments:activeInvestments } = await hygraph.request(
+  const { investments: activeInvestments } = await hygraph.request(
     gql`
-    query ActiveInvestments{
-      investments(where: {basicInvestment: {investmentStatus: Active}}) {
-        id
-        basicInvestment {
+      query ActiveInvestments {
+        investments(where: { basicInvestment: { investmentStatus: Active } }) {
           id
-          address
-          totalInvestment
-          investmentStatus
-          car {
-            basicInfo {
-              title
-              cover {
-                id
-                url
+          basicInvestment {
+            id
+            address
+            totalInvestment
+            investmentStatus
+            car {
+              basicInfo {
+                title
+                cover {
+                  id
+                  url
+                }
               }
             }
           }
         }
       }
-    }
     `
   );
 
   const { transactions } = await hygraph.request(
     gql`
-    query UserInvestments {
-      transactions(
-        where: {transactionDetails: {from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"}}
-      ) {
-        investment {
-          id
-          basicInvestment {
-            address
-            totalInvested
-            totalInvestment
-            investmentStatus
-            car {
-              id
-              basicInfo {
-                cover {
-                  url
+      query UserInvestments {
+        transactions(
+          where: {
+            transactionDetails: {
+              from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+            }
+          }
+        ) {
+          investment {
+            id
+            basicInvestment {
+              address
+              totalInvested
+              totalInvestment
+              investmentStatus
+              car {
+                id
+                basicInfo {
+                  cover {
+                    url
+                  }
+                  title
                 }
-                title
               }
             }
           }
+          amountInvested
         }
-        amountInvested
       }
-    }    
+    `
+  );
+
+  const { slider } = await hygraph.request(
+    gql`
+      query SliderHome {
+        slider(where: { title: "Home" }) {
+          id
+          title
+          image {
+            id
+            url
+          }
+        }
+      }
     `
   );
 
@@ -344,9 +366,8 @@ export async function getStaticProps({ locale, params }) {
     props: {
       posts,
       activeInvestments,
-      transactions
+      transactions,
+      slider,
     },
   };
 }
-
-
