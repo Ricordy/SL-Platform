@@ -10,7 +10,6 @@ import Carousel from "../components/Carousel";
 import Posts from "../components/Posts";
 import { PostItemProps } from "../@types/post";
 import { Address, useAccount, useContractRead } from "wagmi";
-import { ProjectInfo, badges, phases } from "./investment/[address]";
 import { Carousel as C2 } from "react-responsive-carousel";
 import Image from "next/image";
 import { CoinTestAbi, InvestAbi } from "../data/ABIs";
@@ -18,45 +17,7 @@ import { cn } from "../lib/utils";
 import { useEffect, useState } from "react";
 import { GraphQLClient, gql } from "graphql-request";
 import ProjectCarousel from "../components/ProjectCarousel";
-
-const posts: PostItemProps[] = [
-  {
-    title: "Lorem Ipsum Dolor sit amet elit eiusmod",
-    image: "/posts/post-1.jpg",
-    slug: "lorem-1",
-    children: (
-      <p className="text-primaryGrey">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam...
-      </p>
-    ),
-  },
-  {
-    title: "Lorem Ipsum Dolor sit amet elit eiusmod",
-    image: "/posts/post-2.jpg",
-    slug: "lorem-2",
-    children: (
-      <p className="text-primaryGrey">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam...
-      </p>
-    ),
-  },
-  {
-    title: "Lorem Ipsum Dolor sit amet elit eiusmod",
-    image: "/posts/post-3.jpg",
-    slug: "lorem-3",
-    children: (
-      <p className="text-primaryGrey">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam...
-      </p>
-    ),
-  },
-];
+import { ProjectInfo, badges } from "./investment/[address]";
 
 const Home: NextPage = (props) => {
   const { isConnected, isDisconnected, address } = useAccount();
@@ -241,6 +202,8 @@ const Home: NextPage = (props) => {
             isConnected={isConnected}
             className="relative max-w-[1338px] w-full  flex flex-col pt-[132px]"
             userAddress={address}
+            puzzlePieces={props.puzzlePieces}
+            dbLevels={props.levels}
           />
         </div>
         <div className="flex bg-black w-full rounded-t-3xl pb-[132px] pt-[72px]">
@@ -362,12 +325,42 @@ export async function getStaticProps({ locale, params }) {
     `
   );
 
+  const { puzzlePieces } = await hygraph.request(
+    gql`
+      query {
+        puzzlePieces {
+          tokenid
+          title
+          image {
+            url
+          }
+        }
+      }
+    `
+  );
+
+  const { levels } = await hygraph.request(
+    gql`
+      query {
+        levels(locales: pt) {
+          basicLevel {
+            title
+          }
+          description
+          profitRange
+        }
+      }
+    `
+  );
+
   return {
     props: {
       posts,
       activeInvestments,
       transactions,
       slider,
+      puzzlePieces,
+      levels,
     },
   };
 }

@@ -13,10 +13,26 @@ import {
   usePrepareContractWrite,
 } from "wagmi";
 import { BigNumber } from "ethers";
+import useGetUserPuzzlePieces from "../hooks/useGetUserPuzzlePieces";
+import toast from "react-hot-toast";
 interface PuzzleProps {
   className?: string;
   isConnected: boolean;
   userAddress: Address;
+  puzzlePieces: {
+    tokenid: number;
+    title: string;
+    image: {
+      url: string;
+    };
+  }[];
+  dbLevels: {
+    basicLevel: {
+      title: string;
+    };
+    description: string;
+    profitRange: string;
+  }[];
 }
 const SLCoreABI = [
     {
@@ -2041,9 +2057,16 @@ function noDecimals(value) {
   return value / 10 ** 6;
 }
 
-const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
+const Puzzle: FC<PuzzleProps> = ({
+  className,
+  isConnected,
+  userAddress,
+  puzzlePieces,
+  dbLevels,
+}) => {
   const [userCanClaimPiece, setUserCanClaimPiece] = useState(false);
   const [userCanClaimLevel, setUserCanClaimLevel] = useState(false);
+  const [currentLevel, setCurrentLevel] = useState(1);
 
   const NFTs: number[][] = [
     Array.from({ length: 10 }, (_, k) => k),
@@ -2065,18 +2088,12 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
     abi: SLLogicsABI,
   };
 
-  const { data: dataUserAllowed, error: errorUserAllowed } = useContractRead({
-    ...SlLogicsContract,
-    functionName: "userAllowedToClaimPiece",
-    args: [userAddress, 1, 1, 0],
-    // onSettled(data, error) {
-    //   console.log("usercanclaim", data);
-
-    //   if (data) {
-    //     setUserCanClaimPiece(true);
-    //   }
-    // },
+  const { userPuzzlePieces, userPieces } = useGetUserPuzzlePieces({
+    userAddress,
+    level: currentLevel,
+    watch: true,
   });
+
   // const { isSuccess: userAllowedLevel, error: errorUserLevel } =
   //   useContractRead({
   //     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
@@ -2141,11 +2158,43 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
     },
   });
 
+  // data = data ?? [];
+
+  const { data: dataUserAllowed, error: errorUserAllowed } = useContractRead({
+    ...SlLogicsContract,
+    functionName: "userAllowedToClaimPiece",
+    args: [userAddress, currentLevel, data[6], data[currentLevel - 1]], // TODO: level , numberofpieces
+    watch: true,
+    enabled: !!data,
+    onSettled(data, error) {
+      // console.log(
+      //   "debug",
+      //   data[6],
+      //   data[currentLevel - 1],
+      //   currentLevel,
+      //   error
+      // );
+
+      if (!error && true) {
+        // data[6] == currentLevel
+        setUserCanClaimPiece(true);
+      } else {
+        setUserCanClaimPiece(false);
+      }
+    },
+  });
+
   const { config: configClaimPiece } = usePrepareContractWrite({
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
     abi: SLCoreABI,
     functionName: "claimPiece",
     enabled: userCanClaimPiece,
+    // onError(err) {
+    //   toast.error(err.message);
+    // },
+    // onSuccess() {
+    //   toast.success("Puzzle reivindicado com sucesso!");
+    // },
   });
 
   const { write: claimPiece, isLoading: isLoadingClaimPiece } =
@@ -2155,19 +2204,30 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
     abi: SLCoreABI,
     functionName: "claimLevel",
-    enabled: false,
+    enabled: Number(data[0]) > 9,
   });
 
   const { write: claimLevel, isLoading: isLoadingClaimLevel } =
     useContractWrite(configClaimLevel);
-
-  data = data ?? [];
   // console.log("invested>>>", BigNumber.from(data[3]).toNumber());
-  console.log("userHas>>>", data[6].toNumber());
-  // console.log("_userAllowedToClaimPiece", data[7]);
-  console.log("dataUserAllowed", dataUserAllowed);
+  // console.log("userHas>>>", data[6]?.toNumber());
+  // console.log("userCanClaimPiece>>", userCanClaimPiece);
+  // console.log("configClaimLevel>>", configClaimLevel);
 
-  const levels = [
+  // console.log("dataUserAllowed", dataUserAllowed);
+  console.log("userPieces>>>", data[0]);
+
+  const levels = dbLevels.map((dbLevel, idx) => ({
+    title: dbLevel.basicLevel.title,
+    locked: (data[6] as number) < idx + 1,
+    profitRange: dbLevel.profitRange,
+    description: dbLevel.description,
+    progress: (userPieces.length / 10) * 100,
+    invested: noDecimals(Number(data[3 + idx])),
+    collected: userPieces.length.toString(),
+  }));
+
+  const locallevels = [
     {
       title: "Level 1",
       locked: (data[6] as number) < 1,
@@ -2177,7 +2237,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
 
       progress: (Number(data[0]) / 10) * 100,
       invested: noDecimals(Number(data[3])),
-      collected: Number(data[0]),
+      collected: userPieces.length.toString(),
     },
     {
       title: "Level 2",
@@ -2186,8 +2246,8 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
       description:
         "The path is made by walking and you are one step closer to having the intended return! Level 2 of the puzzle takes you to an investment level never before explored with a tailor-made financial return!",
       progress: (Number(data[1]) / 10) * 100,
-      invested: Number(data[4]),
-      collected: Number(data[1]),
+      invested: noDecimals(Number(data[4])),
+      collected: userPieces.length.toString(),
     },
     {
       title: "Level 3",
@@ -2196,8 +2256,8 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
       description:
         "There is no going back, you are at the highest point of your investment with the highest profit margins. Nothing ventured, nothing gained, and if risk is your middle name, you're on the right track!",
       progress: (Number(data[2]) / 10) * 100,
-      invested: Number(data[5]),
-      collected: Number(data[2]),
+      invested: noDecimals(Number(data[5])),
+      collected: userPieces.length.toString(),
     },
   ];
 
@@ -2211,7 +2271,11 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
       <h2 className="text-2xl font-medium uppercase pb-12 ml-[58px]">
         My Puzzle
       </h2>
-      <Tab.Group>
+      <Tab.Group
+        onChange={(index) => {
+          setCurrentLevel(index + 1);
+        }}
+      >
         <Tab.List className="flex ml-[58px] w-full border-b border-b-gray-900/20">
           {levels.map((level) => (
             <Tab
@@ -2319,19 +2383,25 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                         </div>
                         <Button
                           onClick={claimPiece}
-                          className="px-12"
+                          className="px-12 whitespace-nowrap"
                           variant="outline"
-                          disabled={!dataUserAllowed}
+                          disabled={!userCanClaimPiece}
                         >
-                          Claim {idx}
+                          {isLoadingClaimPiece ? "Loading..." : `Claim Piece`}
                         </Button>
-                        <Button
-                          onClick={claimLevel}
-                          className="px-12"
-                          variant="outline"
-                        >
-                          Claim Level {idx}
-                        </Button>
+                        {idx < 2 && (
+                          <Button
+                            onClick={claimLevel}
+                            className="px-12 whitespace-nowrap"
+                            variant="outline"
+                            disabled={
+                              Number(data[0]) < 10 ||
+                              (data[6] as number) > idx + 1
+                            }
+                          >
+                            Claim Level {idx + 2}
+                          </Button>
+                        )}
                       </div>
                     </div>
                   )}
@@ -2340,6 +2410,8 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                       className="pt-5"
                       id={idx.toString()}
                       isConnected={isConnected}
+                      userItems={userPuzzlePieces}
+                      items={puzzlePieces}
                       // items={investmentData.filter(
                       //   (i) => i.status == investmentStatus
                       // )}

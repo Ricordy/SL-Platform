@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
 import { ConnectKitButton } from "connectkit";
+import { BigNumber } from "ethers";
 
 interface CarouselItemProps {
   title: string;
@@ -33,9 +34,9 @@ const CarouselItem = ({
         {amount > 0 ? (
           <div
             className={cn(
-              "flex flex-col w-full justify-start items-center min-h-[396px] rounded-md bg-center bg-cover relative gap-3",
-              image
+              "flex flex-col w-full justify-start items-center min-h-[396px] rounded-md bg-center bg-cover relative gap-3"
             )}
+            style={{ backgroundImage: `url(${image})` }}
           >
             <div className="flex z-10 relative gap-3 pb-6 justify-end items-start w-full">
               <div className="flex gap-3 text-primaryGold justify-center items-center p-3">
@@ -111,31 +112,43 @@ interface CarouselProps {
   className?: string;
   title?: ReactNode;
   prevNavWhite?: boolean;
-  items?: ReactNode;
+  userItems?: readonly BigNumber[];
+  items: {
+    tokenid: number;
+    title: string;
+    image: {
+      url: string;
+    };
+  }[];
 }
 
-const items = [
+const localItems = [
   {
+    id: 1,
     title: "Engine",
     image: "bg-[url('/nfts/puzzle-1.png')]",
     amount: 1,
   },
   {
+    id: 2,
     title: "Wheel",
     image: "bg-[url('/nfts/puzzle-2.png')]",
     amount: 2,
   },
   {
+    id: 3,
     title: "Grill",
     image: "bg-[url('/nfts/puzzle-2.png')]",
     amount: 5,
   },
   {
+    id: 4,
     title: "Body",
     image: "bg-[url('/nfts/puzzle-2.png')]",
     amount: 0,
   },
   {
+    id: 5,
     title: "Chevrolet 200",
     image: "bg-[url('/nfts/puzzle-2.png')]",
     amount: 0,
@@ -148,6 +161,8 @@ const Carousel: FC<CarouselProps> = ({
   className,
   title,
   prevNavWhite,
+  items,
+  userItems,
 }) => {
   return (
     <div className={className ?? ""}>
@@ -177,7 +192,7 @@ const Carousel: FC<CarouselProps> = ({
           <div className="flex relative z-10 w-1/2 swiper-wrapper ">
             <Swiper
               modules={[Navigation, A11y]}
-              className="swiper "
+              className="swiper w-full"
               spaceBetween={24}
               slidesPerView={4}
               navigation={{
@@ -190,16 +205,22 @@ const Carousel: FC<CarouselProps> = ({
               initialSlide={0}
               loop={true}
             >
-              {items.map((item, index) => (
-                <SwiperSlide key={index}>
-                  <CarouselItem
-                    isConnected={isConnected}
-                    title={item.title}
-                    image={item.image}
-                    amount={item.amount}
-                  />
-                </SwiperSlide>
-              ))}
+              {items.map((item, index) => {
+                return (
+                  <SwiperSlide key={index} className="w-full">
+                    <CarouselItem
+                      isConnected={isConnected}
+                      title={item.title}
+                      image={item.image.url}
+                      amount={
+                        userItems && userItems.length > 0
+                          ? userItems[index].toNumber()
+                          : 0
+                      }
+                    />
+                  </SwiperSlide>
+                );
+              })}
             </Swiper>
           </div>
         </section>
