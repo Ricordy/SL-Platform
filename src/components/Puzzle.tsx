@@ -2158,7 +2158,7 @@ const Puzzle: FC<PuzzleProps> = ({
     },
   });
 
-  // data = data ?? [];
+  data = data ?? [];
 
   const { data: dataUserAllowed, error: errorUserAllowed } = useContractRead({
     ...SlLogicsContract,
@@ -2175,7 +2175,7 @@ const Puzzle: FC<PuzzleProps> = ({
       //   error
       // );
 
-      if (!error && true) {
+      if (!error) {
         // data[6] == currentLevel
         setUserCanClaimPiece(true);
       } else {
@@ -2204,7 +2204,7 @@ const Puzzle: FC<PuzzleProps> = ({
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
     abi: SLCoreABI,
     functionName: "claimLevel",
-    enabled: Number(data[0]) > 9,
+    enabled: Number(data[currentLevel - 1]) > 9 && data[6] == currentLevel,
   });
 
   const { write: claimLevel, isLoading: isLoadingClaimLevel } =
@@ -2215,7 +2215,7 @@ const Puzzle: FC<PuzzleProps> = ({
   // console.log("configClaimLevel>>", configClaimLevel);
 
   // console.log("dataUserAllowed", dataUserAllowed);
-  console.log("userPieces>>>", data[0]);
+  console.log("userPieces>>>", data[currentLevel - 1]);
 
   const levels = dbLevels.map((dbLevel, idx) => ({
     title: dbLevel.basicLevel.title,

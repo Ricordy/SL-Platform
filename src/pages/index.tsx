@@ -256,9 +256,9 @@ export async function getStaticProps({ locale, params }) {
       query ActiveInvestments {
         investments(where: { basicInvestment: { investmentStatus: Active } }) {
           id
+          address
           basicInvestment {
             id
-            address
             totalInvestment
             investmentStatus
             car {
@@ -288,8 +288,8 @@ export async function getStaticProps({ locale, params }) {
         ) {
           investment {
             id
+            address
             basicInvestment {
-              address
               totalInvested
               totalInvestment
               investmentStatus

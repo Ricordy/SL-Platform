@@ -696,7 +696,7 @@ function noDecimal(value) {
 
  
 function getAddressProgress(contractAddress) {
-  console.log(contractAddress);
+
   
   const { data: contractProgress } = useContractRead({
     address: contractAddress,
@@ -704,7 +704,6 @@ function getAddressProgress(contractAddress) {
     functionName: "totalSupply"
   });
 
-  console.log("contract progress", Number(contractProgress));
   
   return Number(contractProgress);
 }
@@ -830,7 +829,7 @@ const ProjectCarousel: FC<CarouselProps> = ({
                     title={item.basicInvestment.car.basicInfo.title ??  ""}
                     image={item.basicInvestment.car.basicInfo.cover.url ?? ""}
                     price={item.basicInvestment.totalInvestment}
-                    progress={(noDecimal(getAddressProgress(item.basicInvestment.address))/ item.basicInvestment.totalInvestment) * 100}
+                    progress={(noDecimal(getAddressProgress(item.address))/ item.basicInvestment.totalInvestment) * 100}
                     status={item.basicInvestment.investmentStatus ?? "Not woking"}
                   />
                 </SwiperSlide>

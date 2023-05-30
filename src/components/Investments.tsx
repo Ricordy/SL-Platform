@@ -163,8 +163,8 @@ function clearQueryForRender(query) {
   query.map((item) => {
     newQuery.push({
         id: item.investment.id,
+        address: item.investment.address,
         basicInvestment: {
-          address: item.investment.basicInvestment.address,
           totalInvested: item.investment.basicInvestment.totalInvested,
           totalInvestment: item.investment.basicInvestment.totalInvestment,
           investmentStatus: item.investment.basicInvestment.investmentStatus,
