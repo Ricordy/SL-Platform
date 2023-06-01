@@ -15,6 +15,7 @@ import {
 import { BigNumber } from "ethers";
 import useGetUserPuzzlePieces from "../hooks/useGetUserPuzzlePieces";
 import toast from "react-hot-toast";
+import { log } from "console";
 interface PuzzleProps {
   className?: string;
   isConnected: boolean;
@@ -2158,14 +2159,18 @@ const Puzzle: FC<PuzzleProps> = ({
     },
   });
 
-  // data = data ?? [];
+  data = data ?? [];
 
+  console.log("data>>>>>", data);
+  console.log("currentLEvel == data[6]?????>>>>", currentLevel == data[6]);
+  
+  
   const { data: dataUserAllowed, error: errorUserAllowed } = useContractRead({
     ...SlLogicsContract,
     functionName: "userAllowedToClaimPiece",
     args: [userAddress, currentLevel, data[6], data[currentLevel - 1]], // TODO: level , numberofpieces
     watch: true,
-    enabled: !!data,
+    enabled: currentLevel == data[6],
     onSettled(data, error) {
       // console.log(
       //   "debug",
@@ -2174,15 +2179,20 @@ const Puzzle: FC<PuzzleProps> = ({
       //   currentLevel,
       //   error
       // );
-
-      if (!error && true) {
+      console.log("Erro??>>>>>", error);
+      
+      if (!error) {
         // data[6] == currentLevel
+        console.log("claimPiece>>>>> TRUE");
+        
         setUserCanClaimPiece(true);
       } else {
+        console.log("claimPiece>>>>> FALSE");
         setUserCanClaimPiece(false);
       }
     },
   });
+
 
   const { config: configClaimPiece } = usePrepareContractWrite({
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
@@ -2204,7 +2214,7 @@ const Puzzle: FC<PuzzleProps> = ({
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
     abi: SLCoreABI,
     functionName: "claimLevel",
-    enabled: Number(data[0]) > 9,
+    enabled: Number(data[currentLevel - 1]) > 9 && data[6] == currentLevel,
   });
 
   const { write: claimLevel, isLoading: isLoadingClaimLevel } =
@@ -2215,7 +2225,7 @@ const Puzzle: FC<PuzzleProps> = ({
   // console.log("configClaimLevel>>", configClaimLevel);
 
   // console.log("dataUserAllowed", dataUserAllowed);
-  console.log("userPieces>>>", data[0]);
+  console.log("userPieces>>>", data[currentLevel - 1]);
 
   const levels = dbLevels.map((dbLevel, idx) => ({
     title: dbLevel.basicLevel.title,

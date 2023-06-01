@@ -21,6 +21,7 @@ import { Button } from "../components/ui/Button";
 import Carousel, { CarouselItem, carouselItems } from "../components/Carousel";
 import ProjectCarousel from "../components/ProjectCarousel";
 import { GraphQLClient, gql } from "graphql-request";
+import useGetAddressInvestmentinSingleCar from "../hooks/useGetAddressInvestmentinSingleCar";
 
 interface InvestmentBlockchainType {
   id: number;
@@ -50,9 +51,22 @@ interface InvestmentType extends InvestmentDbType, InvestmentBlockchainType {}
 // );
 export const TransactionItem = (items) => {
   console.log("items inside component", items.items);
-  return items.items.map((item, idx) => (
-    <section key={idx}>
+  const { address } = useAccount();
+  
+
+  
+  
+  return items.items.map((item, idx) => {
+    const addressContract = item.investment.address
+    const { amountInvested } = useGetAddressInvestmentinSingleCar({
+      contractAddress: addressContract,
+      walletAddress: address,
+      watch:true
+    });
+    return(
+    <section key={idx} >
       <div className="flex items-center justify-between">
+        
         <Image
           className="rounded-md"
           src={item.investment.basicInvestment.car.basicInfo.cover.url}
@@ -61,9 +75,10 @@ export const TransactionItem = (items) => {
           alt="Car"
         />
         <span>{item.investment.basicInvestment.car.basicInfo.title}</span>
-        <span>{item.investment.basicInvestment.totalInvestment}</span>
-        <span className="text-primaryGold text-xs">{item.amountInvested}</span>
+        <span>{item.amountInvested}</span>
+        <span className="text-primaryGold text-xs">{amountInvested}</span>
         <span>{item.date}</span>
+
         <Link href="#">
           <Image
             src="/icons/external-link.svg"
@@ -75,17 +90,27 @@ export const TransactionItem = (items) => {
       </div>
       <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
     </section>
-  ));
+  )});
 };
 
 const MyInvestments: NextPage = (props) => {
   console.log("userTeansactions", props.userTransactions);
   console.log("investments", props.investments);
 
+
   const { address } = useAccount();
   const { hasEntryNFT, hasEntryNFTLoading } = useCheckEntryNFT({
     address,
     nftId: 10,
+  });
+
+
+  const { data: userTotalInvestment } = useContractRead({
+    address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
+    abi: FactoryAbi,
+    functionName: "getAddressTotal",
+    args:[address],
+    watch:true,
   });
 
   const [userContracts, setUserContracts] = useState<InvestmentType[]>([]);
@@ -94,6 +119,8 @@ const MyInvestments: NextPage = (props) => {
     "Level 1": [],
     "Level 2": [],
   });
+
+
 
   const { data: userInvestments } = useContractRead({
     address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
@@ -647,10 +674,10 @@ const MyInvestments: NextPage = (props) => {
                 <div className="flex flex-col flex-1 gap-8 bg-myInvestmentsBackground rounded-md py-8 px-12">
                   <div className="flex flex-col">
                     <h5 className="text-primaryGold text-base">
-                      Total Invested:
+                      Total Invested (Connected to Blockchain)
                     </h5>
                     <span className="text-4xl font-semibold tracking-widest">
-                      $403.600
+                      ${userTotalInvestment.div(10**6).toNumber()}
                     </span>
                   </div>
                   <div className="flex flex-col">
@@ -822,9 +849,9 @@ export async function getStaticProps({ locale, params }) {
       query Investments {
         investments {
           id
+          address
           basicInvestment {
             id
-            address
             totalInvestment
             investmentStatus
             car {
@@ -855,6 +882,7 @@ export async function getStaticProps({ locale, params }) {
           amountInvested
           date
           investment {
+            address
             basicInvestment {
               totalInvestment
               car {
