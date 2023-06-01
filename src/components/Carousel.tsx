@@ -164,7 +164,7 @@ const Carousel: FC<CarouselProps> = ({
                     title={item.basicInvestment.car.basicInfo.title}
                     image={item.basicInvestment.car.basicInfo.cover.url}
                     price={item.basicInvestment.totalInvestment}
-                    address={item.basicInvestment.address}
+                    address={item.address}
                   />
                 </SwiperSlide>
               ))}

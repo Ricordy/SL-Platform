@@ -19,6 +19,7 @@
     "chai": "^4.3.7",
     "class-variance-authority": "^0.5.1",
     "connectkit": "^1.1.1",
+    "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
     "ethers": "^5",
     "graphql": "^16.6.0",
