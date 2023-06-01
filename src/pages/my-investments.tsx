@@ -82,10 +82,20 @@ const MyInvestments: NextPage = (props) => {
   console.log("userTeansactions", props.userTransactions);
   console.log("investments", props.investments);
 
+
   const { address } = useAccount();
   const { hasEntryNFT, hasEntryNFTLoading } = useCheckEntryNFT({
     address,
     nftId: 10,
+  });
+
+
+  const { data: userTotalInvestment } = useContractRead({
+    address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
+    abi: FactoryAbi,
+    functionName: "getAddressTotal",
+    args:[address],
+    watch:true,
   });
 
   const [userContracts, setUserContracts] = useState<InvestmentType[]>([]);
@@ -94,6 +104,8 @@ const MyInvestments: NextPage = (props) => {
     "Level 1": [],
     "Level 2": [],
   });
+
+
 
   const { data: userInvestments } = useContractRead({
     address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
@@ -647,10 +659,10 @@ const MyInvestments: NextPage = (props) => {
                 <div className="flex flex-col flex-1 gap-8 bg-myInvestmentsBackground rounded-md py-8 px-12">
                   <div className="flex flex-col">
                     <h5 className="text-primaryGold text-base">
-                      Total Invested:
+                      Total Invested (Connected to Blockchain)
                     </h5>
                     <span className="text-4xl font-semibold tracking-widest">
-                      $403.600
+                      ${userTotalInvestment.div(10**6).toNumber()}
                     </span>
                   </div>
                   <div className="flex flex-col">
@@ -822,9 +834,9 @@ export async function getStaticProps({ locale, params }) {
       query Investments {
         investments {
           id
+          address
           basicInvestment {
             id
-            address
             totalInvestment
             investmentStatus
             car {

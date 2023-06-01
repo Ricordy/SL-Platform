@@ -342,7 +342,7 @@ export async function getStaticProps({ locale, params }) {
   const { levels } = await hygraph.request(
     gql`
       query {
-        levels(locales: pt) {
+        levels {
           basicLevel {
             title
           }

@@ -31,6 +31,7 @@ import toast from "react-hot-toast";
 import { ethers } from "ethers";
 import { InvestmentModal } from "../../../components/modal/InvestmentModal";
 import { GraphQLClient, gql } from "graphql-request";
+import { log } from "console";
 
 export const ProjectInfo = ({ progress }: { progress: number }) => {
   return (
@@ -67,60 +68,60 @@ const TransactionItem = () => {
     </div>
   );
 };
-// export const phases = [
-//   {
-//     status: "done",
-//     title: "Disassembling and Inspection",
-//     deadline: "august 25",
-//     estimatedCost: "3.050.000$",
-//     currentCost: "250.000$",
-//     gallery: [{ url: "/slider/car1.jpg" }, { url: "/slider/car2.jpg" }],
-//     updates: [
-//       {
-//         date: "9 jun 2022",
-//         title: "Delay on something related with some other thing",
-//       },
-//       {
-//         date: "2 jun 2022",
-//         title: "Problems with something",
-//       },
-//       {
-//         date: "12 nov 2022",
-//         title: "Finished something very especific about the car",
-//       },
-//       {
-//         date: "12 nov 2022",
-//         title: "Finished something especific about the car",
-//       },
-//     ],
-//   },
-//   {
-//     status: "inprogress",
-//     title: "Blasting",
-//     deadline: "august 20",
-//     estimatedCost: "3.050.000$",
-//     currentCost: "250.000$",
-//     gallery: [{ url: "/slider/car1.jpg" }, { url: "/slider/car2.jpg" }],
-//     updates: [
-//       {
-//         date: "9 jun 2022",
-//         title: "Delay on something related with some other thing",
-//       },
-//       {
-//         date: "2 jun 2022",
-//         title: "Problems with something",
-//       },
-//       {
-//         date: "12 nov 2022",
-//         title: "Finished something very especific about the car",
-//       },
-//       {
-//         date: "12 nov 2022",
-//         title: "Finished something very especific about the car",
-//       },
-//     ],
-//   },
-// ];
+export const phases = [
+  {
+    status: "done",
+    title: "Disassembling and Inspection",
+    deadline: "august 25",
+    estimatedCost: "3.050.000$",
+    currentCost: "250.000$",
+    gallery: [{ url: "/slider/car1.jpg" }, { url: "/slider/car2.jpg" }],
+    updates: [
+      {
+        date: "9 jun 2022",
+        title: "Delay on something related with some other thing",
+      },
+      {
+        date: "2 jun 2022",
+        title: "Problems with something",
+      },
+      {
+        date: "12 nov 2022",
+        title: "Finished something very especific about the car",
+      },
+      {
+        date: "12 nov 2022",
+        title: "Finished something especific about the car",
+      },
+    ],
+  },
+  {
+    status: "inprogress",
+    title: "Blasting",
+    deadline: "august 20",
+    estimatedCost: "3.050.000$",
+    currentCost: "250.000$",
+    gallery: [{ url: "/slider/car1.jpg" }, { url: "/slider/car2.jpg" }],
+    updates: [
+      {
+        date: "9 jun 2022",
+        title: "Delay on something related with some other thing",
+      },
+      {
+        date: "2 jun 2022",
+        title: "Problems with something",
+      },
+      {
+        date: "12 nov 2022",
+        title: "Finished something very especific about the car",
+      },
+      {
+        date: "12 nov 2022",
+        title: "Finished something very especific about the car",
+      },
+    ],
+  },
+];
 export const badges = {
   inprogress: {
     icon: "/badges/in-progress.svg",
@@ -202,7 +203,7 @@ const Investment = ({ investment }) => {
   });
 
   const investContract = useContract({
-    address: investment?.basicInvestment.address as Address,
+    address: investment?.address as Address,
     abi: InvestAbi,
     signerOrProvider: signerData,
   });
@@ -245,7 +246,7 @@ const Investment = ({ investment }) => {
               title={investment?.title}
               chassis={investment?.chassis}
               contractAddress={
-                investment?.basicInvestment.address as Address
+                investment?.address as Address
               }
               totalProduction={investment?.totalProduction}
               totalModelProduction={investment?.totalModelProduction}
@@ -345,12 +346,12 @@ const Investment = ({ investment }) => {
                 <span className="text-primaryGreen">
                   <Link
                     href={`https://etherscan.io/address/${
-                      investment?.basicInvestment.address as Address
+                      investment?.address as Address
                     }`}
                   >
                     <a className="flex items-center gap-3">
                       {formatAddress(
-                        investment?.basicInvestment.address as Address
+                        investment?.address as Address
                       )}{" "}
                       <FiExternalLink />
                     </a>
@@ -592,7 +593,7 @@ const Investment = ({ investment }) => {
                     title={investment?.title}
                     chassis={investment?.chassis}
                     contractAddress={
-                      investment?.basicInvestment.address as Address
+                      investment?.address as Address
                     }
                     totalProduction={investment?.totalProduction}
                     totalModelProduction={investment?.totalModelProduction}
@@ -702,14 +703,16 @@ const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY, {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { address } = context.query;
+  console.log("address>>>>", address);
+  
   const { investments:investment } = await hygraph.request(
         gql`
         query ActiveInvestments {
-          investments(where: {basicInvestment: {address: "${address}"}}) {
+          investments(where: {address: "${address}"}) {
             id
+            address
             basicInvestment {
               id
-              address
               totalInvestment
               investmentStatus
               car {
@@ -722,6 +725,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 }
               }
             }
+
           }
         }
         
