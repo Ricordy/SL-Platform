@@ -49,6 +49,7 @@ interface InvestmentType extends InvestmentDbType, InvestmentBlockchainType {}
 // const selectedInvestments = investmentData.filter(
 //   (i) => userInvestments.indexOf(i.id) > -1
 // );
+
 export const TransactionItem = (items) => {
   console.log("items inside component", items.items);
   const { address } = useAccount();
@@ -94,23 +95,303 @@ export const TransactionItem = (items) => {
 };
 
 const MyInvestments: NextPage = (props) => {
-  console.log("userTeansactions", props.userTransactions);
-  console.log("investments", props.investments);
-
+  const FactoryABI = [
+    {
+      inputs: [],
+      stateMutability: "nonpayable",
+      type: "constructor",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "ContractID",
+          type: "uint256",
+        },
+        {
+          indexed: false,
+          internalType: "address",
+          name: "conAddress",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "conLevel",
+          type: "uint256",
+        },
+      ],
+      name: "ContractCreated",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "address",
+          name: "previousOwner",
+          type: "address",
+        },
+        {
+          indexed: true,
+          internalType: "address",
+          name: "newOwner",
+          type: "address",
+        },
+      ],
+      name: "OwnershipTransferred",
+      type: "event",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      name: "counter",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "_totalInvestment",
+          type: "uint256",
+        },
+        {
+          internalType: "address",
+          name: "_paymentTokenAddress",
+          type: "address",
+        },
+        {
+          internalType: "uint8",
+          name: "level",
+          type: "uint8",
+        },
+      ],
+      name: "deployNew",
+      outputs: [
+        {
+          internalType: "address",
+          name: "",
+          type: "address",
+        },
+      ],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      name: "deployedContracts",
+      outputs: [
+        {
+          internalType: "contract Investment",
+          name: "",
+          type: "address",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "contractAddress",
+          type: "address",
+        },
+      ],
+      name: "getAddressOnContract",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "userTotal",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "user",
+          type: "address",
+        },
+      ],
+      name: "getAddressTotal",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "userTotal",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "user",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "level",
+          type: "uint256",
+        },
+      ],
+      name: "getAddressTotalInLevel",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "userTotal",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "level",
+          type: "uint256",
+        },
+      ],
+      name: "getLastDeployedContract",
+      outputs: [
+        {
+          internalType: "address",
+          name: "contractAddress",
+          type: "address",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "owner",
+      outputs: [
+        {
+          internalType: "address",
+          name: "",
+          type: "address",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "renounceOwnership",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "_lgentry",
+          type: "address",
+        },
+      ],
+      name: "setEntryAddress",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "newOwner",
+          type: "address",
+        },
+      ],
+      name: "transferOwnership",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+  ]
 
   const { address } = useAccount();
-  const { hasEntryNFT, hasEntryNFTLoading } = useCheckEntryNFT({
-    address,
-    nftId: 10,
+  const SlFactoryContract = {
+    address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
+    abi: FactoryABI,
+  };
+
+  let { data } = useContractReads({
+    contracts: [
+      {
+        ...SlFactoryContract,
+        functionName: "getAddressTotal",
+        args: [address],
+      },
+      {
+        ...SlFactoryContract,
+        functionName: "getAddressTotalInLevel",
+        args: [address, 1],
+      },
+      {
+        ...SlFactoryContract,
+        functionName: "getAddressTotalInLevel",
+        args: [address, 2],
+      },
+      {
+        ...SlFactoryContract,
+        functionName: "getAddressTotalInLevel",
+        args: [address, 3],
+      },
+      // {
+      //   ...SlLogicsContract,
+      //   functionName: "_userAllowedToClaimPiece",
+      //   chainId: Number(process.env.NEXT_PUBLIC_CHAIN_ID),
+      //   args: [address, 1, 1, 0],
+      // },
+    ],
+    watch: true,
+    onError(error) {
+      console.log("Error", error);
+    },
   });
 
 
-  const { data: userTotalInvestment } = useContractRead({
-    address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
-    abi: FactoryAbi,
-    functionName: "getAddressTotal",
-    args:[address],
-    watch:true,
+  
+  const { hasEntryNFT, hasEntryNFTLoading } = useCheckEntryNFT({
+    address,
+    nftId: 10,
   });
 
   const [userContracts, setUserContracts] = useState<InvestmentType[]>([]);
@@ -124,395 +405,7 @@ const MyInvestments: NextPage = (props) => {
 
   const { data: userInvestments } = useContractRead({
     address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
-    abi: [
-      {
-        inputs: [],
-        stateMutability: "nonpayable",
-        type: "constructor",
-      },
-      {
-        anonymous: false,
-        inputs: [
-          {
-            indexed: false,
-            internalType: "uint256",
-            name: "ContractID",
-            type: "uint256",
-          },
-          {
-            indexed: false,
-            internalType: "address",
-            name: "conAddress",
-            type: "address",
-          },
-        ],
-        name: "ContractCreated",
-        type: "event",
-      },
-      {
-        anonymous: false,
-        inputs: [
-          {
-            indexed: true,
-            internalType: "address",
-            name: "previousOwner",
-            type: "address",
-          },
-          {
-            indexed: true,
-            internalType: "address",
-            name: "newOwner",
-            type: "address",
-          },
-        ],
-        name: "OwnershipTransferred",
-        type: "event",
-      },
-      {
-        anonymous: false,
-        inputs: [
-          {
-            indexed: false,
-            internalType: "bool",
-            name: "success",
-            type: "bool",
-          },
-          {
-            indexed: false,
-            internalType: "bytes",
-            name: "data",
-            type: "bytes",
-          },
-        ],
-        name: "UserInvested",
-        type: "event",
-      },
-      {
-        inputs: [
-          {
-            internalType: "address",
-            name: "_contractAddress",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "_userAddress",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "_amount",
-            type: "uint256",
-          },
-        ],
-        name: "addUserInvestment",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "counter",
-        outputs: [
-          {
-            internalType: "uint256",
-            name: "",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "_totalInvestment",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "_paymentTokenAddress",
-            type: "address",
-          },
-        ],
-        name: "deployNew",
-        outputs: [
-          {
-            internalType: "address",
-            name: "",
-            type: "address",
-          },
-        ],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "",
-            type: "uint256",
-          },
-        ],
-        name: "deployedContracts",
-        outputs: [
-          {
-            internalType: "address",
-            name: "",
-            type: "address",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "address",
-            name: "contractAddress",
-            type: "address",
-          },
-        ],
-        name: "getAddressOnContract",
-        outputs: [
-          {
-            internalType: "uint256",
-            name: "userTotal",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "address",
-            name: "user",
-            type: "address",
-          },
-        ],
-        name: "getAddressTotal",
-        outputs: [
-          {
-            internalType: "uint256",
-            name: "userTotal",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "index",
-            type: "uint256",
-          },
-        ],
-        name: "getContractDeployed",
-        outputs: [
-          {
-            internalType: "address",
-            name: "",
-            type: "address",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "getContractDeployedCount",
-        outputs: [
-          {
-            internalType: "uint256",
-            name: "count",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "getInvestments",
-        outputs: [
-          {
-            components: [
-              {
-                internalType: "address",
-                name: "contractAddress",
-                type: "address",
-              },
-              {
-                internalType: "uint256",
-                name: "balance",
-                type: "uint256",
-              },
-            ],
-            internalType: "struct Factory.UserInvestment[]",
-            name: "",
-            type: "tuple[]",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "getLastDeployedContract",
-        outputs: [
-          {
-            internalType: "address",
-            name: "contractAddress",
-            type: "address",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "_id",
-            type: "uint256",
-          },
-        ],
-        name: "getUserInvestment",
-        outputs: [
-          {
-            components: [
-              {
-                internalType: "address",
-                name: "contractAddress",
-                type: "address",
-              },
-              {
-                internalType: "uint256",
-                name: "balance",
-                type: "uint256",
-              },
-            ],
-            internalType: "struct Factory.UserInvestment",
-            name: "",
-            type: "tuple",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "getUserInvestmentCount",
-        outputs: [
-          {
-            internalType: "uint256",
-            name: "_userInvestmentCount",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "owner",
-        outputs: [
-          {
-            internalType: "address",
-            name: "",
-            type: "address",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "renounceOwnership",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "address",
-            name: "_lgentry",
-            type: "address",
-          },
-        ],
-        name: "setEntryAddress",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "address",
-            name: "newOwner",
-            type: "address",
-          },
-        ],
-        name: "transferOwnership",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "address",
-            name: "",
-            type: "address",
-          },
-        ],
-        name: "userInvestmentCount",
-        outputs: [
-          {
-            internalType: "uint256",
-            name: "",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "address",
-            name: "",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "",
-            type: "uint256",
-          },
-        ],
-        name: "userInvestmentHistory",
-        outputs: [
-          {
-            internalType: "address",
-            name: "contractAddress",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "balance",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-    ],
+    abi: FactoryAbi,
     functionName: "getInvestments",
     overrides: { from: address },
     // select: (data) => convertData(data),
@@ -654,6 +547,7 @@ const MyInvestments: NextPage = (props) => {
       </div>
     );
 
+
   return (
     <section className="w-full mx-auto bg-white">
       <div className="flex flex-col w-full relative rounded-bl-[56px] ">
@@ -677,15 +571,31 @@ const MyInvestments: NextPage = (props) => {
                       Total Invested (Connected to Blockchain)
                     </h5>
                     <span className="text-4xl font-semibold tracking-widest">
-                      ${userTotalInvestment.div(10**6).toNumber()}
+                      ${data[0].div(10**6).toNumber()}
                     </span>
                   </div>
                   <div className="flex flex-col">
                     <h5 className="text-primaryGold text-base">
-                      Total Invested:
+                      Level 1 - Total Invested (Connected to Blockchain)
                     </h5>
                     <span className="text-4xl font-semibold tracking-widest">
-                      $403.600
+                      ${data[1].div(10**6).toNumber()}
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <h5 className="text-primaryGold text-base">
+                      Level 2 - Total Invested (Connected to Blockchain)
+                    </h5>
+                    <span className="text-4xl font-semibold tracking-widest">
+                      ${data[2].div(10**6).toNumber()}
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <h5 className="text-primaryGold text-base">
+                      Level 3 - Total Invested (Connected to Blockchain)
+                    </h5>
+                    <span className="text-4xl font-semibold tracking-widest">
+                      ${data[3].div(10**6).toNumber()}
                     </span>
                   </div>
                 </div>
