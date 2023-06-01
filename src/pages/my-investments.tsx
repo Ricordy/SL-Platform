@@ -21,6 +21,7 @@ import { Button } from "../components/ui/Button";
 import Carousel, { CarouselItem, carouselItems } from "../components/Carousel";
 import ProjectCarousel from "../components/ProjectCarousel";
 import { GraphQLClient, gql } from "graphql-request";
+import useGetAddressInvestmentinSingleCar from "../hooks/useGetAddressInvestmentinSingleCar";
 
 interface InvestmentBlockchainType {
   id: number;
@@ -50,9 +51,22 @@ interface InvestmentType extends InvestmentDbType, InvestmentBlockchainType {}
 // );
 export const TransactionItem = (items) => {
   console.log("items inside component", items.items);
-  return items.items.map((item, idx) => (
-    <section key={idx}>
+  const { address } = useAccount();
+  
+
+  
+  
+  return items.items.map((item, idx) => {
+    const addressContract = item.investment.address
+    const { amountInvested } = useGetAddressInvestmentinSingleCar({
+      contractAddress: addressContract,
+      walletAddress: address,
+      watch:true
+    });
+    return(
+    <section key={idx} >
       <div className="flex items-center justify-between">
+        
         <Image
           className="rounded-md"
           src={item.investment.basicInvestment.car.basicInfo.cover.url}
@@ -61,9 +75,10 @@ export const TransactionItem = (items) => {
           alt="Car"
         />
         <span>{item.investment.basicInvestment.car.basicInfo.title}</span>
-        <span>{item.investment.basicInvestment.totalInvestment}</span>
-        <span className="text-primaryGold text-xs">{item.amountInvested}</span>
+        <span>{item.amountInvested}</span>
+        <span className="text-primaryGold text-xs">{amountInvested}</span>
         <span>{item.date}</span>
+
         <Link href="#">
           <Image
             src="/icons/external-link.svg"
@@ -75,7 +90,7 @@ export const TransactionItem = (items) => {
       </div>
       <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
     </section>
-  ));
+  )});
 };
 
 const MyInvestments: NextPage = (props) => {
@@ -867,6 +882,7 @@ export async function getStaticProps({ locale, params }) {
           amountInvested
           date
           investment {
+            address
             basicInvestment {
               totalInvestment
               car {
