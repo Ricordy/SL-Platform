@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import { useEffect, useState } from "react";
 import { Tab } from "@headlessui/react";
 import Link from "next/link";
@@ -39,10 +39,10 @@ interface InvestmentDbType {
   colorCombination: string;
 }
 
-interface InvestmentsProps {
-  investments;
-  userTransactions;
-}
+// interface InvestmentsProps {
+//   investments;
+//   userTransactions;
+// }
 interface InvestmentType extends InvestmentDbType, InvestmentBlockchainType {}
 
 // const userInvestments = [1, 2, 3];
@@ -50,51 +50,95 @@ interface InvestmentType extends InvestmentDbType, InvestmentBlockchainType {}
 //   (i) => userInvestments.indexOf(i.id) > -1
 // );
 
-export const TransactionItem = (items) => {
-  console.log("items inside component", items.items);
+export interface TransactionProps {
+  userTransactions: {
+    amountInvested: number;
+    transactionDetails: {
+      txHash: string;
+      to: string;
+    };
+    date: string;
+    investment: {
+      address: string;
+      basicInvestment: {
+        totalInvestment: number;
+        car: {
+          basicInfo: {
+            cover: {
+              url: string;
+            };
+            title: string;
+          };
+        };
+      };
+    };
+    totalInvested?: number;
+  }[];
+}
+export interface InvestmentProps {
+  address: string;
+  basicInvestment: {
+    totalInvestment: number;
+    investmentStatus: string;
+    car: {
+      basicInfo: {
+        title: string;
+        cover: {
+          url: string;
+        };
+      };
+    };
+  };
+}
+export interface InvestmentsProps {
+  investments: InvestmentProps[];
+}
+
+interface MyInvestmentsProps extends InvestmentsProps, TransactionProps {}
+
+export const TransactionItem = (items, userInvestedContracts) => {
+  console.log(userInvestedContracts);
   const { address } = useAccount();
-  
-
-  
-  
   return items.items.map((item, idx) => {
-    const addressContract = item.investment.address
-    const { amountInvested } = useGetAddressInvestmentinSingleCar({
-      contractAddress: addressContract,
-      walletAddress: address,
-      watch:true
-    });
-    return(
-    <section key={idx} >
-      <div className="flex items-center justify-between">
-        
-        <Image
-          className="rounded-md"
-          src={item.investment.basicInvestment.car.basicInfo.cover.url}
-          width={64}
-          height={53}
-          alt="Car"
-        />
-        <span>{item.investment.basicInvestment.car.basicInfo.title}</span>
-        <span>{item.amountInvested}</span>
-        <span className="text-primaryGold text-xs">{amountInvested}</span>
-        <span>{item.date}</span>
-
-        <Link href="#">
+    const addressContract = item.investment.address;
+    // const { amountInvested } = useGetAddressInvestmentinSingleCar({
+    //   contractAddress: addressContract,
+    //   walletAddress: address,
+    //   watch: true,
+    // });
+    return (
+      <section key={idx}>
+        <div className="flex items-center justify-between">
           <Image
-            src="/icons/external-link.svg"
-            width={10}
-            height={10}
-            alt="External link"
+            className="rounded-md"
+            src={item.investment.basicInvestment.car.basicInfo.cover.url}
+            width={64}
+            height={53}
+            alt="Car"
           />
-        </Link>
-      </div>
-      <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
-    </section>
-  )});
+          <span>{item.investment.basicInvestment.car.basicInfo.title}</span>
+          <span>{item.amountInvested}</span>
+          <span className="text-primaryGold text-xs">
+            {userInvestedContracts[item.investment.address]}
+          </span>
+          <span>{item.date}</span>
+
+          <Link href="#">
+            <Image
+              src="/icons/external-link.svg"
+              width={10}
+              height={10}
+              alt="External link"
+            />
+          </Link>
+        </div>
+        <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
+      </section>
+    );
+  });
 };
 
-const MyInvestments: NextPage = (props) => {
+const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
   const FactoryABI = [
     {
       inputs: [],
@@ -344,15 +388,16 @@ const MyInvestments: NextPage = (props) => {
       stateMutability: "nonpayable",
       type: "function",
     },
-  ]
+  ] as const;
 
   const { address } = useAccount();
+
   const SlFactoryContract = {
     address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
     abi: FactoryABI,
   };
 
-  let { data } = useContractReads({
+  let { data }: { data: BigNumber } = useContractReads({
     contracts: [
       {
         ...SlFactoryContract,
@@ -387,65 +432,113 @@ const MyInvestments: NextPage = (props) => {
     },
   });
 
+  let { data: contractsTotalSupply }: { data: BigNumber } = useContractReads({
+    contracts: [
+      {
+        ...SlFactoryContract,
+        functionName: "getAddressTotal",
+        args: [address],
+      },
+    ],
+  });
 
-  
   const { hasEntryNFT, hasEntryNFTLoading } = useCheckEntryNFT({
     address,
     nftId: 10,
   });
 
-  const [userContracts, setUserContracts] = useState<InvestmentType[]>([]);
+  const [userContracts, setUserContracts] = useState([]);
   const investContracts = [];
-  const [categories] = useState({
-    "Level 1": [],
-    "Level 2": [],
-  });
 
+  // const { data: userInvestments } = useContractRead({
+  //   address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
+  //   abi: FactoryAbi,
+  //   functionName: "getInvestments",
+  //   overrides: { from: address },
+  //   // select: (data) => convertData(data),
+  //   // onSuccess(data) {
+  //   //   data.map((investment) =>
+  //   //     Object.assign(
+  //   //       investment,
+  //   //       investmentData.find(
+  //   //         (i) => i.address[3177] == investment.contractAddress
+  //   //       )
+  //   //     )
+  //   //   );
+  //   //   console.log(data);
+  //   // },
+  // });
 
-
-  const { data: userInvestments } = useContractRead({
-    address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
-    abi: FactoryAbi,
-    functionName: "getInvestments",
-    overrides: { from: address },
-    // select: (data) => convertData(data),
-    // onSuccess(data) {
-    //   data.map((investment) =>
-    //     Object.assign(
-    //       investment,
-    //       investmentData.find(
-    //         (i) => i.address[3177] == investment.contractAddress
-    //       )
-    //     )
-    //   );
-    //   console.log(data);
-    // },
-  });
-
-  useEffect(() => {
-    const populateInvestment = async () => {
-      if (!userInvestments || !investmentData) return;
-      userInvestments.map((ui, idx) => {
-        if (ui) {
-          const inv = investmentData?.find((i) => i.address[31337] == ui[idx]);
-          if (inv) {
-            console.log(ui[idx]);
-
-            const uc: InvestmentType = {
-              id: inv.id,
-              title: inv.title,
-              address: ui[idx] as Address,
-              chassis: inv.chassis,
-              totalProduction: inv.totalProduction,
-              totalModelProduction: inv.totalModelProduction,
-              colorCombination: inv.colorCombination,
-            };
-            setUserContracts([...userContracts, uc]);
+  const getUserTransactions = async (address: Address) => {
+    const {
+      transactions: userTransactions,
+    }: { transactions: TransactionProps } = await hygraph.request(
+      gql`
+        query UserTransactions {
+          transactions(where: { transactionDetails: { from: "34343434" } }) {
+            amountInvested
+            date
+            investment {
+              address
+              basicInvestment {
+                totalInvestment
+                car {
+                  basicInfo {
+                    cover {
+                      url
+                    }
+                    title
+                  }
+                }
+              }
+            }
           }
         }
-      });
-    };
-    populateInvestment();
+      `
+    );
+    return userTransactions;
+  };
+
+  console.log("user transactions>>", props.userTransactions);
+  const userInvestedContracts = [];
+  props.userTransactions.map((transaction) => {
+    if (userInvestedContracts[transaction.transactionDetails.to]) {
+      userInvestedContracts[transaction.transactionDetails.to] +=
+        transaction.amountInvested;
+    } else {
+      userInvestedContracts[transaction.transactionDetails.to] =
+        transaction.amountInvested;
+    }
+  });
+  console.log("userInvestedContracts", userInvestedContracts);
+  // setUserContracts(userInvestedContracts);
+
+  useEffect(() => {
+    // console.log(getUserTransactions(address));
+
+    // const populateInvestment = async () => {
+    //   if (!userInvestments || !investmentData) return;
+    //   userInvestments.map((ui, idx) => {
+    //     if (ui) {
+    //       const inv = investmentData?.find((i) => i.address[31337] == ui[idx]);
+    //       if (inv) {
+    //         console.log(ui[idx]);
+
+    //         const uc: InvestmentType = {
+    //           id: inv.id,
+    //           title: inv.title,
+    //           address: ui[idx] as Address,
+    //           chassis: inv.chassis,
+    //           totalProduction: inv.totalProduction,
+    //           totalModelProduction: inv.totalModelProduction,
+    //           colorCombination: inv.colorCombination,
+    //         };
+    //         setUserContracts([...userContracts, uc]);
+    //       }
+    //     }
+    //   });
+    // };
+    // populateInvestment();
     /*
     const getFactory = async () => {
       try {
@@ -547,7 +640,6 @@ const MyInvestments: NextPage = (props) => {
       </div>
     );
 
-
   return (
     <section className="w-full mx-auto bg-white">
       <div className="flex flex-col w-full relative rounded-bl-[56px] ">
@@ -571,7 +663,7 @@ const MyInvestments: NextPage = (props) => {
                       Total Invested (Connected to Blockchain)
                     </h5>
                     <span className="text-4xl font-semibold tracking-widest">
-                      ${data[0].div(10**6).toNumber()}
+                      ${data && data[0].div(10 ** 6).toNumber()}
                     </span>
                   </div>
                   <div className="flex flex-col">
@@ -579,7 +671,7 @@ const MyInvestments: NextPage = (props) => {
                       Level 1 - Total Invested (Connected to Blockchain)
                     </h5>
                     <span className="text-4xl font-semibold tracking-widest">
-                      ${data[1].div(10**6).toNumber()}
+                      ${data[1].div(10 ** 6).toNumber()}
                     </span>
                   </div>
                   <div className="flex flex-col">
@@ -587,7 +679,7 @@ const MyInvestments: NextPage = (props) => {
                       Level 2 - Total Invested (Connected to Blockchain)
                     </h5>
                     <span className="text-4xl font-semibold tracking-widest">
-                      ${data[2].div(10**6).toNumber()}
+                      ${data[2].div(10 ** 6).toNumber()}
                     </span>
                   </div>
                   <div className="flex flex-col">
@@ -595,7 +687,7 @@ const MyInvestments: NextPage = (props) => {
                       Level 3 - Total Invested (Connected to Blockchain)
                     </h5>
                     <span className="text-4xl font-semibold tracking-widest">
-                      ${data[3].div(10**6).toNumber()}
+                      ${data[3].div(10 ** 6).toNumber()}
                     </span>
                   </div>
                 </div>
@@ -603,7 +695,13 @@ const MyInvestments: NextPage = (props) => {
               <div className="flex flex-col gap-4">
                 <span>Last transactions:</span>
                 <div className="flex flex-col flex-1 gap-2 bg-myInvestmentsBackground rounded-md py-8 px-4">
-                  <TransactionItem items={props.userTransactions} />
+                  {JSON.stringify(userInvestedContracts)}
+                  {userInvestedContracts && (
+                    <TransactionItem
+                      items={props.userTransactions}
+                      userInvestedContracts={userInvestedContracts}
+                    />
+                  )}
 
                   {/* <TransactionItem />
                   <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
@@ -664,14 +762,14 @@ const MyInvestments: NextPage = (props) => {
         <div className="flex w-full max-w-screen-lg flex-col gap-[52px] mx-auto">
           <h3 className="uppercase text-2xl">Our suggestion for you</h3>
           <div className="flex gap-6 mx-auto max-w-screen-lg w-full">
-            {carouselItems.slice(0, 3).map((item, idx) => (
+            {/* {carouselItems.slice(0, 3).map((item, idx) => (
               <CarouselItem
                 key={idx}
                 title={item.title}
                 image={item.image}
                 price={item.price}
               />
-            ))}
+            ))} */}
           </div>
         </div>
       </div>
@@ -753,64 +851,68 @@ const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY, {
   },
 });
 
-export async function getStaticProps({ locale, params }) {
-  const { investments } = await hygraph.request(
-    gql`
-      query Investments {
-        investments {
-          id
-          address
-          basicInvestment {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { investments }: { investments: InvestmentsProps } =
+    await hygraph.request(
+      gql`
+        query Investments {
+          investments {
             id
-            totalInvestment
-            investmentStatus
-            car {
-              basicInfo {
-                title
-                cover {
-                  id
-                  url
-                }
-              }
-            }
-          }
-        }
-      }
-    `
-  );
-
-  const { transactions: userTransactions } = await hygraph.request(
-    gql`
-      query UserTransactions {
-        transactions(
-          where: {
-            transactionDetails: {
-              from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
-            }
-          }
-        ) {
-          amountInvested
-          date
-          investment {
             address
             basicInvestment {
+              id
               totalInvestment
+              investmentStatus
               car {
                 basicInfo {
+                  title
                   cover {
+                    id
                     url
                   }
-                  title
                 }
               }
             }
           }
         }
-      }
-    `
-  );
+      `
+    );
 
-  console.log("oi", userTransactions);
+  const { transactions: userTransactions }: { transactions: TransactionProps } =
+    await hygraph.request(
+      gql`
+        query UserTransactions {
+          transactions(
+            where: {
+              transactionDetails: {
+                from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+              }
+            }
+          ) {
+            amountInvested
+            transactionDetails {
+              txHash
+              to
+            }
+            date
+            investment {
+              address
+              basicInvestment {
+                totalInvestment
+                car {
+                  basicInfo {
+                    cover {
+                      url
+                    }
+                    title
+                  }
+                }
+              }
+            }
+          }
+        }
+      `
+    );
 
   return {
     props: {
@@ -818,4 +920,4 @@ export async function getStaticProps({ locale, params }) {
       userTransactions,
     },
   };
-}
+};

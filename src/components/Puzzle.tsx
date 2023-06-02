@@ -2163,12 +2163,11 @@ const Puzzle: FC<PuzzleProps> = ({
 
   console.log("data>>>>>", data);
   console.log("currentLEvel == data[6]?????>>>>", currentLevel == data[6]);
-  
-  
+
   const { data: dataUserAllowed, error: errorUserAllowed } = useContractRead({
     ...SlLogicsContract,
     functionName: "userAllowedToClaimPiece",
-    args: [userAddress, currentLevel, data[6], data[currentLevel - 1]], // TODO: level , numberofpieces
+    args: [userAddress, currentLevel, data[6], data[currentLevel - 1]],
     watch: true,
     enabled: currentLevel == data[6],
     onSettled(data, error) {
@@ -2180,11 +2179,11 @@ const Puzzle: FC<PuzzleProps> = ({
       //   error
       // );
       console.log("Erro??>>>>>", error);
-      
+
       if (!error) {
         // data[6] == currentLevel
         console.log("claimPiece>>>>> TRUE");
-        
+
         setUserCanClaimPiece(true);
       } else {
         console.log("claimPiece>>>>> FALSE");
@@ -2192,7 +2191,6 @@ const Puzzle: FC<PuzzleProps> = ({
       }
     },
   });
-
 
   const { config: configClaimPiece } = usePrepareContractWrite({
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,

@@ -200,60 +200,6 @@ const TransactionItem = ({ value, date, hash, divisor = true }) => {
   );
 };
 
-// export const localPhases = [
-//   {
-//     status: "done",
-//     title: "Disassembling and Inspection",
-//     deadline: "august 25",
-//     estimatedCost: "3.050.000$",
-//     currentCost: "250.000$",
-//     gallery: [{ url: "/slider/car1.jpg" }, { url: "/slider/car2.jpg" }],
-//     updates: [
-//       {
-//         date: "9 jun 2022",
-//         title: "Delay on something related with some other thing",
-//       },
-//       {
-//         date: "2 jun 2022",
-//         title: "Problems with something",
-//       },
-//       {
-//         date: "12 nov 2022",
-//         title: "Finished something very especific about the car",
-//       },
-//       {
-//         date: "12 nov 2022",
-//         title: "Finished something especific about the car",
-//       },
-//     ],
-//   },
-//   {
-//     status: "inprogress",
-//     title: "Blasting",
-//     deadline: "august 20",
-//     estimatedCost: "3.050.000$",
-//     currentCost: "250.000$",
-//     gallery: [{ url: "/slider/car1.jpg" }, { url: "/slider/car2.jpg" }],
-//     updates: [
-//       {
-//         date: "9 jun 2022",
-//         title: "Delay on something related with some other thing",
-//       },
-//       {
-//         date: "2 jun 2022",
-//         title: "Problems with something",
-//       },
-//       {
-//         date: "12 nov 2022",
-//         title: "Finished something very especific about the car",
-//       },
-//       {
-//         date: "12 nov 2022",
-//         title: "Finished something very especific about the car",
-//       },
-//     ],
-//   },
-// ];
 export const badges = {
   inprogress: {
     icon: "/badges/in-progress.svg",
@@ -272,6 +218,8 @@ export const badges = {
 const Investment = ({ investment }: InvestmentProps) => {
   const { address: walletAddress } = useAccount();
   const { data: signerData } = useSigner();
+
+  // console.log(investment);
 
   const investmentABI = [
     {
@@ -1006,9 +954,9 @@ const Investment = ({ investment }: InvestmentProps) => {
   });
 
   const progress =
-    (totalSupply.div(10 ** 6).toNumber() /
-      investment.basicInvestment.totalInvestment) *
-    100;
+    (totalSupply &&
+      totalSupply.div(10 ** 6).toNumber() /
+        investment.basicInvestment.totalInvestment) * 100;
 
   const phases = investment.restorationPhases.map((phase) => ({
     status: phase.restorationStatus.toLocaleLowerCase(),
@@ -1027,16 +975,20 @@ const Investment = ({ investment }: InvestmentProps) => {
     investment.level.profitRange.split("-")[1]
   );
 
-  const profitMinimumValue = profitMinimumPercentage
-    .mul(totalSupply)
-    .div(10 ** 6)
-    .div(100)
-    .toNumber();
-  const profitMaximumValue = profitMaximumPercentage
-    .mul(totalSupply)
-    .div(10 ** 6)
-    .div(100)
-    .toNumber();
+  const profitMinimumValue =
+    totalSupply &&
+    profitMinimumPercentage
+      .mul(totalSupply)
+      .div(10 ** 6)
+      .div(100)
+      .toNumber();
+  const profitMaximumValue =
+    totalSupply &&
+    profitMaximumPercentage
+      .mul(totalSupply)
+      .div(10 ** 6)
+      .div(100)
+      .toNumber();
 
   return (
     <>
@@ -1073,7 +1025,7 @@ const Investment = ({ investment }: InvestmentProps) => {
               }
               totalInvestment={Number(totalSupply) / 10 ** 6}
               maxToInvest={
-                Number(maxToInvest) / 10 ** 6 - userTotalInvestment.toNumber()
+                Number(maxToInvest) / 10 ** 6 - userTotalInvestment?.toNumber()
               }
               minToInvest={Number(minToInvest)}
               paymentTokenBalance={
@@ -1081,7 +1033,11 @@ const Investment = ({ investment }: InvestmentProps) => {
               }
             />
           </div>
-          <InvestmentGallery images={investment.basicInvestment.car.gallery} />
+          {investment.basicInvestment.car.gallery.length > 0 && (
+            <InvestmentGallery
+              images={investment.basicInvestment.car.gallery}
+            />
+          )}
           <div className="flex justify-between items-start gap-6">
             <div className="flex flex-col w-3/5 ">
               <h3 className="tracking-widest items-center flex gap-6 pb-[52px]">
@@ -1109,7 +1065,7 @@ const Investment = ({ investment }: InvestmentProps) => {
               </p>
             </div>
             <div className="flex flex-col gap-8 w-2/5">
-              {userTotalInvestment.gt(0) && (
+              {
                 <div className="flex flex-col gap-2 py-2 border border-tabInactive pl-24 rounded-md">
                   <h4 className="text-ogBlack">Total Invested until now</h4>
                   <span className="text-3xl font-medium tracking-wider text-primaryGreen">
@@ -1136,7 +1092,7 @@ const Investment = ({ investment }: InvestmentProps) => {
                     </span>
                   </h4>
                 </div>
-              )}
+              }
               <div className="flex flex-col gap-2 px-24 py-2 text-ogBlack rounded-md">
                 <h3 className="text-black">Especifications</h3>
                 <span>Contract Address:</span>
@@ -1220,7 +1176,7 @@ const Investment = ({ investment }: InvestmentProps) => {
                   </Tab>
                 ))}
               </Tab.List>
-              {userTotalInvestment.gt(0) && (
+              {userTotalInvestment?.gt(0) && (
                 <Tab.Panels className="mt-[52px]">
                   {phases.map((phase, idx) => (
                     <Tab.Panel
@@ -1431,11 +1387,15 @@ const Investment = ({ investment }: InvestmentProps) => {
                     title={investment?.basicInvestment.car.basicInfo.title}
                     chassis={investment?.basicInvestment.car.chassis}
                     contractAddress={investment?.address}
-                    totalProduction={investment?.totalProduction}
-                    totalModelProduction={investment?.totalModelProduction}
-                    colorCombination={investment?.colorCombination}
-                    amount={investment?.amount}
-                    phase={investment?.phase}
+                    totalProduction={
+                      investment?.basicInvestment.car.totalProduction
+                    }
+                    totalModelProduction={
+                      investment?.basicInvestment.car.totalModelProduction
+                    }
+                    colorCombination={
+                      investment?.basicInvestment.car.colorCombination
+                    }
                     totalInvestment={Number(totalSupply) / 10 ** 6}
                     maxToInvest={Number(maxToInvest) / 10 ** 6}
                     minToInvest={Number(minToInvest)}
@@ -1486,29 +1446,6 @@ const Investment = ({ investment }: InvestmentProps) => {
               </div>
             </div>
           </section>
-
-          {/* {hasEntryNFT && (
-            <div className="flex w-full gap-6">
-              <InvestmentHistory
-                contractAddress={
-                  investment?.address[
-                    process.env.NEXT_PUBLIC_CHAIN_ID as Address
-                  ]
-                }
-                totalInvestment={Number(totalInvestment) / 10 ** 6}
-                totalInvested={Number(userTotalInvestment) / 10 ** 6}
-                className=" place-self-start flex gap-12 pt-6 justify-start"
-              />
-              <ExpectedReturn
-                contractAddress={
-                  investment?.address[
-                    process.env.NEXT_PUBLIC_CHAIN_ID as Address
-                  ]
-                }
-                totalInvested={Number(userTotalInvestment) / 10 ** 6}
-              />
-            </div>
-          )} */}
         </div>
         <section>
           <div className="flex text-white bg-black relative pb-[128px] pt-[72px] z-20 rounded-t-[56px] mx-auto">
