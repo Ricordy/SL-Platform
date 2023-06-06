@@ -663,7 +663,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                       Total Invested (Connected to Blockchain)
                     </h5>
                     <span className="text-4xl font-semibold tracking-widest">
-                      ${data && data[0].div(10 ** 6).toNumber()}
+                      ${data && data[0]?.div(10 ** 6).toNumber()}
                     </span>
                   </div>
                   <div className="flex flex-col">
@@ -671,7 +671,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                       Level 1 - Total Invested (Connected to Blockchain)
                     </h5>
                     <span className="text-4xl font-semibold tracking-widest">
-                      ${data[1].div(10 ** 6).toNumber()}
+                      ${data[1]?.div(10 ** 6).toNumber()}
                     </span>
                   </div>
                   <div className="flex flex-col">

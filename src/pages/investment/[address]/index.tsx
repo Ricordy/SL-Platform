@@ -1069,7 +1069,7 @@ const Investment = ({ investment }: InvestmentProps) => {
               totalInvestment={Number(totalSupply) / 10 ** 6}
               maxToInvest={
                 Number(maxToInvest) / 10 ** 6 -
-                userTotalInvestment.div(10 ** 6)?.toNumber()
+                userTotalInvestment?.div(10 ** 6)?.toNumber()
               }
               minToInvest={Number(minToInvest)}
               paymentTokenBalance={
