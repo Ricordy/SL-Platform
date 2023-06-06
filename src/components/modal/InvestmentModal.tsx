@@ -167,10 +167,15 @@ export const InvestmentModal = ({
       toggleModalInvest();
     } catch (error) {
       if (
-        typeof error.reason == "string" &&
+        typeof error.reason &&
         error.reason.indexOf("InvestmentExceedMax") > -1
       ) {
         toast.error("You reached the maximum to invest!");
+      } else if (
+        typeof error.reason &&
+        error.reason.indexOf("Not on progress") > -1
+      ) {
+        toast.error("You cannot invest on this phase!");
       } else if (error.reason) {
         toast.error(error.reason);
       } else {

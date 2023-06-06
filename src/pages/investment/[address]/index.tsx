@@ -6,6 +6,8 @@ import {
   useBalance,
   useContract,
   useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
   useSigner,
 } from "wagmi";
 import { GetServerSideProps } from "next";
@@ -33,6 +35,7 @@ import { InvestmentModal } from "../../../components/modal/InvestmentModal";
 import { GraphQLClient, gql } from "graphql-request";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
+import { CONTRACT_STATUS_WITHDRAW } from "../../../constants";
 
 dayjs.extend(localizedFormat);
 
@@ -159,7 +162,18 @@ export const ProjectInfo = ({
       </div>
       <div className="flex gap-2 relative">
         <span>Progress:</span>
-        <span className="font-medium">{progress}% Finished</span>
+        <span className="font-medium">
+          <NumericFormat
+            value={progress}
+            displayType="text"
+            fixedDecimalScale={true}
+            decimalSeparator=","
+            thousandSeparator="."
+            decimalScale={2}
+            suffix="%"
+          />{" "}
+          Finished
+        </span>
       </div>
     </div>
   );
@@ -217,8 +231,8 @@ export const badges = {
 
 const Investment = ({ investment }: InvestmentProps) => {
   const { address: walletAddress } = useAccount();
-  const { data: signerData } = useSigner();
 
+  const [canWithdraw, setCanWithdraw] = useState(false);
   // console.log(investment);
 
   const investmentABI = [
@@ -923,7 +937,6 @@ const Investment = ({ investment }: InvestmentProps) => {
     functionName: "balanceOf",
     args: [walletAddress],
     watch: true,
-    cacheTime: 0,
   });
 
   const { data: investors } = useContractRead({
@@ -953,10 +966,40 @@ const Investment = ({ investment }: InvestmentProps) => {
     watch: true,
   });
 
+  const { data: contractStatus } = useContractRead({
+    address: investment.address,
+    abi: investmentABI,
+    functionName: "status",
+    watch: true,
+  });
+
+  const { config: withdrawCallConfig } = usePrepareContractWrite({
+    address: investment.address,
+    abi: investmentABI,
+    functionName: "withdraw",
+    enabled:
+      userTotalInvestment?.gt(0) && contractStatus == CONTRACT_STATUS_WITHDRAW,
+    onSuccess() {
+      setCanWithdraw(true);
+    },
+    onError(err) {
+      if (
+        err.message &&
+        err.message.indexOf("Investment: User already withdrawed") > -1
+      ) {
+        setCanWithdraw(false);
+      } else {
+        toast.error(err.message);
+      }
+    },
+  });
+
+  const { write: withdraw } = useContractWrite(withdrawCallConfig);
+
   const progress =
-    (totalSupply &&
-      totalSupply.div(10 ** 6).toNumber() /
-        investment.basicInvestment.totalInvestment) * 100;
+    (totalSupply?.div(10 ** 6).toNumber() /
+      investment.basicInvestment.totalInvestment) *
+    100;
 
   const phases = investment.restorationPhases.map((phase) => ({
     status: phase.restorationStatus.toLocaleLowerCase(),
@@ -1025,7 +1068,8 @@ const Investment = ({ investment }: InvestmentProps) => {
               }
               totalInvestment={Number(totalSupply) / 10 ** 6}
               maxToInvest={
-                Number(maxToInvest) / 10 ** 6 - userTotalInvestment?.toNumber()
+                Number(maxToInvest) / 10 ** 6 -
+                userTotalInvestment.div(10 ** 6)?.toNumber()
               }
               minToInvest={Number(minToInvest)}
               paymentTokenBalance={
@@ -1323,7 +1367,9 @@ const Investment = ({ investment }: InvestmentProps) => {
                     <div className="flex">Minimum:</div>
                     <div className="flex text-2xl font-medium gap-3 items-center">
                       <NumericFormat
-                        value={profitMinimumValue}
+                        value={
+                          Number(totalSupply) / 10 ** 6 + profitMinimumValue
+                        }
                         displayType="text"
                         fixedDecimalScale={true}
                         decimalSeparator=","
@@ -1340,7 +1386,9 @@ const Investment = ({ investment }: InvestmentProps) => {
                     <div className="flex">Maximum:</div>
                     <div className="flex text-2xl font-medium gap-3 items-center">
                       <NumericFormat
-                        value={profitMaximumValue}
+                        value={
+                          Number(totalSupply) / 10 ** 6 + profitMaximumValue
+                        }
                         displayType="text"
                         fixedDecimalScale={true}
                         decimalSeparator=","
@@ -1401,7 +1449,13 @@ const Investment = ({ investment }: InvestmentProps) => {
                     minToInvest={Number(minToInvest)}
                     paymentTokenBalance={Number(paymentTokenBalance?.formatted)}
                   />
-                  <Button variant="outline">Withdraw</Button>
+                  <Button
+                    disabled={!canWithdraw}
+                    variant="outline"
+                    onClick={withdraw}
+                  >
+                    Withdraw
+                  </Button>
                 </div>
               </div>
               <div className="flex flex-col">
