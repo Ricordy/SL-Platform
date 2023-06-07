@@ -194,7 +194,7 @@ const Home: NextPage = (props) => {
         <div className=" w-full relative z-20 left-1/2 -ml-[570px] max-w-[1338px] mx-auto">
           <Investments
             isConnected={isConnected}
-            userInvestments={props.transactions}
+            userInvestments={props.investments}
           />
         </div>
         <div className="mx-auto w-full relative left-1/2 -ml-[570px] max-w-[1338px]">
@@ -276,37 +276,31 @@ export async function getStaticProps({ locale, params }) {
     `
   );
 
-  const { transactions } = await hygraph.request(
+  const { investments } = await hygraph.request(
     gql`
       query UserInvestments {
-        transactions(
-          where: {
-            transactionDetails: {
-              from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
-            }
+  investments(
+    where: {transactions_some: {from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"}}
+  ) {
+    id
+    address
+    basicInvestment {
+      totalInvested
+      totalInvestment
+      investmentStatus
+      car {
+        id
+        basicInfo {
+          cover {
+            url
           }
-        ) {
-          investment {
-            id
-            address
-            basicInvestment {
-              totalInvested
-              totalInvestment
-              investmentStatus
-              car {
-                id
-                basicInfo {
-                  cover {
-                    url
-                  }
-                  title
-                }
-              }
-            }
-          }
-          amountInvested
+          title
         }
       }
+    }
+  }
+}
+
     `
   );
 
@@ -357,7 +351,7 @@ export async function getStaticProps({ locale, params }) {
     props: {
       posts,
       activeInvestments,
-      transactions,
+      investments,
       slider,
       puzzlePieces,
       levels,

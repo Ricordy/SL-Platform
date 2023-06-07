@@ -17,6 +17,7 @@ interface InvestmentsProps {
 export default function Investments({ isConnected, userInvestments }: InvestmentsProps) {
   const [investmentStatuses] = useState(investmentStatusesData);
 
+  
 
   return (
     <section
@@ -71,7 +72,7 @@ export default function Investments({ isConnected, userInvestments }: Investment
 
                   <ProjectCarousel
                     id={investmentStatus}
-                    items={clearQueryForRender(userInvestments.filter(investment => investment.investment.basicInvestment.investmentStatus == investmentStatus))}
+                    items={userInvestments.filter(investment => investment.basicInvestment.investmentStatus == investmentStatus)}
                     // items={investmentData.filter(
                     //   (i) => i.status == investmentStatus
                     // )}
@@ -161,20 +162,22 @@ export default function Investments({ isConnected, userInvestments }: Investment
 function clearQueryForRender(query) {
   const newQuery = [];
   query.map((item) => {
+    console.log(item);
+    
     newQuery.push({
-        id: item.investment.id,
-        address: item.investment.address,
+        id: item.id,
+        address: item.address,
         basicInvestment: {
-          totalInvested: item.investment.basicInvestment.totalInvested,
-          totalInvestment: item.investment.basicInvestment.totalInvestment,
-          investmentStatus: item.investment.basicInvestment.investmentStatus,
+          totalInvested: item.basicInvestment.totalInvested,
+          totalInvestment: item.basicInvestment.totalInvestment,
+          investmentStatus: item.basicInvestment.investmentStatus,
           car: {
-            id: item.investment.basicInvestment.car.id,
+            id: item.basicInvestment.car.id,
             basicInfo: {
               cover: {
-                url: item.investment.basicInvestment.car.basicInfo.cover.url,
+                url: item.basicInvestment.car.basicInfo.cover.url,
               },
-              title: item.investment.basicInvestment.car.basicInfo.title,
+              title: item.basicInvestment.car.basicInfo.title,
             },
           },
         },

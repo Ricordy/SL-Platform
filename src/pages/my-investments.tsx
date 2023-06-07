@@ -53,10 +53,8 @@ interface InvestmentType extends InvestmentDbType, InvestmentBlockchainType {}
 export interface TransactionProps {
   userTransactions: {
     amountInvested: number;
-    transactionDetails: {
-      txHash: string;
-      to: string;
-    };
+    hash: string;
+    to: string;
     date: string;
     investment: {
       address: string;
@@ -502,12 +500,10 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
   console.log("user transactions>>", props.userTransactions);
   const userInvestedContracts = [];
   props.userTransactions.map((transaction) => {
-    if (userInvestedContracts[transaction.transactionDetails.to]) {
-      userInvestedContracts[transaction.transactionDetails.to] +=
-        transaction.amountInvested;
+    if (userInvestedContracts[transaction.to]) {
+      userInvestedContracts[transaction.to] += transaction.amountInvested;
     } else {
-      userInvestedContracts[transaction.transactionDetails.to] =
-        transaction.amountInvested;
+      userInvestedContracts[transaction.to] = transaction.amountInvested;
     }
   });
   console.log("userInvestedContracts", userInvestedContracts);
@@ -883,17 +879,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       gql`
         query UserTransactions {
           transactions(
-            where: {
-              transactionDetails: {
-                from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
-              }
-            }
+            where: { from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8" }
+            orderBy: publishedAt_DESC
           ) {
             amountInvested
-            transactionDetails {
-              txHash
-              to
-            }
+            hash
+            to
             date
             investment {
               address
