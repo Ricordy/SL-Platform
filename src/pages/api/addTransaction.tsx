@@ -14,26 +14,22 @@ interface MyResponse extends NextApiResponse {
   };
 }
 interface CreateTransactionResponse {
-  data: {
-    createTransaction: {
+  createTransaction: {
+    id: string;
+    amountInvested: number;
+    date: string;
+    hash: string;
+    from: string;
+    to: string;
+    type: string;
+    investment: {
       id: string;
-      amountInvested: number;
-      date: string;
-      hash: string;
-      from: string;
-      to: string;
-      type: string;
-      investment: {
-        id: string;
-      };
     };
   };
 }
 interface PublishTransaction {
-  data: {
-    publishTransaction: {
-      id: string;
-    };
+  publishTransaction: {
+    id: string;
   };
 }
 
@@ -47,8 +43,9 @@ export default async function handler(req: NextApiRequest, res: MyResponse) {
   });
 
   try {
-    const { data }: CreateTransactionResponse = await hygraph.request(
-      `
+    const { createTransaction }: CreateTransactionResponse =
+      await hygraph.request(
+        `
       mutation createTransaction($body: TransactionCreateInput!) {
         createTransaction(data: $body) {
           id
@@ -63,27 +60,28 @@ export default async function handler(req: NextApiRequest, res: MyResponse) {
     			}
         }
       }`,
-      {
-        body,
-      }
-    );
+        {
+          body,
+        }
+      );
 
-    if (data && data.createTransaction.id) {
-      const { data: publishTransaction }: PublishTransaction =
-        await hygraph.request(
-          `
+    console.log("data>>>>>", createTransaction);
+
+    if (createTransaction && createTransaction.id) {
+      const { publishTransaction }: PublishTransaction = await hygraph.request(
+        `
         mutation publishTransaction($id: ID!) {
         publishTransaction(where: { id: $id }, to: PUBLISHED) {
           id
         }
       }`,
-          {
-            id: data.createTransaction.id,
-          }
-        );
+        {
+          id: createTransaction.id,
+        }
+      );
     }
 
-    res.status(201).json(data);
+    res.status(201).json(createTransaction);
   } catch (error) {
     res.status(400).json(error);
   }

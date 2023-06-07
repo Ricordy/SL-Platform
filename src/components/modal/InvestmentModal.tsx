@@ -886,7 +886,8 @@ export const InvestmentModal = ({
           }),
         });
 
-        if (!response.ok) toast.error(JSON.stringify(response));
+        if (!response.ok)
+          toast.error(JSON.stringify("Error on fecthing API", response));
         // throw new Error(`Something went wrong submitting the form.`);
         console.log(response);
 

@@ -1574,7 +1574,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
               date
             }
           }
-          transactions {
+          transactions(orderBy: publishedAt_DESC) {
             amountInvested
             date
             type
