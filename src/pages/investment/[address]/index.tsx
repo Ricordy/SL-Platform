@@ -90,9 +90,8 @@ interface InvestmentProps {
     transactions: {
       amountInvested: number;
       date: string;
-      transactionDetails: {
-        txHash: string;
-      };
+      type: string;
+      hash: string;
     }[];
   };
 }
@@ -178,7 +177,7 @@ export const ProjectInfo = ({
     </div>
   );
 };
-const TransactionItem = ({ value, date, hash, divisor = true }) => {
+const TransactionItem = ({ value, date, type, hash, divisor = true }) => {
   return (
     <div className="flex items-center justify-between">
       <span>
@@ -192,17 +191,7 @@ const TransactionItem = ({ value, date, hash, divisor = true }) => {
           prefix="$ "
         />
       </span>
-      <span className="text-primaryGreen text-xs">
-        <NumericFormat
-          value={value}
-          displayType="text"
-          fixedDecimalScale={true}
-          decimalSeparator=","
-          thousandSeparator="."
-          decimalScale={2}
-          prefix="$ "
-        />
-      </span>
+      <span className="text-primaryGreen text-xs">{type}</span>
       <span>{dayjs(date).format("ll")}</span>
       <Link href={`https://etherscan.io/tx/${hash}`} target="_blank">
         <a>
@@ -1055,6 +1044,7 @@ const Investment = ({ investment }: InvestmentProps) => {
               <p>{investment.basicInvestment.car.subtitle}</p>
             </div>
             <InvestmentModal
+              userAddress={walletAddress}
               className="flex flex-col align-middle justify-between"
               title={investment?.basicInvestment.car.basicInfo.title}
               chassis={investment?.basicInvestment.car.chassis}
@@ -1463,10 +1453,11 @@ const Investment = ({ investment }: InvestmentProps) => {
                 <div className="flex flex-col divide-y-2 flex-1 gap-2 rounded-md py-8 px-4">
                   {investment.transactions.map((transaction) => (
                     <TransactionItem
-                      key={transaction.transactionDetails.txHash}
+                      key={transaction.hash}
                       value={transaction.amountInvested}
                       date={transaction.date}
-                      hash={transaction.transactionDetails.txHash}
+                      type={transaction.type}
+                      hash={transaction.hash}
                     />
                   ))}
                 </div>
@@ -1586,9 +1577,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           transactions {
             amountInvested
             date
-            transactionDetails {
-              txHash
-            }
+            type
+            hash
           }
         }
       }

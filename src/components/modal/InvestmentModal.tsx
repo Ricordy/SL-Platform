@@ -3,7 +3,7 @@ import { FiExternalLink } from "react-icons/fi";
 import Link from "next/link";
 import { useState } from "react";
 import { Address, useContract, useSigner } from "wagmi";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import useDebounce from "../../hooks/useDebounce";
 import toast from "react-hot-toast";
 import { CoinTestAbi, FactoryAbi, InvestAbi } from "../../data/ABIs";
@@ -11,9 +11,11 @@ import Modal from "../Modal";
 import useModal from "../../hooks/useModal";
 import { NumericFormat } from "react-number-format";
 import { Button } from "../ui/Button";
+import dayjs from "dayjs";
 
 type investmentProps = {
   contractAddress: string;
+  userAddress: string;
   title: string;
   percentageInvested?: string;
   chassis: string;
@@ -29,6 +31,7 @@ type investmentProps = {
 
 export const InvestmentModal = ({
   contractAddress,
+  userAddress,
   title,
   percentageInvested,
   chassis,
@@ -96,7 +99,705 @@ export const InvestmentModal = ({
 
   const investContract = useContract({
     address: contractAddress,
-    abi: InvestAbi,
+    abi: [
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "_totalInvestment",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "_entryNFTAddress",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "_paymentTokenAddress",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "_factoryAddress",
+            type: "address",
+          },
+        ],
+        stateMutability: "nonpayable",
+        type: "constructor",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxAllowed",
+            type: "uint256",
+          },
+        ],
+        name: "InvestmentExceedMax",
+        type: "error",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
+            internalType: "address",
+            name: "owner",
+            type: "address",
+          },
+          {
+            indexed: true,
+            internalType: "address",
+            name: "spender",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "value",
+            type: "uint256",
+          },
+        ],
+        name: "Approval",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "time",
+            type: "uint256",
+          },
+        ],
+        name: "ContractFilled",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "profit",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "time",
+            type: "uint256",
+          },
+        ],
+        name: "ContractRefilled",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
+            internalType: "address",
+            name: "previousOwner",
+            type: "address",
+          },
+          {
+            indexed: true,
+            internalType: "address",
+            name: "newOwner",
+            type: "address",
+          },
+        ],
+        name: "OwnershipTransferred",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "time",
+            type: "uint256",
+          },
+        ],
+        name: "SLWithdraw",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
+            internalType: "address",
+            name: "from",
+            type: "address",
+          },
+          {
+            indexed: true,
+            internalType: "address",
+            name: "to",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "value",
+            type: "uint256",
+          },
+        ],
+        name: "Transfer",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: false,
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "time",
+            type: "uint256",
+          },
+        ],
+        name: "UserInvest",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: false,
+            internalType: "address",
+            name: "user",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "time",
+            type: "uint256",
+          },
+        ],
+        name: "Withdraw",
+        type: "event",
+      },
+      {
+        inputs: [],
+        name: "LEVEL1",
+        outputs: [
+          {
+            internalType: "uint8",
+            name: "",
+            type: "uint8",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "MINIMUM_INVESTMENT",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "owner",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "spender",
+            type: "address",
+          },
+        ],
+        name: "allowance",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "spender",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
+        name: "approve",
+        outputs: [
+          {
+            internalType: "bool",
+            name: "",
+            type: "bool",
+          },
+        ],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "account",
+            type: "address",
+          },
+        ],
+        name: "balanceOf",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        name: "balanceReceived",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "enum Investment.Status",
+            name: "_newStatus",
+            type: "uint8",
+          },
+        ],
+        name: "changeStatus",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "decimals",
+        outputs: [
+          {
+            internalType: "uint8",
+            name: "",
+            type: "uint8",
+          },
+        ],
+        stateMutability: "pure",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "spender",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "subtractedValue",
+            type: "uint256",
+          },
+        ],
+        name: "decreaseAllowance",
+        outputs: [
+          {
+            internalType: "bool",
+            name: "",
+            type: "bool",
+          },
+        ],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "entryNFTAddress",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "factoryAddress",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "_user",
+            type: "address",
+          },
+        ],
+        name: "getBalanceReceived",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "_investmentCount",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "getMaxToInvest",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "maxToInvest",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "spender",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "addedValue",
+            type: "uint256",
+          },
+        ],
+        name: "increaseAllowance",
+        outputs: [
+          {
+            internalType: "bool",
+            name: "",
+            type: "bool",
+          },
+        ],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "_amount",
+            type: "uint256",
+          },
+        ],
+        name: "invest",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "name",
+        outputs: [
+          {
+            internalType: "string",
+            name: "",
+            type: "string",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "owner",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "paymentTokenAddress",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "_amount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "_profitRate",
+            type: "uint256",
+          },
+        ],
+        name: "refill",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "renounceOwnership",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "returnProfit",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "status",
+        outputs: [
+          {
+            internalType: "enum Investment.Status",
+            name: "",
+            type: "uint8",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "symbol",
+        outputs: [
+          {
+            internalType: "string",
+            name: "",
+            type: "string",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "totalContractBalanceStable",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "totalBalance",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "totalInvestment",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "totalSupply",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "to",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
+        name: "transfer",
+        outputs: [
+          {
+            internalType: "bool",
+            name: "",
+            type: "bool",
+          },
+        ],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "from",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "to",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
+        name: "transferFrom",
+        outputs: [
+          {
+            internalType: "bool",
+            name: "",
+            type: "bool",
+          },
+        ],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "newOwner",
+            type: "address",
+          },
+        ],
+        name: "transferOwnership",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "withdraw",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "withdrawSL",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+    ] as const,
     signerOrProvider: signerData,
   });
   const factoryContract = useContract({
@@ -147,7 +848,8 @@ export const InvestmentModal = ({
       // setisInvesting(true);
       const results2 = await investContract
         .connect(signerData)
-        .invest(valueApprovalAndInvestment);
+        .invest(BigNumber.from(valueApprovalAndInvestment));
+
       toast.promise(
         results2.wait(),
         {
@@ -164,22 +866,52 @@ export const InvestmentModal = ({
       );
       await results2.wait();
 
+      // Save to hygraph
+
+      try {
+        const response = await fetch("/api/addTransaction", {
+          method: "POST",
+          body: JSON.stringify({
+            hash: results2.hash,
+            from: userAddress,
+            to: contractAddress,
+            amountInvested: parseFloat(valueApprovalAndInvestment.toString()),
+            date: dayjs(new Date()).format("YYYY-MM-DD"),
+            type: "deposit",
+            investment: {
+              connect: {
+                address: contractAddress,
+              },
+            },
+          }),
+        });
+
+        if (!response.ok) toast.error(JSON.stringify(response));
+        // throw new Error(`Something went wrong submitting the form.`);
+        console.log(response);
+
+        toast.success("Saved to the DB");
+      } catch (err) {
+        toast.error(err.message);
+      }
+
       toggleModalInvest();
     } catch (error) {
       if (
-        typeof error.reason &&
+        typeof error.reason === "string" &&
         error.reason.indexOf("InvestmentExceedMax") > -1
       ) {
         toast.error("You reached the maximum to invest!");
       } else if (
-        typeof error.reason &&
+        typeof error.reason === "string" &&
         error.reason.indexOf("Not on progress") > -1
       ) {
         toast.error("You cannot invest on this phase!");
-      } else if (error.reason) {
-        toast.error(error.reason);
+      } else if (error.code && error.code == -32603) {
+        toast.error("Nonce to high for Metamask");
       } else {
-        toast.error(JSON.stringify(error));
+        console.log(error);
+        toast.error(error);
       }
     }
   }
