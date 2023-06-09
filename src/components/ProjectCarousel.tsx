@@ -764,12 +764,18 @@ const ProjectCarousel: FC<CarouselProps> = ({
 }) => {
   const [contractAddress, setContractAddress] = useState();
 
+  const [currentSlider, setcurrentSlider] = useState(0);
+
   const { data: contractProgress } = useContractRead({
     address: contractAddress,
     abi: investmentABI,
     functionName: "totalSupply",
     select: (data) => Number(data),
   });
+
+  const handleSlideChange = (swiper: any) => {
+    setcurrentSlider(swiper.activeIndex);
+  };
 
   items = items;
   return (
@@ -785,7 +791,11 @@ const ProjectCarousel: FC<CarouselProps> = ({
         >
           <Image
             src={
-              prevNavWhite
+              (
+                currentSlider == 0 || currentSlider == items.length - 1
+                  ? true
+                  : false
+              )
                 ? "/icons/pagination-previous.svg"
                 : "/icons/pagination-previous-black.svg"
             }
@@ -814,6 +824,7 @@ const ProjectCarousel: FC<CarouselProps> = ({
               observeParents
               initialSlide={0}
               loop={true}
+              onSlideChange={handleSlideChange}
             >
               {items.map((item, index) => (
                 <SwiperSlide key={index}>

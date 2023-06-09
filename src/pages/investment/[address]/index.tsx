@@ -220,6 +220,7 @@ export const badges = {
 
 const Investment = ({ investment }: InvestmentProps) => {
   const { address: walletAddress } = useAccount();
+  const { data: signerData } = useSigner();
 
   const [canWithdraw, setCanWithdraw] = useState(false);
   // console.log(investment);
@@ -905,6 +906,12 @@ const Investment = ({ investment }: InvestmentProps) => {
     },
   ] as const;
 
+  const investContract = useContract({
+    address: investment?.address,
+    abi: investmentABI,
+    signerOrProvider: signerData,
+  });
+
   const { data: totalSupply } = useContractRead({
     address: investment.address,
     abi: investmentABI,
@@ -984,6 +991,38 @@ const Investment = ({ investment }: InvestmentProps) => {
   });
 
   const { write: withdraw } = useContractWrite(withdrawCallConfig);
+
+  async function onClickWithdraw() {
+    const results = await investContract.connect(signerData).withdraw();
+    results.wait();
+    try {
+      const response = await fetch("/api/addTransaction", {
+        method: "POST",
+        body: JSON.stringify({
+          hash: results.hash,
+          from: walletAddress,
+          to: investment?.address,
+          amountInvested: Number(totalSupply) / 10 ** 6 + profitMinimumValue,
+          date: dayjs(new Date()).format("YYYY-MM-DD"),
+          type: "withdraw",
+          investment: {
+            connect: {
+              address: investment?.address,
+            },
+          },
+        }),
+      });
+
+      if (!response.ok)
+        toast.error(JSON.stringify("Error on fecthing API", response.text));
+      // throw new Error(`Something went wrong submitting the form.`);
+      console.log(response);
+
+      toast.success("Saved to the DB");
+    } catch (err) {
+      toast.error(err.message);
+    }
+  }
 
   const progress =
     (totalSupply?.div(10 ** 6).toNumber() /
@@ -1442,7 +1481,7 @@ const Investment = ({ investment }: InvestmentProps) => {
                   <Button
                     disabled={!canWithdraw}
                     variant="outline"
-                    onClick={withdraw}
+                    onClick={onClickWithdraw}
                   >
                     Withdraw
                   </Button>

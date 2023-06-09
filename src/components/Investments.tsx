@@ -12,12 +12,13 @@ import { ConnectKitButton } from "connectkit";
 
 interface InvestmentsProps {
   isConnected: boolean;
-  userInvestments,
+  userInvestments;
 }
-export default function Investments({ isConnected, userInvestments }: InvestmentsProps) {
+export default function Investments({
+  isConnected,
+  userInvestments,
+}: InvestmentsProps) {
   const [investmentStatuses] = useState(investmentStatusesData);
-
-  
 
   return (
     <section
@@ -55,7 +56,6 @@ export default function Investments({ isConnected, userInvestments }: Investment
                 }
               >
                 {investmentStatus}
-      
               </Tab>
             ))}
           </Tab.List>
@@ -69,10 +69,13 @@ export default function Investments({ isConnected, userInvestments }: Investment
                     "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2"
                   )}
                 >
-
                   <ProjectCarousel
                     id={investmentStatus}
-                    items={userInvestments.filter(investment => investment.basicInvestment.investmentStatus == investmentStatus)}
+                    items={userInvestments.filter(
+                      (investment) =>
+                        investment.basicInvestment.investmentStatus ==
+                        investmentStatus
+                    )}
                     // items={investmentData.filter(
                     //   (i) => i.status == investmentStatus
                     // )}
@@ -163,24 +166,24 @@ function clearQueryForRender(query) {
   const newQuery = [];
   query.map((item) => {
     console.log(item);
-    
+
     newQuery.push({
-        id: item.id,
-        address: item.address,
-        basicInvestment: {
-          totalInvested: item.basicInvestment.totalInvested,
-          totalInvestment: item.basicInvestment.totalInvestment,
-          investmentStatus: item.basicInvestment.investmentStatus,
-          car: {
-            id: item.basicInvestment.car.id,
-            basicInfo: {
-              cover: {
-                url: item.basicInvestment.car.basicInfo.cover.url,
-              },
-              title: item.basicInvestment.car.basicInfo.title,
+      id: item.id,
+      address: item.address,
+      basicInvestment: {
+        totalInvested: item.basicInvestment.totalInvested,
+        totalInvestment: item.basicInvestment.totalInvestment,
+        investmentStatus: item.basicInvestment.investmentStatus,
+        car: {
+          id: item.basicInvestment.car.id,
+          basicInfo: {
+            cover: {
+              url: item.basicInvestment.car.basicInfo.cover.url,
             },
+            title: item.basicInvestment.car.basicInfo.title,
           },
         },
+      },
     });
   });
   return newQuery;
