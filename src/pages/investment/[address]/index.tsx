@@ -36,6 +36,8 @@ import { GraphQLClient, gql } from "graphql-request";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { CONTRACT_STATUS_WITHDRAW } from "../../../constants";
+import Lightbox from "react-image-lightbox";
+import "react-image-lightbox/style.css";
 
 dayjs.extend(localizedFormat);
 
@@ -94,37 +96,68 @@ interface InvestmentProps {
       hash: string;
     }[];
   };
+  transactions: {
+    from: Address;
+  };
 }
 
 const InvestmentGallery = ({ images }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [photoIndex, setPhotoIndex] = useState(0);
+
+  const openLightbox = (index) => {
+    setIsOpen(true);
+    setPhotoIndex(index);
+  };
+
+  const closeLightbox = () => {
+    setIsOpen(false);
+  };
+
+  const moveNext = (index) => {
+    setPhotoIndex(index == 2 ? 0 : index + 1);
+  };
   return (
-    <div className="grid relative grid-cols-1 mb-9 gap-3 md:grid-cols-[2fr_1fr]">
-      <div className="flex">
-        <Image
-          src={images[0].url}
-          width={765}
-          height={400}
-          alt="Gallery"
-          className="rounded-md"
-        />
+    <>
+      <div className="grid relative grid-cols-1 mb-9 gap-3 md:grid-cols-[2fr_1fr]">
+        <div className="flex">
+          <Image
+            src={images[0].url}
+            width={765}
+            height={400}
+            alt="Gallery"
+            className="rounded-md cursor-pointer"
+            onClick={() => openLightbox(0)}
+          />
+        </div>
+        <div className="flex flex-col gap-3">
+          <Image
+            src={images[1].url}
+            width={248}
+            height={193}
+            alt="Gallery"
+            className="rounded-md cursor-pointer"
+            onClick={() => openLightbox(1)}
+          />
+          <Image
+            src={images[2].url}
+            width={248}
+            height={193}
+            alt="Gallery"
+            className="rounded-md cursor-pointer"
+            onClick={() => openLightbox(2)}
+          />
+        </div>
       </div>
-      <div className="flex flex-col gap-3">
-        <Image
-          src={images[1].url}
-          width={248}
-          height={193}
-          alt="Gallery"
-          className="rounded-md"
+      {isOpen && (
+        <Lightbox
+          mainSrc={images[photoIndex].url}
+          onCloseRequest={closeLightbox}
+          clickOutsideToClose={true}
+          onMovePrevRequest={() => moveNext(photoIndex)}
         />
-        <Image
-          src={images[2].url}
-          width={248}
-          height={193}
-          alt="Gallery"
-          className="rounded-md"
-        />
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 export const ProjectInfo = ({
@@ -218,7 +251,7 @@ export const badges = {
   },
 };
 
-const Investment = ({ investment }: InvestmentProps) => {
+const Investment = ({ investment, transactions }: InvestmentProps) => {
   const { address: walletAddress } = useAccount();
   const { data: signerData } = useSigner();
 
@@ -1061,6 +1094,16 @@ const Investment = ({ investment }: InvestmentProps) => {
       .div(100)
       .toNumber();
 
+  function countUniques(transactions: any) {
+    let uniqueFromValues = new Set();
+    for (let i = 0; i < transactions.length; i++) {
+      if (transactions[i].from !== null) {
+        uniqueFromValues.add(transactions[i].from);
+      }
+    }
+    return uniqueFromValues.size;
+  }
+
   return (
     <>
       <Head>
@@ -1153,7 +1196,7 @@ const Investment = ({ investment }: InvestmentProps) => {
                     />
                   </span>
                   <h4 className="text-primaryGrey">
-                    Investing here:{" "}
+                    Investing here:{countUniques(transactions)}
                     <Image
                       src="/icons/mini-avatar.svg"
                       alt="Avatar"
@@ -1624,8 +1667,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     `
   );
 
+  const { transactions }: InvestmentProps = await hygraph.request(
+    gql`
+      query InvestingHere {
+        transactions(
+          where: { to: "0xCafac3dD18aC6c6e92c921884f9E4176737C052c" }
+        ) {
+          from
+        }
+      }
+    `
+  );
+
   return {
-    props: { investment },
+    props: { investment, transactions },
   };
 };
 export default Investment;
