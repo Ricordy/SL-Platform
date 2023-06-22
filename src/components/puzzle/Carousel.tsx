@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useState } from "react";
 import { cn } from "../../lib/utils";
 import { Navigation, A11y } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -164,6 +164,12 @@ const Carousel: FC<CarouselProps> = ({
   items,
   userItems,
 }) => {
+  const [currentSlider, setcurrentSlider] = useState(0);
+
+  const handleSlideChange = (swiper: any) => {
+    setcurrentSlider(swiper.activeIndex);
+  };
+
   return (
     <div className={className ?? ""}>
       {title && (
@@ -175,7 +181,11 @@ const Carousel: FC<CarouselProps> = ({
         >
           <Image
             src={
-              prevNavWhite
+              (
+                currentSlider == 0 || currentSlider == items.length - 1
+                  ? true
+                  : false
+              )
                 ? "/icons/pagination-previous.svg"
                 : "/icons/pagination-previous-black.svg"
             }
@@ -204,6 +214,7 @@ const Carousel: FC<CarouselProps> = ({
               observeParents
               initialSlide={0}
               loop={true}
+              onSlideChange={handleSlideChange}
             >
               {items.map((item, index) => {
                 return (
