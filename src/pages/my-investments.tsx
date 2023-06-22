@@ -405,17 +405,17 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       {
         ...SlFactoryContract,
         functionName: "getAddressTotalInLevel",
-        args: [address, 1],
+        args: [address, BigNumber.from(1)],
       },
       {
         ...SlFactoryContract,
         functionName: "getAddressTotalInLevel",
-        args: [address, 2],
+        args: [address, BigNumber.from(2)],
       },
       {
         ...SlFactoryContract,
         functionName: "getAddressTotalInLevel",
-        args: [address, 3],
+        args: [address, BigNumber.from(3)],
       },
       // {
       //   ...SlLogicsContract,
@@ -653,40 +653,42 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
             <div className="grid grid-cols-2 auto-rows-[1fr] text-white gap-12">
               <div className="flex flex-col  gap-4">
                 <span>Overview:</span>
-                <div className="flex flex-col flex-1 gap-8 bg-myInvestmentsBackground rounded-md py-8 px-12">
-                  <div className="flex flex-col">
-                    <h5 className="text-primaryGold text-base">
-                      Total Invested (Connected to Blockchain)
-                    </h5>
-                    <span className="text-4xl font-semibold tracking-widest">
-                      ${data && data[0]?.div(10 ** 6).toNumber()}
-                    </span>
+                {data && (
+                  <div className="flex flex-col flex-1 gap-8 bg-myInvestmentsBackground rounded-md py-8 px-12">
+                    <div className="flex flex-col">
+                      <h5 className="text-primaryGold text-base">
+                        Total Invested (Connected to Blockchain)
+                      </h5>
+                      <span className="text-4xl font-semibold tracking-widest">
+                        ${data && data[0]?.div(10 ** 6).toNumber()}
+                      </span>
+                    </div>
+                    <div className="flex flex-col">
+                      <h5 className="text-primaryGold text-base">
+                        Level 1 - Total Invested (Connected to Blockchain)
+                      </h5>
+                      <span className="text-4xl font-semibold tracking-widest">
+                        ${data?.[1].div(10 ** 6).toNumber()}
+                      </span>
+                    </div>
+                    <div className="flex flex-col">
+                      <h5 className="text-primaryGold text-base">
+                        Level 2 - Total Invested (Connected to Blockchain)
+                      </h5>
+                      <span className="text-4xl font-semibold tracking-widest">
+                        ${data[2].div(10 ** 6).toNumber()}
+                      </span>
+                    </div>
+                    <div className="flex flex-col">
+                      <h5 className="text-primaryGold text-base">
+                        Level 3 - Total Invested (Connected to Blockchain)
+                      </h5>
+                      <span className="text-4xl font-semibold tracking-widest">
+                        ${data[3].div(10 ** 6).toNumber()}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex flex-col">
-                    <h5 className="text-primaryGold text-base">
-                      Level 1 - Total Invested (Connected to Blockchain)
-                    </h5>
-                    <span className="text-4xl font-semibold tracking-widest">
-                      ${data[1]?.div(10 ** 6).toNumber()}
-                    </span>
-                  </div>
-                  <div className="flex flex-col">
-                    <h5 className="text-primaryGold text-base">
-                      Level 2 - Total Invested (Connected to Blockchain)
-                    </h5>
-                    <span className="text-4xl font-semibold tracking-widest">
-                      ${data[2].div(10 ** 6).toNumber()}
-                    </span>
-                  </div>
-                  <div className="flex flex-col">
-                    <h5 className="text-primaryGold text-base">
-                      Level 3 - Total Invested (Connected to Blockchain)
-                    </h5>
-                    <span className="text-4xl font-semibold tracking-widest">
-                      ${data[3].div(10 ** 6).toNumber()}
-                    </span>
-                  </div>
-                </div>
+                )}
               </div>
               <div className="flex flex-col gap-4">
                 <span>Last transactions:</span>
