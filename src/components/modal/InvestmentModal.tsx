@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { FiExternalLink } from "react-icons/fi";
 import Link from "next/link";
 import { useState } from "react";
-import { Address, useContract, useSigner } from "wagmi";
+import { type Address, useContract, useSigner } from "wagmi";
 import { BigNumber, ethers } from "ethers";
 import useDebounce from "../../hooks/useDebounce";
 import toast from "react-hot-toast";
@@ -924,9 +924,9 @@ export const InvestmentModal = ({
         toggle={toggleModalEntryNFT}
         title="Buy an Entry NFT"
       >
-        <div className="flex justify-between w-full">
+        <div className="flex w-full justify-between">
           <div className="mt-2">You don&apos;t have an Entry NFT yet.</div>
-          <Link href="/mint-entry-nft" passHref>
+          <Link href="/mint-entry-nft" passHref legacyBehavior>
             <a className="inline-flex justify-center rounded-md border border-transparent bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2">
               Buy Now
             </a>
@@ -944,13 +944,13 @@ export const InvestmentModal = ({
         toggleBlur={toggleBlurModalInvest}
         title="Make an Investment"
       >
-        <div className="flex flex-col w-full gap-8 justify-center">
-          <div className="mt-[72px] relative items-center flex gap-3">
-            <span className="absolute text-tabInactive text-3xl font-medium px-2 left-0">
+        <div className="flex w-full flex-col justify-center gap-8">
+          <div className="relative mt-[72px] flex items-center gap-3">
+            <span className="absolute left-0 px-2 text-3xl font-medium text-tabInactive">
               $
             </span>
             <input
-              className="p-2 pl-8 placeholder:text-tabInactive/60 rounded-md w-full text-tabInactive text-3xl font-medium"
+              className="w-full rounded-md p-2 pl-8 text-3xl font-medium text-tabInactive placeholder:text-tabInactive/60"
               onChange={handleChange}
               type="number"
               name=""
@@ -960,29 +960,29 @@ export const InvestmentModal = ({
               min={100}
               value={valueApprovalAndInvestment}
             />
-            <div className="flex absolute gap-3 right-0 pr-8">
+            <div className="absolute right-0 flex gap-3 pr-8">
               <button
                 onClick={() => setApprovalandInvestment(100)}
-                className="inline-block whitespace-nowrap rounded-full bg-puzzleProfitNotice text-tabInactive  px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-medium leading-none"
+                className="inline-block whitespace-nowrap rounded-full bg-puzzleProfitNotice px-[0.65em]  pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-medium leading-none text-tabInactive"
               >
                 $ 100.00
               </button>
               <button
                 onClick={() => setApprovalandInvestment(500)}
-                className="inline-block whitespace-nowrap rounded-full bg-puzzleProfitNotice text-tabInactive  px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-medium leading-none"
+                className="inline-block whitespace-nowrap rounded-full bg-puzzleProfitNotice px-[0.65em]  pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-medium leading-none text-tabInactive"
               >
                 $ 500.00
               </button>
               <button
                 onClick={() => setApprovalandInvestment(maxToInvest)}
-                className="inline-block whitespace-nowrap rounded-full bg-puzzleProfitNotice text-tabInactive  px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-medium leading-none"
+                className="inline-block whitespace-nowrap rounded-full bg-puzzleProfitNotice px-[0.65em]  pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-medium leading-none text-tabInactive"
               >
                 Max
               </button>
             </div>
           </div>
-          <div className="flex font-medium items-center mt-8 mb-[20px] gap-3">
-            <div className="text-sm  text-gray-500 uppercase">
+          <div className="mb-[20px] mt-8 flex items-center gap-3 font-medium">
+            <div className="text-sm  uppercase text-gray-500">
               Your Balance:
             </div>
             <div className="text-md text-primaryGold">
@@ -1035,7 +1035,7 @@ export const InvestmentModal = ({
 
           <Button
             disabled={Number(inputRef?.current?.value) < 100}
-            className="inline-flex bg-primaryGreen justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:bg-slate-400"
+            className="inline-flex justify-center rounded-md border border-transparent bg-primaryGreen px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:bg-slate-400"
             onClick={(e) => handleClick(e)}
           >
             Invest now

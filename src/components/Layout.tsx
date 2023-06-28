@@ -1,5 +1,3 @@
-import NavBar from "./NavBar";
-import Footer from "./Footer";
 import { Toaster } from "react-hot-toast";
 import Head from "next/head";
 
@@ -10,7 +8,7 @@ export default function Layout({ children }) {
         <title>Something Legendary</title>
       </Head>
       <Toaster position="top-center" reverseOrder={false} />
-      <main className="flex flex-col w-full max-w-screen-2xl mx-auto grow shrink-0">
+      <main className="mx-auto flex w-full max-w-screen-2xl shrink-0 grow flex-col">
         {children}
       </main>
     </div>

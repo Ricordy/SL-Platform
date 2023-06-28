@@ -9,7 +9,7 @@ import Link from "next/link";
 import Carousel from "../components/Carousel";
 import Posts from "../components/Posts";
 import { PostItemProps } from "../@types/post";
-import { Address, useAccount, useContractRead } from "wagmi";
+import { type Address, useAccount, useContractRead } from "wagmi";
 import { Carousel as C2 } from "react-responsive-carousel";
 import Image from "next/image";
 import { CoinTestAbi, InvestAbi } from "../data/ABIs";
@@ -30,7 +30,7 @@ const Home: NextPage = (props) => {
     abi: CoinTestAbi,
     functionName: "balanceOf",
     args: [
-      highlightContractAddress.address[
+      highlightContractAddress?.address[
         process.env.NEXT_PUBLIC_CHAIN_ID as Address
       ],
     ],
@@ -66,24 +66,24 @@ const Home: NextPage = (props) => {
 
   return (
     <>
-      <section className="w-full mx-auto bg-white">
-        <div className="flex flex-col w-full relative rounded-bl-[56px] min-h-screen bg-cover bg-right bg-no-repeat bg-black bg-opacity-80">
+      <section className="mx-auto w-full bg-white">
+        <div className="relative flex min-h-screen w-full flex-col rounded-bl-[56px] bg-black bg-opacity-80 bg-cover bg-right bg-no-repeat">
           {images.map((image, index) => (
             <div
               key={index}
-              className={`absolute rounded-bl-[56px] w-full h-full bg-right bg-black bg-opacity-80 bg-cover transition-opacity duration-1000 ${
+              className={`absolute h-full w-full rounded-bl-[56px] bg-black bg-opacity-80 bg-cover bg-right transition-opacity duration-1000 ${
                 activeIndex === index ? "opacity-100" : "opacity-0"
               }`}
               style={{ backgroundImage: `url(${image.url})` }}
             />
           ))}
-          <div className="absolute flex z-0 top-0 w-full min-h-[83px] bg-[url('/bg/bg-navbar.svg')]"></div>
-          <div className="absolute flex z-10 left-0 w-full min-h-screen bg-bottom bg-no-repeat bg-contain bg-[url('/bg/gradient-vertical-header.svg')]"></div>
-          <div className="absolute rounded-bl-[56px] flex z-0 bottom-0 w-full min-h-screen bg-left bg-no-repeat bg-cover bg-[url('/bg/gradient-horizontal-header.svg')]"></div>
+          <div className="absolute top-0 z-0 flex min-h-[83px] w-full bg-[url('/bg/bg-navbar.svg')]"></div>
+          <div className="absolute left-0 z-10 flex min-h-screen w-full bg-[url('/bg/gradient-vertical-header.svg')] bg-contain bg-bottom bg-no-repeat"></div>
+          <div className="absolute bottom-0 z-0 flex min-h-screen w-full rounded-bl-[56px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat"></div>
           <NavBar />
-          <div className="flex flex-col justify-center w-full z-20 mx-auto max-w-screen-lg">
+          <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
             <div className="flex flex-col gap-12 pt-24">
-              <h3 className="text-white uppercase text-5xl tracking-widest">
+              <h3 className="text-5xl uppercase tracking-widest text-white">
                 New Classic
                 <br />
                 in town!
@@ -93,18 +93,19 @@ const Home: NextPage = (props) => {
                 <br />
                 Don&apos;t miss your limited opportunity to get on this boat.
               </p>
-              <Link href="/investments">
-                <a className="dark:hover:bg-white dark:hover:text-black text-center uppercase text-sm bg-white text-black rounded-md px-12 py-1.5 self-start">
-                  See More
-                </a>
+              <Link
+                href="/investments"
+                className="self-start rounded-md bg-white px-12 py-1.5 text-center text-sm uppercase text-black dark:hover:bg-white dark:hover:text-black"
+              >
+                See More
               </Link>
             </div>
           </div>
-          <div className="absolute z-40 top-[550px] left-[270px] transform -translate-x-1/2 space-x-2">
+          <div className="absolute left-[270px] top-[550px] z-40 -translate-x-1/2 transform space-x-2">
             {images.map((_, index) => (
               <button
                 key={index}
-                className={`w-2.5 h-2.5 rounded-full ${
+                className={`h-2.5 w-2.5 rounded-full ${
                   activeIndex === index ? "bg-white" : "bg-gray-500"
                 } focus:outline-none`}
                 onClick={() => setActiveIndex(index)}
@@ -112,35 +113,35 @@ const Home: NextPage = (props) => {
             ))}
           </div>
         </div>
-        <div className="min-h-[500px] -mt-[100px] relative z-20 left-1/2 -ml-[570px]  max-w-[1338px] mx-auto">
+        <div className="relative left-1/2 z-20 mx-auto -ml-[570px] -mt-[100px]  min-h-[500px] max-w-[1338px]">
           <Carousel
             id="1"
             items={props.activeInvestments}
             prevNavWhite={true}
-            title={<h2 className="text-white text-2xl">Our cars</h2>}
+            title={<h2 className="text-2xl text-white">Our cars</h2>}
             //seeMoreLabel="See more"
             //seeMoreLink="/our-cars"
           />
           {isDisconnected && (
-            <div className="flex flex-col ml-[58px] py-[132px]">
+            <div className="ml-[58px] flex flex-col py-[132px]">
               <h2 className="mb-[52px] text-2xl font-medium uppercase">
                 Highlight
               </h2>
               <div className="flex gap-6">
-                <div className="flex w-full relative">
+                <div className="relative flex w-full">
                   <C2 showStatus={false} showThumbs={false}>
                     {[
                       "/projects/car-1-detail.jpg",
                       "/projects/car-1-detail.jpg",
                     ].map((image, idx) => (
-                      <div key={idx} className="w-full relative">
+                      <div key={idx} className="relative w-full">
                         <Image src={image} width={528} height={396} alt="car" />
                       </div>
                     ))}
                   </C2>
                 </div>
                 <div className="flex flex-col">
-                  <h2 className="text-3xl pb-8 text-primaryGreen font-medium">
+                  <h2 className="pb-8 text-3xl font-medium text-primaryGreen">
                     Mercedes Benz 280 Sl
                   </h2>
                   <ProjectInfo progress={progress} />
@@ -158,10 +159,10 @@ const Home: NextPage = (props) => {
                       height={22}
                       alt="Tasks"
                     />
-                    <span className="pr-2 font-medium text-xl">Blasting</span>
+                    <span className="pr-2 text-xl font-medium">Blasting</span>
                     <span
                       className={cn(
-                        "flex gap-2 text-xs py-1 px-2 rounded-full",
+                        "flex gap-2 rounded-full px-2 py-1 text-xs",
                         badges["inprogress"].bg,
                         badges["inprogress"].text
                       )}
@@ -191,22 +192,22 @@ const Home: NextPage = (props) => {
           )} */}
         </div>
 
-        <div className=" w-full relative z-20 left-1/2 -ml-[570px] max-w-[1338px] mx-auto">
+        <div className=" relative left-1/2 z-20 mx-auto -ml-[570px] w-full max-w-[1338px]">
           <Investments
             isConnected={isConnected}
             userInvestments={props.investments}
           />
         </div>
-        <div className="mx-auto w-full relative left-1/2 -ml-[570px] max-w-[1338px]">
+        <div className="relative left-1/2 mx-auto -ml-[570px] w-full max-w-[1338px]">
           <Puzzle
             isConnected={isConnected}
-            className="relative max-w-[1338px] w-full  flex flex-col pt-[132px]"
+            className="relative flex w-full  max-w-[1338px] flex-col pt-[132px]"
             userAddress={address}
             puzzlePieces={props.puzzlePieces}
             dbLevels={props.levels}
           />
         </div>
-        <div className="flex bg-black w-full rounded-t-3xl pb-[132px] pt-[72px]">
+        <div className="flex w-full rounded-t-3xl bg-black pb-[132px] pt-[72px]">
           <Posts
             posts={props.posts}
             title="Learn More"
@@ -279,28 +280,31 @@ export async function getStaticProps({ locale, params }) {
   const { investments } = await hygraph.request(
     gql`
       query UserInvestments {
-  investments(
-    where: {transactions_some: {from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"}}
-  ) {
-    id
-    address
-    basicInvestment {
-      totalInvested
-      totalInvestment
-      investmentStatus
-      car {
-        id
-        basicInfo {
-          cover {
-            url
+        investments(
+          where: {
+            transactions_some: {
+              from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+            }
           }
-          title
+        ) {
+          id
+          address
+          basicInvestment {
+            totalInvested
+            totalInvestment
+            investmentStatus
+            car {
+              id
+              basicInfo {
+                cover {
+                  url
+                }
+                title
+              }
+            }
+          }
         }
       }
-    }
-  }
-}
-
     `
   );
 

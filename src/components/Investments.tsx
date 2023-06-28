@@ -23,25 +23,26 @@ export default function Investments({
   return (
     <section
       id="investments"
-      className="relative max-w-[1338px] w-full overflow-hidden flex flex-col"
+      className="relative flex w-full max-w-[1338px] flex-col overflow-hidden"
     >
-      <div className="flex ml-[58px] w-full justify-between mx-auto">
-        <h2 className="text-2xl font-medium mb-[52px] uppercase">
+      <div className="mx-auto ml-[58px] flex w-full justify-between">
+        <h2 className="mb-[52px] text-2xl font-medium uppercase">
           My Investments
         </h2>
         {isConnected && (
           <div className="mr-[116px]">
-            <Link href="/my-investments">
-              <a className="border-b-2 border-primaryGreen text-primaryGreen uppercase text-sm">
-                See more
-              </a>
+            <Link
+              href="/my-investments"
+              className="border-b-2 border-primaryGreen text-sm uppercase text-primaryGreen"
+            >
+              See more
             </Link>
           </div>
         )}
       </div>
       {isConnected && (
         <Tab.Group>
-          <Tab.List className="flex ml-[58px] w-fit border-b border-b-gray-900/20">
+          <Tab.List className="ml-[58px] flex w-fit border-b border-b-gray-900/20">
             {investmentStatusesData.map((investmentStatus) => (
               <Tab
                 key={investmentStatus}
@@ -50,7 +51,7 @@ export default function Investments({
                     "flex min-w-fit justify-center gap-3 px-6 pb-4  text-2xl font-normal  leading-5 text-tabInactive",
                     "focus:outline-none",
                     selected
-                      ? "bg-white text-primaryGreen border-b-4 font-semibold border-primaryGreen"
+                      ? "border-b-4 border-primaryGreen bg-white font-semibold text-primaryGreen"
                       : " hover:bg-white/[0.12] hover:text-tabInactive/80"
                   )
                 }
@@ -125,16 +126,16 @@ export default function Investments({
         </Tab.Group>
       )}
       {!isConnected && (
-        <div className="grid ml-[58px] grid-cols-3 grid-flow-row auto-rows-auto justify-center gap-4 ">
-          <div className="flex flex-col items-center rounded-md p-8 bg-puzzleProfitNotice">
-            <h4 className="mb-4 text-primaryGreen font-medium text-2xl">
+        <div className="ml-[58px] grid grid-flow-row auto-rows-auto grid-cols-3 justify-center gap-4 ">
+          <div className="flex flex-col items-center rounded-md bg-puzzleProfitNotice p-8">
+            <h4 className="mb-4 text-2xl font-medium text-primaryGreen">
               Start your investments
             </h4>
             <p className="mb-8 text-ogBlack">
               Sed ut perspiciatis unde omnis iste natus error sit voluptatem
               accusantium doloremque laudantium, totam.
             </p>
-            {!isConnected && (
+            {/* {!isConnected && (
               <ConnectKitButton
                 label="CONNECT WALLET"
                 customTheme={{
@@ -149,7 +150,7 @@ export default function Investments({
                     "inset 0 0 0 1px rgb(20,116,84)",
                 }}
               />
-            )}
+            )} */}
           </div>
           <div className="flex justify-center rounded-md bg-puzzleProfitNotice">
             <Image src="/icons/add.svg" width={63} height={63} alt="Add" />

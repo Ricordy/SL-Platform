@@ -1,13 +1,12 @@
 import Image from "next/image";
-import { FC, ReactNode, useState } from "react";
-import { cn } from "../../lib/utils";
-import { Navigation, A11y } from "swiper";
+import { useState, type FC, type ReactNode } from "react";
+import { A11y, Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { cn } from "../../lib/utils";
 
 // Import Swiper styles
+import { type BigNumber } from "ethers";
 import "swiper/css";
-import { ConnectKitButton } from "connectkit";
-import { BigNumber } from "ethers";
 
 interface CarouselItemProps {
   title: string;
@@ -24,23 +23,23 @@ const CarouselItem = ({
 }: CarouselItemProps) => {
   if (isConnected)
     return (
-      <div className="flex group justify-center items-center flex-col w-full rounded-md">
-        <div className="w-full min-h-full justify-center text-white items-center flex-col flex z-20 absolute rounded-md opacity-0 bg-primaryGold group-hover:opacity-100">
-          <span className="font-normal tracking-widest  uppercase text-center text-md">
+      <div className="group flex w-full flex-col items-center justify-center rounded-md">
+        <div className="absolute z-20 flex min-h-full w-full flex-col items-center justify-center rounded-md bg-primaryGold text-white opacity-0 group-hover:opacity-100">
+          <span className="text-md text-center  font-normal uppercase tracking-widest">
             {title}
           </span>
-          <span className="font-medium text-xl">LOREM</span>
+          <span className="text-xl font-medium">LOREM</span>
         </div>
         {amount > 0 ? (
           <div
             className={cn(
-              "flex flex-col w-full justify-start items-center min-h-[396px] rounded-md bg-center bg-cover relative gap-3"
+              "relative flex min-h-[396px] w-full flex-col items-center justify-start gap-3 rounded-md bg-cover bg-center"
             )}
             style={{ backgroundImage: `url(${image})` }}
           >
-            <div className="flex z-10 relative gap-3 pb-6 justify-end items-start w-full">
-              <div className="flex gap-3 text-primaryGold justify-center items-center p-3">
-                <div className="font-normal flex justify-center items-center text-center text-lg h-10 w-10 border border-primaryGold rounded-full">
+            <div className="relative z-10 flex w-full items-start justify-end gap-3 pb-6">
+              <div className="flex items-center justify-center gap-3 p-3 text-primaryGold">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-primaryGold text-center text-lg font-normal">
                   {amount}
                   <span className="text-md">x</span>
                 </div>
@@ -50,13 +49,13 @@ const CarouselItem = ({
         ) : (
           <div
             className={cn(
-              "flex w-full flex-col justify-center hover:text-white bg-contactBackground items-center min-h-[396px] rounded-md gap-3"
+              "flex min-h-[396px] w-full flex-col items-center justify-center gap-3 rounded-md bg-contactBackground hover:text-white"
             )}
           >
-            <div className="flex gap-3 justify-center items-center w-full">
-              <div className="font-normal tracking-widest text-black uppercase flex flex-col justify-center items-center text-center text-md">
+            <div className="flex w-full items-center justify-center gap-3">
+              <div className="text-md flex flex-col items-center justify-center text-center font-normal uppercase tracking-widest text-black">
                 Next NFT
-                <span className="font-medium text-xl">{title}</span>
+                <span className="text-xl font-medium">{title}</span>
               </div>
             </div>
           </div>
@@ -65,16 +64,16 @@ const CarouselItem = ({
     );
   if (!isConnected)
     return (
-      <div className="flex group justify-center items-center flex-col w-full rounded-md">
-        <div className="w-full min-h-full justify-center text-white items-center flex-col flex z-20 absolute rounded-md opacity-0 p-8 bg-primaryGreen group-hover:opacity-100">
-          <h3 className="font-medium tracking-widest text-center text-2xl pb-4">
+      <div className="group flex w-full flex-col items-center justify-center rounded-md">
+        <div className="absolute z-20 flex min-h-full w-full flex-col items-center justify-center rounded-md bg-primaryGreen p-8 text-white opacity-0 group-hover:opacity-100">
+          <h3 className="pb-4 text-center text-2xl font-medium tracking-widest">
             Buy your entry ticket
           </h3>
           <p className="pb-8 text-center">
             Sed ut perspiciatis unde omnis iste natus error sit voluptatem
             accusantium doloremque laudantium, totam
           </p>
-          <ConnectKitButton
+          {/* <ConnectKitButton
             label="CONNECT WALLET"
             customTheme={{
               "--ck-focus-color": "rgb(15, 85, 62)",
@@ -87,18 +86,18 @@ const CarouselItem = ({
               "--ck-connectbutton-border-radius": "6px",
               "--ck-connectbutton-box-shadow": "inset 0 0 0 1px rgb(20,116,84)",
             }}
-          />
+          /> */}
         </div>
 
         <div
           className={cn(
-            "flex w-full flex-col justify-center hover:text-white bg-contactBackground items-center min-h-[396px] rounded-md gap-3"
+            "flex min-h-[396px] w-full flex-col items-center justify-center gap-3 rounded-md bg-contactBackground hover:text-white"
           )}
         >
-          <div className="flex gap-3 justify-center items-center w-full">
-            <div className="font-normal tracking-widest text-black uppercase flex flex-col justify-center items-center text-center text-md">
+          <div className="flex w-full items-center justify-center gap-3">
+            <div className="text-md flex flex-col items-center justify-center text-center font-normal uppercase tracking-widest text-black">
               Next NFT
-              <span className="font-medium text-xl">{title}</span>
+              <span className="text-xl font-medium">{title}</span>
             </div>
           </div>
         </div>
@@ -173,11 +172,11 @@ const Carousel: FC<CarouselProps> = ({
   return (
     <div className={className ?? ""}>
       {title && (
-        <div className="self-start ml-[58px] pb-6 uppercase">{title ?? ""}</div>
+        <div className="ml-[58px] self-start pb-6 uppercase">{title ?? ""}</div>
       )}
-      <div className="relative max-w-[1338px] overflow-hidden flex items-center">
+      <div className="relative flex max-w-[1338px] items-center overflow-hidden">
         <div
-          className={`flex  absolute items-center justify-center left-0 z-20 swiper-prev-${id}`}
+          className={`absolute  left-0 z-20 flex items-center justify-center swiper-prev-${id}`}
         >
           <Image
             src={
@@ -196,10 +195,10 @@ const Carousel: FC<CarouselProps> = ({
         </div>
         <section
           className={cn(
-            " ml-[58px] z-10  relative items-center flex flex-col w-full"
+            " relative z-10  ml-[58px] flex w-full flex-col items-center"
           )}
         >
-          <div className="flex relative z-10 w-1/2 swiper-wrapper ">
+          <div className="swiper-wrapper relative z-10 flex w-1/2 ">
             <Swiper
               modules={[Navigation, A11y]}
               className="swiper w-full"
@@ -236,7 +235,7 @@ const Carousel: FC<CarouselProps> = ({
           </div>
         </section>
         <div
-          className={`flex bg-gradient-to-r from-transparent to-black h-full absolute items-center right-0 pr-10 z-20 swiper-next-${id}`}
+          className={`absolute right-0 z-20 flex h-full items-center bg-gradient-to-r from-transparent to-black pr-10 swiper-next-${id}`}
         >
           <Image
             src="/icons/pagination-next.svg"

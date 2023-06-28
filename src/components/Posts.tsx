@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FC } from "react";
-import { PostItemProps, PostProps } from "../@types/post";
+import { type FC } from "react";
+import { type PostItemProps, type PostProps } from "../@types/post";
 import { cn } from "../lib/utils";
-import DOMPurify from "dompurify";
+import DOMPurify from "isomorphic-dompurify";
 
 const PostItem: FC<PostItemProps> = ({
   image,
@@ -17,7 +17,7 @@ const PostItem: FC<PostItemProps> = ({
   });
 
   return (
-    <div className="flex flex-col gap-6 relative">
+    <div className="relative flex flex-col gap-6">
       <Image
         className="rounded-md"
         src={image.url}
@@ -32,10 +32,11 @@ const PostItem: FC<PostItemProps> = ({
         className="text-white"
         dangerouslySetInnerHTML={purifiedChildren()}
       ></div>
-      <Link href={`/learn/${slug}`}>
-        <a className="text-primaryGreen text-center uppercase border-b-2 text-xs border-b-primaryGreen py-1 self-start">
-          Know more
-        </a>
+      <Link
+        href={`/learn/${slug}`}
+        className="self-start border-b-2 border-b-primaryGreen py-1 text-center text-xs uppercase text-primaryGreen"
+      >
+        Know more
       </Link>
       <a
         href={`/learn/${slug}`}
@@ -61,12 +62,12 @@ const Posts: FC<PostProps> = ({
   return (
     <section
       className={cn(
-        "mx-auto flex flex-col w-full max-w-screen-lg justify-center",
+        "mx-auto flex w-full max-w-screen-lg flex-col justify-center",
         className,
         contentPadding ? "px-24" : ""
       )}
     >
-      <div className="flex pb-[52px] w-full items-center relative justify-between">
+      <div className="relative flex w-full items-center justify-between pb-[52px]">
         <h3
           className={cn(
             "flex-1  text-2xl uppercase",
@@ -76,15 +77,16 @@ const Posts: FC<PostProps> = ({
         >
           {title}
           {buttonMoreLink && buttonMoreText && (
-            <Link href={buttonMoreLink}>
-              <a className="uppercase  hover:text-black hover:bg-white border-2 py-1 px-10 text-sm absolute right-0 rounded-md text-white">
-                {buttonMoreText}
-              </a>
+            <Link
+              href={buttonMoreLink}
+              className="absolute  right-0 rounded-md border-2 px-10 py-1 text-sm uppercase text-white hover:bg-white hover:text-black"
+            >
+              {buttonMoreText}
             </Link>
           )}
         </h3>
       </div>
-      <div className="grid grid-cols-3 gap-6 w-full justify-between">
+      <div className="grid w-full grid-cols-3 justify-between gap-6">
         {posts &&
           posts.map((post) => (
             <PostItem

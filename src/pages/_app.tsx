@@ -2,22 +2,35 @@ import "../styles/globals.css";
 import type { AppType } from "next/dist/shared/lib/utils";
 import type { AppProps } from "next/app";
 import Layout from "../components/Layout";
-import { WagmiConfig, createClient, mainnet } from "wagmi";
+import { WagmiConfig, configureChains, createClient, mainnet } from "wagmi";
 import { goerli, hardhat } from "wagmi/chains";
 import { ConnectKitProvider, getDefaultClient } from "connectkit";
 import { useEffect, useState } from "react";
+import { SessionProvider } from "next-auth/react";
+import { type Session } from "next-auth";
+import { api } from "~/utils/api";
+import { publicProvider } from "wagmi/providers/public";
 
 const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY;
 
-const client = createClient(
-  getDefaultClient({
-    appName: "Something Legendary",
-    alchemyId,
-    chains: [mainnet, goerli, hardhat],
-  })
+const { provider } = configureChains(
+  [mainnet, goerli, hardhat],
+  [
+    publicProvider(),
+    // alchemyProvider({ apiKey: process.env.ALCHEMY_API_KEY as string }),
+  ]
 );
 
-const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
+const client = createClient({
+  autoConnect: true,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  provider,
+});
+
+const MyApp: AppType<{ session: Session | null }> = ({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) => {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -25,12 +38,15 @@ const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
   }, []);
 
   return (
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     <WagmiConfig client={client}>
-      <ConnectKitProvider>
+      <SessionProvider session={session}>
+        {/* <ConnectKitProvider> */}
         <Layout>{isMounted && <Component {...pageProps} />}</Layout>
-      </ConnectKitProvider>
+        {/* </ConnectKitProvider> */}
+      </SessionProvider>
     </WagmiConfig>
   );
 };
 
-export default MyApp;
+export default api.withTRPC(MyApp);

@@ -1,119 +1,247 @@
-import React, { useState } from "react";
-import Link from "next/link";
+import { getCsrfToken, signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { SiweMessage } from "siwe";
+import {
+  useAccount,
+  useConnect,
+  useDisconnect,
+  useNetwork,
+  useSignMessage,
+} from "wagmi";
+import { InjectedConnector } from "wagmi/connectors/injected";
 import logoBlack from "../../public/logo-black.svg";
 import logoWhite from "../../public/logo-white.svg";
-import ProfileMenu from "./ProfileMenu";
-import { ChainIcon, ConnectKitButton } from "connectkit";
-import { useAccount, useNetwork } from "wagmi";
-import { disconnect } from "@wagmi/core";
 import { cn } from "../lib/utils";
 
-interface MenuItemProps {
-  link: string;
-  text: string;
-}
-
 const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
-  const { isConnected, isConnecting, isDisconnected } = useAccount();
-
+  const { address, isConnected, isConnecting, isDisconnected } = useAccount();
+  const { connect } = useConnect({
+    connector: new InjectedConnector(),
+  });
+  const { disconnect } = useDisconnect();
+  const { chain } = useNetwork();
   const [navbar, setNavbar] = useState(false);
-  const menuItems: MenuItemProps[] = [
-    {
-      link: "/#investments",
-      text: "MyInvestments",
-    },
-    {
-      link: "/#puzzle",
-      text: "Puzzle",
-    },
-    {
-      link: "/faq",
-      text: "FAQ",
-    },
-  ];
+  const { signMessageAsync } = useSignMessage();
+  const { data: sessionData } = useSession();
+
+  // State
+  const [showConnection, setShowConnection] = useState(false);
+
+  // Functions
+  /**
+   * Attempts SIWE and establish session
+   */
+  const onClickSignIn = async () => {
+    try {
+      const message = new SiweMessage({
+        domain: window.location.host,
+        address: address,
+        statement: "Sign in with Ethereum to the app.",
+        uri: window.location.origin,
+        version: "1",
+        chainId: chain?.id,
+        // nonce is used from CSRF token
+        nonce: await getCsrfToken(),
+      });
+      const signature = await signMessageAsync({
+        message: message.prepareMessage(),
+      });
+      await signIn("credentials", {
+        message: JSON.stringify(message),
+        redirect: false,
+        signature,
+      });
+    } catch (error) {
+      window.alert(error);
+    }
+  };
+
+  /**
+   * Sign user out
+   */
+  const onClickSignOut = async () => {
+    await signOut();
+  };
+
+  /**
+   * Handles hydration issue
+   * only show after the window has finished loading
+   */
+  useEffect(() => {
+    setShowConnection(true);
+  }, []);
 
   return (
     <>
-      <nav className="md:flex max-w-screen-lg relative z-20 hidden justify-between w-full mx-auto lg:px-0 shrink-0 py-6">
+      <nav className="relative z-20 mx-auto hidden w-full max-w-screen-lg shrink-0 justify-between py-6 md:flex lg:px-0">
         <Link href="/">
-          <a>
-            <Image
-              src={bgWhite ? logoBlack : logoWhite}
-              alt="Something Legendary logo"
-            />
-          </a>
+          <Image
+            src={bgWhite ? logoBlack : logoWhite}
+            alt="Something Legendary logo"
+          />
         </Link>
-        <div className="flex justify-center gap-6 items-center">
-          {isConnected && (
-            <>
-              <Link href="/my-investments">
-                <a className={bgWhite ? "text-black" : "text-white"}>
-                  my Investments
-                </a>
-              </Link>
-              <Link href="/#investments">
-                <a className=" text-white">
-                  <Image
-                    src={
-                      bgWhite
-                        ? "/icons/notification-grey.svg"
-                        : "/icons/notification-white.svg"
-                    }
-                    width={16}
-                    height={19}
-                    alt="Alert"
-                  />
-                </a>
-              </Link>
-              <ProfileMenu bgWhite={bgWhite} logout={disconnect} />
-              <Link href="#">
-                <a className="py-2" onClick={disconnect}>
+        <div className="flex items-center justify-center gap-6">
+          <div className="flex items-center justify-center gap-4">
+            {sessionData ? (
+              <div className="flex text-center">
+                <div className="flex">
+                  {/* {sessionData?.user?.id ? (
+                      <Image
+                        width={"80"}
+                        height={"80"}
+                        alt={`${sessionData.user.id}`}
+                        className="mx-auto my-4 border-8 border-white/30"
+                        src={`${renderDataURI({
+                          seed: sessionData.user.id,
+                          size: 10,
+                          scale: 8,
+                        })}`}
+                      />
+                    ) : null} */}
+                  {/* <code className="block rounded bg-black/20 p-4 text-white">
+                    {JSON.stringify(sessionData)}
+                  </code> */}
+                  <Link
+                    className={bgWhite ? "text-black" : "text-white"}
+                    href="/my-investments"
+                  >
+                    my Investments
+                  </Link>
+                  <Link className="w-full text-white" href="/#investments">
+                    <Image
+                      src={
+                        bgWhite
+                          ? "/icons/notification-grey.svg"
+                          : "/icons/notification-white.svg"
+                      }
+                      width={16}
+                      height={19}
+                      alt="Alert"
+                    />
+                  </Link>
+                  <div
+                    className={cn(
+                      "flex w-full items-center justify-center gap-3 rounded-full border-2 bg-black bg-opacity-0 p-1 hover:bg-opacity-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75",
+                      bgWhite ? "border-primaryGrey" : "border-white"
+                    )}
+                  >
+                    <Image
+                      src={
+                        bgWhite ? "/icons/avatar-grey.svg" : "/icons/avatar.svg"
+                      }
+                      width={27}
+                      height={27}
+                      alt="Profile icon"
+                    />
+                    <span
+                      className={cn(
+                        " text-xs",
+                        bgWhite ? "text-secondaryGrey" : "text-white"
+                      )}
+                    >
+                      {sessionData.user.id.slice(0, 10)}
+                    </span>
+                  </div>
+                  {/* Sign Out */}
+                  <button
+                    className="w-full rounded-full bg-red-200/50 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+                    onClick={onClickSignOut as () => void}
+                  >
+                    <Image
+                      src={
+                        bgWhite
+                          ? "/icons/logout-black.svg"
+                          : "/icons/logout.svg"
+                      }
+                      alt="Sign Out"
+                      width={20}
+                      height={18}
+                    />
+                  </button>
+                </div>
+              </div>
+            ) : showConnection ? (
+              <div className="">
+                {isConnected ? (
+                  <button
+                    className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+                    onClick={onClickSignIn as () => void}
+                  >
+                    Sign In
+                  </button>
+                ) : null}
+              </div>
+            ) : null}
+            {showConnection && isConnected && (
+              <div className="text-center">
+                {/* {address ? (
+                  <p className="mb-4">
+                    <code className="block rounded bg-black/20 p-4 text-white">
+                      {address}
+                    </code>
+                  </p>
+                ) : null} */}
+                <button
+                  className={cn(
+                    "w-full rounded-full  px-10 py-3 font-semibold text-white no-underline transition",
+
+                    "bg-red-400/50 hover:bg-red-400"
+                  )}
+                  onClick={() => disconnect()}
+                >
                   <Image
                     src={
                       bgWhite ? "/icons/logout-black.svg" : "/icons/logout.svg"
                     }
-                    alt="Logout"
+                    alt="Log Out"
                     width={20}
                     height={18}
                   />
-                </a>
-              </Link>
-            </>
-          )}
+                </button>
+              </div>
+            )}
+          </div>
+
           {!isConnected && (
-            <ConnectKitButton
-              customTheme={{
-                "--ck-connectbutton-color": "rgba(0, 0, 0)",
-                "--ck-connectbutton-background": "rgb(255,255,255)",
-                "--ck-connectbutton-hover-background": "rgb(230,230,230)",
-                "--ck-connectbutton-hover-color": "rgba(0,0,0,0.8)",
-              }}
-            />
+            <button
+              className="rounded-full bg-white/20 px-10 py-3 font-semibold text-slate-800 no-underline transition hover:bg-white/30"
+              onClick={() => connect()}
+            >
+              Connect Wallet
+            </button>
           )}
+
+          {/* <ConnectKitButton
+               customTheme={{
+                 "--ck-connectbutton-color": "rgba(0, 0, 0)",
+                 "--ck-connectbutton-background": "rgb(255,255,255)",
+                 "--ck-connectbutton-hover-background": "rgb(230,230,230)",
+                 "--ck-connectbutton-hover-color": "rgba(0,0,0,0.8)",
+               }}
+             /> */}
         </div>
       </nav>
-      <nav className="bg-white shadow-sm flex fixed w-full z-20 md:hidden  drop-shadow-md px-3 py-0 items-center justify-around">
-        <div className="justify-between px-4 w-full md:items-center md:flex md:px-8 ">
+      <nav className="fixed z-20 flex w-full items-center justify-around bg-white  px-3 py-0 shadow-sm drop-shadow-md md:hidden">
+        <div className="w-full justify-between px-4 md:flex md:items-center md:px-8 ">
           <div>
-            <div className="flex items-center justify-between py-3 md:py-2 md:block w-full">
+            <div className="flex w-full items-center justify-between py-3 md:block md:py-2">
               <Link href="/">
-                <a>
-                  <Image
-                    src={bgWhite ? logoBlack : logoWhite}
-                    alt="Something Legendary logo"
-                  />
-                </a>
+                <Image
+                  src={bgWhite ? logoBlack : logoWhite}
+                  alt="Something Legendary logo"
+                />
               </Link>
               <div className="md:hidden">
                 <button
-                  className="p-2 text-gray-700 rounded-md outline-none border border-transparent focus:border-gray-400 focus:border"
+                  className="rounded-md border border-transparent p-2 text-gray-700 outline-none focus:border focus:border-gray-400"
                   onClick={() => setNavbar(!navbar)}
                 >
                   {navbar ? (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="w-6 h-6"
+                      className="h-6 w-6"
                       viewBox="0 0 20 20"
                       fill="currentColor"
                     >
@@ -126,7 +254,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                   ) : (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="w-6 h-6"
+                      className="h-6 w-6"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -144,35 +272,36 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
             </div>
           </div>
           <div
-            className={`flex-1 justify-self-center pb-3 mt-8 md:block  md:pb-0 md:mt-0 ${
+            className={`mt-8 flex-1 justify-self-center pb-3 md:mt-0  md:block md:pb-0 ${
               navbar ? "block" : "hidden"
             }`}
           >
             <div className="items-center justify-items-end space-y-4 md:flex  md:space-x-6 md:space-y-0 ">
-              <Link href="/#investments">
+              <Link
+                onClick={() => setNavbar(false)}
+                className={cn("flex px-4 py-2", bgWhite ? "text-black" : "")}
+                href="/#investments"
+              >
+                Investments
+              </Link>
+              <Link
+                onClick={() => setNavbar(false)}
+                className="flex px-4 py-2"
+                href="/#puzzle"
+              >
+                Puzzle
+              </Link>
+              <Link href="/faq" legacyBehavior>
                 <a
                   onClick={() => setNavbar(false)}
-                  className={cn("flex px-4 py-2", bgWhite ? "text-black" : "")}
-                >
-                  Investments
-                </a>
-              </Link>
-              <Link href="/#puzzle">
-                <a onClick={() => setNavbar(false)} className="flex px-4 py-2">
-                  Puzzle
-                </a>
-              </Link>
-              <Link href="/faq">
-                <a
-                  onClick={() => setNavbar(false)}
-                  className="flex px-4 py-2 pb-4 border-b border-gray-200"
+                  className="flex border-b border-gray-200 px-4 py-2 pb-4"
                 >
                   FAQ
                 </a>
               </Link>
               {isConnected && (
                 <>
-                  <Link className="flex " href="/profile">
+                  {/* <Link className="flex " href="/profile">
                     <a
                       onClick={() => setNavbar(false)}
                       className="flex w-fit px-4 py-2"
@@ -195,10 +324,10 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                     >
                       My Puzzle
                     </a>
-                  </Link>
-                  <Link className="flex " href="#connect">
+                  </Link> */}
+                  <Link className="flex " href="#connect" legacyBehavior>
                     <a
-                      className="flex w-fit px-4 py-2 border rounded-md bg-slate-800 text-slate-50"
+                      className="flex w-fit rounded-md border bg-slate-800 px-4 py-2 text-slate-50"
                       onClick={disconnect}
                     >
                       Disconnect Wallet
@@ -206,7 +335,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                   </Link>
                 </>
               )}
-              {!isConnected && <ConnectKitButton />}
+              {/* {!isConnected && <ConnectKitButton />} */}
             </div>
           </div>
         </div>

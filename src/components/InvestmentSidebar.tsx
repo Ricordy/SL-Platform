@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { FiExternalLink } from "react-icons/fi";
 import Link from "next/link";
 import { useState } from "react";
-import { Address, useContract, useSigner } from "wagmi";
+import { type Address, useContract, useSigner } from "wagmi";
 import { ethers } from "ethers";
 import useDebounce from "../hooks/useDebounce";
 import toast from "react-hot-toast";
@@ -152,9 +152,9 @@ export const InvestmentSidebar = ({
           <div
             className={`${
               t.visible ? "animate-enter" : "animate-leave"
-            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            } pointer-events-auto flex w-full max-w-md rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5`}
           >
-            <div className="flex-1 w-0 p-4">
+            <div className="w-0 flex-1 p-4">
               <div className="flex items-start">
                 <div className="flex-shrink-0 pt-0.5">
                   <img
@@ -176,7 +176,7 @@ export const InvestmentSidebar = ({
             <div className="flex border-l border-gray-200">
               <button
                 onClick={() => toast.dismiss(t.id)}
-                className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="flex w-full items-center justify-center rounded-none rounded-r-lg border border-transparent p-4 text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 Close
               </button>
@@ -253,9 +253,9 @@ export const InvestmentSidebar = ({
         toggle={toggleModalEntryNFT}
         title="Buy an Entry NFT"
       >
-        <div className="flex justify-between w-full">
+        <div className="flex w-full justify-between">
           <div className="mt-2">You don&apos;t have an Entry NFT yet.</div>
-          <Link href="/mint-entry-nft" passHref>
+          <Link href="/mint-entry-nft" passHref legacyBehavior>
             <a className="inline-flex justify-center rounded-md border border-transparent bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2">
               Buy Now
             </a>
@@ -273,7 +273,7 @@ export const InvestmentSidebar = ({
         toggleBlur={toggleBlurModalInvest}
         title="Make an Investment"
       >
-        <div className="flex gap-6 justify-center">
+        <div className="flex justify-center gap-6">
           <div className="mt-2">
             <div className="text-sm text-gray-500">Token Balance</div>
             <div className="text-md">
@@ -315,7 +315,7 @@ export const InvestmentSidebar = ({
           </div>
           <div className="mt-4 flex flex-col gap-3">
             <input
-              className="border p-2 rounded-md"
+              className="rounded-md border p-2"
               onChange={handleChange}
               type="number"
               name=""
@@ -346,7 +346,7 @@ export const InvestmentSidebar = ({
       <aside className={className}>
         <div className="sticky top-0">
           <div className="flex flex-col align-middle">
-            <h4 className="font-bold pb-3">{title}</h4>
+            <h4 className="pb-3 font-bold">{title}</h4>
             <div className="pb-3">
               <div className="text-xs text-slate-700">Chassis Nr:</div>
               <div className="text">{chassis}</div>
@@ -368,9 +368,9 @@ export const InvestmentSidebar = ({
           </div>
           <div className="pb-6">
             <h3 className="text-xs text-slate-700">Contract address:</h3>
-            <Link href="#">
+            <Link href="#" legacyBehavior>
               <a
-                className="flex align-middle gap-2"
+                className="flex gap-2 align-middle"
                 onClick={() =>
                   window.open(
                     "https://goerli.etherscan.io/address/" +
@@ -383,10 +383,11 @@ export const InvestmentSidebar = ({
               </a>
             </Link>
           </div>
-          <Link href="/mercedes-benz">
-            <a className="flex gap-2 border p-2 rounded-md justify-center mb-6 align-middle">
-              More info <FiExternalLink />
-            </a>
+          <Link
+            className="mb-6 flex justify-center gap-2 rounded-md border p-2 align-middle"
+            href="/mercedes-benz"
+          >
+            More info <FiExternalLink />
           </Link>
           <button
             onClick={() => {
@@ -396,7 +397,7 @@ export const InvestmentSidebar = ({
                 toggleModalEntryNFT();
               }
             }}
-            className="w-full border rounded-md p-2 bg-slate-800 text-slate-50"
+            className="w-full rounded-md border bg-slate-800 p-2 text-slate-50"
           >
             Invest Now
           </button>

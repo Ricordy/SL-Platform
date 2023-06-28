@@ -1,27 +1,24 @@
-import type { GetServerSideProps, NextPage } from "next";
-import { useEffect, useState } from "react";
-import { Tab } from "@headlessui/react";
-import Link from "next/link";
-import { investmentData } from "../data/Investments";
-import {
-  Address,
-  useAccount,
-  useContract,
-  useContractRead,
-  useContractReads,
-  useSigner,
-} from "wagmi";
-import useCheckEntryNFT from "../hooks/useCheckEntryNFT";
-import { InvestAbi, FactoryAbi } from "../data/ABIs";
-import { classNames } from "../lib/utils";
-import { BigNumber } from "ethers";
-import NavBar from "../components/NavBar";
-import Image from "next/image";
-import { Button } from "../components/ui/Button";
-import Carousel, { CarouselItem, carouselItems } from "../components/Carousel";
-import ProjectCarousel from "../components/ProjectCarousel";
+import { BigNumber, utils } from "ethers";
 import { GraphQLClient, gql } from "graphql-request";
-import useGetAddressInvestmentinSingleCar from "../hooks/useGetAddressInvestmentinSingleCar";
+import type { GetServerSideProps, NextPage } from "next";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import {
+  useAccount,
+  useBalance,
+  useContractReads,
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction,
+  type Address,
+} from "wagmi";
+import Carousel from "../components/Carousel";
+import NavBar from "../components/NavBar";
+import ProjectCarousel from "../components/ProjectCarousel";
+import useCheckEntryNFT from "../hooks/useCheckEntryNFT";
 
 interface InvestmentBlockchainType {
   id: number;
@@ -116,7 +113,7 @@ export const TransactionItem = (items, userInvestedContracts) => {
           />
           <span>{item.investment.basicInvestment.car.basicInfo.title}</span>
           <span>{item.amountInvested}</span>
-          <span className="text-primaryGold text-xs">
+          <span className="text-xs text-primaryGold">
             {userInvestedContracts[item.investment.address]}
           </span>
           <span>{item.date}</span>
@@ -137,6 +134,1001 @@ export const TransactionItem = (items, userInvestedContracts) => {
 };
 
 const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
+  const { data: sessionData } = useSession();
+  const { isConnected } = useAccount();
+  const entryNFTPrice = utils.parseUnits("100", 6);
+
+  // ABIs
+  const paymentTokenABI = [
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "spender",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "amount",
+          type: "uint256",
+        },
+      ],
+      name: "approve",
+      outputs: [
+        {
+          internalType: "bool",
+          name: "",
+          type: "bool",
+        },
+      ],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "account",
+          type: "address",
+        },
+      ],
+      name: "balanceOf",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "amount",
+          type: "uint256",
+        },
+      ],
+      name: "mint",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    ,
+  ] as const;
+
+  const slcoreABI = [
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "_factoryAddress",
+          type: "address",
+        },
+        {
+          internalType: "address",
+          name: "_slLogicsAddress",
+          type: "address",
+        },
+      ],
+      stateMutability: "nonpayable",
+      type: "constructor",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "address",
+          name: "account",
+          type: "address",
+        },
+        {
+          indexed: true,
+          internalType: "address",
+          name: "operator",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "bool",
+          name: "approved",
+          type: "bool",
+        },
+      ],
+      name: "ApprovalForAll",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: false,
+          internalType: "address",
+          name: "newContract",
+          type: "address",
+        },
+      ],
+      name: "ContractUpgrade",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "address",
+          name: "claimer",
+          type: "address",
+        },
+        {
+          indexed: true,
+          internalType: "uint256",
+          name: "tokenId",
+          type: "uint256",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "quantity",
+          type: "uint256",
+        },
+      ],
+      name: "TokensClaimed",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "address",
+          name: "operator",
+          type: "address",
+        },
+        {
+          indexed: true,
+          internalType: "address",
+          name: "from",
+          type: "address",
+        },
+        {
+          indexed: true,
+          internalType: "address",
+          name: "to",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "uint256[]",
+          name: "ids",
+          type: "uint256[]",
+        },
+        {
+          indexed: false,
+          internalType: "uint256[]",
+          name: "values",
+          type: "uint256[]",
+        },
+      ],
+      name: "TransferBatch",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "address",
+          name: "operator",
+          type: "address",
+        },
+        {
+          indexed: true,
+          internalType: "address",
+          name: "from",
+          type: "address",
+        },
+        {
+          indexed: true,
+          internalType: "address",
+          name: "to",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "id",
+          type: "uint256",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "value",
+          type: "uint256",
+        },
+      ],
+      name: "TransferSingle",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: false,
+          internalType: "string",
+          name: "value",
+          type: "string",
+        },
+        {
+          indexed: true,
+          internalType: "uint256",
+          name: "id",
+          type: "uint256",
+        },
+      ],
+      name: "URI",
+      type: "event",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "level",
+          type: "uint256",
+        },
+      ],
+      name: "_getPuzzleCollectionIds",
+      outputs: [
+        {
+          internalType: "uint256[]",
+          name: "",
+          type: "uint256[]",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "_random",
+      outputs: [
+        {
+          internalType: "uint8",
+          name: "",
+          type: "uint8",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "user",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "_tokenId",
+          type: "uint256",
+        },
+      ],
+      name: "_userAllowedToBurnPuzzle",
+      outputs: [],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "",
+          type: "address",
+        },
+      ],
+      name: "allowedContracts",
+      outputs: [
+        {
+          internalType: "bool",
+          name: "",
+          type: "bool",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "account",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "id",
+          type: "uint256",
+        },
+      ],
+      name: "balanceOf",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address[]",
+          name: "accounts",
+          type: "address[]",
+        },
+        {
+          internalType: "uint256[]",
+          name: "ids",
+          type: "uint256[]",
+        },
+      ],
+      name: "balanceOfBatch",
+      outputs: [
+        {
+          internalType: "uint256[]",
+          name: "",
+          type: "uint256[]",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "ceoAddress",
+      outputs: [
+        {
+          internalType: "address",
+          name: "",
+          type: "address",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "cfoAddress",
+      outputs: [
+        {
+          internalType: "address",
+          name: "",
+          type: "address",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "number",
+          type: "uint256",
+        },
+        {
+          internalType: "uint32",
+          name: "position",
+          type: "uint32",
+        },
+        {
+          internalType: "uint256",
+          name: "newNumber",
+          type: "uint256",
+        },
+      ],
+      name: "changetXPositionInFactor5",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "_final",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "claimLevel",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "claimPiece",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "factoryAddress",
+      outputs: [
+        {
+          internalType: "address",
+          name: "",
+          type: "address",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "_cap",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "_entryPrice",
+          type: "uint256",
+        },
+        {
+          internalType: "string",
+          name: "_tokenUri",
+          type: "string",
+        },
+      ],
+      name: "generateNewEntryBatch",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "getCurrentEntryBatchRemainingTokens",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "number",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "startPosition",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "numberOfResults",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "factor",
+          type: "uint256",
+        },
+      ],
+      name: "getMultiplePositionsXInDivisionByY",
+      outputs: [
+        {
+          internalType: "uint256[]",
+          name: "",
+          type: "uint256[]",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "number",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "position",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "factor",
+          type: "uint256",
+        },
+      ],
+      name: "getPositionXInDivisionByY",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "_user",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "level",
+          type: "uint256",
+        },
+      ],
+      name: "getUserPuzzlePiecesForUserCurrentLevel",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint32",
+          name: "number",
+          type: "uint32",
+        },
+        {
+          internalType: "uint32",
+          name: "position",
+          type: "uint32",
+        },
+      ],
+      name: "incrementXPositionInFactor3",
+      outputs: [
+        {
+          internalType: "uint32",
+          name: "_final",
+          type: "uint32",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "account",
+          type: "address",
+        },
+        {
+          internalType: "address",
+          name: "operator",
+          type: "address",
+        },
+      ],
+      name: "isApprovedForAll",
+      outputs: [
+        {
+          internalType: "bool",
+          name: "",
+          type: "bool",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "mintEntry",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "level",
+          type: "uint256",
+        },
+      ],
+      name: "mintTest",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "batch",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "cap",
+          type: "uint256",
+        },
+      ],
+      name: "mountEntryID",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "cap",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "currentID",
+          type: "uint256",
+        },
+      ],
+      name: "mountEntryValue",
+      outputs: [
+        {
+          internalType: "uint24",
+          name: "",
+          type: "uint24",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "pause",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "pauseEntryMint",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "paused",
+      outputs: [
+        {
+          internalType: "bool",
+          name: "",
+          type: "bool",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "pausedEntryMint",
+      outputs: [
+        {
+          internalType: "bool",
+          name: "",
+          type: "bool",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "from",
+          type: "address",
+        },
+        {
+          internalType: "address",
+          name: "to",
+          type: "address",
+        },
+        {
+          internalType: "uint256[]",
+          name: "ids",
+          type: "uint256[]",
+        },
+        {
+          internalType: "uint256[]",
+          name: "amounts",
+          type: "uint256[]",
+        },
+        {
+          internalType: "bytes",
+          name: "data",
+          type: "bytes",
+        },
+      ],
+      name: "safeBatchTransferFrom",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "from",
+          type: "address",
+        },
+        {
+          internalType: "address",
+          name: "to",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "id",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "amount",
+          type: "uint256",
+        },
+        {
+          internalType: "bytes",
+          name: "data",
+          type: "bytes",
+        },
+      ],
+      name: "safeTransferFrom",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "_contractAddress",
+          type: "address",
+        },
+        {
+          internalType: "bool",
+          name: "_allowed",
+          type: "bool",
+        },
+      ],
+      name: "setAllowedContracts",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "operator",
+          type: "address",
+        },
+        {
+          internalType: "bool",
+          name: "approved",
+          type: "bool",
+        },
+      ],
+      name: "setApprovalForAll",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "_newCEO",
+          type: "address",
+        },
+      ],
+      name: "setCEO",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "_newCFO",
+          type: "address",
+        },
+      ],
+      name: "setCFO",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "slLogicsAddress",
+      outputs: [
+        {
+          internalType: "address",
+          name: "",
+          type: "address",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "bytes4",
+          name: "interfaceId",
+          type: "bytes4",
+        },
+      ],
+      name: "supportsInterface",
+      outputs: [
+        {
+          internalType: "bool",
+          name: "",
+          type: "bool",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "id",
+          type: "uint256",
+        },
+      ],
+      name: "unmountEntryID",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "batch",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "cap",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint24",
+          name: "value",
+          type: "uint24",
+        },
+      ],
+      name: "unmountEntryValue",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "cap",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "currentID",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "unpause",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "unpauseEntryMint",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "_tokenId",
+          type: "uint256",
+        },
+      ],
+      name: "uri",
+      outputs: [
+        {
+          internalType: "string",
+          name: "",
+          type: "string",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "_claimer",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "_tokenIdOrPuzzleLevel",
+          type: "uint256",
+        },
+      ],
+      name: "verifyClaim",
+      outputs: [],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "user",
+          type: "address",
+        },
+      ],
+      name: "whichLevelUserHas",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+  ] as const;
   const FactoryABI = [
     {
       inputs: [],
@@ -395,7 +1387,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     abi: FactoryABI,
   };
 
-  let { data }: { data: BigNumber } = useContractReads({
+  const { data }: { data: BigNumber } = useContractReads({
     contracts: [
       {
         ...SlFactoryContract,
@@ -430,7 +1422,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     },
   });
 
-  let { data: contractsTotalSupply }: { data: BigNumber } = useContractReads({
+  const { data: contractsTotalSupply }: { data: BigNumber } = useContractReads({
     contracts: [
       {
         ...SlFactoryContract,
@@ -497,7 +1489,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     return userTransactions;
   };
 
-  console.log("user transactions>>", props.userTransactions);
+  // console.log("user transactions>>", props.userTransactions);
   const userInvestedContracts = [];
   props.userTransactions.map((transaction) => {
     if (userInvestedContracts[transaction.to]) {
@@ -506,8 +1498,112 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       userInvestedContracts[transaction.to] = transaction.amountInvested;
     }
   });
-  console.log("userInvestedContracts", userInvestedContracts);
+  // console.log("userInvestedContracts", userInvestedContracts);
   // setUserContracts(userInvestedContracts);
+
+  // Approve spend payment token
+  const {
+    config: configApproveToken,
+    isLoading: isLoadingPrepareApprove,
+    refetch: refecthPrepareApprove,
+  } = usePrepareContractWrite({
+    address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
+    abi: paymentTokenABI,
+    functionName: "approve",
+    args: [
+      process.env.NEXT_PUBLIC_SLLOGIC_ADDRESS as Address,
+      utils.parseUnits("100", 6),
+    ],
+    enabled: false,
+    onError(err) {
+      console.log("configApprove", err.message);
+
+      // toast.error(err.message);
+    },
+    // onSuccess() {
+    //   toast.success("Approved!");
+    // },
+  });
+
+  const {
+    data: approveData,
+    write: approve,
+    isLoading: isLoadingApprove,
+    error: errorApprove,
+    isError: isErrorApprove,
+    isSuccess: isSuccessApprove,
+  } = useContractWrite(configApproveToken);
+
+  const { config: mintEntryNFTConfig, refetch: mintEntryNFTRefetch } =
+    usePrepareContractWrite({
+      address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
+      abi: slcoreABI,
+      functionName: "mintEntry",
+      enabled: false,
+      // onError(err) {
+      //toast.error(JSON.stringify(err));
+      // console.log("mintEntry", err.data.message);
+      // },
+      // onSuccess() {
+      // console.log("Allowed to mintEntryNFT");
+      // },
+    });
+
+  const { data: dataMintNFT, write: mintNFT } =
+    useContractWrite(mintEntryNFTConfig);
+
+  const { isLoading: isLoadingMintNFT, isSuccess: isSuccessMintNFT } =
+    useWaitForTransaction({
+      hash: dataMintNFT?.hash,
+      onSuccess: () => {
+        // setUserMinted(true);
+        toast.success("Minted NFT!");
+      },
+    });
+
+  // Check user Payment Token balance
+  const { data: userPaymentTokenBalance } = useBalance({
+    token: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
+    address: sessionData?.user.id as Address,
+    // address: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    watch: true,
+    enabled: isConnected,
+    chainId: 31337,
+  });
+  const myMint = async () => {
+    console.log(userPaymentTokenBalance);
+
+    try {
+      if (
+        userPaymentTokenBalance &&
+        userPaymentTokenBalance.value < entryNFTPrice
+      ) {
+        toast.error("You don't have enough balance!");
+        return;
+      }
+      const result = await mintEntryNFTRefetch();
+      if (result.error && result.error.stack) {
+        if (
+          result.error.stack.indexOf("ERC20: transfer amount exceeds balance") >
+          -1
+        ) {
+          return toast.error("You don't have enough balance");
+        }
+        if (
+          result.error.stack.indexOf("SLCore: User have an entry token") > -1
+        ) {
+          return toast.error("You already minted the NFT!");
+        }
+        if (result.error.stack.indexOf("ERC20: insufficient allowance") > -1) {
+          await refecthPrepareApprove();
+          approve?.();
+        }
+      }
+      mintNFT?.();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     // console.log(getUserTransactions(address));
@@ -582,17 +1678,17 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
 
   if (!hasEntryNFTLoading && !hasEntryNFT)
     return (
-      <div className="flex flex-col min-h-screen mx-auto w-full">
+      <div className="mx-auto flex min-h-screen w-full flex-col">
         <NavBar />
-        <div className="flex flex-col gap-[96px] pt-[52px] max-w-screen-lg w-full mx-auto">
-          <div className="grid grid-cols-2 w-full gap-4 items-start justify-center">
-            <div className="flex flex-col gap-8 w-[434px]">
-              <div className="flex flex-col rounded-xl  py-[72px] px-10 bg-white">
+        <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[96px] pt-[52px]">
+          <div className="grid w-full grid-cols-2 items-start justify-center gap-4">
+            <div className="flex w-[434px] flex-col gap-8">
+              <div className="flex flex-col rounded-xl  bg-white px-10 py-[72px]">
                 <div className="flex flex-col gap-[52px]">
-                  <h1 className="text-primaryGold text-5xl font-semibold uppercase">
+                  <h1 className="text-5xl font-semibold uppercase text-primaryGold">
                     Buy your
                     <br />
-                    <span className="text-black font-medium">Entry NFT!</span>
+                    <span className="font-medium text-black">Entry NFT!</span>
                   </h1>
                   <p className=" text-sm">
                     Sed ut perspiciatis unde omnis iste natus error sit
@@ -602,32 +1698,40 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                   </p>
                 </div>
               </div>
-              <Link href="/mint-entry-nft">
-                <a className="text-center rounded-xl py-1.5 uppercase font-medium px-3 bg-primaryGold text-white dark:text-white dark:bg-primaryGold">
-                  Buy it for 100$
-                </a>
+              <Link
+                href="/mint-entry-nft"
+                className="rounded-xl bg-primaryGold px-3 py-1.5 text-center font-medium uppercase text-white dark:bg-primaryGold dark:text-white"
+              >
+                Buy it for 100$
               </Link>
+              <button
+                className="inline-flex justify-center rounded-md border border-transparent bg-orange-800 px-4 py-2 text-sm font-medium text-slate-100 transition-colors hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:bg-slate-400"
+                disabled={!isConnected}
+                onClick={myMint as () => void}
+              >
+                {isLoadingMintNFT ? "Minting..." : "Mint NFT"}
+              </button>
             </div>
-            <div className="flex w-full h-full bg-center bg-contain bg-no-repeat relative bg-[url('/bg/bg-buy-entry-nft.jpg')]"></div>
+            <div className="relative flex h-full w-full bg-[url('/bg/bg-buy-entry-nft.jpg')] bg-contain bg-center bg-no-repeat"></div>
           </div>
           <div className="flex justify-center gap-12">
             <div className="flex flex-col">
               <span className="text-primaryGold">
                 Total Invested until now:
               </span>
-              <span className="font-semibold text-4xl text-white">
+              <span className="text-4xl font-semibold text-white">
                 $504.600
               </span>
             </div>
             <div className="flex flex-col">
               <span className="text-primaryGold">Return expected</span>
-              <span className="font-semibold text-4xl text-white">
+              <span className="text-4xl font-semibold text-white">
                 $504.600
               </span>
             </div>
             <div className="flex flex-col">
               <span className="text-primaryGold">NFTs sold until now:</span>
-              <span className="font-semibold text-4xl text-white">
+              <span className="text-4xl font-semibold text-white">
                 $504.600
               </span>
             </div>
@@ -637,26 +1741,26 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     );
 
   return (
-    <section className="w-full mx-auto bg-white">
-      <div className="flex flex-col w-full relative rounded-bl-[56px] ">
-        <div className="absolute rounded-bl-[56px] top-0 w-full bg-black h-[1092px]"></div>
+    <section className="mx-auto w-full bg-white">
+      <div className="relative flex w-full flex-col rounded-bl-[56px] ">
+        <div className="absolute top-0 h-[1092px] w-full rounded-bl-[56px] bg-black"></div>
         <NavBar />
-        <div className="flex flex-col justify-center w-full z-20 mx-auto max-w-screen-lg">
+        <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
           <div className="flex flex-col gap-4 pt-8">
-            <h3 className="text-white uppercase mb-8 text-3xl tracking-widest">
+            <h3 className="mb-8 text-3xl uppercase tracking-widest text-white">
               My Investments
             </h3>
-            <h2 className="mb-12 text-white text-5xl uppercase">
+            <h2 className="mb-12 text-5xl uppercase text-white">
               Welcome{" "}
-              <span className="text-primaryGold font-medium">Home, sir</span>
+              <span className="font-medium text-primaryGold">Home, sir</span>
             </h2>
-            <div className="grid grid-cols-2 auto-rows-[1fr] text-white gap-12">
+            <div className="grid auto-rows-[1fr] grid-cols-2 gap-12 text-white">
               <div className="flex flex-col  gap-4">
                 <span>Overview:</span>
                 {data && (
-                  <div className="flex flex-col flex-1 gap-8 bg-myInvestmentsBackground rounded-md py-8 px-12">
+                  <div className="flex flex-1 flex-col gap-8 rounded-md bg-myInvestmentsBackground px-12 py-8">
                     <div className="flex flex-col">
-                      <h5 className="text-primaryGold text-base">
+                      <h5 className="text-base text-primaryGold">
                         Total Invested (Connected to Blockchain)
                       </h5>
                       <span className="text-4xl font-semibold tracking-widest">
@@ -664,7 +1768,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                       </span>
                     </div>
                     <div className="flex flex-col">
-                      <h5 className="text-primaryGold text-base">
+                      <h5 className="text-base text-primaryGold">
                         Level 1 - Total Invested (Connected to Blockchain)
                       </h5>
                       <span className="text-4xl font-semibold tracking-widest">
@@ -672,7 +1776,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                       </span>
                     </div>
                     <div className="flex flex-col">
-                      <h5 className="text-primaryGold text-base">
+                      <h5 className="text-base text-primaryGold">
                         Level 2 - Total Invested (Connected to Blockchain)
                       </h5>
                       <span className="text-4xl font-semibold tracking-widest">
@@ -680,7 +1784,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                       </span>
                     </div>
                     <div className="flex flex-col">
-                      <h5 className="text-primaryGold text-base">
+                      <h5 className="text-base text-primaryGold">
                         Level 3 - Total Invested (Connected to Blockchain)
                       </h5>
                       <span className="text-4xl font-semibold tracking-widest">
@@ -692,7 +1796,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
               </div>
               <div className="flex flex-col gap-4">
                 <span>Last transactions:</span>
-                <div className="flex flex-col flex-1 gap-2 bg-myInvestmentsBackground rounded-md py-8 px-4">
+                <div className="flex flex-1 flex-col gap-2 rounded-md bg-myInvestmentsBackground px-4 py-8">
                   {JSON.stringify(userInvestedContracts)}
                   {userInvestedContracts && (
                     <TransactionItem
@@ -720,11 +1824,11 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
         </div>
       </div>
 
-      <div className="min-h-[500px] mt-[52px] relative z-20 left-1/2 -ml-[570px]  max-w-[1338px] mx-auto">
+      <div className="relative left-1/2 z-20 mx-auto -ml-[570px] mt-[52px]  min-h-[500px] max-w-[1338px]">
         <ProjectCarousel
           id="1"
           prevNavWhite={true}
-          title={<h2 className="text-white text-2xl">Active</h2>}
+          title={<h2 className="text-2xl text-white">Active</h2>}
           items={props.investments.filter(
             (investment) =>
               investment.basicInvestment.investmentStatus == "Active"
@@ -756,10 +1860,10 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
           )}
         />
       </div>
-      <div className="flex text-white bg-black relative pb-[128px] pt-[72px] z-20 rounded-t-[56px] mx-auto">
-        <div className="flex w-full max-w-screen-lg flex-col gap-[52px] mx-auto">
-          <h3 className="uppercase text-2xl">Our suggestion for you</h3>
-          <div className="flex gap-6 mx-auto max-w-screen-lg w-full">
+      <div className="relative z-20 mx-auto flex rounded-t-[56px] bg-black pb-[128px] pt-[72px] text-white">
+        <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[52px]">
+          <h3 className="text-2xl uppercase">Our suggestion for you</h3>
+          <div className="mx-auto flex w-full max-w-screen-lg gap-6">
             {/* {carouselItems.slice(0, 3).map((item, idx) => (
               <CarouselItem
                 key={idx}
