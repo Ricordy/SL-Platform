@@ -1,7 +1,21 @@
+import { Tab } from "@headlessui/react";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import { BigNumber } from "ethers";
+import { GraphQLClient, gql } from "graphql-request";
+import { type GetServerSideProps } from "next";
 import Head from "next/head";
-import { investmentData } from "../../../data/Investments";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { FiExternalLink } from "react-icons/fi";
+import Lightbox from "react-image-lightbox";
+import "react-image-lightbox/style.css";
+import { NumericFormat } from "react-number-format";
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import {
-  type Address,
   useAccount,
   useBalance,
   useContract,
@@ -9,35 +23,17 @@ import {
   useContractWrite,
   usePrepareContractWrite,
   useSigner,
+  type Address,
 } from "wagmi";
-import { type GetServerSideProps } from "next";
-import { InvestAbi, CoinTestAbi, FactoryAbi } from "../../../data/ABIs";
-import useCheckEntryNFT from "../../../hooks/useCheckEntryNFT";
-import NavBar from "../../../components/NavBar";
-import Image from "next/image";
-import ProgressBar from "../../../components/ui/ProgressBar";
-import { cn, formatAddress } from "../../../lib/utils";
-import Link from "next/link";
-import { FiExternalLink } from "react-icons/fi";
-import { Tab } from "@headlessui/react";
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import { ExternalLink } from "../../../components/ui/icons/External";
-import { Button } from "../../../components/ui/Button";
-import { NumericFormat } from "react-number-format";
 import { CarouselItem, carouselItems } from "../../../components/Carousel";
-import Modal from "../../../components/Modal";
-import useModal from "../../../hooks/useModal";
-import { useRef, useState } from "react";
-import toast from "react-hot-toast";
-import { BigNumber, ethers } from "ethers";
+import NavBar from "../../../components/NavBar";
 import { InvestmentModal } from "../../../components/modal/InvestmentModal";
-import { GraphQLClient, gql } from "graphql-request";
-import dayjs from "dayjs";
-import localizedFormat from "dayjs/plugin/localizedFormat";
+import { Button } from "../../../components/ui/Button";
+import ProgressBar from "../../../components/ui/ProgressBar";
+import { ExternalLink } from "../../../components/ui/icons/External";
 import { CONTRACT_STATUS_WITHDRAW } from "../../../constants";
-import Lightbox from "react-image-lightbox";
-import "react-image-lightbox/style.css";
+import { CoinTestAbi } from "../../../data/ABIs";
+import { cn, formatAddress } from "../../../lib/utils";
 
 dayjs.extend(localizedFormat);
 
@@ -1183,6 +1179,7 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                 <div className="flex flex-col gap-2 rounded-md border border-tabInactive py-2 pl-24">
                   <h4 className="text-ogBlack">Total Invested until now</h4>
                   <span className="text-3xl font-medium tracking-wider text-primaryGreen">
+                    {totalSupply?.toString()}
                     <NumericFormat
                       value={Number(totalSupply) / 10 ** 6}
                       displayType="text"

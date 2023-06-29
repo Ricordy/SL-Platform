@@ -75,7 +75,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
 
   return (
     <>
-      <nav className="relative z-20 mx-auto hidden w-full max-w-screen-lg shrink-0 justify-between py-6 md:flex lg:px-0">
+      <nav className="relative z-20 mx-auto hidden w-full max-w-screen-lg shrink-0 justify-between gap-12 py-6 md:flex lg:px-0">
         <Link href="/">
           <Image
             src={bgWhite ? logoBlack : logoWhite}
@@ -83,11 +83,10 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
           />
         </Link>
         <div className="flex items-center justify-center gap-6">
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex w-full  items-center justify-end gap-4">
             {sessionData ? (
-              <div className="flex text-center">
-                <div className="flex">
-                  {/* {sessionData?.user?.id ? (
+              <div className="flex w-full items-center justify-between gap-3">
+                {/* {sessionData?.user?.id ? (
                       <Image
                         width={"80"}
                         height={"80"}
@@ -100,54 +99,76 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                         })}`}
                       />
                     ) : null} */}
-                  {/* <code className="block rounded bg-black/20 p-4 text-white">
+                {/* <code className="block rounded bg-black/20 p-4 text-white">
                     {JSON.stringify(sessionData)}
                   </code> */}
-                  <Link
-                    className={bgWhite ? "text-black" : "text-white"}
-                    href="/my-investments"
-                  >
-                    my Investments
-                  </Link>
-                  <Link className="w-full text-white" href="/#investments">
-                    <Image
-                      src={
-                        bgWhite
-                          ? "/icons/notification-grey.svg"
-                          : "/icons/notification-white.svg"
-                      }
-                      width={16}
-                      height={19}
-                      alt="Alert"
-                    />
-                  </Link>
-                  <div
+                <Link
+                  className={cn(
+                    "w-44 text-center",
+                    bgWhite ? "text-black" : "text-white"
+                  )}
+                  href="/my-investments"
+                >
+                  my Investments
+                </Link>
+                <Link className="w-12 text-white" href="/#investments">
+                  <Image
+                    src={
+                      bgWhite
+                        ? "/icons/notification-grey.svg"
+                        : "/icons/notification-white.svg"
+                    }
+                    width={16}
+                    height={19}
+                    alt="Alert"
+                  />
+                </Link>
+                <div
+                  className={cn(
+                    "flex w-44 items-center justify-center gap-3 rounded-full border-2 bg-black bg-opacity-0 p-1 hover:bg-opacity-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75",
+                    bgWhite ? "border-primaryGrey" : "border-white"
+                  )}
+                >
+                  <Image
+                    src={
+                      bgWhite ? "/icons/avatar-grey.svg" : "/icons/avatar.svg"
+                    }
+                    width={27}
+                    height={27}
+                    alt="Profile icon"
+                  />
+                  <span
                     className={cn(
-                      "flex w-full items-center justify-center gap-3 rounded-full border-2 bg-black bg-opacity-0 p-1 hover:bg-opacity-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75",
-                      bgWhite ? "border-primaryGrey" : "border-white"
+                      " text-xs",
+                      bgWhite ? "text-secondaryGrey" : "text-white"
                     )}
                   >
-                    <Image
-                      src={
-                        bgWhite ? "/icons/avatar-grey.svg" : "/icons/avatar.svg"
-                      }
-                      width={27}
-                      height={27}
-                      alt="Profile icon"
-                    />
-                    <span
-                      className={cn(
-                        " text-xs",
-                        bgWhite ? "text-secondaryGrey" : "text-white"
-                      )}
-                    >
-                      {sessionData.user.id.slice(0, 10)}
-                    </span>
-                  </div>
-                  {/* Sign Out */}
+                    {sessionData.user.id.slice(0, 10)}
+                  </span>
+                </div>
+                {/* Sign Out */}
+                <button
+                  className="flex w-12 items-center justify-center rounded-full py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+                  onClick={onClickSignOut as () => void}
+                >
+                  <Image
+                    src={
+                      bgWhite ? "/icons/logout-black.svg" : "/icons/logout.svg"
+                    }
+                    alt="Sign Out"
+                    className="w-5"
+                    width={20}
+                    height={18}
+                  />
+                </button>
+                {showConnection && isConnected && (
                   <button
-                    className="w-full rounded-full bg-red-200/50 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-                    onClick={onClickSignOut as () => void}
+                    className={cn(
+                      "flex w-12 items-center justify-center rounded-full py-3 font-semibold text-white no-underline transition",
+
+                      "bg-red-400/50 hover:bg-red-400"
+                    )}
+                    onClick={() => disconnect()}
                   >
                     <Image
                       src={
@@ -155,18 +176,19 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                           ? "/icons/logout-black.svg"
                           : "/icons/logout.svg"
                       }
-                      alt="Sign Out"
+                      alt="Log Out"
+                      className="w-5"
                       width={20}
                       height={18}
                     />
                   </button>
-                </div>
+                )}
               </div>
             ) : showConnection ? (
-              <div className="">
+              <div className="w-full text-right">
                 {isConnected ? (
                   <button
-                    className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+                    className="self-end rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
                     onClick={onClickSignIn as () => void}
                   >
                     Sign In
@@ -174,39 +196,11 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                 ) : null}
               </div>
             ) : null}
-            {showConnection && isConnected && (
-              <div className="text-center">
-                {/* {address ? (
-                  <p className="mb-4">
-                    <code className="block rounded bg-black/20 p-4 text-white">
-                      {address}
-                    </code>
-                  </p>
-                ) : null} */}
-                <button
-                  className={cn(
-                    "w-full rounded-full  px-10 py-3 font-semibold text-white no-underline transition",
-
-                    "bg-red-400/50 hover:bg-red-400"
-                  )}
-                  onClick={() => disconnect()}
-                >
-                  <Image
-                    src={
-                      bgWhite ? "/icons/logout-black.svg" : "/icons/logout.svg"
-                    }
-                    alt="Log Out"
-                    width={20}
-                    height={18}
-                  />
-                </button>
-              </div>
-            )}
           </div>
 
           {!isConnected && (
             <button
-              className="rounded-full bg-white/20 px-10 py-3 font-semibold text-slate-800 no-underline transition hover:bg-white/30"
+              className=" w-50 whitespace-nowrap rounded-full bg-white/20 px-10 py-3 font-semibold text-slate-800 no-underline transition hover:bg-white/30"
               onClick={() => connect()}
             >
               Connect Wallet

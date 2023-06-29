@@ -1,16 +1,14 @@
 import Image from "next/image";
-import Link from "next/link";
-import { FC, ReactNode, useState } from "react";
-import { cn } from "../lib/utils";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { useState, type FC, type ReactNode } from "react";
+import { A11y, Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { cn } from "../lib/utils";
 
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
-import { Address, useContract, useContractRead, useSigner } from "wagmi";
-import { c } from "@wagmi/cli/dist/config-c09a23a5";
-import { InvestmentProps, InvestmentsProps } from "../pages/my-investments";
+import { useContractRead } from "wagmi";
+import { type InvestmentProps } from "../pages/my-investments";
 // import "swiper/css/navigation";
 
 export interface CarouselItemProps {
@@ -706,13 +704,13 @@ const CarouselItem = ({
     <div className=" w-full rounded-md">
       <div
         className={cn(
-          "flex flex-col w-full  justify-end items-center min-h-[394px] rounded-md bg-cover relative gap-3"
+          "relative flex min-h-[394px]  w-full flex-col items-center justify-end gap-3 rounded-md bg-cover"
         )}
         style={{ backgroundImage: `url(${image})` }}
       >
-        <h4 className="z-10 uppercase text-2xl text-white">{title}</h4>
-        <div className="flex z-10 relative gap-3 pb-6 justify-center w-full">
-          <div className="flex gap-3 items-center">
+        <h4 className="z-10 text-2xl uppercase text-white">{title}</h4>
+        <div className="relative z-10 flex w-full justify-center gap-3 pb-6">
+          <div className="flex items-center gap-3">
             <div className="flex flex-col">
               <h4 className="text-white">Status:</h4>
               <span className="font-light text-white">{status}</span>
@@ -728,12 +726,14 @@ const CarouselItem = ({
             </div>
           </div>
         </div>
-        <div className="bg-[#DCDCDC] h-3 w-full flex z-10 absolute bottom-0 left-0 rounded-b-md">
+        <div className="absolute bottom-0 left-0 z-10 flex h-3 w-full rounded-b-md bg-[#DCDCDC]">
           <div
-            className={` bg-progressHighlight rounded-bl-md`}
+            className={` rounded-bl-md bg-progressHighlight`}
             style={{ width: `${progress}%` }}
           ></div>
         </div>
+
+        <div className="absolute z-0 flex min-h-[200px] w-full rounded-b-md bg-[url('/projects/car-gradient.svg')] bg-cover"></div>
         <a
           href={`/investment/${id}`}
           className={cn(
@@ -741,7 +741,6 @@ const CarouselItem = ({
             "focus:z-10 focus:outline-none focus:ring-2"
           )}
         />
-        <div className="flex z-0 absolute rounded-b-md w-full min-h-[200px] bg-[url('/projects/car-gradient.svg')] bg-cover"></div>
       </div>
     </div>
   );
@@ -781,13 +780,13 @@ const ProjectCarousel: FC<CarouselProps> = ({
   return (
     <div className={className ?? ""}>
       {title && (
-        <div className="self-start ml-[58px] pb-[52px] uppercase">
+        <div className="ml-[58px] self-start pb-[52px] uppercase">
           {title ?? ""}
         </div>
       )}
-      <div className="relative max-w-[1338px] overflow-hidden flex items-center">
+      <div className="relative flex max-w-[1338px] items-center overflow-hidden">
         <div
-          className={`flex  absolute items-center justify-center left-0 z-20 swiper-prev-${id}`}
+          className={`absolute  left-0 z-20 flex items-center justify-center swiper-prev-${id}`}
         >
           <Image
             src={
@@ -806,10 +805,10 @@ const ProjectCarousel: FC<CarouselProps> = ({
         </div>
         <section
           className={cn(
-            " ml-[58px] z-10 relative items-center flex flex-col w-full"
+            " relative z-10 ml-[58px] flex w-full flex-col items-center"
           )}
         >
-          <div className="relative w-full z-10 swiper-wrapper ">
+          <div className="swiper-wrapper relative z-10 w-full ">
             <Swiper
               modules={[Navigation, A11y]}
               className="swiper w-full"
@@ -829,7 +828,7 @@ const ProjectCarousel: FC<CarouselProps> = ({
               {items.map((item, index) => (
                 <SwiperSlide key={index}>
                   <CarouselItem
-                    id={(index + 1).toString()}
+                    id={item.address}
                     title={item.basicInvestment.car.basicInfo.title ?? ""}
                     image={item.basicInvestment.car.basicInfo.cover.url ?? ""}
                     price={item.basicInvestment.totalInvestment}
@@ -848,7 +847,7 @@ const ProjectCarousel: FC<CarouselProps> = ({
           </div>
         </section>
         <div
-          className={`flex bg-gradient-to-r from-transparent to-black h-full absolute items-center right-0 pr-10 z-20 swiper-next-${id}`}
+          className={`absolute right-0 z-20 flex h-full items-center bg-gradient-to-r from-transparent to-black pr-10 swiper-next-${id}`}
         >
           <Image
             src="/icons/pagination-next.svg"

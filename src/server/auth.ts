@@ -3,15 +3,15 @@
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
-  type NextAuthOptions,
   type DefaultSession,
+  type NextAuthOptions,
 } from "next-auth";
 // SIWE Integration
+import type { Session } from "next-auth";
 import type { CtxOrReq } from "next-auth/client/_utils";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { SiweMessage } from "siwe";
 import { getCsrfToken } from "next-auth/react";
-import type { Session } from "next-auth";
+import { SiweMessage } from "siwe";
 
 // Types
 // ========================================================
@@ -154,9 +154,7 @@ export const authOptions: (ctxReq: CtxOrReq) => NextAuthOptions = ({
       authorize: async (credentials) => {
         try {
           const siwe = new SiweMessage(
-            JSON.parse(
-              (credentials?.message as string) ?? "{}"
-            ) as Partial<SiweMessage>
+            JSON.parse(credentials?.message ?? "{}") as Partial<SiweMessage>
           );
           const nonce = await getCsrfToken({ req });
           const fields = await siwe.validate(credentials?.signature || "");
@@ -196,7 +194,7 @@ export const authOptions: (ctxReq: CtxOrReq) => NextAuthOptions = ({
           };
         } catch (error) {
           // Uncomment or add logging if needed
-          console.error({ error });
+          console.error(error);
           return null;
         }
       },

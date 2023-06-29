@@ -1,7 +1,8 @@
 import { BigNumber, utils } from "ethers";
 import { GraphQLClient, gql } from "graphql-request";
 import type { GetServerSideProps, NextPage } from "next";
-import { useSession } from "next-auth/react";
+import { type Session } from "next-auth";
+import { getSession, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -87,6 +88,9 @@ export interface InvestmentProps {
 }
 export interface InvestmentsProps {
   investments: InvestmentProps[];
+}
+export interface SessionProps {
+  session: Session;
 }
 
 interface MyInvestmentsProps extends InvestmentsProps, TransactionProps {}
@@ -1680,6 +1684,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     return (
       <div className="mx-auto flex min-h-screen w-full flex-col">
         <NavBar />
+
         <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[96px] pt-[52px]">
           <div className="grid w-full grid-cols-2 items-start justify-center gap-4">
             <div className="flex w-[434px] flex-col gap-8">
@@ -1745,10 +1750,12 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       <div className="relative flex w-full flex-col rounded-bl-[56px] ">
         <div className="absolute top-0 h-[1092px] w-full rounded-bl-[56px] bg-black"></div>
         <NavBar />
+
         <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
           <div className="flex flex-col gap-4 pt-8">
             <h3 className="mb-8 text-3xl uppercase tracking-widest text-white">
               My Investments
+              {/* <div>Here{JSON.stringify(props, null, 2)}</div> */}
             </h3>
             <h2 className="mb-12 text-5xl uppercase text-white">
               Welcome{" "}
@@ -1862,9 +1869,17 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       </div>
       <div className="relative z-20 mx-auto flex rounded-t-[56px] bg-black pb-[128px] pt-[72px] text-white">
         <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[52px]">
-          <h3 className="text-2xl uppercase">Our suggestion for you</h3>
-          <div className="mx-auto flex w-full max-w-screen-lg gap-6">
-            {/* {carouselItems.slice(0, 3).map((item, idx) => (
+          <Carousel
+            id="4"
+            className="w-full pt-[132px]"
+            title={<h2 className="text-2xl">Our Suggestions for you</h2>}
+            items={props.investments.filter(
+              (investment) =>
+                investment.basicInvestment.investmentStatus == "Active"
+            )}
+          />
+
+          {/* {carouselItems.slice(0, 3).map((item, idx) => (
               <CarouselItem
                 key={idx}
                 title={item.title}
@@ -1872,7 +1887,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                 price={item.price}
               />
             ))} */}
-          </div>
         </div>
       </div>
     </section>
@@ -1953,7 +1967,11 @@ const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY, {
   },
 });
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps<
+  MyInvestmentsProps
+> = async (ctx) => {
+  const session = await getSession(ctx);
+
   const { investments }: { investments: InvestmentsProps } =
     await hygraph.request(
       gql`
@@ -1985,7 +2003,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       gql`
         query UserTransactions {
           transactions(
-            where: { from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8" }
+            where: { from: ${session.user.id} }
             orderBy: publishedAt_DESC
           ) {
             amountInvested
