@@ -1,19 +1,17 @@
-import type { NextPage } from "next";
-import { useState, useEffect } from "react";
 import { Tab } from "@headlessui/react";
+import type { NextPage } from "next";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import {
   useAccount,
-  useContractRead,
-  useContractWrite,
-  usePrepareContractWrite,
   useContract,
+  useContractRead,
   useSigner,
-  Address,
+  type Address,
 } from "wagmi";
-import { classNames } from "../lib/utils";
 import NftCheckedIcon from "../components/NftCheckedIcon";
-import toast from "react-hot-toast";
 import useNFTChecker from "../hooks/useNFTChecker";
+import { cn } from "../lib/utils";
 
 const FactoryAbi = [
   {
@@ -1934,14 +1932,14 @@ const MyPuzzle: NextPage = () => {
 
   return (
     <div className="w-full px-6 lg:px-3">
-      <h2 className="text-2xl py-6">My Puzzle</h2>
+      <h2 className="py-6 text-2xl">My Puzzle</h2>
       <Tab.Group>
         <Tab.List className="flex space-x-1 rounded-xl bg-gray-900/20 p-1">
           {Object.keys(assets).map((category) => (
             <Tab
               key={category}
               className={({ selected }) =>
-                classNames(
+                cn(
                   "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-gray-700",
                   "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-400 focus:outline-none focus:ring-2",
                   selected
@@ -1958,7 +1956,7 @@ const MyPuzzle: NextPage = () => {
           {Object.values(assets).map((nfts, idx) => (
             <Tab.Panel
               key={idx}
-              className={classNames(
+              className={cn(
                 "flex flex-col rounded-xl bg-white p-3",
                 "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-400 focus:outline-none focus:ring-2"
               )}
@@ -1967,13 +1965,13 @@ const MyPuzzle: NextPage = () => {
                 {nfts.map((nft) => (
                   <li
                     key={nft.id}
-                    className="relative flex flex-col justify-between rounded-md p-3 border min-h-[100px] hover:bg-gray-100"
+                    className="relative flex min-h-[100px] flex-col justify-between rounded-md border p-3 hover:bg-gray-100"
                   >
                     <h3 className="text-sm font-medium leading-5">
                       {nft.title}
                     </h3>
 
-                    <div className="mt-1 flex self-end space-x-1 text-xs font-normal leading-4 text-gray-500">
+                    <div className="mt-1 flex space-x-1 self-end text-xs font-normal leading-4 text-gray-500">
                       <NftCheckedIcon numberOfItems={nft.nft} />
                     </div>
                   </li>

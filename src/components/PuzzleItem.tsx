@@ -1,6 +1,6 @@
 import React from "react";
 import { NumericFormat } from "react-number-format";
-import { classNames } from "../lib/utils";
+import { cn } from "../lib/utils";
 
 type PuzzleItemData = {
   level?: number;
@@ -24,7 +24,7 @@ const PuzzleItem: React.FC<PuzzleItemData> = ({
 
   const barWidthFormatted = `${barWidth}%`;
   return (
-    <div className={classNames("w-full", className ?? "")}>
+    <div className={cn("w-full", className ?? "")}>
       {level && <h2 className="text-2xl text-slate-500">{`Level ${level}`}</h2>}
       <div className="w-full text-center">
         {amount?.indexOf("/") > -1 ? (
@@ -54,10 +54,10 @@ const PuzzleItem: React.FC<PuzzleItemData> = ({
         )}
       </div>
 
-      <div className="w-full mt-1 text-xs bg-gray-200 rounded-full">
+      <div className="mt-1 w-full rounded-full bg-gray-200 text-xs">
         {barWidth !== 0 ? (
           <div
-            className="bg-gray-600  font-medium text-black-100 text-center p-0.5 leading-none rounded-full"
+            className="text-black-100  rounded-full bg-gray-600 p-0.5 text-center font-medium leading-none"
             style={{ width: barWidth > 100 ? "100%" : barWidthFormatted }}
           >
             {showProgressInsideBar && (

@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FC, ReactNode } from "react";
-import { cn } from "../lib/utils";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { type FC, type ReactNode } from "react";
+import { A11y, Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { cn } from "../lib/utils";
 
 // Import Swiper styles
 import "swiper/css";
@@ -27,12 +27,12 @@ export const CarouselItem = ({
     <div className=" w-full rounded-md">
       <div
         className={cn(
-          "flex flex-col w-full justify-end items-center min-h-[394px] rounded-md bg-cover bg-center relative gap-4"
+          "relative flex min-h-[394px] w-full flex-col items-center justify-end gap-4 rounded-md bg-cover bg-center"
         )}
         style={{ backgroundImage: `url(${image})` }}
       >
-        <h4 className="z-10 uppercase text-3xl text-white">{title}</h4>
-        <div className="flex z-10 relative gap-3 pb-8 justify-center w-full">
+        <h4 className="z-10 text-3xl uppercase text-white">{title}</h4>
+        <div className="relative z-10 flex w-full justify-center gap-3 pb-8">
           <div className="flex">
             <div className="flex gap-3">
               <span className="font-light text-white">{price}</span>
@@ -46,7 +46,7 @@ export const CarouselItem = ({
             "focus:z-10 focus:outline-none focus:ring-2"
           )}
         />
-        <div className="flex z-0 absolute rounded-b-md w-full min-h-[200px] bg-[url('/projects/car-gradient.svg')] bg-cover"></div>
+        <div className="absolute z-0 flex min-h-[200px] w-full rounded-b-md bg-[url('/projects/car-gradient.svg')] bg-cover"></div>
       </div>
     </div>
   );
@@ -102,25 +102,25 @@ const Carousel: FC<CarouselProps> = ({
 }) => {
   return (
     <div className={className ?? ""}>
-      <div className="flex justify-between mx-auto">
+      <div className="mx-auto flex justify-between">
         {title && (
-          <div className="self-start font-medium ml-[58px] pb-[52px] uppercase">
+          <div className="ml-[58px] self-start pb-[52px] font-medium uppercase">
             {title ?? ""}
           </div>
         )}
         {seeMoreLink && seeMoreLabel && (
           <div className=" mr-[58px]">
             <Link href={seeMoreLink}>
-              <a className="border-b-2 border-white text-white uppercase text-sm">
+              <a className="border-b-2 border-white text-sm uppercase text-white">
                 {seeMoreLabel}
               </a>
             </Link>
           </div>
         )}
       </div>
-      <div className="relative max-w-[1338px] overflow-hidden flex items-center">
+      <div className="relative flex max-w-[1338px] items-center overflow-hidden">
         <div
-          className={`flex  absolute items-center justify-center left-0 z-20 swiper-prev-${id}`}
+          className={`absolute  left-0 z-20 flex items-center justify-center swiper-prev-${id}`}
         >
           <Image
             src={
@@ -135,10 +135,10 @@ const Carousel: FC<CarouselProps> = ({
         </div>
         <section
           className={cn(
-            " ml-[58px] z-10  relative items-center flex flex-col w-full"
+            " relative z-10  ml-[58px] flex w-full flex-col items-center"
           )}
         >
-          <div className="flex relative z-10 w-1/2 swiper-wrapper ">
+          <div className="swiper-wrapper relative z-10 flex w-1/2 ">
             {/* {JSON.stringify(items)} */}
             <Swiper
               modules={[Navigation, A11y]}
@@ -155,7 +155,7 @@ const Carousel: FC<CarouselProps> = ({
               initialSlide={0}
               loop={true}
             >
-              {items.map((item, index) => (
+              {items?.map((item, index) => (
                 <SwiperSlide key={index}>
                   <CarouselItem
                     // title="my title"
@@ -172,7 +172,7 @@ const Carousel: FC<CarouselProps> = ({
           </div>
         </section>
         <div
-          className={`flex bg-gradient-to-r from-transparent to-black h-full absolute items-center right-0 pr-10 z-20 swiper-next-${id}`}
+          className={`absolute right-0 z-20 flex h-full items-center bg-gradient-to-r from-transparent to-black pr-10 swiper-next-${id}`}
         >
           <Image
             src="/icons/pagination-next.svg"

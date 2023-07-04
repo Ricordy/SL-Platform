@@ -10,6 +10,8 @@ const config = {
   swcMinify: true,
   images: {
     domains: ["media.graphassets.com"],
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
   /**

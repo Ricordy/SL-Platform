@@ -1,13 +1,9 @@
-import { ClassValue, clsx } from "clsx";
+import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-export const classNames = (...classes: string[]) => {
-  return classes.filter(Boolean).join(" ");
-};
-
-export const cn = (...inputs: ClassValue[]) => {
+export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
-};
+}
 
 export const formatAddress = (address: string) => {
   if (address && address.length > 4) {

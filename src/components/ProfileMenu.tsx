@@ -1,8 +1,7 @@
 import { Menu, Transition } from "@headlessui/react";
-import { forwardRef, Fragment } from "react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import { Fragment, forwardRef } from "react";
 import { useAccount } from "wagmi";
 import { cn } from "../lib/utils";
 
@@ -28,10 +27,6 @@ const MyLink = forwardRef<HTMLAnchorElement, MyLinkProps>((props, ref) => {
 });
 MyLink.displayName = "MyLink";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
 export default function ProfileMenu({ logout, bgWhite }: MenuProps) {
   const { address } = useAccount();
   return (
@@ -40,7 +35,7 @@ export default function ProfileMenu({ logout, bgWhite }: MenuProps) {
         <div>
           <Menu.Button
             className={cn(
-              "inline-flex items-center border-2 gap-3 w-full justify-center rounded-full bg-black bg-opacity-0 p-1 hover:bg-opacity-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75",
+              "inline-flex w-full items-center justify-center gap-3 rounded-full border-2 bg-black bg-opacity-0 p-1 hover:bg-opacity-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75",
               bgWhite ? "border-primaryGrey" : "border-white"
             )}
           >
@@ -57,7 +52,7 @@ export default function ProfileMenu({ logout, bgWhite }: MenuProps) {
             /> */}
             <span
               className={cn(
-                " text-xs pr-2",
+                " pr-2 text-xs",
                 bgWhite ? "text-secondaryGrey" : "text-white"
               )}
             >
@@ -74,7 +69,7 @@ export default function ProfileMenu({ logout, bgWhite }: MenuProps) {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute z-10 right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div className="px-1 py-1">
               <Menu.Item>
                 {({ active }) => (
@@ -99,7 +94,7 @@ export default function ProfileMenu({ logout, bgWhite }: MenuProps) {
                 {({ active }) => (
                   <MyLink
                     href="/my-investments"
-                    className={classNames(
+                    className={cn(
                       active ? "bg-gray-500 text-white" : "text-gray-900",
                       "group flex w-full items-center rounded-md px-2 py-2 text-sm"
                     )}
@@ -131,7 +126,7 @@ export default function ProfileMenu({ logout, bgWhite }: MenuProps) {
                 )}
               </Menu.Item>
             </div>
-            <div className="px-1 py-1 z-100">
+            <div className="z-100 px-1 py-1">
               <Menu.Item>
                 {({ active }) => (
                   <button

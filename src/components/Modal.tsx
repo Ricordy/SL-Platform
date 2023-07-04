@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, ReactNode, useState } from "react";
-import { classNames, cn } from "../lib/utils";
 import Image from "next/image";
+import { Fragment, type ReactNode } from "react";
+import { cn } from "../lib/utils";
 interface ModalType {
   title: string;
   children?: ReactNode;
@@ -54,14 +54,14 @@ const Modal = ({
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel
-                className={classNames(
+                className={cn(
                   "w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-[52px] text-left align-middle shadow-xl transition-all",
                   isBlur ? "blur-sm" : ""
                 )}
               >
                 <Dialog.Title
                   as="h3"
-                  className="text-3xl tracking-wide font-medium leading-6 text-gray-900 flex justify-between"
+                  className="flex justify-between text-3xl font-medium leading-6 tracking-wide text-gray-900"
                 >
                   {title}
                   <Image
@@ -73,7 +73,7 @@ const Modal = ({
                     className=" cursor-pointer"
                   />
                 </Dialog.Title>
-                <div className="flex w-full gap-6 justify-center">
+                <div className="flex w-full justify-center gap-6">
                   {children}
                 </div>
               </Dialog.Panel>

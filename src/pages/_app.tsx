@@ -1,23 +1,22 @@
-import "../styles/globals.css";
-import type { AppType } from "next/dist/shared/lib/utils";
-import type { AppProps } from "next/app";
-import Layout from "../components/Layout";
-import { WagmiConfig, configureChains, createClient, mainnet } from "wagmi";
-import { goerli, hardhat } from "wagmi/chains";
-import { ConnectKitProvider, getDefaultClient } from "connectkit";
-import { useEffect, useState } from "react";
-import { SessionProvider } from "next-auth/react";
 import { type Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
+import type { AppProps } from "next/app";
+import type { AppType } from "next/dist/shared/lib/utils";
+import { useEffect, useState } from "react";
+import { WagmiConfig, configureChains, createClient } from "wagmi";
+import { polygonMumbai } from "wagmi/chains";
+import { alchemyProvider } from "wagmi/providers/alchemy";
 import { api } from "~/utils/api";
-import { publicProvider } from "wagmi/providers/public";
+import Layout from "../components/Layout";
+import "../styles/globals.css";
 
-const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY;
+const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY as string;
 
 const { provider } = configureChains(
-  [mainnet, goerli, hardhat],
+  [polygonMumbai],
   [
-    publicProvider(),
-    // alchemyProvider({ apiKey: process.env.ALCHEMY_API_KEY as string }),
+    // publicProvider(),
+    alchemyProvider({ apiKey: alchemyId }),
   ]
 );
 

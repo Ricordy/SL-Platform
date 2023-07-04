@@ -1,14 +1,10 @@
-import { useState } from "react";
 import { Tab } from "@headlessui/react";
-import { investmentData } from "../data/Investments";
-import { investmentStatusesData } from "../data/InvestmentStatuses";
-import { NumericFormat } from "react-number-format";
-import { classNames } from "../lib/utils";
-import ProjectCarousel from "./ProjectCarousel";
-import { CarouselItemProps } from "./ProjectCarousel";
-import Link from "next/link";
 import Image from "next/image";
-import { ConnectKitButton } from "connectkit";
+import Link from "next/link";
+import { useState } from "react";
+import { investmentStatusesData } from "../data/InvestmentStatuses";
+import { cn } from "../lib/utils";
+import ProjectCarousel from "./ProjectCarousel";
 
 interface InvestmentsProps {
   isConnected: boolean;
@@ -47,7 +43,7 @@ export default function Investments({
               <Tab
                 key={investmentStatus}
                 className={({ selected }) =>
-                  classNames(
+                  cn(
                     "flex min-w-fit justify-center gap-3 px-6 pb-4  text-2xl font-normal  leading-5 text-tabInactive",
                     "focus:outline-none",
                     selected
@@ -65,7 +61,7 @@ export default function Investments({
               return (
                 <Tab.Panel
                   key={investmentStatus}
-                  className={classNames(
+                  className={cn(
                     " pt-6",
                     "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2"
                   )}
@@ -111,7 +107,7 @@ export default function Investments({
 
                       <a
                         href={`/investment/${investment.id}`}
-                        className={classNames(
+                        className={cn(
                           "absolute inset-0 rounded-md",
                           "ring-gray-400 focus:z-10 focus:outline-none focus:ring-2"
                         )}

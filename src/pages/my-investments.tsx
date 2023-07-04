@@ -10,16 +10,17 @@ import toast from "react-hot-toast";
 import {
   useAccount,
   useBalance,
+  useContractRead,
   useContractReads,
   useContractWrite,
   usePrepareContractWrite,
   useWaitForTransaction,
   type Address,
 } from "wagmi";
+import useCheckEntryNFT from "~/hooks/useCheckEntryNFT";
 import Carousel from "../components/Carousel";
 import NavBar from "../components/NavBar";
 import ProjectCarousel from "../components/ProjectCarousel";
-import useCheckEntryNFT from "../hooks/useCheckEntryNFT";
 
 interface InvestmentBlockchainType {
   id: number;
@@ -96,9 +97,9 @@ export interface SessionProps {
 interface MyInvestmentsProps extends InvestmentsProps, TransactionProps {}
 
 export const TransactionItem = (items, userInvestedContracts) => {
-  console.log(userInvestedContracts);
+  //console.log(userInvestedContracts);
   const { address } = useAccount();
-  return items.items.map((item, idx) => {
+  return items?.items?.map((item, idx) => {
     const addressContract = item.investment.address;
     // const { amountInvested } = useGetAddressInvestmentinSingleCar({
     //   contractAddress: addressContract,
@@ -145,6 +146,85 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
   // ABIs
   const paymentTokenABI = [
     {
+      inputs: [],
+      stateMutability: "nonpayable",
+      type: "constructor",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "address",
+          name: "owner",
+          type: "address",
+        },
+        {
+          indexed: true,
+          internalType: "address",
+          name: "spender",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "value",
+          type: "uint256",
+        },
+      ],
+      name: "Approval",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "address",
+          name: "from",
+          type: "address",
+        },
+        {
+          indexed: true,
+          internalType: "address",
+          name: "to",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "value",
+          type: "uint256",
+        },
+      ],
+      name: "Transfer",
+      type: "event",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "owner",
+          type: "address",
+        },
+        {
+          internalType: "address",
+          name: "spender",
+          type: "address",
+        },
+      ],
+      name: "allowance",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
       inputs: [
         {
           internalType: "address",
@@ -188,6 +268,67 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       type: "function",
     },
     {
+      inputs: [],
+      name: "decimals",
+      outputs: [
+        {
+          internalType: "uint8",
+          name: "",
+          type: "uint8",
+        },
+      ],
+      stateMutability: "pure",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "spender",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "subtractedValue",
+          type: "uint256",
+        },
+      ],
+      name: "decreaseAllowance",
+      outputs: [
+        {
+          internalType: "bool",
+          name: "",
+          type: "bool",
+        },
+      ],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "spender",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "addedValue",
+          type: "uint256",
+        },
+      ],
+      name: "increaseAllowance",
+      outputs: [
+        {
+          internalType: "bool",
+          name: "",
+          type: "bool",
+        },
+      ],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
       inputs: [
         {
           internalType: "uint256",
@@ -200,7 +341,98 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       stateMutability: "nonpayable",
       type: "function",
     },
-    ,
+    {
+      inputs: [],
+      name: "name",
+      outputs: [
+        {
+          internalType: "string",
+          name: "",
+          type: "string",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "symbol",
+      outputs: [
+        {
+          internalType: "string",
+          name: "",
+          type: "string",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "totalSupply",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "to",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "amount",
+          type: "uint256",
+        },
+      ],
+      name: "transfer",
+      outputs: [
+        {
+          internalType: "bool",
+          name: "",
+          type: "bool",
+        },
+      ],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "from",
+          type: "address",
+        },
+        {
+          internalType: "address",
+          name: "to",
+          type: "address",
+        },
+        {
+          internalType: "uint256",
+          name: "amount",
+          type: "uint256",
+        },
+      ],
+      name: "transferFrom",
+      outputs: [
+        {
+          internalType: "bool",
+          name: "",
+          type: "bool",
+        },
+      ],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
   ] as const;
 
   const slcoreABI = [
@@ -208,17 +440,122 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       inputs: [
         {
           internalType: "address",
-          name: "_factoryAddress",
+          name: "_slLogicsAddress",
           type: "address",
         },
         {
           internalType: "address",
-          name: "_slLogicsAddress",
+          name: "_slPermissionsAddress",
           type: "address",
         },
       ],
       stateMutability: "nonpayable",
       type: "constructor",
+    },
+    {
+      inputs: [],
+      name: "ClaimingPaused",
+      type: "error",
+    },
+    {
+      inputs: [],
+      name: "EntryMintPaused",
+      type: "error",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "expectedLevel",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "userLevel",
+          type: "uint256",
+        },
+      ],
+      name: "IncorrectUserLevel",
+      type: "error",
+    },
+    {
+      inputs: [],
+      name: "InexistentEntryBatch",
+      type: "error",
+    },
+    {
+      inputs: [
+        {
+          internalType: "string",
+          name: "reason",
+          type: "string",
+        },
+      ],
+      name: "InvalidAddress",
+      type: "error",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "input",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "min",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "max",
+          type: "uint256",
+        },
+      ],
+      name: "InvalidLevel",
+      type: "error",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "input",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "max",
+          type: "uint256",
+        },
+      ],
+      name: "InvalidNumber",
+      type: "error",
+    },
+    {
+      inputs: [],
+      name: "NoTokensRemaining",
+      type: "error",
+    },
+    {
+      inputs: [],
+      name: "NotCEO",
+      type: "error",
+    },
+    {
+      inputs: [],
+      name: "PlatformPaused",
+      type: "error",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "level",
+          type: "uint256",
+        },
+      ],
+      name: "UserMustHaveCompletePuzzle",
+      type: "error",
     },
     {
       anonymous: false,
@@ -249,19 +586,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       anonymous: false,
       inputs: [
         {
-          indexed: false,
-          internalType: "address",
-          name: "newContract",
-          type: "address",
-        },
-      ],
-      name: "ContractUpgrade",
-      type: "event",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
           indexed: true,
           internalType: "address",
           name: "claimer",
@@ -271,12 +595,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
           indexed: true,
           internalType: "uint256",
           name: "tokenId",
-          type: "uint256",
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "quantity",
           type: "uint256",
         },
       ],
@@ -377,6 +695,19 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       type: "event",
     },
     {
+      inputs: [],
+      name: "COLLECTION_IDS",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
       inputs: [
         {
           internalType: "uint256",
@@ -412,7 +743,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       inputs: [
         {
           internalType: "address",
-          name: "user",
+          name: "_claimer",
           type: "address",
         },
         {
@@ -423,25 +754,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       ],
       name: "_userAllowedToBurnPuzzle",
       outputs: [],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "",
-          type: "address",
-        },
-      ],
-      name: "allowedContracts",
-      outputs: [
-        {
-          internalType: "bool",
-          name: "",
-          type: "bool",
-        },
-      ],
       stateMutability: "view",
       type: "function",
     },
@@ -495,61 +807,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     },
     {
       inputs: [],
-      name: "ceoAddress",
-      outputs: [
-        {
-          internalType: "address",
-          name: "",
-          type: "address",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "cfoAddress",
-      outputs: [
-        {
-          internalType: "address",
-          name: "",
-          type: "address",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "number",
-          type: "uint256",
-        },
-        {
-          internalType: "uint32",
-          name: "position",
-          type: "uint32",
-        },
-        {
-          internalType: "uint256",
-          name: "newNumber",
-          type: "uint256",
-        },
-      ],
-      name: "changetXPositionInFactor5",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "_final",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
       name: "claimLevel",
       outputs: [],
       stateMutability: "nonpayable",
@@ -563,13 +820,19 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       type: "function",
     },
     {
-      inputs: [],
-      name: "factoryAddress",
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      name: "entryIdsArray",
       outputs: [
         {
-          internalType: "address",
+          internalType: "uint24",
           name: "",
-          type: "address",
+          type: "uint24",
         },
       ],
       stateMutability: "view",
@@ -614,69 +877,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     {
       inputs: [
         {
-          internalType: "uint256",
-          name: "number",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "startPosition",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "numberOfResults",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "factor",
-          type: "uint256",
-        },
-      ],
-      name: "getMultiplePositionsXInDivisionByY",
-      outputs: [
-        {
-          internalType: "uint256[]",
-          name: "",
-          type: "uint256[]",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "number",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "position",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "factor",
-          type: "uint256",
-        },
-      ],
-      name: "getPositionXInDivisionByY",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
           internalType: "address",
           name: "_user",
           type: "address",
@@ -693,30 +893,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
           internalType: "uint256",
           name: "",
           type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint32",
-          name: "number",
-          type: "uint32",
-        },
-        {
-          internalType: "uint32",
-          name: "position",
-          type: "uint32",
-        },
-      ],
-      name: "incrementXPositionInFactor3",
-      outputs: [
-        {
-          internalType: "uint32",
-          name: "_final",
-          type: "uint32",
         },
       ],
       stateMutability: "view",
@@ -751,107 +927,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       name: "mintEntry",
       outputs: [],
       stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "level",
-          type: "uint256",
-        },
-      ],
-      name: "mintTest",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "batch",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "cap",
-          type: "uint256",
-        },
-      ],
-      name: "mountEntryID",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "cap",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "currentID",
-          type: "uint256",
-        },
-      ],
-      name: "mountEntryValue",
-      outputs: [
-        {
-          internalType: "uint24",
-          name: "",
-          type: "uint24",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "pause",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "pauseEntryMint",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "paused",
-      outputs: [
-        {
-          internalType: "bool",
-          name: "",
-          type: "bool",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "pausedEntryMint",
-      outputs: [
-        {
-          internalType: "bool",
-          name: "",
-          type: "bool",
-        },
-      ],
-      stateMutability: "view",
       type: "function",
     },
     {
@@ -924,24 +999,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       inputs: [
         {
           internalType: "address",
-          name: "_contractAddress",
-          type: "address",
-        },
-        {
-          internalType: "bool",
-          name: "_allowed",
-          type: "bool",
-        },
-      ],
-      name: "setAllowedContracts",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
           name: "operator",
           type: "address",
         },
@@ -957,34 +1014,21 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       type: "function",
     },
     {
-      inputs: [
+      inputs: [],
+      name: "slLogicsAddress",
+      outputs: [
         {
           internalType: "address",
-          name: "_newCEO",
+          name: "",
           type: "address",
         },
       ],
-      name: "setCEO",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "_newCFO",
-          type: "address",
-        },
-      ],
-      name: "setCFO",
-      outputs: [],
-      stateMutability: "nonpayable",
+      stateMutability: "view",
       type: "function",
     },
     {
       inputs: [],
-      name: "slLogicsAddress",
+      name: "slPermissionsAddress",
       outputs: [
         {
           internalType: "address",
@@ -1041,46 +1085,8 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     {
       inputs: [
         {
-          internalType: "uint24",
-          name: "value",
-          type: "uint24",
-        },
-      ],
-      name: "unmountEntryValue",
-      outputs: [
-        {
           internalType: "uint256",
-          name: "cap",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "currentID",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "unpause",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "unpauseEntryMint",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "_tokenId",
+          name: "_collectionId",
           type: "uint256",
         },
       ],
@@ -1090,6 +1096,25 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
           internalType: "string",
           name: "",
           type: "string",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "",
+          type: "address",
+        },
+      ],
+      name: "userPuzzlePieces",
+      outputs: [
+        {
+          internalType: "uint32",
+          name: "",
+          type: "uint32",
         },
       ],
       stateMutability: "view",
@@ -1117,7 +1142,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       inputs: [
         {
           internalType: "address",
-          name: "user",
+          name: "_user",
           type: "address",
         },
       ],
@@ -1135,27 +1160,75 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
   ] as const;
   const FactoryABI = [
     {
-      inputs: [],
+      inputs: [
+        {
+          internalType: "address",
+          name: "_slPermissionsAddress",
+          type: "address",
+        },
+      ],
       stateMutability: "nonpayable",
       type: "constructor",
+    },
+    {
+      inputs: [
+        {
+          internalType: "string",
+          name: "reason",
+          type: "string",
+        },
+      ],
+      name: "InvalidAddress",
+      type: "error",
+    },
+    {
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "input",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "min",
+          type: "uint256",
+        },
+        {
+          internalType: "uint256",
+          name: "max",
+          type: "uint256",
+        },
+      ],
+      name: "InvalidLevel",
+      type: "error",
+    },
+    {
+      inputs: [],
+      name: "NotCEO",
+      type: "error",
+    },
+    {
+      inputs: [],
+      name: "PlatformPaused",
+      type: "error",
     },
     {
       anonymous: false,
       inputs: [
         {
-          indexed: false,
+          indexed: true,
           internalType: "uint256",
           name: "ContractID",
           type: "uint256",
         },
         {
-          indexed: false,
+          indexed: true,
           internalType: "address",
           name: "conAddress",
           type: "address",
         },
         {
-          indexed: false,
+          indexed: true,
           internalType: "uint256",
           name: "conLevel",
           type: "uint256",
@@ -1165,38 +1238,13 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       type: "event",
     },
     {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: true,
-          internalType: "address",
-          name: "previousOwner",
-          type: "address",
-        },
-        {
-          indexed: true,
-          internalType: "address",
-          name: "newOwner",
-          type: "address",
-        },
-      ],
-      name: "OwnershipTransferred",
-      type: "event",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      name: "counter",
+      inputs: [],
+      name: "SLPERMISSIONS_ADDRESS",
       outputs: [
         {
-          internalType: "uint256",
+          internalType: "address",
           name: "",
-          type: "uint256",
+          type: "address",
         },
       ],
       stateMutability: "view",
@@ -1215,9 +1263,9 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
           type: "address",
         },
         {
-          internalType: "uint8",
-          name: "level",
-          type: "uint8",
+          internalType: "uint256",
+          name: "_level",
+          type: "uint256",
         },
       ],
       name: "deployNew",
@@ -1259,7 +1307,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       inputs: [
         {
           internalType: "address",
-          name: "contractAddress",
+          name: "_contractAddress",
           type: "address",
         },
       ],
@@ -1278,7 +1326,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       inputs: [
         {
           internalType: "address",
-          name: "user",
+          name: "_user",
           type: "address",
         },
       ],
@@ -1297,12 +1345,12 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       inputs: [
         {
           internalType: "address",
-          name: "user",
+          name: "_user",
           type: "address",
         },
         {
           internalType: "uint256",
-          name: "level",
+          name: "_level",
           type: "uint256",
         },
       ],
@@ -1321,7 +1369,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       inputs: [
         {
           internalType: "uint256",
-          name: "level",
+          name: "_level",
           type: "uint256",
         },
       ],
@@ -1337,8 +1385,21 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       type: "function",
     },
     {
+      inputs: [
+        {
+          internalType: "address",
+          name: "_slCoreAddress",
+          type: "address",
+        },
+      ],
+      name: "setSLCoreAddress",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
       inputs: [],
-      name: "owner",
+      name: "slCoreAddress",
       outputs: [
         {
           internalType: "address",
@@ -1347,39 +1408,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
         },
       ],
       stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "renounceOwnership",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "_lgentry",
-          type: "address",
-        },
-      ],
-      name: "setEntryAddress",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "newOwner",
-          type: "address",
-        },
-      ],
-      name: "transferOwnership",
-      outputs: [],
-      stateMutability: "nonpayable",
       type: "function",
     },
   ] as const;
@@ -1420,7 +1448,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       //   args: [address, 1, 1, 0],
       // },
     ],
-    watch: true,
+    // watch: true,
     onError(error) {
       console.log("Error", error);
     },
@@ -1437,8 +1465,19 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
   });
 
   const { hasEntryNFT, hasEntryNFTLoading } = useCheckEntryNFT({
-    address,
-    nftId: 10,
+    address: address as Address,
+  });
+
+  const {
+    data: dataLevels,
+    error,
+    isLoading,
+  } = useContractRead({
+    address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
+    abi: slcoreABI,
+    functionName: "whichLevelUserHas",
+    args: [sessionData?.user.id as Address],
+    // watch: true,
   });
 
   const [userContracts, setUserContracts] = useState([]);
@@ -1495,7 +1534,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
 
   // console.log("user transactions>>", props.userTransactions);
   const userInvestedContracts = [];
-  props.userTransactions.map((transaction) => {
+  props.userTransactions?.map((transaction) => {
     if (userInvestedContracts[transaction.to]) {
       userInvestedContracts[transaction.to] += transaction.amountInvested;
     } else {
@@ -1570,9 +1609,9 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     token: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
     address: sessionData?.user.id as Address,
     // address: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-    watch: true,
+    // watch: true,
     enabled: isConnected,
-    chainId: 31337,
+    // chainId: 31337,
   });
   const myMint = async () => {
     console.log(userPaymentTokenBalance);
@@ -1601,9 +1640,11 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
         if (result.error.stack.indexOf("ERC20: insufficient allowance") > -1) {
           await refecthPrepareApprove();
           approve?.();
+          mintNFT?.();
         }
+      } else {
+        mintNFT?.();
       }
-      mintNFT?.();
     } catch (error) {
       console.log(error);
     }
@@ -1611,7 +1652,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
 
   useEffect(() => {
     // console.log(getUserTransactions(address));
-
     // const populateInvestment = async () => {
     //   if (!userInvestments || !investmentData) return;
     //   userInvestments.map((ui, idx) => {
@@ -1619,7 +1659,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     //       const inv = investmentData?.find((i) => i.address[31337] == ui[idx]);
     //       if (inv) {
     //         console.log(ui[idx]);
-
     //         const uc: InvestmentType = {
     //           id: inv.id,
     //           title: inv.title,
@@ -1675,9 +1714,10 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     };
     getFactory();
     */
-    return () => console.log("Cleanup..");
+    //return () => console.log("Cleanup..");
   }, []);
 
+  // return <div>end</div>;
   if (hasEntryNFTLoading) return <div>Loading...</div>;
 
   if (!hasEntryNFTLoading && !hasEntryNFT)
@@ -1836,7 +1876,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
           id="1"
           prevNavWhite={true}
           title={<h2 className="text-2xl text-white">Active</h2>}
-          items={props.investments.filter(
+          items={props.investments?.filter(
             (investment) =>
               investment.basicInvestment.investmentStatus == "Active"
           )}
@@ -1846,22 +1886,22 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
           id="2"
           className="pt-[132px]"
           title={<h2 className="text-2xl">Upcoming</h2>}
-          items={props.investments.filter(
+          items={props.investments?.filter(
             (investment) =>
               investment.basicInvestment.investmentStatus == "Upcoming"
           )}
         />
-        <Carousel
+        {/* <Carousel
           id="3"
           className="pt-[132px]"
           title={<h2 className="text-2xl">My favorites</h2>}
           items={props.investments}
-        />
+        /> */}
         <ProjectCarousel
           id="4"
           className="py-[132px]"
           title={<h2 className="text-2xl">Finished</h2>}
-          items={props.investments.filter(
+          items={props.investments?.filter(
             (investment) =>
               investment.basicInvestment.investmentStatus == "Finished"
           )}
@@ -1873,7 +1913,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
             id="4"
             className="w-full pt-[132px]"
             title={<h2 className="text-2xl">Our Suggestions for you</h2>}
-            items={props.investments.filter(
+            items={props.investments?.filter(
               (investment) =>
                 investment.basicInvestment.investmentStatus == "Active"
             )}
@@ -2003,7 +2043,7 @@ export const getServerSideProps: GetServerSideProps<
       gql`
         query UserTransactions {
           transactions(
-            where: { from: ${session.user.id} }
+            where: { from: "${session?.user.id}" }
             orderBy: publishedAt_DESC
           ) {
             amountInvested
@@ -2031,8 +2071,8 @@ export const getServerSideProps: GetServerSideProps<
 
   return {
     props: {
-      investments,
-      userTransactions,
+      investments: session ? investments : null,
+      userTransactions: session ? userTransactions : null,
     },
   };
 };

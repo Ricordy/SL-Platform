@@ -215,7 +215,7 @@ const Carousel: FC<CarouselProps> = ({
               loop={true}
               onSlideChange={handleSlideChange}
             >
-              {items.map((item, index) => {
+              {items?.map((item, index) => {
                 return (
                   <SwiperSlide key={index} className="w-full">
                     <CarouselItem

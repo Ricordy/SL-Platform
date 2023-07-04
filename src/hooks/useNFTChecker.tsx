@@ -1,17 +1,14 @@
-import { Address, useContractRead } from "wagmi";
-import { PuzzleAbi } from "../data/ABIs";
 import { useEffect, useState } from "react";
+import { useContractRead, type Address } from "wagmi";
 
 interface HookProps {
   contractAddress: Address;
   walletAddress: Address;
-  nftId: number;
   watch?: boolean;
 }
 const useNFTChecker = ({
   contractAddress,
   walletAddress,
-  nftId,
   watch = false,
 }: HookProps) => {
   const { data, error, isLoading } = useContractRead({
@@ -21,17 +18,122 @@ const useNFTChecker = ({
         inputs: [
           {
             internalType: "address",
-            name: "_factoryAddress",
+            name: "_slLogicsAddress",
             type: "address",
           },
           {
             internalType: "address",
-            name: "_slLogicsAddress",
+            name: "_slPermissionsAddress",
             type: "address",
           },
         ],
         stateMutability: "nonpayable",
         type: "constructor",
+      },
+      {
+        inputs: [],
+        name: "ClaimingPaused",
+        type: "error",
+      },
+      {
+        inputs: [],
+        name: "EntryMintPaused",
+        type: "error",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "expectedLevel",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "userLevel",
+            type: "uint256",
+          },
+        ],
+        name: "IncorrectUserLevel",
+        type: "error",
+      },
+      {
+        inputs: [],
+        name: "InexistentEntryBatch",
+        type: "error",
+      },
+      {
+        inputs: [
+          {
+            internalType: "string",
+            name: "reason",
+            type: "string",
+          },
+        ],
+        name: "InvalidAddress",
+        type: "error",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "input",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "min",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "max",
+            type: "uint256",
+          },
+        ],
+        name: "InvalidLevel",
+        type: "error",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "input",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "max",
+            type: "uint256",
+          },
+        ],
+        name: "InvalidNumber",
+        type: "error",
+      },
+      {
+        inputs: [],
+        name: "NoTokensRemaining",
+        type: "error",
+      },
+      {
+        inputs: [],
+        name: "NotCEO",
+        type: "error",
+      },
+      {
+        inputs: [],
+        name: "PlatformPaused",
+        type: "error",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "level",
+            type: "uint256",
+          },
+        ],
+        name: "UserMustHaveCompletePuzzle",
+        type: "error",
       },
       {
         anonymous: false,
@@ -62,19 +164,6 @@ const useNFTChecker = ({
         anonymous: false,
         inputs: [
           {
-            indexed: false,
-            internalType: "address",
-            name: "newContract",
-            type: "address",
-          },
-        ],
-        name: "ContractUpgrade",
-        type: "event",
-      },
-      {
-        anonymous: false,
-        inputs: [
-          {
             indexed: true,
             internalType: "address",
             name: "claimer",
@@ -84,12 +173,6 @@ const useNFTChecker = ({
             indexed: true,
             internalType: "uint256",
             name: "tokenId",
-            type: "uint256",
-          },
-          {
-            indexed: false,
-            internalType: "uint256",
-            name: "quantity",
             type: "uint256",
           },
         ],
@@ -190,6 +273,19 @@ const useNFTChecker = ({
         type: "event",
       },
       {
+        inputs: [],
+        name: "COLLECTION_IDS",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
         inputs: [
           {
             internalType: "uint256",
@@ -225,18 +321,17 @@ const useNFTChecker = ({
         inputs: [
           {
             internalType: "address",
-            name: "",
+            name: "_claimer",
             type: "address",
           },
-        ],
-        name: "allowedContracts",
-        outputs: [
           {
-            internalType: "bool",
-            name: "",
-            type: "bool",
+            internalType: "uint256",
+            name: "_tokenId",
+            type: "uint256",
           },
         ],
+        name: "_userAllowedToBurnPuzzle",
+        outputs: [],
         stateMutability: "view",
         type: "function",
       },
@@ -290,61 +385,6 @@ const useNFTChecker = ({
       },
       {
         inputs: [],
-        name: "ceoAddress",
-        outputs: [
-          {
-            internalType: "address",
-            name: "",
-            type: "address",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "cfoAddress",
-        outputs: [
-          {
-            internalType: "address",
-            name: "",
-            type: "address",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "number",
-            type: "uint256",
-          },
-          {
-            internalType: "uint32",
-            name: "position",
-            type: "uint32",
-          },
-          {
-            internalType: "uint256",
-            name: "newNumber",
-            type: "uint256",
-          },
-        ],
-        name: "changetXPositionInFactor5",
-        outputs: [
-          {
-            internalType: "uint256",
-            name: "_final",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
         name: "claimLevel",
         outputs: [],
         stateMutability: "nonpayable",
@@ -358,13 +398,19 @@ const useNFTChecker = ({
         type: "function",
       },
       {
-        inputs: [],
-        name: "factoryAddress",
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        name: "entryIdsArray",
         outputs: [
           {
-            internalType: "address",
+            internalType: "uint24",
             name: "",
-            type: "address",
+            type: "uint24",
           },
         ],
         stateMutability: "view",
@@ -409,72 +455,14 @@ const useNFTChecker = ({
       {
         inputs: [
           {
-            internalType: "uint256",
-            name: "number",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "startPosition",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "numberOfResults",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "factor",
-            type: "uint256",
-          },
-        ],
-        name: "getMultiplePositionsXInDivisionByY",
-        outputs: [
-          {
-            internalType: "uint256[]",
-            name: "",
-            type: "uint256[]",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "number",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "position",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "factor",
-            type: "uint256",
-          },
-        ],
-        name: "getPositionXInDivisionByY",
-        outputs: [
-          {
-            internalType: "uint256",
-            name: "",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
             internalType: "address",
             name: "_user",
             type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "level",
+            type: "uint256",
           },
         ],
         name: "getUserPuzzlePiecesForUserCurrentLevel",
@@ -483,30 +471,6 @@ const useNFTChecker = ({
             internalType: "uint256",
             name: "",
             type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "uint32",
-            name: "number",
-            type: "uint32",
-          },
-          {
-            internalType: "uint32",
-            name: "position",
-            type: "uint32",
-          },
-        ],
-        name: "incrementXPositionInFactor3",
-        outputs: [
-          {
-            internalType: "uint32",
-            name: "_final",
-            type: "uint32",
           },
         ],
         stateMutability: "view",
@@ -541,107 +505,6 @@ const useNFTChecker = ({
         name: "mintEntry",
         outputs: [],
         stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "level",
-            type: "uint256",
-          },
-        ],
-        name: "mintTest",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "batch",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "cap",
-            type: "uint256",
-          },
-        ],
-        name: "mountEntryID",
-        outputs: [
-          {
-            internalType: "uint256",
-            name: "",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "cap",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "currentID",
-            type: "uint256",
-          },
-        ],
-        name: "mountEntryValue",
-        outputs: [
-          {
-            internalType: "uint24",
-            name: "",
-            type: "uint24",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "pause",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "pauseEntryMint",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "paused",
-        outputs: [
-          {
-            internalType: "bool",
-            name: "",
-            type: "bool",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "pausedEntryMint",
-        outputs: [
-          {
-            internalType: "bool",
-            name: "",
-            type: "bool",
-          },
-        ],
-        stateMutability: "view",
         type: "function",
       },
       {
@@ -714,24 +577,6 @@ const useNFTChecker = ({
         inputs: [
           {
             internalType: "address",
-            name: "_contractAddress",
-            type: "address",
-          },
-          {
-            internalType: "bool",
-            name: "_allowed",
-            type: "bool",
-          },
-        ],
-        name: "setAllowedContracts",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "address",
             name: "operator",
             type: "address",
           },
@@ -747,34 +592,21 @@ const useNFTChecker = ({
         type: "function",
       },
       {
-        inputs: [
+        inputs: [],
+        name: "slLogicsAddress",
+        outputs: [
           {
             internalType: "address",
-            name: "_newCEO",
+            name: "",
             type: "address",
           },
         ],
-        name: "setCEO",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "address",
-            name: "_newCFO",
-            type: "address",
-          },
-        ],
-        name: "setCFO",
-        outputs: [],
-        stateMutability: "nonpayable",
+        stateMutability: "view",
         type: "function",
       },
       {
         inputs: [],
-        name: "slLogicsAddress",
+        name: "slPermissionsAddress",
         outputs: [
           {
             internalType: "address",
@@ -831,46 +663,8 @@ const useNFTChecker = ({
       {
         inputs: [
           {
-            internalType: "uint24",
-            name: "value",
-            type: "uint24",
-          },
-        ],
-        name: "unmountEntryValue",
-        outputs: [
-          {
             internalType: "uint256",
-            name: "cap",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "currentID",
-            type: "uint256",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "unpause",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "unpauseEntryMint",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "_tokenId",
+            name: "_collectionId",
             type: "uint256",
           },
         ],
@@ -880,6 +674,25 @@ const useNFTChecker = ({
             internalType: "string",
             name: "",
             type: "string",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        name: "userPuzzlePieces",
+        outputs: [
+          {
+            internalType: "uint32",
+            name: "",
+            type: "uint32",
           },
         ],
         stateMutability: "view",
@@ -907,7 +720,7 @@ const useNFTChecker = ({
         inputs: [
           {
             internalType: "address",
-            name: "user",
+            name: "_user",
             type: "address",
           },
         ],

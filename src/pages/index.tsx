@@ -1,22 +1,18 @@
-import type { NextPage } from "next";
-import { investmentData } from "../data/Investments";
-import Hero from "../components/Hero";
-import Investments from "../components/Investments";
-import Puzzle from "../components/Puzzle";
-import NavBar from "../components/NavBar";
-import { Button } from "../components/ui/Button";
-import Link from "next/link";
-import Carousel from "../components/Carousel";
-import Posts from "../components/Posts";
-import { PostItemProps } from "../@types/post";
-import { type Address, useAccount, useContractRead } from "wagmi";
-import { Carousel as C2 } from "react-responsive-carousel";
-import Image from "next/image";
-import { CoinTestAbi, InvestAbi } from "../data/ABIs";
-import { cn } from "../lib/utils";
-import { useEffect, useState } from "react";
 import { GraphQLClient, gql } from "graphql-request";
-import ProjectCarousel from "../components/ProjectCarousel";
+import type { NextPage } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Carousel as C2 } from "react-responsive-carousel";
+import { useAccount, useContractRead, type Address } from "wagmi";
+import Puzzle from "~/components/Puzzle";
+import Carousel from "../components/Carousel";
+import NavBar from "../components/NavBar";
+import Posts from "../components/Posts";
+import { Button } from "../components/ui/Button";
+import { CoinTestAbi, InvestAbi } from "../data/ABIs";
+import { investmentData } from "../data/Investments";
+import { cn } from "../lib/utils";
 import { ProjectInfo, badges } from "./investment/[address]";
 
 const Home: NextPage = (props) => {
@@ -191,13 +187,15 @@ const Home: NextPage = (props) => {
             />
           )} */}
         </div>
-
-        <div className=" relative left-1/2 z-20 mx-auto -ml-[570px] w-full max-w-[1338px]">
+        {/* My Investments */}
+        {/* <div className=" relative left-1/2 z-20 mx-auto -ml-[570px] w-full max-w-[1338px]">
           <Investments
             isConnected={isConnected}
             userInvestments={props.investments}
           />
-        </div>
+        </div> */}
+        {/* My Puzzle */}
+
         <div className="relative left-1/2 mx-auto -ml-[570px] w-full max-w-[1338px]">
           <Puzzle
             isConnected={isConnected}
@@ -207,6 +205,7 @@ const Home: NextPage = (props) => {
             dbLevels={props.levels}
           />
         </div>
+
         <div className="flex w-full rounded-t-3xl bg-black pb-[132px] pt-[72px]">
           <Posts
             posts={props.posts}
@@ -346,6 +345,9 @@ export async function getStaticProps({ locale, params }) {
           }
           description
           profitRange
+          bg {
+            url
+          }
         }
       }
     `

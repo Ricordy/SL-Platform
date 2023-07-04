@@ -78,7 +78,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
       <nav className="relative z-20 mx-auto hidden w-full max-w-screen-lg shrink-0 justify-between gap-12 py-6 md:flex lg:px-0">
         <Link href="/">
           <Image
-            src={bgWhite ? logoBlack : logoWhite}
+            src={bgWhite ? (logoBlack as string) : (logoWhite as string)}
             alt="Something Legendary logo"
           />
         </Link>
@@ -118,8 +118,9 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                         ? "/icons/notification-grey.svg"
                         : "/icons/notification-white.svg"
                     }
-                    width={16}
-                    height={19}
+                    style={{ width: "auto" }}
+                    width={0}
+                    height={0}
                     alt="Alert"
                   />
                 </Link>
@@ -161,7 +162,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                     height={18}
                   />
                 </button>
-                {showConnection && isConnected && (
+                {/* {showConnection && isConnected && (
                   <button
                     className={cn(
                       "flex w-12 items-center justify-center rounded-full py-3 font-semibold text-white no-underline transition",
@@ -182,13 +183,13 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                       height={18}
                     />
                   </button>
-                )}
+                )} */}
               </div>
             ) : showConnection ? (
               <div className="w-full text-right">
                 {isConnected ? (
                   <button
-                    className="self-end rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+                    className="self-end whitespace-nowrap rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
                     onClick={onClickSignIn as () => void}
                   >
                     Sign In
@@ -198,13 +199,27 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
             ) : null}
           </div>
 
-          {!isConnected && (
-            <button
-              className=" w-50 whitespace-nowrap rounded-full bg-white/20 px-10 py-3 font-semibold text-slate-800 no-underline transition hover:bg-white/30"
-              onClick={() => connect()}
-            >
-              Connect Wallet
-            </button>
+          {showConnection && (
+            <div className="w-full text-right">
+              <button
+                className=" w-50 whitespace-nowrap rounded-full bg-white/20 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/30"
+                onClick={() => (isConnected ? disconnect() : connect())}
+              >
+                {isConnected ? (
+                  <Image
+                    src={
+                      bgWhite ? "/icons/logout-black.svg" : "/icons/logout.svg"
+                    }
+                    alt="Log Out"
+                    className="w-5"
+                    width={20}
+                    height={18}
+                  />
+                ) : (
+                  "Connect Wallet"
+                )}
+              </button>
+            </div>
           )}
 
           {/* <ConnectKitButton
@@ -223,7 +238,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
             <div className="flex w-full items-center justify-between py-3 md:block md:py-2">
               <Link href="/">
                 <Image
-                  src={bgWhite ? logoBlack : logoWhite}
+                  src={bgWhite ? (logoBlack as string) : (logoWhite as string)}
                   alt="Something Legendary logo"
                 />
               </Link>
@@ -319,13 +334,12 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                       My Puzzle
                     </a>
                   </Link> */}
-                  <Link className="flex " href="#connect" legacyBehavior>
-                    <a
-                      className="flex w-fit rounded-md border bg-slate-800 px-4 py-2 text-slate-50"
-                      onClick={disconnect}
-                    >
-                      Disconnect Wallet
-                    </a>
+                  <Link
+                    className="flex w-fit rounded-md border bg-slate-800 px-4 py-2 text-slate-50"
+                    onClick={() => disconnect}
+                    href="#connect"
+                  >
+                    Disconnect Wallet2
                   </Link>
                 </>
               )}

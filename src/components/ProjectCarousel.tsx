@@ -791,7 +791,7 @@ const ProjectCarousel: FC<CarouselProps> = ({
           <Image
             src={
               (
-                currentSlider == 0 || currentSlider == items.length - 1
+                currentSlider == 0 || currentSlider == items?.length - 1
                   ? true
                   : false
               )
@@ -825,7 +825,7 @@ const ProjectCarousel: FC<CarouselProps> = ({
               loop={true}
               onSlideChange={handleSlideChange}
             >
-              {items.map((item, index) => (
+              {items?.map((item, index) => (
                 <SwiperSlide key={index}>
                   <CarouselItem
                     id={item.address}
