@@ -8,13 +8,14 @@ import { cn } from "../lib/utils";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
+import { type InvestmentProps } from "~/@types/investment";
 // import "swiper/css/navigation";
 
 interface CarouselItemProps {
   title: string;
   image: string;
   price: string;
-  address?: string;
+  address: string;
 }
 
 export const CarouselItem = ({
@@ -31,7 +32,9 @@ export const CarouselItem = ({
         )}
         style={{ backgroundImage: `url(${image})` }}
       >
-        <h4 className="z-10 text-3xl uppercase text-white">{title}</h4>
+        <h4 className="z-10 text-center text-3xl uppercase text-white">
+          {title}
+        </h4>
         <div className="relative z-10 flex w-full justify-center gap-3 pb-8">
           <div className="flex">
             <div className="flex gap-3">
@@ -57,39 +60,10 @@ interface CarouselProps {
   className?: string;
   title?: ReactNode;
   prevNavWhite?: boolean;
-  items?: Object[];
+  items?: InvestmentProps[];
   seeMoreLabel?: string;
   seeMoreLink?: string;
 }
-
-export const carouselItems = [
-  {
-    title: "Maserati 3500 GT",
-    image: "bg-[url('/projects/car-1.jpg')]",
-    price: "US$350.000",
-  },
-  {
-    title: "Chevrolet 200",
-    image: "bg-[url('/projects/car-2.jpg')]",
-    price: "US$350.000",
-  },
-
-  {
-    title: "Chevrolet 300",
-    image: "bg-[url('/projects/car-3.jpg')]",
-    price: "US$350.000",
-  },
-  {
-    title: "Maserati 3500 GT",
-    image: "bg-[url('/projects/car-1.jpg')]",
-    price: "US$350.000",
-  },
-  {
-    title: "Chevrolet 200",
-    image: "bg-[url('/projects/car-2.jpg')]",
-    price: "US$350.000",
-  },
-];
 
 const Carousel: FC<CarouselProps> = ({
   id,
@@ -104,16 +78,17 @@ const Carousel: FC<CarouselProps> = ({
     <div className={className ?? ""}>
       <div className="mx-auto flex justify-between">
         {title && (
-          <div className="ml-[58px] self-start pb-[52px] font-medium uppercase">
+          <div className="ml-[58px] self-start pb-[52px] text-center font-medium uppercase">
             {title ?? ""}
           </div>
         )}
         {seeMoreLink && seeMoreLabel && (
           <div className=" mr-[58px]">
-            <Link href={seeMoreLink}>
-              <a className="border-b-2 border-white text-sm uppercase text-white">
-                {seeMoreLabel}
-              </a>
+            <Link
+              href={seeMoreLink}
+              className="border-b-2 border-white text-sm uppercase text-white"
+            >
+              {seeMoreLabel}
             </Link>
           </div>
         )}
@@ -163,7 +138,7 @@ const Carousel: FC<CarouselProps> = ({
                     // price="39595"
                     title={item.basicInvestment.car.basicInfo.title}
                     image={item.basicInvestment.car.basicInfo.cover.url}
-                    price={item.basicInvestment.totalInvestment}
+                    price={item.basicInvestment.totalInvestment.toString()}
                     address={item.address}
                   />
                 </SwiperSlide>

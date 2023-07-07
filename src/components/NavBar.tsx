@@ -202,7 +202,10 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
           {showConnection && (
             <div className="w-full text-right">
               <button
-                className=" w-50 whitespace-nowrap rounded-full bg-white/20 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/30"
+                className={cn(
+                  " w-50 whitespace-nowrap rounded-full  px-10 py-3 font-semibold text-black no-underline transition hover:bg-white/30",
+                  bgWhite ? "bg-black/10" : "bg-white/10"
+                )}
                 onClick={() => (isConnected ? disconnect() : connect())}
               >
                 {isConnected ? (

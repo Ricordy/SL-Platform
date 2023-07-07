@@ -7,7 +7,7 @@ import { type GetServerSideProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FiExternalLink } from "react-icons/fi";
 import Lightbox from "react-image-lightbox";
@@ -25,14 +25,13 @@ import {
   useSigner,
   type Address,
 } from "wagmi";
-import { CarouselItem, carouselItems } from "../../../components/Carousel";
+import { InvestmentModal } from "~/components/modal/InvestmentModal";
+import { CONTRACT_STATUS_WITHDRAW } from "~/constants";
+import { investmentABI, paymentTokenABI } from "~/utils/abis";
 import NavBar from "../../../components/NavBar";
-import { InvestmentModal } from "../../../components/modal/InvestmentModal";
 import { Button } from "../../../components/ui/Button";
 import ProgressBar from "../../../components/ui/ProgressBar";
 import { ExternalLink } from "../../../components/ui/icons/External";
-import { CONTRACT_STATUS_WITHDRAW } from "../../../constants";
-import { CoinTestAbi } from "../../../data/ABIs";
 import { cn, formatAddress } from "../../../lib/utils";
 
 dayjs.extend(localizedFormat);
@@ -182,7 +181,6 @@ export const ProjectInfo = ({
             fixedDecimalScale={true}
             decimalSeparator=","
             thousandSeparator="."
-            decimalScale={2}
             prefix="$ "
           />
         </span>
@@ -197,7 +195,7 @@ export const ProjectInfo = ({
             fixedDecimalScale={true}
             decimalSeparator=","
             thousandSeparator="."
-            decimalScale={2}
+            // decimalScale={2}
             suffix="%"
           />{" "}
           Finished
@@ -252,748 +250,88 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
   const [canWithdraw, setCanWithdraw] = useState(false);
   // console.log(investment);
 
-  const investmentABI = [
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "_totalInvestment",
-          type: "uint256",
-        },
-        {
-          internalType: "address",
-          name: "_entryNFTAddress",
-          type: "address",
-        },
-        {
-          internalType: "address",
-          name: "_paymentTokenAddress",
-          type: "address",
-        },
-        {
-          internalType: "uint8",
-          name: "_contractLevel",
-          type: "uint8",
-        },
-      ],
-      stateMutability: "nonpayable",
-      type: "constructor",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "amount",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "maxAllowed",
-          type: "uint256",
-        },
-      ],
-      name: "InvestmentExceedMax",
-      type: "error",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: true,
-          internalType: "address",
-          name: "owner",
-          type: "address",
-        },
-        {
-          indexed: true,
-          internalType: "address",
-          name: "spender",
-          type: "address",
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "value",
-          type: "uint256",
-        },
-      ],
-      name: "Approval",
-      type: "event",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "time",
-          type: "uint256",
-        },
-      ],
-      name: "ContractFilled",
-      type: "event",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "amount",
-          type: "uint256",
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "profit",
-          type: "uint256",
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "time",
-          type: "uint256",
-        },
-      ],
-      name: "ContractRefilled",
-      type: "event",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: true,
-          internalType: "address",
-          name: "previousOwner",
-          type: "address",
-        },
-        {
-          indexed: true,
-          internalType: "address",
-          name: "newOwner",
-          type: "address",
-        },
-      ],
-      name: "OwnershipTransferred",
-      type: "event",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "amount",
-          type: "uint256",
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "time",
-          type: "uint256",
-        },
-      ],
-      name: "SLWithdraw",
-      type: "event",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: true,
-          internalType: "address",
-          name: "from",
-          type: "address",
-        },
-        {
-          indexed: true,
-          internalType: "address",
-          name: "to",
-          type: "address",
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "value",
-          type: "uint256",
-        },
-      ],
-      name: "Transfer",
-      type: "event",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: false,
-          internalType: "address",
-          name: "user",
-          type: "address",
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "amount",
-          type: "uint256",
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "time",
-          type: "uint256",
-        },
-      ],
-      name: "UserInvest",
-      type: "event",
-    },
-    {
-      anonymous: false,
-      inputs: [
-        {
-          indexed: false,
-          internalType: "address",
-          name: "user",
-          type: "address",
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "amount",
-          type: "uint256",
-        },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "time",
-          type: "uint256",
-        },
-      ],
-      name: "Withdraw",
-      type: "event",
-    },
-    {
-      inputs: [],
-      name: "CONTRACT_LEVEL",
-      outputs: [
-        {
-          internalType: "uint8",
-          name: "",
-          type: "uint8",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "MINIMUM_INVESTMENT",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "owner",
-          type: "address",
-        },
-        {
-          internalType: "address",
-          name: "spender",
-          type: "address",
-        },
-      ],
-      name: "allowance",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "spender",
-          type: "address",
-        },
-        {
-          internalType: "uint256",
-          name: "amount",
-          type: "uint256",
-        },
-      ],
-      name: "approve",
-      outputs: [
-        {
-          internalType: "bool",
-          name: "",
-          type: "bool",
-        },
-      ],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "account",
-          type: "address",
-        },
-      ],
-      name: "balanceOf",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "enum Investment.Status",
-          name: "_newStatus",
-          type: "uint8",
-        },
-      ],
-      name: "changeStatus",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "decimals",
-      outputs: [
-        {
-          internalType: "uint8",
-          name: "",
-          type: "uint8",
-        },
-      ],
-      stateMutability: "pure",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "spender",
-          type: "address",
-        },
-        {
-          internalType: "uint256",
-          name: "subtractedValue",
-          type: "uint256",
-        },
-      ],
-      name: "decreaseAllowance",
-      outputs: [
-        {
-          internalType: "bool",
-          name: "",
-          type: "bool",
-        },
-      ],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "entryNFTAddress",
-      outputs: [
-        {
-          internalType: "address",
-          name: "",
-          type: "address",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "getMaxToInvest",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "maxToInvest",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "spender",
-          type: "address",
-        },
-        {
-          internalType: "uint256",
-          name: "addedValue",
-          type: "uint256",
-        },
-      ],
-      name: "increaseAllowance",
-      outputs: [
-        {
-          internalType: "bool",
-          name: "",
-          type: "bool",
-        },
-      ],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "_amount",
-          type: "uint256",
-        },
-      ],
-      name: "invest",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "investors",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "name",
-      outputs: [
-        {
-          internalType: "string",
-          name: "",
-          type: "string",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "owner",
-      outputs: [
-        {
-          internalType: "address",
-          name: "",
-          type: "address",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "paymentTokenAddress",
-      outputs: [
-        {
-          internalType: "address",
-          name: "",
-          type: "address",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "uint256",
-          name: "_amount",
-          type: "uint256",
-        },
-        {
-          internalType: "uint256",
-          name: "_profitRate",
-          type: "uint256",
-        },
-      ],
-      name: "refill",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "renounceOwnership",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "returnProfit",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "status",
-      outputs: [
-        {
-          internalType: "enum Investment.Status",
-          name: "",
-          type: "uint8",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "symbol",
-      outputs: [
-        {
-          internalType: "string",
-          name: "",
-          type: "string",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "totalContractBalanceStable",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "totalBalance",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "totalInvestment",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "totalSupply",
-      outputs: [
-        {
-          internalType: "uint256",
-          name: "",
-          type: "uint256",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "to",
-          type: "address",
-        },
-        {
-          internalType: "uint256",
-          name: "amount",
-          type: "uint256",
-        },
-      ],
-      name: "transfer",
-      outputs: [
-        {
-          internalType: "bool",
-          name: "",
-          type: "bool",
-        },
-      ],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "from",
-          type: "address",
-        },
-        {
-          internalType: "address",
-          name: "to",
-          type: "address",
-        },
-        {
-          internalType: "uint256",
-          name: "amount",
-          type: "uint256",
-        },
-      ],
-      name: "transferFrom",
-      outputs: [
-        {
-          internalType: "bool",
-          name: "",
-          type: "bool",
-        },
-      ],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "newOwner",
-          type: "address",
-        },
-      ],
-      name: "transferOwnership",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "address",
-          name: "",
-          type: "address",
-        },
-      ],
-      name: "userWithdrawed",
-      outputs: [
-        {
-          internalType: "bool",
-          name: "",
-          type: "bool",
-        },
-      ],
-      stateMutability: "view",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "withdraw",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [],
-      name: "withdrawSL",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-  ] as const;
-
   const investContract = useContract({
     address: investment?.address,
     abi: investmentABI,
     signerOrProvider: signerData,
   });
 
+  // const paymentTokenContract = useContract({
+  //   address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
+  //   abi: paymentTokenABI,
+  //   signerOrProvider: signerData,
+  // });
+
+  // const getContractTotal = async () => {
+  //   await paymentTokenContract
+  //     ?.balanceOf(investment.address)
+  //     .then((total) => total.toNumber());
+  // };
+
   const { data: totalSupply } = useContractRead({
     address: investment.address,
     abi: investmentABI,
     functionName: "totalSupply",
-    watch: true,
+    watch: false,
+    // select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
+    enabled: !!investment,
   });
 
-  const { data: contractTotal } = useContractRead({
-    address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
-    abi: CoinTestAbi,
-    functionName: "balanceOf",
-    args: [investment.address],
-    watch: true,
+  const { data: contractTotal1 } = useBalance({
+    address: investment.address,
+    token: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
+    // abi: paymentTokenABI,
+    // args: [investment.address],
+    // watch: false,
+    // select: (data) => data.div(10 ** 6), // Convert BigInt
+    enabled: !!investment,
   });
 
   const { data: userTotalInvestment } = useContractRead({
     address: investment.address,
     abi: investmentABI,
     functionName: "balanceOf",
-    args: [walletAddress],
-    watch: true,
-  });
-
-  const { data: investors } = useContractRead({
-    address: investment.address,
-    abi: investmentABI,
-    functionName: "investors",
-    watch: true,
-    // staleTime: Infinity,
+    args: [walletAddress as Address],
+    watch: false,
+    enabled: !!investment,
+    // select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
   });
 
   const { data: maxToInvest } = useContractRead({
     address: investment.address,
     abi: investmentABI,
     functionName: "getMaxToInvest",
-    watch: true,
+    watch: false,
+    enabled: !!investment,
+    select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
   });
 
   const { data: minToInvest } = useContractRead({
     address: investment.address,
     abi: investmentABI,
     functionName: "MINIMUM_INVESTMENT",
+    select: (data) => data.toNumber(), // Convert to number
   });
 
-  const { data: paymentTokenBalance } = useBalance({
-    address: walletAddress,
-    token: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
-    watch: true,
+  // const { data: paymentTokenBalance } = useBalance({
+  //   address: walletAddress,
+  //   token: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
+  //   // watch: false,
+  // });
+
+  const { data: paymentTokenBalance } = useContractRead({
+    address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
+    abi: paymentTokenABI,
+    functionName: "balanceOf",
+    args: [walletAddress as Address],
+    watch: false,
   });
 
   const { data: contractStatus } = useContractRead({
     address: investment.address,
     abi: investmentABI,
     functionName: "status",
-    watch: true,
+    watch: false,
   });
 
   const { config: withdrawCallConfig } = usePrepareContractWrite({
@@ -1001,7 +339,9 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
     abi: investmentABI,
     functionName: "withdraw",
     enabled:
-      userTotalInvestment?.gt(0) && contractStatus == CONTRACT_STATUS_WITHDRAW,
+      userTotalInvestment &&
+      userTotalInvestment.gt(0) &&
+      contractStatus == CONTRACT_STATUS_WITHDRAW,
     onSuccess() {
       setCanWithdraw(true);
     },
@@ -1020,16 +360,17 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
   const { write: withdraw } = useContractWrite(withdrawCallConfig);
 
   async function onClickWithdraw() {
-    const results = await investContract.connect(signerData).withdraw();
-    results.wait();
+    const results = investContract && (await investContract.withdraw());
+
     try {
       const response = await fetch("/api/addTransaction", {
         method: "POST",
         body: JSON.stringify({
-          hash: results.hash,
+          hash: results?.hash,
           from: walletAddress,
           to: investment?.address,
-          amountInvested: Number(totalSupply) / 10 ** 6 + profitMinimumValue,
+          amountInvested:
+            Number(totalSupply) / 10 ** 6 + (profitMinimumValue || 0),
           date: dayjs(new Date()).format("YYYY-MM-DD"),
           type: "withdraw",
           investment: {
@@ -1051,10 +392,38 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
     }
   }
 
-  const progress =
-    (totalSupply?.div(10 ** 6).toNumber() /
-      investment.basicInvestment.totalInvestment) *
-    100;
+  useEffect(() => {
+    console.log("walletAddress", walletAddress);
+    console.log("totalSupply", totalSupply);
+    console.log("userTotalInvestment", userTotalInvestment);
+    console.log("maxToInvest", maxToInvest);
+    console.log("minToInvest", minToInvest);
+    console.log("paymentTokenBalance", paymentTokenBalance);
+    console.log("contractStatus", contractStatus);
+
+    // getContractTotal().then((data) => {
+    //   console.log("contractTotal", data?.toNumber());
+    // });
+    // return () => {
+    //   second
+    // }
+  }, []);
+
+  // return <div className="text-center text-white">hello</div>;
+
+  if (!investment) {
+    return (
+      <div className="flex min-h-screen items-center justify-center text-center text-white">
+        Investment not found :(
+      </div>
+    );
+  }
+
+  const progress = totalSupply
+    ? (totalSupply?.div(10 ** 6).toNumber() /
+        investment.basicInvestment.totalInvestment) *
+      100
+    : 0;
 
   const phases = investment.restorationPhases.map((phase) => ({
     status: phase.restorationStatus.toLocaleLowerCase(),
@@ -1109,7 +478,7 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
           <div className="sticky top-0 z-20 mx-auto flex w-full items-center justify-between bg-white py-4">
             <div className="flex flex-col ">
               <h2 className="text-4xl font-medium">
-                {investment?.basicInvestment.car.basicInfo.title}{" "}
+                {investment.basicInvestment.car.basicInfo.title}{" "}
                 <Image
                   src="/icons/heart-full.svg"
                   width={25}
@@ -1119,8 +488,9 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
               </h2>
               <p>{investment.basicInvestment.car.subtitle}</p>
             </div>
+
             <InvestmentModal
-              userAddress={walletAddress}
+              userAddress={walletAddress as Address}
               className="flex flex-col justify-between align-middle"
               title={investment?.basicInvestment.car.basicInfo.title}
               chassis={investment?.basicInvestment.car.chassis}
@@ -1134,13 +504,11 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
               }
               totalInvestment={Number(totalSupply) / 10 ** 6}
               maxToInvest={
-                Number(maxToInvest) / 10 ** 6 -
-                userTotalInvestment?.div(10 ** 6)?.toNumber()
+                Number(maxToInvest) -
+                userTotalInvestment?.div(10 ** 6).toNumber()
               }
               minToInvest={Number(minToInvest)}
-              paymentTokenBalance={
-                Number(paymentTokenBalance?.formatted) / 10 ** 6
-              }
+              paymentTokenBalance={Number(paymentTokenBalance?.div(10 ** 6))}
             />
           </div>
           {investment.basicInvestment.car.gallery.length > 0 && (
@@ -1199,7 +567,7 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                       height={12}
                     />{" "}
                     <span className="text-primaryGold ">
-                      {investors && investors.toNumber()}
+                      {/* {investors && investors.toNumber()} */}
                     </span>
                   </h4>
                 </div>
@@ -1286,7 +654,7 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                   </Tab>
                 ))}
               </Tab.List>
-              {userTotalInvestment?.gt(0) && (
+              {userTotalInvestment?.gt(0) && phases.length > 0 && (
                 <Tab.Panels className="mt-[52px]">
                   {phases.map((phase, idx) => (
                     <Tab.Panel
@@ -1418,7 +786,7 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                 <div className="flex">Total Invested:</div>
                 <span className="pb-2 text-4xl font-semibold tracking-widest text-primaryGreen">
                   <NumericFormat
-                    value={Number(totalSupply) / 10 ** 6}
+                    value={(Number(totalSupply) / 10 ** 6).toString()}
                     displayType="text"
                     fixedDecimalScale={true}
                     decimalSeparator=","
@@ -1434,7 +802,12 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                     <div className="flex items-center gap-3 text-2xl font-medium">
                       <NumericFormat
                         value={
-                          Number(totalSupply) / 10 ** 6 + profitMinimumValue
+                          totalSupply && profitMinimumValue
+                            ? (
+                                totalSupply.div(10 ** 6).toNumber() +
+                                profitMinimumValue
+                              ).toString()
+                            : 0
                         }
                         displayType="text"
                         fixedDecimalScale={true}
@@ -1453,7 +826,12 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                     <div className="flex items-center gap-3 text-2xl font-medium">
                       <NumericFormat
                         value={
-                          Number(totalSupply) / 10 ** 6 + profitMaximumValue
+                          totalSupply && profitMaximumValue
+                            ? (
+                                totalSupply.div(10 ** 6).toNumber() +
+                                profitMaximumValue
+                              ).toString()
+                            : 0
                         }
                         displayType="text"
                         fixedDecimalScale={true}
@@ -1496,7 +874,7 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                   </div>
                 </div>
                 <div className="flex justify-center gap-8 pb-8">
-                  <InvestmentModal
+                  {/* <InvestmentModal
                     className="flex flex-col justify-between align-middle"
                     title={investment?.basicInvestment.car.basicInfo.title}
                     chassis={investment?.basicInvestment.car.chassis}
@@ -1514,7 +892,7 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                     maxToInvest={Number(maxToInvest) / 10 ** 6}
                     minToInvest={Number(minToInvest)}
                     paymentTokenBalance={Number(paymentTokenBalance?.formatted)}
-                  />
+                  /> */}
                   <Button
                     disabled={!canWithdraw}
                     variant="outline"
@@ -1572,7 +950,7 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
           <div className="relative z-20 mx-auto flex rounded-t-[56px] bg-black pb-[128px] pt-[72px] text-white">
             <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[52px]">
               <h3 className="text-2xl uppercase">Our suggestion for you</h3>
-              <div className="mx-auto flex w-full max-w-screen-lg gap-6">
+              {/* <div className="mx-auto flex w-full max-w-screen-lg gap-6">
                 {carouselItems.slice(0, 3).map((item, idx) => (
                   <CarouselItem
                     key={idx}
@@ -1581,7 +959,7 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                     price={item.price}
                   />
                 ))}
-              </div>
+              </div> */}
             </div>
           </div>
         </section>
@@ -1590,9 +968,9 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
   );
 };
 
-const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY, {
+const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
   headers: {
-    Authorization: process.env.HYGRAPH_BEARER,
+    Authorization: process.env.HYGRAPH_BEARER as string,
   },
 });
 
@@ -1665,7 +1043,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     gql`
       query InvestingHere {
         transactions(
-          where: { to: "0xCafac3dD18aC6c6e92c921884f9E4176737C052c" }
+          where: { to: "${address}" }
         ) {
           from
         }
@@ -1678,37 +1056,3 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 export default Investment;
-
-// export async function getStaticProps({ locale, params }) {
-
-//   const { investments:activeInvestments } = await hygraph.request(
-//     gql`
-//     query ActiveInvestments{
-//       investments {
-//         id
-//         basicInvestment {
-//           id
-//           address
-//           totalInvestment
-//           investmentStatus
-//           car {
-//             basicInfo {
-//               title
-//               cover {
-//                 id
-//                 url
-//               }
-//             }
-//           }
-//         }
-//       }
-//     }
-//     `
-//   );
-
-//   return {
-//     props: {
-//       activeInvestments,
-//     },
-//   };
-// }

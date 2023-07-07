@@ -17,6 +17,8 @@ import {
   useWaitForTransaction,
   type Address,
 } from "wagmi";
+import { type InvestmentProps } from "~/@types/investment";
+import { type TransactionProps } from "~/@types/transaction";
 import useCheckEntryNFT from "~/hooks/useCheckEntryNFT";
 import Carousel from "../components/Carousel";
 import NavBar from "../components/NavBar";
@@ -49,44 +51,6 @@ interface InvestmentType extends InvestmentDbType, InvestmentBlockchainType {}
 //   (i) => userInvestments.indexOf(i.id) > -1
 // );
 
-export interface TransactionProps {
-  userTransactions: {
-    amountInvested: number;
-    hash: string;
-    to: string;
-    date: string;
-    investment: {
-      address: string;
-      basicInvestment: {
-        totalInvestment: number;
-        car: {
-          basicInfo: {
-            cover: {
-              url: string;
-            };
-            title: string;
-          };
-        };
-      };
-    };
-    totalInvested?: number;
-  }[];
-}
-export interface InvestmentProps {
-  address: string;
-  basicInvestment: {
-    totalInvestment: number;
-    investmentStatus: string;
-    car: {
-      basicInfo: {
-        title: string;
-        cover: {
-          url: string;
-        };
-      };
-    };
-  };
-}
 export interface InvestmentsProps {
   investments: InvestmentProps[];
 }
@@ -2001,9 +1965,9 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
 
 export default MyInvestments;
 
-const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY, {
+const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
   headers: {
-    Authorization: process.env.HYGRAPH_BEARER,
+    Authorization: process.env.HYGRAPH_BEARER as string,
   },
 });
 

@@ -2,9 +2,12 @@ import { Tab } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useConnect, useDisconnect } from "wagmi";
+import { InjectedConnector } from "wagmi/connectors/injected";
 import { investmentStatusesData } from "../data/InvestmentStatuses";
 import { cn } from "../lib/utils";
 import ProjectCarousel from "./ProjectCarousel";
+import { Button } from "./ui/Button";
 
 interface InvestmentsProps {
   isConnected: boolean;
@@ -15,7 +18,10 @@ export default function Investments({
   userInvestments,
 }: InvestmentsProps) {
   const [investmentStatuses] = useState(investmentStatusesData);
-
+  const { connect } = useConnect({
+    connector: new InjectedConnector(),
+  });
+  const { disconnect } = useDisconnect();
   return (
     <section
       id="investments"
@@ -122,7 +128,7 @@ export default function Investments({
         </Tab.Group>
       )}
       {!isConnected && (
-        <div className="ml-[58px] grid grid-flow-row auto-rows-auto grid-cols-3 justify-center gap-4 ">
+        <div className="ml-[58px] grid grid-flow-row auto-rows-auto grid-cols-3 justify-center gap-4 pb-[132px] ">
           <div className="flex flex-col items-center rounded-md bg-puzzleProfitNotice p-8">
             <h4 className="mb-4 text-2xl font-medium text-primaryGreen">
               Start your investments
@@ -131,6 +137,23 @@ export default function Investments({
               Sed ut perspiciatis unde omnis iste natus error sit voluptatem
               accusantium doloremque laudantium, totam.
             </p>
+
+            <Button
+              variant={"outline"}
+              onClick={() => (isConnected ? disconnect() : connect())}
+            >
+              {isConnected ? (
+                <Image
+                  src={"/icons/logout.svg"}
+                  alt="Log Out"
+                  className="w-5"
+                  width={20}
+                  height={18}
+                />
+              ) : (
+                "Connect Wallet"
+              )}
+            </Button>
             {/* {!isConnected && (
               <ConnectKitButton
                 label="CONNECT WALLET"

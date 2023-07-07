@@ -1,53 +1,47 @@
 import { GraphQLClient, gql } from "graphql-request";
 import type { NextPage } from "next";
-import Image from "next/image";
+import { getSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Carousel as C2 } from "react-responsive-carousel";
-import { useAccount, useContractRead, type Address } from "wagmi";
-import Puzzle from "~/components/Puzzle";
+import { useAccount } from "wagmi";
+import { type InvestmentProps } from "~/@types/investment";
+import { type SliderProps } from "~/@types/slider";
+import Investments from "~/components/Investments";
+import Posts from "~/components/Posts";
+import Highlight from "~/components/investment/Highlight";
 import Carousel from "../components/Carousel";
 import NavBar from "../components/NavBar";
-import Posts from "../components/Posts";
-import { Button } from "../components/ui/Button";
-import { CoinTestAbi, InvestAbi } from "../data/ABIs";
-import { investmentData } from "../data/Investments";
-import { cn } from "../lib/utils";
-import { ProjectInfo, badges } from "./investment/[address]";
-
+interface ActiveInvestmentsProps {
+  investments: InvestmentProps[];
+}
 const Home: NextPage = (props) => {
   const { isConnected, isDisconnected, address } = useAccount();
-  const highlightContractAddress = investmentData.find(
-    (investment) => investment.id === 1
-  );
 
-  const { data: contractTotal } = useContractRead({
-    address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
-    abi: CoinTestAbi,
-    functionName: "balanceOf",
-    args: [
-      highlightContractAddress?.address[
-        process.env.NEXT_PUBLIC_CHAIN_ID as Address
-      ],
-    ],
-    watch: true,
-  });
+  // const { data: contractTotal } = useContractRead({
+  //   address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
+  //   abi: CoinTestAbi,
+  //   functionName: "balanceOf",
+  //   args: [
+  //     highlightContractAddress?.address[
+  //       process.env.NEXT_PUBLIC_CHAIN_ID as Address
+  //     ],
+  //   ],
+  //   watch: true,
+  // });
 
-  const { data: totalInvestment } = useContractRead({
-    address:
-      highlightContractAddress.address[
-        process.env.NEXT_PUBLIC_CHAIN_ID as Address
-      ],
-    abi: InvestAbi,
-    functionName: "totalInvestment",
-  });
+  // const { data: totalInvestment } = useContractRead({
+  //   address:
+  //     highlightContractAddress.address[
+  //       process.env.NEXT_PUBLIC_CHAIN_ID as Address
+  //     ],
+  //   abi: InvestAbi,
+  //   functionName: "totalInvestment",
+  // });
 
-  const progress =
-    (Number(contractTotal) / 10 ** 6 / (Number(totalInvestment) / 10 ** 6)) *
-    100;
+  const contractTotal = 10;
+  const totalInvestment = 1000;
 
   // Carousel
-  // const images = ["/bg/bg-home.jpg", "/bg/bg-our-cars.jpg"];
   const images = props.slider.image;
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -63,19 +57,29 @@ const Home: NextPage = (props) => {
   return (
     <>
       <section className="mx-auto w-full bg-white">
-        <div className="relative flex min-h-screen w-full flex-col rounded-bl-[56px] bg-black bg-opacity-80 bg-cover bg-right bg-no-repeat">
+        {/* <div className="absolute z-20 h-[615px] w-full rounded-bl-[200px] bg-gradient-to-b from-black to-gray-950"></div> */}
+        {/* <div class="relative h-[968px] w-[1444px]">
+          <div class="absolute left-0 top-0 h-[968px] w-[1444px] rounded-bl-[50px] rounded-br-[50px] bg-gray-950"></div>
+          <img
+            class="absolute left-[2px] top-0 h-[784px] w-[1442px] opacity-80"
+            src="https://via.placeholder.com/1442x784"
+          />
+          <div class="absolute left-[1149px] top-[12px] h-[1147px] w-[772px] origin-top-left rotate-90 bg-gradient-to-b from-black to-gray-950"></div>
+          <div class="absolute left-0 top-[353px] h-[615px] w-[1442px] rounded-bl-[200px] bg-gradient-to-b from-black to-gray-950"></div>
+        </div> */}
+        <div className="relative flex min-h-screen w-full flex-col rounded-bl-[126px] bg-opacity-80 bg-cover bg-center bg-no-repeat">
           {images.map((image, index) => (
             <div
               key={index}
-              className={`absolute h-full w-full rounded-bl-[56px] bg-black bg-opacity-80 bg-cover bg-right transition-opacity duration-1000 ${
+              className={`absolute left-0 min-h-screen w-full rounded-bl-[156px] bg-black bg-opacity-80 bg-cover transition-opacity duration-1000 ${
                 activeIndex === index ? "opacity-100" : "opacity-0"
               }`}
               style={{ backgroundImage: `url(${image.url})` }}
             />
           ))}
           <div className="absolute top-0 z-0 flex min-h-[83px] w-full bg-[url('/bg/bg-navbar.svg')]"></div>
-          <div className="absolute left-0 z-10 flex min-h-screen w-full bg-[url('/bg/gradient-vertical-header.svg')] bg-contain bg-bottom bg-no-repeat"></div>
-          <div className="absolute bottom-0 z-0 flex min-h-screen w-full rounded-bl-[56px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat"></div>
+          <div className="absolute left-0 z-10 flex min-h-screen w-full rounded-bl-[116px] bg-[url('/bg/gradient-vertical-header.svg')] bg-cover bg-bottom bg-no-repeat"></div>
+          <div className="absolute bottom-0 z-0 flex min-h-screen w-full rounded-bl-[116px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat"></div>
           <NavBar />
           <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
             <div className="flex flex-col gap-12 pt-24">
@@ -115,70 +119,13 @@ const Home: NextPage = (props) => {
             items={props.activeInvestments}
             prevNavWhite={true}
             title={<h2 className="text-2xl text-white">Our cars</h2>}
-            //seeMoreLabel="See more"
-            //seeMoreLink="/our-cars"
+            seeMoreLabel="See more"
+            seeMoreLink="/our-cars"
           />
-          {isDisconnected && (
-            <div className="ml-[58px] flex flex-col py-[132px]">
-              <h2 className="mb-[52px] text-2xl font-medium uppercase">
-                Highlight
-              </h2>
-              <div className="flex gap-6">
-                <div className="relative flex w-full">
-                  <C2 showStatus={false} showThumbs={false}>
-                    {[
-                      "/projects/car-1-detail.jpg",
-                      "/projects/car-1-detail.jpg",
-                    ].map((image, idx) => (
-                      <div key={idx} className="relative w-full">
-                        <Image src={image} width={528} height={396} alt="car" />
-                      </div>
-                    ))}
-                  </C2>
-                </div>
-                <div className="flex flex-col">
-                  <h2 className="pb-8 text-3xl font-medium text-primaryGreen">
-                    Mercedes Benz 280 Sl
-                  </h2>
-                  <ProjectInfo progress={progress} />
-                  <p>
-                    Mercedes-Benz introduced the 280SL less than a year after
-                    the 250SL arrived on the scene, and closed out the “pagoda”
-                    SL line in 1971 after nearly 24,000 were built. The 280 was
-                    very similar, to its predecessor, using clean, elegant
-                    lines, intelligent placement of the wheels in ...
-                  </p>
-                  <div className="flex gap-4 py-8">
-                    <Image
-                      src="/icons/tasks.svg"
-                      width={22}
-                      height={22}
-                      alt="Tasks"
-                    />
-                    <span className="pr-2 text-xl font-medium">Blasting</span>
-                    <span
-                      className={cn(
-                        "flex gap-2 rounded-full px-2 py-1 text-xs",
-                        badges["inprogress"].bg,
-                        badges["inprogress"].text
-                      )}
-                    >
-                      <Image
-                        src={badges["inprogress"].icon}
-                        width={12}
-                        height={12}
-                        alt={badges["inprogress"].label}
-                      />
-                      {badges["inprogress"].label}
-                    </span>
-                  </div>
-                  <Button variant="outline" className="self-start">
-                    Know more
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Highlight Component */}
+
+          {!isConnected && <Highlight investment={props.highlightInvestment} />}
+
           {/* {isConnected && (
             <Carousel
               id="2"
@@ -188,15 +135,15 @@ const Home: NextPage = (props) => {
           )} */}
         </div>
         {/* My Investments */}
-        {/* <div className=" relative left-1/2 z-20 mx-auto -ml-[570px] w-full max-w-[1338px]">
+        <div className=" relative left-1/2 z-20 mx-auto -ml-[570px] w-full max-w-[1338px]">
           <Investments
             isConnected={isConnected}
             userInvestments={props.investments}
           />
-        </div> */}
+        </div>
         {/* My Puzzle */}
 
-        <div className="relative left-1/2 mx-auto -ml-[570px] w-full max-w-[1338px]">
+        {/* <div className="relative left-1/2 mx-auto -ml-[570px] w-full max-w-[1338px]">
           <Puzzle
             isConnected={isConnected}
             className="relative flex w-full  max-w-[1338px] flex-col pt-[132px]"
@@ -204,7 +151,7 @@ const Home: NextPage = (props) => {
             puzzlePieces={props.puzzlePieces}
             dbLevels={props.levels}
           />
-        </div>
+        </div> */}
 
         <div className="flex w-full rounded-t-3xl bg-black pb-[132px] pt-[72px]">
           <Posts
@@ -222,13 +169,15 @@ const Home: NextPage = (props) => {
 
 export default Home;
 
-const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY, {
+const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
   headers: {
-    Authorization: process.env.HYGRAPH_BEARER,
+    Authorization: process.env.HYGRAPH_BEARER as string,
   },
 });
 
-export async function getStaticProps({ locale, params }) {
+export async function getStaticProps(ctx) {
+  const session = await getSession(ctx);
+
   const { posts } = await hygraph.request(
     gql`
       query MyQuery {
@@ -251,63 +200,77 @@ export async function getStaticProps({ locale, params }) {
     `
   );
 
-  const { investments: activeInvestments } = await hygraph.request(
-    gql`
-      query ActiveInvestments {
-        investments(where: { basicInvestment: { investmentStatus: Active } }) {
-          id
-          address
-          basicInvestment {
+  const { investments: activeInvestments }: ActiveInvestmentsProps =
+    await hygraph.request(
+      gql`
+        query ActiveInvestments {
+          investments(
+            where: { basicInvestment: { investmentStatus: Active } }
+          ) {
             id
-            totalInvestment
-            investmentStatus
-            car {
-              basicInfo {
-                title
-                cover {
-                  id
-                  url
-                }
-              }
-            }
-          }
-        }
-      }
-    `
-  );
-
-  const { investments } = await hygraph.request(
-    gql`
-      query UserInvestments {
-        investments(
-          where: {
-            transactions_some: {
-              from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
-            }
-          }
-        ) {
-          id
-          address
-          basicInvestment {
-            totalInvested
-            totalInvestment
-            investmentStatus
-            car {
+            address
+            highlight
+            basicInvestment {
               id
-              basicInfo {
-                cover {
+              totalInvested
+              totalInvestment
+              investmentStatus
+              car {
+                basicInfo {
+                  title
+                  cover {
+                    id
+                    url
+                  }
+                }
+                description
+                gallery {
                   url
                 }
-                title
+              }
+            }
+            restorationPhases(where: { restorationStatus: InProgress }) {
+              title
+              restorationStatus
+            }
+          }
+        }
+      `
+    );
+
+  const { investments }: { investments: InvestmentProps[] } =
+    await hygraph.request(
+      gql`
+        query UserInvestments {
+          investments(
+            where: {
+              transactions_some: {
+                from: "${session?.user.id}"
+              }
+            }
+          ) {
+            id
+            address
+            basicInvestment {
+              totalInvested
+              totalInvestment
+              investmentStatus
+              car {
+                id
+                basicInfo {
+                  cover {
+                    url
+                  }
+                  title
+                }
               }
             }
           }
         }
-      }
-    `
-  );
+      `
+    );
 
-  const { slider } = await hygraph.request(
+  const { slider }: SliderProps = await hygraph.request(
     gql`
       query SliderHome {
         slider(where: { title: "Home" }) {
@@ -353,10 +316,15 @@ export async function getStaticProps({ locale, params }) {
     `
   );
 
+  const highlightInvestment = activeInvestments.find(
+    (investment) => investment.highlight === true
+  );
+
   return {
     props: {
       posts,
       activeInvestments,
+      highlightInvestment,
       investments,
       slider,
       puzzlePieces,
