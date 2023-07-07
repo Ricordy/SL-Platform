@@ -25,6 +25,7 @@ import {
   useSigner,
   type Address,
 } from "wagmi";
+import { type TransactionItemProps } from "~/@types/TransactionItem";
 import { InvestmentModal } from "~/components/modal/InvestmentModal";
 import { CONTRACT_STATUS_WITHDRAW } from "~/constants";
 import { investmentABI, paymentTokenABI } from "~/utils/abis";
@@ -204,12 +205,19 @@ export const ProjectInfo = ({
     </div>
   );
 };
-const TransactionItem = ({ value, date, type, hash, divisor = true }) => {
+
+const TransactionItem = ({
+  value,
+  date,
+  type,
+  hash,
+  divisor = true,
+}: TransactionItemProps) => {
   return (
     <div className="flex items-center justify-between">
       <span>
         <NumericFormat
-          value={value}
+          value={value.toString()}
           displayType="text"
           fixedDecimalScale={true}
           decimalSeparator=","
@@ -547,9 +555,8 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                 <div className="flex flex-col gap-2 rounded-md border border-tabInactive py-2 pl-24">
                   <h4 className="text-ogBlack">Total Invested until now</h4>
                   <span className="text-3xl font-medium tracking-wider text-primaryGreen">
-                    {totalSupply?.toString()}
                     <NumericFormat
-                      value={Number(totalSupply) / 10 ** 6}
+                      value={totalSupply && totalSupply.div(10 ** 6).toString()}
                       displayType="text"
                       fixedDecimalScale={true}
                       decimalSeparator=","
@@ -558,8 +565,8 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                       prefix="$ "
                     />
                   </span>
-                  <h4 className="text-primaryGrey">
-                    Investing here:{countUniques(transactions)}
+                  <h4 className="flex gap-3 text-primaryGrey">
+                    Investing here: {countUniques(transactions)}
                     <Image
                       src="/icons/mini-avatar.svg"
                       alt="Avatar"
