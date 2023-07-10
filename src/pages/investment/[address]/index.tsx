@@ -17,7 +17,6 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import {
   useAccount,
-  useBalance,
   useContract,
   useContractRead,
   useContractWrite,
@@ -26,6 +25,7 @@ import {
   type Address,
 } from "wagmi";
 import { type TransactionItemProps } from "~/@types/TransactionItem";
+import { type InvestmentProps } from "~/@types/investment";
 import { InvestmentModal } from "~/components/modal/InvestmentModal";
 import { CONTRACT_STATUS_WITHDRAW } from "~/constants";
 import { investmentABI, paymentTokenABI } from "~/utils/abis";
@@ -37,65 +37,66 @@ import { cn, formatAddress } from "../../../lib/utils";
 
 dayjs.extend(localizedFormat);
 
-interface InvestmentProps {
-  investment: {
-    basicInvestment: {
-      totalInvestment: number;
-      investmentStatus: string;
-      car: {
-        basicInfo: {
-          title: string;
-          cover: {
-            url: string;
-          };
-        };
-        subtitle: string;
-        shortDescription: string;
-        description: string;
-        chassis: string;
-        totalProduction: number;
-        totalModelProduction: number;
-        colorCombination: string;
-        gallery: {
-          url: string;
-        }[];
-        chart: {
-          url: string;
-        };
-      };
-    };
-    address: Address;
-    salesEnd: string;
-    salesStart: string;
-    estimateClaiming: string;
-    level: {
-      profitRange: string;
-    };
-    restorationPhases: {
-      title: string;
-      deadline: string;
-      currentCost: number;
-      costExpectation: number;
-      restorationStatus: string;
-      gallery: {
-        url: string;
-      }[];
-      restorationUpdates: {
-        title: string;
-        date: string;
-      }[];
-    }[];
-    transactions: {
-      amountInvested: number;
-      date: string;
-      type: string;
-      hash: string;
-    }[];
-  };
-  transactions: {
-    from: Address;
-  };
-}
+// interface InvestmentProps {
+//   investment: {
+//     basicInvestment: {
+//       totalInvestment: number;
+//       investmentStatus: string;
+//       car: {
+//         basicInfo: {
+//           title: string;
+//           cover: {
+//             url: string;
+//           };
+//         };
+//         subtitle: string;
+//         shortDescription: string;
+//         description: string;
+//         chassis: string;
+//         totalProduction: number;
+//         totalModelProduction: number;
+//         colorCombination: string;
+//         gallery: {
+//           url: string;
+//         }[];
+//         chart: {
+//           url: string;
+//         };
+//       };
+//     };
+//     address: Address;
+//     salesEnd: string;
+//     salesStart: string;
+//     estimateClaiming: string;
+//     level: {
+//       profitRange: string;
+//     };
+//     restorationPhases: {
+//       title: string;
+//       deadline: string;
+//       currentCost: number;
+//       costExpectation: number;
+//       restorationStatus: string;
+//       gallery: {
+//         url: string;
+//       }[];
+//       restorationUpdates: {
+//         title: string;
+//         date: string;
+//       }[];
+//     }[];
+//     transactions: {
+//       amountInvested: number;
+//       date: string;
+//       type: string;
+//       hash: string;
+//       from: string;
+//     }[];
+//   };
+//   transactions: {
+//     from: Address;
+//   };
+// }
 
 const InvestmentGallery = ({ images }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -212,9 +213,16 @@ const TransactionItem = ({
   type,
   hash,
   divisor = true,
+  wallet,
+  from,
 }: TransactionItemProps) => {
   return (
-    <div className="flex items-center justify-between">
+    <div
+      className={cn(
+        "flex items-center justify-between",
+        from === wallet ? "bg-red-200/20" : ""
+      )}
+    >
       <span>
         <NumericFormat
           value={value.toString()}
@@ -285,15 +293,15 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
     enabled: !!investment,
   });
 
-  const { data: contractTotal1 } = useBalance({
-    address: investment.address,
-    token: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
-    // abi: paymentTokenABI,
-    // args: [investment.address],
-    // watch: false,
-    // select: (data) => data.div(10 ** 6), // Convert BigInt
-    enabled: !!investment,
-  });
+  // const { data: contractTotal1 } = useBalance({
+  //   address: investment.address,
+  //   token: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
+  //   // abi: paymentTokenABI,
+  //   // args: [investment.address],
+  //   // watch: false,
+  //   // select: (data) => data.div(10 ** 6), // Convert BigInt
+  //   enabled: !!investment,
+  // });
 
   const { data: userTotalInvestment } = useContractRead({
     address: investment.address,
@@ -793,7 +801,7 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                 <div className="flex">Total Invested:</div>
                 <span className="pb-2 text-4xl font-semibold tracking-widest text-primaryGreen">
                   <NumericFormat
-                    value={(Number(totalSupply) / 10 ** 6).toString()}
+                    value={(Number(userTotalInvestment) / 10 ** 6).toString()}
                     displayType="text"
                     fixedDecimalScale={true}
                     decimalSeparator=","
@@ -809,9 +817,9 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                     <div className="flex items-center gap-3 text-2xl font-medium">
                       <NumericFormat
                         value={
-                          totalSupply && profitMinimumValue
+                          userTotalInvestment && profitMinimumValue
                             ? (
-                                totalSupply.div(10 ** 6).toNumber() +
+                                userTotalInvestment.div(10 ** 6).toNumber() +
                                 profitMinimumValue
                               ).toString()
                             : 0
@@ -833,9 +841,9 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                     <div className="flex items-center gap-3 text-2xl font-medium">
                       <NumericFormat
                         value={
-                          totalSupply && profitMaximumValue
+                          userTotalInvestment && profitMaximumValue
                             ? (
-                                totalSupply.div(10 ** 6).toNumber() +
+                                userTotalInvestment.div(10 ** 6).toNumber() +
                                 profitMaximumValue
                               ).toString()
                             : 0
@@ -919,6 +927,8 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                       date={transaction.date}
                       type={transaction.type}
                       hash={transaction.hash}
+                      wallet={walletAddress}
+                      from={transaction.from}
                     />
                   ))}
                 </div>
@@ -983,7 +993,7 @@ const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { address } = context.query;
-  const { investment }: InvestmentProps = await hygraph.request(
+  const { investment }: { investment: InvestmentProps } = await hygraph.request(
     gql`
       query {
         investment(
@@ -1040,6 +1050,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             date
             type
             hash
+            from
           }
         }
       }

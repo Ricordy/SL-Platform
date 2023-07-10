@@ -295,6 +295,9 @@ export async function getServerSideProps(ctx) {
           image {
             url
           }
+          imageCollected {
+            url
+          }
         }
       }
     `

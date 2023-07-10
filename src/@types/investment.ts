@@ -73,6 +73,8 @@ export interface InvestmentProps {
     date: string;
     type: string;
     hash: string;
+    from: Address;
+    wallet: Address;
   }[];
 }
 

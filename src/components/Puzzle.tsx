@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 import Image from "next/image";
-import { useState, type FC } from "react";
+import { useEffect, useState, type FC } from "react";
 import {
   useContractRead,
   useContractReads,
@@ -8,33 +8,13 @@ import {
   usePrepareContractWrite,
   type Address,
 } from "wagmi";
+import { type PuzzleProps } from "~/@types/Puzzle";
 import { FactoryABI, SLCoreABI, SLLogicsABI } from "~/utils/abis";
 import useGetUserPuzzlePieces from "../hooks/useGetUserPuzzlePieces";
 import { cn } from "../lib/utils";
+import { CarouselItem } from "./puzzle/Carousel";
 import Level from "./puzzle/Level";
 import { Button } from "./ui/Button";
-interface PuzzleProps {
-  className?: string;
-  isConnected: boolean;
-  userAddress: Address;
-  puzzlePieces: {
-    tokenid: number;
-    title: string;
-    image: {
-      url: string;
-    };
-  }[];
-  dbLevels: {
-    basicLevel: {
-      title: string;
-    };
-    bg: {
-      url: string;
-    };
-    description: string;
-    profitRange: string;
-  }[];
-}
 
 function noDecimals(value: number) {
   return value / 10 ** 6;
@@ -72,11 +52,12 @@ const Puzzle: FC<PuzzleProps> = ({
     abi: SLLogicsABI,
   };
 
-  const { userPuzzlePieces, userPieces } = useGetUserPuzzlePieces({
-    userAddress,
-    level: currentLevel,
-    // watch: true,
-  });
+  const { userPuzzlePieces, userPieces, userTotalPieces } =
+    useGetUserPuzzlePieces({
+      userAddress,
+      level: currentLevel,
+      // watch: true,
+    });
 
   // const { isSuccess: userAllowedLevel, error: errorUserLevel } =
   //   useContractRead({
@@ -153,11 +134,11 @@ const Puzzle: FC<PuzzleProps> = ({
     args: [
       userAddress,
       BigNumber.from(currentLevel),
-      data?.[6],
-      data[currentLevel - 1],
+      data?.[6] as BigNumber,
+      data?.[currentLevel - 1] as BigNumber,
     ],
     // watch: true,
-    enabled: currentLevel === data?.[6]?.toNumber(),
+    enabled: data && currentLevel === data?.[6]?.toNumber(),
     onSettled(data, error) {
       // console.log(
       //   "debug",
@@ -185,9 +166,9 @@ const Puzzle: FC<PuzzleProps> = ({
     abi: SLCoreABI,
     functionName: "claimPiece",
     enabled: userCanClaimPiece,
-    // onError(err) {
-    //   toast.error(err.message);
-    // },
+    onError(err) {
+      console.log(err);
+    },
     // onSuccess() {
     //   toast.success("Puzzle reivindicado com sucesso!");
     // },
@@ -200,7 +181,7 @@ const Puzzle: FC<PuzzleProps> = ({
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
     abi: SLCoreABI,
     functionName: "claimLevel",
-    enabled: Number(data[currentLevel - 1]) > 9 && data[6] == currentLevel,
+    enabled: Number(data?.[currentLevel - 1]) > 9 && data?.[6] == currentLevel,
   });
 
   const { write: claimLevel, isLoading: isLoadingClaimLevel } =
@@ -223,41 +204,18 @@ const Puzzle: FC<PuzzleProps> = ({
     collected: userPieces.length.toString(),
   }));
 
-  const locallevels = [
-    {
-      title: "Level 1",
-      locked: (data[6] as number) < 1,
-      profitRange: "12-15",
-      description:
-        "Don't be afraid to invest with lower margins, here the most important margin is the profit margin that naturally accompanies the investment ratio.",
-
-      progress: (Number(data[0]) / 10) * 100,
-      invested: noDecimals(Number(data[3])),
-      collected: userPieces.length.toString(),
-    },
-    {
-      title: "Level 2",
-      locked: (data[6] as number) < 2,
-      profitRange: "15-18",
-      description:
-        "The path is made by walking and you are one step closer to having the intended return! Level 2 of the puzzle takes you to an investment level never before explored with a tailor-made financial return!",
-      progress: (Number(data[1]) / 10) * 100,
-      invested: noDecimals(Number(data[4])),
-      collected: userPieces.length.toString(),
-    },
-    {
-      title: "Level 3",
-      locked: (data[6] as number) < 3,
-      profitRange: "18-20",
-      description:
-        "There is no going back, you are at the highest point of your investment with the highest profit margins. Nothing ventured, nothing gained, and if risk is your middle name, you're on the right track!",
-      progress: (Number(data[2]) / 10) * 100,
-      invested: noDecimals(Number(data[5])),
-      collected: userPieces.length.toString(),
-    },
-  ];
-
   const [profitNotification, setProfitNotification] = useState(true);
+
+  useEffect(() => {
+    // console.log(userPieces);
+    // console.log(userPuzzlePieces);
+    // console.log("userAddress", userAddress);
+    // console.log("currentLevel", currentLevel);
+    // console.log("data?.[6]", data?.[6].toNumber());
+    // console.log("data[currentLevel - 1]", data[currentLevel - 1]?.toNumber());
+    // console.log("sllogics", process.env.NEXT_PUBLIC_SLLOGIC_ADDRESS);
+    // console.log("puzzle", process.env.NEXT_PUBLIC_PUZZLE_ADDRESS);
+  }, []);
 
   return (
     <section
@@ -460,7 +418,7 @@ const Puzzle: FC<PuzzleProps> = ({
                 </span>
                 <span className="text-[16px] font-normal leading-normal text-neutral-600">
                   <span className="text-[16px] font-semibold leading-normal text-black">
-                    {noDecimals(Number(data?.[4]))}
+                    {noDecimals(Number(data?.[3])) - userTotalPieces * 5000}
                   </span>{" "}
                   | 5.000$
                 </span>
@@ -486,22 +444,49 @@ const Puzzle: FC<PuzzleProps> = ({
               </div>
             </div>
             {puzzlePieces.map((puzzle) => (
-              <div
-                key={puzzle.tokenid}
-                className="flex h-[393px] flex-col items-center justify-center rounded-md border-2 border-tabInactive/20"
-              >
-                <Image
-                  src={puzzle.image.url}
-                  alt={puzzle.title}
-                  width={165}
-                  height={165}
+              <div key={puzzle.tokenid} className="relative">
+                <CarouselItem
+                  title={puzzle.title}
+                  amount={
+                    userPuzzlePieces?.at(puzzle.tokenid)?.toNumber() as number
+                  }
+                  isConnected={isConnected}
+                  image={
+                    (userPuzzlePieces &&
+                      userPuzzlePieces.at(puzzle?.tokenid)?.toNumber()) ||
+                    0 > 0
+                      ? puzzle.imageCollected.url
+                      : puzzle.image.url
+                  }
                 />
-                <h3 className="text-center text-sm uppercase text-tabInactive">
-                  Piece
-                  <br />
-                  <span className="text-2xl">{puzzle.title}</span>
-                </h3>
               </div>
+              // <div
+              //   key={puzzle.tokenid}
+              //   className="flex h-[393px] flex-col items-center justify-center rounded-md border-2 border-tabInactive/20"
+              // >
+              //   {userPuzzlePieces &&
+              //   userPuzzlePieces?.at(puzzle.tokenid)?.gt(0) ? (
+              //     <Image
+              //       src={puzzle.imageCollected.url}
+              //       alt={puzzle.title}
+              //       width={165}
+              //       height={165}
+              //     />
+              //   ) : (
+              //     <Image
+              //       src={puzzle.image.url}
+              //       alt={puzzle.title}
+              //       width={165}
+              //       height={165}
+              //     />
+              //   )}
+
+              //   <h3 className="text-center text-sm uppercase text-tabInactive">
+              //     Piece
+              //     <br />
+              //     <span className="text-2xl">{puzzle.title}</span>
+              //   </h3>
+              // </div>
             ))}
             <div className="h-90 relative flex flex-col items-center justify-between rounded-md border-2 border-tabInactive/20">
               <Image

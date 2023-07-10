@@ -15,20 +15,22 @@ interface CarouselItemProps {
   isConnected: boolean;
 }
 
-const CarouselItem = ({
+export const CarouselItem = ({
   title,
   image,
   amount,
   isConnected,
 }: CarouselItemProps) => {
-  if (isConnected)
+  if (isConnected) {
     return (
       <div className="group flex w-full flex-col items-center justify-center rounded-md">
-        <div className="absolute z-20 flex min-h-full w-full flex-col items-center justify-center rounded-md bg-primaryGold text-white opacity-0 group-hover:opacity-100">
-          <span className="text-md text-center  font-normal uppercase tracking-widest">
-            {title}
-          </span>
-          <span className="text-xl font-medium">LOREM</span>
+        <div className="text-md absolute z-20 flex min-h-full w-full flex-col items-center justify-center rounded-md bg-primaryGold bg-center bg-no-repeat text-white opacity-0 group-hover:opacity-100">
+          <h3 className="text-center text-sm uppercase text-white">
+            Piece
+            <br />
+            <span className="text-2xl">{title}</span>
+          </h3>
+          {/* <span className="text-xl font-medium">LOREM</span> */}
         </div>
         {amount > 0 ? (
           <div
@@ -49,20 +51,24 @@ const CarouselItem = ({
         ) : (
           <div
             className={cn(
-              "flex min-h-[396px] w-full flex-col items-center justify-center gap-3 rounded-md bg-contactBackground hover:text-white"
+              "relative flex min-h-[396px] w-full flex-col items-center justify-center gap-3 rounded-md bg-contain bg-center bg-no-repeat"
             )}
+            style={{ backgroundImage: `url(${image})` }}
           >
             <div className="flex w-full items-center justify-center gap-3">
               <div className="text-md flex flex-col items-center justify-center text-center font-normal uppercase tracking-widest text-black">
-                Next NFT
-                <span className="text-xl font-medium">{title}</span>
+                <h3 className="text-center text-sm uppercase text-tabInactive">
+                  Piece
+                  <br />
+                  <span className="text-2xl">{title}</span>
+                </h3>
               </div>
             </div>
           </div>
         )}
       </div>
     );
-  if (!isConnected)
+  } else {
     return (
       <div className="group flex w-full flex-col items-center justify-center rounded-md">
         <div className="absolute z-20 flex min-h-full w-full flex-col items-center justify-center rounded-md bg-primaryGreen p-8 text-white opacity-0 group-hover:opacity-100">
@@ -103,6 +109,7 @@ const CarouselItem = ({
         </div>
       </div>
     );
+  }
 };
 
 interface CarouselProps {
@@ -121,39 +128,6 @@ interface CarouselProps {
   }[];
 }
 
-const localItems = [
-  {
-    id: 1,
-    title: "Engine",
-    image: "bg-[url('/nfts/puzzle-1.png')]",
-    amount: 1,
-  },
-  {
-    id: 2,
-    title: "Wheel",
-    image: "bg-[url('/nfts/puzzle-2.png')]",
-    amount: 2,
-  },
-  {
-    id: 3,
-    title: "Grill",
-    image: "bg-[url('/nfts/puzzle-2.png')]",
-    amount: 5,
-  },
-  {
-    id: 4,
-    title: "Body",
-    image: "bg-[url('/nfts/puzzle-2.png')]",
-    amount: 0,
-  },
-  {
-    id: 5,
-    title: "Chevrolet 200",
-    image: "bg-[url('/nfts/puzzle-2.png')]",
-    amount: 0,
-  },
-];
-
 const Carousel: FC<CarouselProps> = ({
   id,
   isConnected,
@@ -165,7 +139,7 @@ const Carousel: FC<CarouselProps> = ({
 }) => {
   const [currentSlider, setcurrentSlider] = useState(0);
 
-  const handleSlideChange = (swiper: any) => {
+  const handleSlideChange = (swiper: { activeIndex: number }) => {
     setcurrentSlider(swiper.activeIndex);
   };
 
@@ -224,7 +198,7 @@ const Carousel: FC<CarouselProps> = ({
                       image={item.image.url}
                       amount={
                         userItems && userItems.length > 0
-                          ? userItems[index].toNumber()
+                          ? (userItems?.[index]?.toNumber() as number)
                           : 0
                       }
                     />

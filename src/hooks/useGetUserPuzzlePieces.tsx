@@ -36,6 +36,7 @@ const useGetUserPuzzlePieces = ({
   });
 
   const [userPieces, setUserPieces] = useState<BigNumber[]>([]);
+  const [userTotalPieces, setUserTotalPieces] = useState(0);
 
   useEffect(() => {
     if (!userPuzzlePieces) return;
@@ -46,9 +47,12 @@ const useGetUserPuzzlePieces = ({
     //   puzzlePieces.map((piece) => console.log(piece.toNumber()));
 
     setUserPieces(userPuzzlePieces.filter((piece) => piece.gt(0)));
+    let sum = 0;
+    userPieces.map((amount) => (sum += amount.toNumber()));
+    setUserTotalPieces(sum);
   }, [userPuzzlePieces]);
 
-  return { userPieces, userPuzzlePieces, error, isLoading };
+  return { userPieces, userPuzzlePieces, userTotalPieces, error, isLoading };
 };
 
 export default useGetUserPuzzlePieces;
