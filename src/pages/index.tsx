@@ -3,11 +3,12 @@ import type { NextPage } from "next";
 import { getSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, type Address } from "wagmi";
 import { type InvestmentProps } from "~/@types/investment";
 import { type SliderProps } from "~/@types/slider";
 import Investments from "~/components/Investments";
 import Posts from "~/components/Posts";
+import Puzzle from "~/components/Puzzle";
 import Highlight from "~/components/investment/Highlight";
 import Carousel from "../components/Carousel";
 import NavBar from "../components/NavBar";
@@ -15,7 +16,7 @@ interface ActiveInvestmentsProps {
   investments: InvestmentProps[];
 }
 const Home: NextPage = (props) => {
-  const { isConnected, isDisconnected, address } = useAccount();
+  const { isConnected, isDisconnected, address: walletAddress } = useAccount();
 
   // const { data: contractTotal } = useContractRead({
   //   address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
@@ -143,15 +144,15 @@ const Home: NextPage = (props) => {
         </div>
         {/* My Puzzle */}
 
-        {/* <div className="relative left-1/2 mx-auto -ml-[570px] w-full max-w-[1338px]">
+        <div className="relative left-1/2 mx-auto -ml-[570px] w-full max-w-[1338px]">
           <Puzzle
             isConnected={isConnected}
             className="relative flex w-full  max-w-[1338px] flex-col pt-[132px]"
-            userAddress={address}
+            userAddress={walletAddress as Address}
             puzzlePieces={props.puzzlePieces}
             dbLevels={props.levels}
           />
-        </div> */}
+        </div>
 
         <div className="flex w-full rounded-t-3xl bg-black pb-[132px] pt-[72px]">
           <Posts
