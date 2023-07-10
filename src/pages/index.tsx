@@ -175,7 +175,7 @@ const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
   },
 });
 
-export async function getStaticProps(ctx) {
+export async function getServerSideProps(ctx) {
   const session = await getSession(ctx);
 
   const { posts } = await hygraph.request(
