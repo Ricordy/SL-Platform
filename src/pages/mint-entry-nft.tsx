@@ -26,7 +26,6 @@ const MintEntryNFT: NextPage = () => {
   });
   const { hasEntryNFT } = useCheckEntryNFT({
     address: walletAddress as Address,
-    nftId: 10,
   });
   // const { config: mintConfig } = usePrepareContractWrite({
   //   address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
