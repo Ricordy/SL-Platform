@@ -36,9 +36,9 @@ interface PublishTransaction {
 export default async function handler(req: NextApiRequest, res: MyResponse) {
   const body = JSON.parse(req.body);
 
-  const hygraph = new GraphQLClient(process.env.HYGRAPH_CONTENT_API, {
+  const hygraph = new GraphQLClient(process.env.HYGRAPH_CONTENT_API as string, {
     headers: {
-      Authorization: process.env.HYGRAPH_BEARER,
+      Authorization: process.env.HYGRAPH_BEARER as string,
     },
   });
 
