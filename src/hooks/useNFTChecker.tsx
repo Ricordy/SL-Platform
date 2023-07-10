@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useContractRead, type Address } from "wagmi";
-import { slcoreABI } from "~/utils/abis";
+import { SLCoreABI } from "~/utils/abis";
 
 interface HookProps {
   contractAddress: Address;
@@ -14,7 +14,7 @@ const useNFTChecker = ({
 }: HookProps) => {
   const { data, error, isLoading } = useContractRead({
     address: contractAddress,
-    abi: slcoreABI,
+    abi: SLCoreABI,
     functionName: "whichLevelUserHas",
     args: [walletAddress],
     watch,

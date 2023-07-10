@@ -20,10 +20,10 @@ import {
 import { type InvestmentProps } from "~/@types/investment";
 import { type TransactionProps } from "~/@types/transaction";
 import useCheckEntryNFT from "~/hooks/useCheckEntryNFT";
+import { FactoryABI, SLCoreABI, paymentTokenABI } from "~/utils/abis";
 import Carousel from "../components/Carousel";
 import NavBar from "../components/NavBar";
 import ProjectCarousel from "../components/ProjectCarousel";
-import { factoryABI, paymentTokenABI, slcoreABI } from "~/utils/abis";
 
 interface InvestmentBlockchainType {
   id: number;
@@ -112,7 +112,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
 
   const SlFactoryContract = {
     address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
-    abi: factoryABI,
+    abi: FactoryABI,
   };
 
   const { data }: { data: BigNumber } = useContractReads({
@@ -276,7 +276,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
   const { config: mintEntryNFTConfig, refetch: mintEntryNFTRefetch } =
     usePrepareContractWrite({
       address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
-      abi: slcoreABI,
+      abi: SLCoreABI,
       functionName: "mintEntry",
       enabled: false,
       // onError(err) {
