@@ -62,44 +62,50 @@ export interface SessionProps {
 interface MyInvestmentsProps extends InvestmentsProps, TransactionProps {}
 
 export const TransactionItem = (items, userInvestedContracts) => {
-  //console.log(userInvestedContracts);
-  return items?.items?.map((item, idx) => {
-    const addressContract = item.investment.address;
-    // const { amountInvested } = useGetAddressInvestmentinSingleCar({
-    //   contractAddress: addressContract,
-    //   walletAddress: address,
-    //   watch: true,
-    // });
-    return (
-      <section key={idx}>
-        <div className="flex items-center justify-between">
-          <Image
-            className="rounded-md"
-            src={item.investment.basicInvestment.car.basicInfo.cover.url}
-            width={64}
-            height={53}
-            alt="Car"
-          />
-          <span>{item.investment.basicInvestment.car.basicInfo.title}</span>
-          <span>{item.amountInvested}</span>
-          <span className="text-xs text-primaryGold">
-            {userInvestedContracts[item.investment.address]}
-          </span>
-          <span>{item.date}</span>
+  console.log("items>>>", items);
+  return (
+    items &&
+    items.items.map((item, idx) => {
+      // const { amountInvested } = useGetAddressInvestmentinSingleCar({
+      //   contractAddress: addressContract,
+      //   walletAddress: address,
+      //   watch: true,
+      // });
+      console.log("inside item>>>>>", item);
 
-          <Link href="#">
-            <Image
-              src="/icons/external-link.svg"
-              width={10}
-              height={10}
-              alt="External link"
-            />
-          </Link>
-        </div>
-        <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
-      </section>
-    );
-  });
+      return (
+        item.investment && (
+          <section key={idx}>
+            <div className="flex items-center justify-between">
+              <Image
+                className="rounded-md"
+                src={item.investment.basicInvestment.car.basicInfo.cover.url}
+                width={64}
+                height={53}
+                alt="Car"
+              />
+              <span>{item.investment.basicInvestment.car.basicInfo.title}</span>
+              <span>{item.amountInvested}</span>
+              <span className="text-xs text-primaryGold">
+                {userInvestedContracts[item.investment.address]}
+              </span>
+              <span>{item.date}</span>
+
+              <Link href="#">
+                <Image
+                  src="/icons/external-link.svg"
+                  width={10}
+                  height={10}
+                  alt="External link"
+                />
+              </Link>
+            </div>
+            <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
+          </section>
+        )
+      );
+    })
+  );
 };
 
 const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
@@ -503,7 +509,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                   <div className="flex flex-1 flex-col gap-8 rounded-md bg-myInvestmentsBackground px-12 py-8">
                     <div className="flex flex-col">
                       <h5 className="text-base text-primaryGold">
-                        Total Invested (Connected to Blockchain)
+                        Total Invested
                       </h5>
                       <span className="text-4xl font-semibold tracking-widest">
                         ${data && data[0]?.div(10 ** 6).toNumber()}
@@ -511,7 +517,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                     </div>
                     <div className="flex flex-col">
                       <h5 className="text-base text-primaryGold">
-                        Level 1 - Total Invested (Connected to Blockchain)
+                        Level 1 - Total Invested
                       </h5>
                       <span className="text-4xl font-semibold tracking-widest">
                         ${data?.[1].div(10 ** 6).toNumber()}
@@ -519,7 +525,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                     </div>
                     <div className="flex flex-col">
                       <h5 className="text-base text-primaryGold">
-                        Level 2 - Total Invested (Connected to Blockchain)
+                        Level 2 - Total Invested
                       </h5>
                       <span className="text-4xl font-semibold tracking-widest">
                         ${data[2].div(10 ** 6).toNumber()}
@@ -527,7 +533,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                     </div>
                     <div className="flex flex-col">
                       <h5 className="text-base text-primaryGold">
-                        Level 3 - Total Invested (Connected to Blockchain)
+                        Level 3 - Total Invested
                       </h5>
                       <span className="text-4xl font-semibold tracking-widest">
                         ${data[3].div(10 ** 6).toNumber()}
