@@ -155,9 +155,11 @@ export const InvestmentModal = ({
 
       //setIsApproving(false);
       // setisInvesting(true);
-      const results2 = await investContract
-        .connect(signerData)
-        .invest(BigNumber.from(valueApprovalAndInvestment));
+      const results2 =
+        investContract &&
+        (await investContract
+          .connect(signerData)
+          .invest(BigNumber.from(valueApprovalAndInvestment)));
 
       await toast.promise(
         results2.wait(),

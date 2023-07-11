@@ -31,6 +31,8 @@ const Puzzle: FC<PuzzleProps> = ({
   const [userCanClaimLevel, setUserCanClaimLevel] = useState(false);
   const [currentLevel, setCurrentLevel] = useState(1);
 
+  console.log("PP", puzzlePieces[0]?.imageCollected.url);
+
   const NFTs: {
     tokenid: number;
     title: string;
@@ -58,6 +60,15 @@ const Puzzle: FC<PuzzleProps> = ({
       level: currentLevel,
       // watch: true,
     });
+
+  console.log(
+    "total pieces",
+    userTotalPieces,
+    "/",
+    userPieces,
+    "/",
+    userPuzzlePieces
+  );
 
   // const { isSuccess: userAllowedLevel, error: errorUserLevel } =
   //   useContractRead({
@@ -460,7 +471,7 @@ const Puzzle: FC<PuzzleProps> = ({
                     (userPuzzlePieces &&
                       userPuzzlePieces.at(puzzle?.tokenid)?.toNumber()) ||
                     0 > 0
-                      ? puzzle.imageCollected.url
+                      ? puzzle?.imageCollected?.url
                       : puzzle.image.url
                   }
                 />

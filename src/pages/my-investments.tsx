@@ -170,7 +170,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     isLoading,
   } = useContractRead({
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
-    abi: slcoreABI,
+    abi: SLCoreABI,
     functionName: "whichLevelUserHas",
     args: [sessionData?.user.id as Address],
     // watch: true,
