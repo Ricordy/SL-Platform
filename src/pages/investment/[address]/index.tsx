@@ -350,6 +350,8 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
     watch: false,
   });
 
+  // console.log("can withdraw?>>>>", contractStatus == CONTRACT_STATUS_WITHDRAW);
+
   const { config: withdrawCallConfig } = usePrepareContractWrite({
     address: investment.address,
     abi: investmentABI,
@@ -373,7 +375,7 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
     },
   });
 
-  const { write: withdraw } = useContractWrite(withdrawCallConfig);
+  // const { write: withdraw } = useContractWrite(withdrawCallConfig);
 
   async function onClickWithdraw() {
     const results = investContract && (await investContract.withdraw());
