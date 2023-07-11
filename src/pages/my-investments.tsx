@@ -62,45 +62,48 @@ export interface SessionProps {
 interface MyInvestmentsProps extends InvestmentsProps, TransactionProps {}
 
 export const TransactionItem = (items, userInvestedContracts) => {
-  //console.log(userInvestedContracts);
-  const { address } = useAccount();
-  return items?.items?.map((item, idx) => {
-    const addressContract = item.investment.address;
-    // const { amountInvested } = useGetAddressInvestmentinSingleCar({
-    //   contractAddress: addressContract,
-    //   walletAddress: address,
-    //   watch: true,
-    // });
-    return (
-      <section key={idx}>
-        <div className="flex items-center justify-between">
-          <Image
-            className="rounded-md"
-            src={item.investment.basicInvestment.car.basicInfo.cover.url}
-            width={64}
-            height={53}
-            alt="Car"
-          />
-          <span>{item.investment.basicInvestment.car.basicInfo.title}</span>
-          <span>{item.amountInvested}</span>
-          <span className="text-xs text-primaryGold">
-            {userInvestedContracts[item.investment.address]}
-          </span>
-          <span>{item.date}</span>
+  return (
+    items &&
+    items.items.map((item, idx) => {
+      // const { amountInvested } = useGetAddressInvestmentinSingleCar({
+      //   contractAddress: addressContract,
+      //   walletAddress: address,
+      //   watch: true,
+      // });
 
-          <Link href="#">
-            <Image
-              src="/icons/external-link.svg"
-              width={10}
-              height={10}
-              alt="External link"
-            />
-          </Link>
-        </div>
-        <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
-      </section>
-    );
-  });
+      return (
+        item.investment && (
+          <section key={idx}>
+            <div className="flex items-center justify-between">
+              <Image
+                className="rounded-md"
+                src={item.investment.basicInvestment.car.basicInfo.cover.url}
+                width={64}
+                height={53}
+                alt="Car"
+              />
+              <span>{item.investment.basicInvestment.car.basicInfo.title}</span>
+              <span>{item.amountInvested}</span>
+              <span className="text-xs text-primaryGold">
+                {userInvestedContracts[item.investment.address]}
+              </span>
+              <span>{item.date}</span>
+
+              <Link href="#">
+                <Image
+                  src="/icons/external-link.svg"
+                  width={10}
+                  height={10}
+                  alt="External link"
+                />
+              </Link>
+            </div>
+            <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
+          </section>
+        )
+      );
+    })
+  );
 };
 
 const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
@@ -150,15 +153,15 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     },
   });
 
-  const { data: contractsTotalSupply }: { data: BigNumber } = useContractReads({
-    contracts: [
-      {
-        ...SlFactoryContract,
-        functionName: "getAddressTotal",
-        args: [address],
-      },
-    ],
-  });
+  // const { data: contractsTotalSupply }: { data: BigNumber } = useContractReads({
+  //   contracts: [
+  //     {
+  //       ...SlFactoryContract,
+  //       functionName: "getAddressTotal",
+  //       args: [address],
+  //     },
+  //   ],
+  // });
 
   const { hasEntryNFT, hasEntryNFTLoading } = useCheckEntryNFT({
     address: address as Address,
@@ -170,7 +173,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     isLoading,
   } = useContractRead({
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
-    abi: slcoreABI,
+    abi: SLCoreABI,
     functionName: "whichLevelUserHas",
     args: [sessionData?.user.id as Address],
     // watch: true,
@@ -198,35 +201,35 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
   //   // },
   // });
 
-  const getUserTransactions = async (address: Address) => {
-    const {
-      transactions: userTransactions,
-    }: { transactions: TransactionProps } = await hygraph.request(
-      gql`
-        query UserTransactions {
-          transactions(where: { transactionDetails: { from: "34343434" } }) {
-            amountInvested
-            date
-            investment {
-              address
-              basicInvestment {
-                totalInvestment
-                car {
-                  basicInfo {
-                    cover {
-                      url
-                    }
-                    title
-                  }
-                }
-              }
-            }
-          }
-        }
-      `
-    );
-    return userTransactions;
-  };
+  // const getUserTransactions = async (address: Address) => {
+  //   const {
+  //     transactions: userTransactions,
+  //   }: { transactions: TransactionProps } = await hygraph.request(
+  //     gql`
+  //       query UserTransactions {
+  //         transactions(where: { transactionDetails: { from: "34343434" } }) {
+  //           amountInvested
+  //           date
+  //           investment {
+  //             address
+  //             basicInvestment {
+  //               totalInvestment
+  //               car {
+  //                 basicInfo {
+  //                   cover {
+  //                     url
+  //                   }
+  //                   title
+  //                 }
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }
+  //     `
+  //   );
+  //   return userTransactions;
+  // };
 
   // console.log("user transactions>>", props.userTransactions);
   const userInvestedContracts = [];
@@ -413,6 +416,51 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     //return () => console.log("Cleanup..");
   }, []);
 
+  function extractUniqueInvestments(queryResult) {
+    // Use a map to store unique investments by their address
+    const uniqueInvestments = new Map();
+
+    // Iterate over each transaction
+    queryResult &&
+      queryResult.forEach((transaction) => {
+        // Check if the transaction has an investment
+        if (transaction.investment) {
+          // Use the investment address as the unique identifier
+          const address = transaction.investment.address;
+
+          // If the investment is not already in the map, add it
+          if (!uniqueInvestments.has(address)) {
+            uniqueInvestments.set(address, transaction.investment);
+          }
+        }
+      });
+
+    // Convert the map values to an array and return it
+    return Array.from(uniqueInvestments.values());
+  }
+
+  const userInv = extractUniqueInvestments(props.userTransactions);
+
+  function getMissingInvestments(allInvestments, userInv) {
+    // Check if the inputs are valid arrays
+    if (!Array.isArray(allInvestments) || !Array.isArray(userInv)) {
+      console.error("Invalid input");
+      return [];
+    }
+
+    // Create a set of investment addresses from the userInv array
+    const userInvAddresses = new Set(
+      userInv.map((investment) => investment.address)
+    );
+
+    // Filter the allInvestments array to get the missing investments
+    const missingInvestments = allInvestments.filter(
+      (investment) => !userInvAddresses.has(investment.address)
+    );
+
+    return missingInvestments;
+  }
+
   // return <div>end</div>;
   if (hasEntryNFTLoading) return <div>Loading...</div>;
 
@@ -504,7 +552,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                   <div className="flex flex-1 flex-col gap-8 rounded-md bg-myInvestmentsBackground px-12 py-8">
                     <div className="flex flex-col">
                       <h5 className="text-base text-primaryGold">
-                        Total Invested (Connected to Blockchain)
+                        Total Invested
                       </h5>
                       <span className="text-4xl font-semibold tracking-widest">
                         ${data && data[0]?.div(10 ** 6).toNumber()}
@@ -512,7 +560,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                     </div>
                     <div className="flex flex-col">
                       <h5 className="text-base text-primaryGold">
-                        Level 1 - Total Invested (Connected to Blockchain)
+                        Level 1 - Total Invested
                       </h5>
                       <span className="text-4xl font-semibold tracking-widest">
                         ${data?.[1].div(10 ** 6).toNumber()}
@@ -520,7 +568,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                     </div>
                     <div className="flex flex-col">
                       <h5 className="text-base text-primaryGold">
-                        Level 2 - Total Invested (Connected to Blockchain)
+                        Level 2 - Total Invested
                       </h5>
                       <span className="text-4xl font-semibold tracking-widest">
                         ${data[2].div(10 ** 6).toNumber()}
@@ -528,7 +576,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                     </div>
                     <div className="flex flex-col">
                       <h5 className="text-base text-primaryGold">
-                        Level 3 - Total Invested (Connected to Blockchain)
+                        Level 3 - Total Invested
                       </h5>
                       <span className="text-4xl font-semibold tracking-widest">
                         ${data[3].div(10 ** 6).toNumber()}
@@ -567,40 +615,46 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       </div>
 
       <div className="relative left-1/2 z-20 mx-auto -ml-[570px] mt-[52px]  min-h-[500px] max-w-[1338px]">
-        <ProjectCarousel
-          id="1"
-          prevNavWhite={true}
-          title={<h2 className="text-2xl text-white">Active</h2>}
-          items={props.investments?.filter(
-            (investment) =>
-              investment.basicInvestment.investmentStatus == "Active"
-          )}
-        />
+        {userInv && (
+          <ProjectCarousel
+            id="1"
+            prevNavWhite={true}
+            title={<h2 className="text-2xl text-white">Active</h2>}
+            items={userInv.filter(
+              (investment) =>
+                investment.basicInvestment.investmentStatus == "Active"
+            )}
+          />
+        )}
 
-        <ProjectCarousel
-          id="2"
-          className="pt-[132px]"
-          title={<h2 className="text-2xl">Upcoming</h2>}
-          items={props.investments?.filter(
-            (investment) =>
-              investment.basicInvestment.investmentStatus == "Upcoming"
-          )}
-        />
+        {/* {userInv && (
+          <ProjectCarousel
+            id="2"
+            className="pt-[132px]"
+            title={<h2 className="text-2xl">Upcoming</h2>}
+            items={userInv.filter(
+              (investment) =>
+                investment.basicInvestment.investmentStatus == "Upcoming"
+            )}
+          />
+        )} */}
         {/* <Carousel
           id="3"
           className="pt-[132px]"
           title={<h2 className="text-2xl">My favorites</h2>}
           items={props.investments}
         /> */}
-        <ProjectCarousel
-          id="4"
-          className="py-[132px]"
-          title={<h2 className="text-2xl">Finished</h2>}
-          items={props.investments?.filter(
-            (investment) =>
-              investment.basicInvestment.investmentStatus == "Finished"
-          )}
-        />
+        {userInv && (
+          <ProjectCarousel
+            id="4"
+            className="py-[132px]"
+            title={<h2 className="text-2xl">Finished</h2>}
+            items={userInv.filter(
+              (investment) =>
+                investment.basicInvestment.investmentStatus == "Finished"
+            )}
+          />
+        )}
       </div>
       <div className="relative z-20 mx-auto flex rounded-t-[56px] bg-black pb-[128px] pt-[72px] text-white">
         <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[52px]">
@@ -608,7 +662,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
             id="4"
             className="w-full pt-[132px]"
             title={<h2 className="text-2xl">Our Suggestions for you</h2>}
-            items={props.investments?.filter(
+            items={getMissingInvestments(props.investments, userInv).filter(
               (investment) =>
                 investment.basicInvestment.investmentStatus == "Active"
             )}
@@ -710,7 +764,7 @@ export const getServerSideProps: GetServerSideProps<
   const { investments }: { investments: InvestmentsProps } =
     await hygraph.request(
       gql`
-        query Investments {
+        query AllInvestments {
           investments {
             id
             address
@@ -749,12 +803,13 @@ export const getServerSideProps: GetServerSideProps<
               address
               basicInvestment {
                 totalInvestment
+                investmentStatus
                 car {
                   basicInfo {
+                    title
                     cover {
                       url
                     }
-                    title
                   }
                 }
               }

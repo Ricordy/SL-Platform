@@ -299,7 +299,12 @@ export const investmentABI = [
       },
       {
         internalType: "address",
-        name: "_entryNFTAddress",
+        name: "_slPermissionsAddress",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_slCoreAddress",
         type: "address",
       },
       {
@@ -308,13 +313,129 @@ export const investmentABI = [
         type: "address",
       },
       {
-        internalType: "address",
-        name: "_factoryAddress",
-        type: "address",
+        internalType: "uint256",
+        name: "_contractLevel",
+        type: "uint256",
       },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
+  },
+  {
+    inputs: [],
+    name: "CannotWithdrawTwice",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "expected",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "input",
+        type: "uint256",
+      },
+    ],
+    name: "IncorrectRefillValue",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "expectedLevel",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "userLevel",
+        type: "uint256",
+      },
+    ],
+    name: "IncorrectUserLevel",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "reason",
+        type: "string",
+      },
+    ],
+    name: "InvalidAddress",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "enum Investment.Status",
+        name: "currentStatus",
+        type: "uint8",
+      },
+      {
+        internalType: "enum Investment.Status",
+        name: "expectedStatus",
+        type: "uint8",
+      },
+    ],
+    name: "InvalidContractStatus",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "input",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "min",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "max",
+        type: "uint256",
+      },
+    ],
+    name: "InvalidLevel",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "NotCEO",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "NotCFO",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "expected",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "actual",
+        type: "uint256",
+      },
+    ],
+    name: "NotEnoughForProcess",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "PlatformPaused",
+    type: "error",
   },
   {
     inputs: [
@@ -325,11 +446,16 @@ export const investmentABI = [
       },
       {
         internalType: "uint256",
+        name: "minAllowed",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
         name: "maxAllowed",
         type: "uint256",
       },
     ],
-    name: "InvestmentExceedMax",
+    name: "WrongfulInvestmentAmount",
     type: "error",
   },
   {
@@ -361,7 +487,7 @@ export const investmentABI = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: "uint256",
         name: "time",
         type: "uint256",
@@ -374,19 +500,19 @@ export const investmentABI = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: "uint256",
         name: "amount",
         type: "uint256",
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: "uint256",
         name: "profit",
         type: "uint256",
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: "uint256",
         name: "time",
         type: "uint256",
@@ -400,31 +526,12 @@ export const investmentABI = [
     inputs: [
       {
         indexed: true,
-        internalType: "address",
-        name: "previousOwner",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
-    name: "OwnershipTransferred",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
         internalType: "uint256",
         name: "amount",
         type: "uint256",
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: "uint256",
         name: "time",
         type: "uint256",
@@ -462,19 +569,19 @@ export const investmentABI = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: "address",
         name: "user",
         type: "address",
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: "uint256",
         name: "amount",
         type: "uint256",
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: "uint256",
         name: "time",
         type: "uint256",
@@ -487,19 +594,19 @@ export const investmentABI = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: "address",
         name: "user",
         type: "address",
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: "uint256",
         name: "amount",
         type: "uint256",
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: "uint256",
         name: "time",
         type: "uint256",
@@ -510,12 +617,12 @@ export const investmentABI = [
   },
   {
     inputs: [],
-    name: "LEVEL1",
+    name: "CONTRACT_LEVEL",
     outputs: [
       {
-        internalType: "uint8",
+        internalType: "uint256",
         name: "",
-        type: "uint8",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -524,6 +631,45 @@ export const investmentABI = [
   {
     inputs: [],
     name: "MINIMUM_INVESTMENT",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "SLCORE_ADDRESS",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "SLPERMISSIONS_ADDRESS",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "TOTAL_INVESTMENT",
     outputs: [
       {
         internalType: "uint256",
@@ -604,25 +750,6 @@ export const investmentABI = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "balanceReceived",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "enum Investment.Status",
         name: "_newStatus",
         type: "uint8",
@@ -643,7 +770,7 @@ export const investmentABI = [
         type: "uint8",
       },
     ],
-    stateMutability: "pure",
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -668,51 +795,6 @@ export const investmentABI = [
       },
     ],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "entryNFTAddress",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "factoryAddress",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_user",
-        type: "address",
-      },
-    ],
-    name: "getBalanceReceived",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "_investmentCount",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -780,19 +862,6 @@ export const investmentABI = [
   },
   {
     inputs: [],
-    name: "owner",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "paymentTokenAddress",
     outputs: [
       {
@@ -818,13 +887,6 @@ export const investmentABI = [
       },
     ],
     name: "refill",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "renounceOwnership",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -875,19 +937,6 @@ export const investmentABI = [
       {
         internalType: "uint256",
         name: "totalBalance",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "totalInvestment",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
         type: "uint256",
       },
     ],
@@ -964,13 +1013,19 @@ export const investmentABI = [
     inputs: [
       {
         internalType: "address",
-        name: "newOwner",
+        name: "",
         type: "address",
       },
     ],
-    name: "transferOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
+    name: "userWithdrew",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {

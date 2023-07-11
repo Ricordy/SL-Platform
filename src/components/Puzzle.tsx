@@ -31,6 +31,12 @@ const Puzzle: FC<PuzzleProps> = ({
   const [userCanClaimLevel, setUserCanClaimLevel] = useState(false);
   const [currentLevel, setCurrentLevel] = useState(1);
 
+  const NFTs: {
+    tokenid: number;
+    title: string;
+    url: string;
+  }[] = [{ tokenid: 1, title: "Tablier", url: "" }];
+
   const SlCoreContract = {
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
     abi: SLCoreABI,
@@ -42,9 +48,16 @@ const Puzzle: FC<PuzzleProps> = ({
   };
 
   const SlLogicsContract = {
-    address: process.env.NEXT_PUBLIC_SLLOGIC_ADDRESS as Address,
+    address: process.env.NEXT_PUBLIC_LOGICS_ADDRESS as Address,
     abi: SLLogicsABI,
   };
+
+  const { userPuzzlePieces, userPieces, userTotalPieces } =
+    useGetUserPuzzlePieces({
+      userAddress,
+      level: currentLevel,
+      // watch: true,
+    });
 
   // const { isSuccess: userAllowedLevel, error: errorUserLevel } =
   //   useContractRead({
@@ -137,15 +150,8 @@ const Puzzle: FC<PuzzleProps> = ({
       data?.[currentLevel - 1] as BigNumber,
     ],
     // watch: true,
-    enabled: data && currentLevel === data?.[6]?.toNumber(),
+    //enabled: data && currentLevel === data?.[6]?.toNumber(),
     onSettled(data, error) {
-      // console.log(
-      //   "debug",
-      //   data[6],
-      //   data[currentLevel - 1],
-      //   currentLevel,
-      //   error
-      // );
       console.log("Erro??>>>>>", error);
 
       if (!error) {
@@ -155,7 +161,7 @@ const Puzzle: FC<PuzzleProps> = ({
         setUserCanClaimPiece(true);
       } else {
         console.log("claimPiece>>>>> FALSE");
-        setUserCanClaimPiece(false);
+        //setUserCanClaimPiece(false);
       }
     },
   });
@@ -214,6 +220,18 @@ const Puzzle: FC<PuzzleProps> = ({
     // console.log("data[currentLevel - 1]", data[currentLevel - 1]?.toNumber());
     // console.log("sllogics", process.env.NEXT_PUBLIC_SLLOGIC_ADDRESS);
     // console.log("puzzle", process.env.NEXT_PUBLIC_PUZZLE_ADDRESS);
+    // console.log(
+    //   "debug",
+    //   data[6],
+    //   "/",
+    //   data[currentLevel - 1],
+    //   "/",
+    //   currentLevel,
+    //   "/",
+    //   userAddress,
+    //   "/",
+    //   dataUserAllowed
+    // );
   }, []);
 
   return (
@@ -458,7 +476,7 @@ const Puzzle: FC<PuzzleProps> = ({
                     (userPuzzlePieces &&
                       userPuzzlePieces.at(puzzle?.tokenid)?.toNumber()) ||
                     0 > 0
-                      ? puzzle.imageCollected.url
+                      ? puzzle?.imageCollected?.url
                       : puzzle.image.url
                   }
                 />
