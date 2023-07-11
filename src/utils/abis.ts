@@ -293,13 +293,8 @@ export const investmentABI = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "_totalInvestment",
-        type: "uint256",
-      },
-      {
         internalType: "address",
-        name: "_entryNFTAddress",
+        name: "_factoryAddress",
         type: "address",
       },
       {
@@ -309,7 +304,7 @@ export const investmentABI = [
       },
       {
         internalType: "address",
-        name: "_factoryAddress",
+        name: "_slPermissionsAddress",
         type: "address",
       },
     ],
@@ -319,17 +314,96 @@ export const investmentABI = [
   {
     inputs: [
       {
+        internalType: "string",
+        name: "reason",
+        type: "string",
+      },
+    ],
+    name: "InvalidAddress",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
-        name: "amount",
+        name: "input",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "maxAllowed",
+        name: "min",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "max",
         type: "uint256",
       },
     ],
-    name: "InvestmentExceedMax",
+    name: "InvalidLevel",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "input",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "max",
+        type: "uint256",
+      },
+    ],
+    name: "InvalidNumber",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "allowedPieces",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "currentPieces",
+        type: "uint256",
+      },
+    ],
+    name: "MissingInvestmentToClaim",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "NotAllowedContract",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "NotCFO",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "level",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "currentPieces",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "maxPieces",
+        type: "uint256",
+      },
+    ],
+    name: "PiecesLimit",
     type: "error",
   },
   {
@@ -338,184 +412,27 @@ export const investmentABI = [
       {
         indexed: true,
         internalType: "address",
-        name: "owner",
+        name: "withdrawer",
         type: "address",
       },
       {
         indexed: true,
-        internalType: "address",
-        name: "spender",
-        type: "address",
-      },
-      {
-        indexed: false,
         internalType: "uint256",
-        name: "value",
+        name: "quantity",
         type: "uint256",
       },
     ],
-    name: "Approval",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "time",
-        type: "uint256",
-      },
-    ],
-    name: "ContractFilled",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "profit",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "time",
-        type: "uint256",
-      },
-    ],
-    name: "ContractRefilled",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "previousOwner",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
-    name: "OwnershipTransferred",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "time",
-        type: "uint256",
-      },
-    ],
-    name: "SLWithdraw",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "value",
-        type: "uint256",
-      },
-    ],
-    name: "Transfer",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "user",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "time",
-        type: "uint256",
-      },
-    ],
-    name: "UserInvest",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "user",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "time",
-        type: "uint256",
-      },
-    ],
-    name: "Withdraw",
+    name: "TokensWithdrawn",
     type: "event",
   },
   {
     inputs: [],
-    name: "LEVEL1",
+    name: "SLPERMISSIONS_ADDRESS",
     outputs: [
       {
-        internalType: "uint8",
+        internalType: "address",
         name: "",
-        type: "uint8",
+        type: "address",
       },
     ],
     stateMutability: "view",
@@ -523,7 +440,20 @@ export const investmentABI = [
   },
   {
     inputs: [],
-    name: "MINIMUM_INVESTMENT",
+    name: "URI",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "_getEntryPrice",
     outputs: [
       {
         internalType: "uint256",
@@ -538,146 +468,44 @@ export const investmentABI = [
     inputs: [
       {
         internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "spender",
-        type: "address",
-      },
-    ],
-    name: "allowance",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "spender",
+        name: "_user",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "_tokenId",
         type: "uint256",
       },
-    ],
-    name: "approve",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "balanceOf",
-    outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "_currentUserLevel",
         type: "uint256",
       },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "balanceReceived",
-    outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "_userPuzzlePiecesForUserCurrentLevel",
         type: "uint256",
       },
     ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "enum Investment.Status",
-        name: "_newStatus",
-        type: "uint8",
-      },
-    ],
-    name: "changeStatus",
+    name: "_userAllowedToClaimPiece",
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "decimals",
-    outputs: [
-      {
-        internalType: "uint8",
-        name: "",
-        type: "uint8",
-      },
-    ],
-    stateMutability: "pure",
+    stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
       {
-        internalType: "address",
-        name: "spender",
-        type: "address",
-      },
-      {
         internalType: "uint256",
-        name: "subtractedValue",
+        name: "",
         type: "uint256",
       },
     ],
-    name: "decreaseAllowance",
+    name: "batches_uri",
     outputs: [
       {
-        internalType: "bool",
+        internalType: "string",
         name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "entryNFTAddress",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
+        type: "string",
       },
     ],
     stateMutability: "view",
@@ -699,96 +527,46 @@ export const investmentABI = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "_level",
+        type: "uint256",
+      },
+    ],
+    name: "getMinClaimAmount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "min_claim_amount_and_entry_price",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "_user",
         type: "address",
       },
     ],
-    name: "getBalanceReceived",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "_investmentCount",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getMaxToInvest",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "maxToInvest",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "spender",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "addedValue",
-        type: "uint256",
-      },
-    ],
-    name: "increaseAllowance",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
-    ],
-    name: "invest",
+    name: "payEntryFee",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "name",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "owner",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -808,34 +586,38 @@ export const investmentABI = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_amount",
+        name: "_newPrice",
         type: "uint256",
       },
       {
+        internalType: "string",
+        name: "_tokenURI",
+        type: "string",
+      },
+    ],
+    name: "setEntryPrice",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
-        name: "_profitRate",
+        name: "id",
         type: "uint256",
       },
     ],
-    name: "refill",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "renounceOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "returnProfit",
+    name: "unmountEntryID",
     outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "batch",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "cap",
         type: "uint256",
       },
     ],
@@ -843,21 +625,14 @@ export const investmentABI = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "status",
-    outputs: [
+    inputs: [
       {
-        internalType: "enum Investment.Status",
-        name: "",
-        type: "uint8",
+        internalType: "uint256",
+        name: "_tokenID",
+        type: "uint256",
       },
     ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "symbol",
+    name: "uri",
     outputs: [
       {
         internalType: "string",
@@ -869,58 +644,29 @@ export const investmentABI = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "totalContractBalanceStable",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "totalBalance",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "totalInvestment",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "totalSupply",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "address",
-        name: "to",
+        name: "_user",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "_tokenId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_currentUserLevel",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_userPuzzlePiecesForUserCurrentLevel",
         type: "uint256",
       },
     ],
-    name: "transfer",
+    name: "userAllowedToClaimPiece",
     outputs: [
       {
         internalType: "bool",
@@ -928,61 +674,18 @@ export const investmentABI = [
         type: "bool",
       },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "transferFrom",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "newOwner",
+        name: "_user",
         type: "address",
       },
     ],
-    name: "transferOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "withdraw",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "withdrawSL",
+    name: "withdrawTokens",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

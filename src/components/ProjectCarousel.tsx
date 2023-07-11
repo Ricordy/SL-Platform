@@ -13,7 +13,7 @@ import { investmentABI } from "~/utils/abis";
 // import "swiper/css/navigation";
 
 export interface CarouselItemProps {
-  id?: string;
+  address?: string;
   title: string;
   image: string;
   status: string;
@@ -25,14 +25,16 @@ function noDecimal(value) {
 }
 
 const CarouselItem = ({
-  id = "1",
+  address,
   title,
   image,
   status,
   price,
 }: CarouselItemProps) => {
+  console.log("addresss>>>>>", address);
+
   const { data: contractProgress } = useContractRead({
-    address: id as Address,
+    address: address as Address,
     abi: investmentABI,
     functionName: "totalSupply",
     select: (data) => Number(data),
@@ -78,7 +80,7 @@ const CarouselItem = ({
 
         <div className="absolute z-0 flex min-h-[200px] w-full rounded-b-md bg-[url('/projects/car-gradient.svg')] bg-cover"></div>
         <a
-          href={`/investment/${id}`}
+          href={`/investment/${address}`}
           className={cn(
             "absolute inset-0 rounded-md",
             "focus:z-10 focus:outline-none focus:ring-2"
@@ -108,12 +110,7 @@ const ProjectCarousel: FC<CarouselProps> = ({
 
   const [currentSlider, setcurrentSlider] = useState(0);
 
-  const { data: contractProgress } = useContractRead({
-    address: contractAddress,
-    abi: investmentABI,
-    functionName: "totalSupply",
-    select: (data) => Number(data),
-  });
+
 
   const handleSlideChange = (swiper: any) => {
     setcurrentSlider(swiper.activeIndex);
@@ -171,7 +168,7 @@ const ProjectCarousel: FC<CarouselProps> = ({
               {items?.map((item, index) => (
                 <SwiperSlide key={index}>
                   <CarouselItem
-                    id={item.address}
+                    address={item.address}
                     title={item.basicInvestment.car.basicInfo.title ?? ""}
                     image={item.basicInvestment.car.basicInfo.cover.url ?? ""}
                     price={item.basicInvestment.totalInvestment}
