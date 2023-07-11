@@ -30,6 +30,7 @@ module.exports = {
         buyNFTBackground: "#1E1B16",
         myInvestmentsBackground: "#161616",
         progressActiveBackground: "#2BDA9F",
+
         // tabInactive: "#757C79",
         tabInactive: "#8C9592",
         puzzleProfitNotice: "#F6F9F8",

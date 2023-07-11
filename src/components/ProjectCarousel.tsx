@@ -7,9 +7,9 @@ import { cn } from "../lib/utils";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
-import { Address, useContractRead } from "wagmi";
-import { type InvestmentProps } from "../pages/my-investments";
+import { useContractRead, type Address } from "wagmi";
 import { investmentABI } from "~/utils/abis";
+import { type InvestmentProps } from "../pages/my-investments";
 // import "swiper/css/navigation";
 
 export interface CarouselItemProps {
@@ -31,7 +31,7 @@ const CarouselItem = ({
   status,
   price,
 }: CarouselItemProps) => {
-  console.log("addresss>>>>>", address);
+  // console.log("addresss>>>>>", address);
 
   const { data: contractProgress } = useContractRead({
     address: address as Address,
@@ -109,8 +109,6 @@ const ProjectCarousel: FC<CarouselProps> = ({
   const [contractAddress, setContractAddress] = useState();
 
   const [currentSlider, setcurrentSlider] = useState(0);
-
-
 
   const handleSlideChange = (swiper: any) => {
     setcurrentSlider(swiper.activeIndex);

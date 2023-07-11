@@ -1,6 +1,9 @@
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import Image from "next/image";
 import { useEffect, useState, type FC } from "react";
+import { NumericFormat } from "react-number-format";
+import { A11y, Navigation } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
 import {
   useContractRead,
   useContractReads,
@@ -15,6 +18,10 @@ import { cn } from "../lib/utils";
 import { CarouselItem } from "./puzzle/Carousel";
 import Level from "./puzzle/Level";
 import { Button } from "./ui/Button";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/pagination";
 
 function noDecimals(value: number) {
   return value / 10 ** 6;
@@ -31,11 +38,9 @@ const Puzzle: FC<PuzzleProps> = ({
   const [userCanClaimLevel, setUserCanClaimLevel] = useState(false);
   const [currentLevel, setCurrentLevel] = useState(1);
 
-  const NFTs: {
-    tokenid: number;
-    title: string;
-    url: string;
-  }[] = [{ tokenid: 1, title: "Tablier", url: "" }];
+  const handleSlideChange = (swiper: { activeIndex: number }) => {
+    setCurrentLevel(swiper.activeIndex + 1);
+  };
 
   const SlCoreContract = {
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
@@ -48,7 +53,7 @@ const Puzzle: FC<PuzzleProps> = ({
   };
 
   const SlLogicsContract = {
-    address: process.env.NEXT_PUBLIC_LOGICS_ADDRESS as Address,
+    address: process.env.NEXT_PUBLIC_SLLOGIC_ADDRESS as Address,
     abi: SLLogicsABI,
   };
 
@@ -69,37 +74,37 @@ const Puzzle: FC<PuzzleProps> = ({
     contracts: [
       {
         ...SlCoreContract,
-        functionName: "getUserPuzzlePiecesForUserCurrentLevel",
+        functionName: "getUserPuzzlePiecesForUserCurrentLevel", // 0
         args: [userAddress, BigNumber.from(1)],
       },
       {
         ...SlCoreContract,
-        functionName: "getUserPuzzlePiecesForUserCurrentLevel",
+        functionName: "getUserPuzzlePiecesForUserCurrentLevel", // 1
         args: [userAddress, BigNumber.from(2)],
       },
       {
         ...SlCoreContract,
-        functionName: "getUserPuzzlePiecesForUserCurrentLevel",
+        functionName: "getUserPuzzlePiecesForUserCurrentLevel", // 2
         args: [userAddress, BigNumber.from(3)],
       },
       {
         ...SlFactoryContract,
-        functionName: "getAddressTotalInLevel",
+        functionName: "getAddressTotalInLevel", // 3
         args: [userAddress, BigNumber.from(1)],
       },
       {
         ...SlFactoryContract,
-        functionName: "getAddressTotalInLevel",
+        functionName: "getAddressTotalInLevel", // 4
         args: [userAddress, BigNumber.from(2)],
       },
       {
         ...SlFactoryContract,
-        functionName: "getAddressTotalInLevel",
+        functionName: "getAddressTotalInLevel", // 5
         args: [userAddress, BigNumber.from(3)],
       },
       {
         ...SlCoreContract,
-        functionName: "whichLevelUserHas",
+        functionName: "whichLevelUserHas", // 6
         args: [userAddress],
       },
       // {
@@ -143,7 +148,7 @@ const Puzzle: FC<PuzzleProps> = ({
       data?.[currentLevel - 1] as BigNumber,
     ],
     // watch: true,
-    //enabled: data && currentLevel === data?.[6]?.toNumber(),
+    enabled: data && currentLevel === data?.[6]?.toNumber(),
     onSettled(data, error) {
       console.log("Erro??>>>>>", error);
 
@@ -179,7 +184,9 @@ const Puzzle: FC<PuzzleProps> = ({
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
     abi: SLCoreABI,
     functionName: "claimLevel",
-    enabled: Number(data?.[currentLevel - 1]) > 9 && data?.[6] == currentLevel,
+    enabled:
+      Number(data?.[currentLevel - 1]) > 9 &&
+      data?.[6].toNumber() == currentLevel,
   });
 
   const { write: claimLevel, isLoading: isLoadingClaimLevel } =
@@ -205,6 +212,22 @@ const Puzzle: FC<PuzzleProps> = ({
   const [profitNotification, setProfitNotification] = useState(true);
 
   useEffect(() => {
+    // async function callContract() {
+    //   const provider = ethers.getDefaultProvider();
+    //   const contract = new ethers.Contract(
+    //     process.env.NEXT_PUBLIC_LOGICS_ADDRESS as Address,
+    //     SLLogicsABI,
+    //     provider
+    //   );
+    //   const works = await contract.userAllowedToClaimPiece(
+    //     userAddress,
+    //     BigNumber.from(currentLevel),
+    //     BigNumber.from(currentLevel), // data?.[6] as BigNumber,
+    //     BigNumber.from(3) // data?.[currentLevel - 1] as BigNumber,
+    //   );
+    //   console.log(works);
+    // }
+    // void callContract();
     // console.log(userPieces);
     // console.log(userPuzzlePieces);
     // console.log("userAddress", userAddress);
@@ -215,17 +238,20 @@ const Puzzle: FC<PuzzleProps> = ({
     // console.log("puzzle", process.env.NEXT_PUBLIC_PUZZLE_ADDRESS);
     // console.log(
     //   "debug",
-    //   data[6],
+    //   data?.[6].toNumber(),
     //   "/",
-    //   data[currentLevel - 1],
+    //   data?.[currentLevel - 1]?.toNumber(),
     //   "/",
     //   currentLevel,
     //   "/",
     //   userAddress,
     //   "/",
+    //   "dataUserAllowed",
     //   dataUserAllowed
     // );
-  }, []);
+    // console.log(data[6].toNumber());
+    console.log(currentLevel);
+  }, [currentLevel]);
 
   return (
     <section
@@ -387,16 +413,17 @@ const Puzzle: FC<PuzzleProps> = ({
           })}
         </Tab.Panels>
       </Tab.Group> */}
-      {isConnected && (
-        <Level
-          level={1}
-          bg={dbLevels?.at(0)?.bg.url as string}
-          description={dbLevels?.at(0)?.description}
-          profitRange={dbLevels?.at(0)?.profitRange as string}
-          nextProfitRange={dbLevels?.at(1)?.profitRange as string}
-          userPieces={userPieces}
-        />
-      )}
+
+      {/* {currentLevel < 2 && (
+        <Button
+          onClick={claimLevel}
+          className="whitespace-nowrap px-12"
+          variant="outline"
+          disabled={data?.[0].lt(10) || data?.[6].gt(currentLevel + 1)}
+        >
+          Claim Level {currentLevel + 1}
+        </Button>
+      )} */}
       {/* <Carousel
         className="pt-5"
         id="1"
@@ -405,90 +432,197 @@ const Puzzle: FC<PuzzleProps> = ({
         items={puzzlePieces}
       /> */}
       {isConnected && (
-        <div className="flex flex-col">
-          <h2 className="ml-[58px] pb-12 pt-16 text-2xl font-medium uppercase">
-            My Achievements
-          </h2>
-          <div className="grid max-w-6xl grid-cols-1 gap-6 pb-36 md:grid-cols-4">
-            <div className="h-90 relative flex flex-col items-center justify-between rounded-md bg-neutral-100">
-              <h2 className="pt-6 text-center text-[24px] font-semibold uppercase leading-normal tracking-wider text-black">
-                Your
-                <br />
-                next NFT
-              </h2>
-              <div className="flex flex-col items-center justify-center gap-3">
-                <span className=" text-center text-[14px] font-normal leading-none tracking-wide text-neutral-600">
-                  Progress
-                </span>
-                <span className="text-center text-[40px] font-light leading-10 tracking-widest text-black">
-                  {((noDecimals(Number(data?.[3])) - userTotalPieces * 5000) /
-                    5000) *
-                    100}{" "}
-                  /{claimPieceProgress.toString()}%
-                </span>
-                <span className="text-center text-[14px] font-normal leading-none tracking-wide text-neutral-600">
-                  You&apos;re almost there!
-                </span>
-                <span className="text-[16px] font-normal leading-normal text-neutral-600">
-                  <span className="text-[16px] font-semibold leading-normal text-black">
-                    {/* {noDecimals(Number(data?.[3])) - userTotalPieces * 5000} */}
-                    {claimPieceProgressValue}
-                  </span>{" "}
-                  | 5.000$
-                </span>
-              </div>
-              <Button
-                onClick={claimPiece}
-                className="whitespace-nowrap border-emerald-700 px-12 text-emerald-700"
-                variant="outline"
-                disabled={!userCanClaimPiece}
+        <div className="relative ml-[-70px] flex max-w-[1408px] items-center overflow-hidden">
+          <div
+            className={`swiper-prev-22 absolute left-0  z-20 flex h-full items-start justify-center pl-16 pt-[190px]`}
+          >
+            <Image
+              src={"/icons/pagination-previous-black.svg"}
+              width={38}
+              height={38}
+              alt="Previous"
+            />
+          </div>
+          <section
+            className={cn(" relative z-10 flex w-full flex-col items-center ")}
+          >
+            <div className="swiper-wrapper relative z-10 flex ">
+              <Swiper
+                modules={[Navigation, A11y]}
+                className="swiper w-full"
+                spaceBetween={80}
+                slidesPerView={1.2}
+                navigation={{
+                  nextEl: `.swiper-next-22`,
+                  prevEl: `.swiper-prev-22`,
+                }}
+                updateOnWindowResize
+                observer
+                observeParents
+                // initialSlide={0}
+                // loop
+                centeredSlides
+                onSlideChange={(swiperCore) => {
+                  const { activeIndex } = swiperCore;
+                  setCurrentLevel(activeIndex + 1);
+                }}
               >
-                {isLoadingClaimPiece ? "Loading..." : `Claim Piece`}
-              </Button>
-              <div className="bottom-0 left-0 flex h-3 w-full self-end rounded-b-md bg-progressBackground">
-                <div
-                  className={cn("rounded-bl-md bg-progressHighlight")}
-                  style={{
-                    width: `${
-                      levels.find((level) => level.title == "Level 1")
-                        ?.progress as number
-                    }%`,
-                  }}
-                ></div>
-              </div>
+                {dbLevels.map((level, idx) => (
+                  <SwiperSlide
+                    key={level.basicLevel.title}
+                    className="flex items-center justify-center  "
+                  >
+                    <Level
+                      level={idx + 1}
+                      userLevel={data?.[6].toNumber() as number}
+                      bg={level.bg.url}
+                      description={level.description}
+                      profitRange={level.profitRange}
+                      nextProfitRange={
+                        dbLevels?.at(idx + 1)?.profitRange as string
+                      }
+                      userPieces={userPieces}
+                      claimLevel={claimLevel}
+                    />
+                    <div className="flex flex-col">
+                      <h2 className="pb-12 pt-16 text-2xl font-medium uppercase">
+                        My Achievements
+                      </h2>
+                      <div className="grid max-w-6xl grid-cols-1 gap-6 pb-36 md:grid-cols-4">
+                        <div className="h-90 relative flex flex-col items-center justify-between rounded-md bg-neutral-100">
+                          <h2 className="pt-6 text-center text-[24px] font-semibold uppercase leading-normal tracking-wider text-black">
+                            Your
+                            <br />
+                            next NFT
+                          </h2>
+                          <div className="flex flex-col items-center justify-center gap-3">
+                            <span className=" text-center text-[14px] font-normal leading-none tracking-wide text-neutral-600">
+                              Progress
+                            </span>
+                            <span className="text-center text-[40px] font-light leading-10 tracking-widest text-black">
+                              <NumericFormat
+                                value={claimPieceProgress.toString()}
+                                displayType="text"
+                                fixedDecimalScale
+                                decimalSeparator="."
+                                thousandSeparator=","
+                                decimalScale={0}
+                                suffix=" %"
+                              />
+                            </span>
+                            <span className="text-center text-[14px] font-normal leading-none tracking-wide text-neutral-600">
+                              You&apos;re almost there!
+                            </span>
+                            <span className="text-[16px] font-normal leading-normal text-neutral-600">
+                              <span className="text-[16px] font-semibold leading-normal text-black">
+                                <NumericFormat
+                                  value={ethers.utils.formatUnits(
+                                    claimPieceProgressValue.toNumber(),
+                                    6
+                                  )}
+                                  displayType="text"
+                                  fixedDecimalScale
+                                  decimalSeparator="."
+                                  thousandSeparator=","
+                                  decimalScale={2}
+                                  prefix="$ "
+                                />
+                              </span>{" "}
+                              |{" "}
+                              <NumericFormat
+                                value="5000"
+                                displayType="text"
+                                fixedDecimalScale
+                                decimalSeparator="."
+                                thousandSeparator=","
+                                decimalScale={2}
+                                prefix="$ "
+                              />
+                            </span>
+                          </div>
+                          <Button
+                            onClick={claimPiece}
+                            className="whitespace-nowrap border-emerald-700 px-12 text-emerald-700"
+                            variant="outline"
+                            disabled={!userCanClaimPiece}
+                          >
+                            {isLoadingClaimPiece ? "Loading..." : `Claim Piece`}
+                          </Button>
+
+                          <div className="bottom-0 left-0 flex h-3 w-full self-end rounded-b-md bg-progressBackground">
+                            <div
+                              className={cn(
+                                "rounded-bl-md bg-progressHighlight",
+                                Math.abs(claimPieceProgress.toNumber()) >= 100
+                                  ? "rounded-br-md"
+                                  : ""
+                              )}
+                              style={{
+                                width: `${
+                                  Math.abs(claimPieceProgress.toNumber()) >= 100
+                                    ? 100
+                                    : Math.abs(claimPieceProgress.toNumber())
+                                }%`,
+                              }}
+                            ></div>
+                          </div>
+                        </div>
+                        {puzzlePieces.map((puzzle) => (
+                          <div key={puzzle.tokenid} className="relative">
+                            <CarouselItem
+                              title={puzzle.title}
+                              amount={
+                                userPuzzlePieces
+                                  ?.at(puzzle.tokenid)
+                                  ?.toNumber() as number
+                              }
+                              isConnected={isConnected}
+                              image={
+                                (userPuzzlePieces &&
+                                  userPuzzlePieces
+                                    .at(puzzle?.tokenid)
+                                    ?.toNumber()) ||
+                                0 > 0
+                                  ? puzzle?.imageCollected?.url
+                                  : puzzle.image.url
+                              }
+                            />
+                          </div>
+                        ))}
+                        <div className="h-90 relative flex flex-col items-center justify-between rounded-md border-2 border-tabInactive/20">
+                          <Image
+                            src="/nfts/next_level.svg"
+                            alt="Symbol"
+                            width={165}
+                            height={165}
+                          />
+                          <div className="flex flex-col items-center justify-center text-primaryGold">
+                            <h3>NFT Level {idx + 2}</h3>
+                            <p className="text-center">
+                              You can claim it when you get 10 different pieces
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
             </div>
-            {puzzlePieces.map((puzzle) => (
-              <div key={puzzle.tokenid} className="relative">
-                <CarouselItem
-                  title={puzzle.title}
-                  amount={
-                    userPuzzlePieces?.at(puzzle.tokenid)?.toNumber() as number
-                  }
-                  isConnected={isConnected}
-                  image={
-                    (userPuzzlePieces &&
-                      userPuzzlePieces.at(puzzle?.tokenid)?.toNumber()) ||
-                    0 > 0
-                      ? puzzle?.imageCollected?.url
-                      : puzzle.image.url
-                  }
-                />
-              </div>
-            ))}
-            <div className="h-90 relative flex flex-col items-center justify-between rounded-md border-2 border-tabInactive/20">
-              <Image
-                src="/nfts/next_level.svg"
-                alt="Symbol"
-                width={165}
-                height={165}
-              />
-              <div className="flex flex-col items-center justify-center text-primaryGold">
-                <h3>NFT Level 2</h3>
-                <p className="text-center">
-                  You can claim it when you get 10 different pieces
-                </p>
-              </div>
-            </div>
+          </section>
+          <div
+            className={cn(
+              "swiper-next-22 absolute right-0 z-20 flex h-full items-start pr-16 pt-[195px]",
+              currentLevel > 2 ? "hidden" : ""
+            )}
+          >
+            <Image
+              src="/icons/pagination-next-black.svg"
+              // className="fill-black text-black"
+              width={38}
+              height={38}
+              alt="Next"
+            />
           </div>
         </div>
       )}

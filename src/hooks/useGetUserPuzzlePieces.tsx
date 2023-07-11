@@ -42,7 +42,8 @@ const useGetUserPuzzlePieces = ({
   const [claimPieceProgress, setClaimPieceProgress] = useState<BigNumber>(
     BigNumber.from(0)
   );
-  const [claimPieceProgressValue, setClaimPieceProgressValue] = useState(0);
+  const [claimPieceProgressValue, setClaimPieceProgressValue] =
+    useState<BigNumber>(BigNumber.from(0));
   useEffect(() => {
     if (!userPuzzlePieces) return;
 
@@ -58,19 +59,22 @@ const useGetUserPuzzlePieces = ({
   }, [userPieces]);
 
   useEffect(() => {
-    const claimPieceProgressValue = totalInvested
-      .div(10 ** 6)
-      .sub(userTotalPieces * 5000);
-    console.log(claimPieceProgressValue.toNumber());
+    const claimPieceProgressValue = totalInvested?.sub(
+      userTotalPieces * (5000 * 10 ** 6)
+    );
 
-    const claimPieceProgress = claimPieceProgressValue.div(5000).mul(100);
-    console.log(claimPieceProgress.toNumber());
-    /* {((noDecimals(Number(data?.[3])) - userTotalPieces * 5000) /
-                    5000) *
-                    100} */
+    console.log("claimPieceProgressValue", claimPieceProgressValue.toNumber());
+
+    const claimPieceProgress = claimPieceProgressValue
+      .div(5000)
+      .mul(100)
+      .div(10 ** 6);
+
+    // console.log("claimPieceProgress", claimPieceProgress.toString());
     setClaimPieceProgress(claimPieceProgress);
-    setClaimPieceProgressValue(claimPieceProgressValue.toNumber());
-  }, [userTotalPieces]);
+    setClaimPieceProgressValue(claimPieceProgressValue);
+    console.log(level);
+  }, [userTotalPieces, level]);
 
   return {
     userPieces,
