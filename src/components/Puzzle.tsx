@@ -52,13 +52,6 @@ const Puzzle: FC<PuzzleProps> = ({
     abi: SLLogicsABI,
   };
 
-  const { userPuzzlePieces, userPieces, userTotalPieces } =
-    useGetUserPuzzlePieces({
-      userAddress,
-      level: currentLevel,
-      // watch: true,
-    });
-
   // const { isSuccess: userAllowedLevel, error: errorUserLevel } =
   //   useContractRead({
   //     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
