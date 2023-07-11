@@ -459,16 +459,16 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
   );
 
   const profitMinimumValue =
-    totalSupply &&
+    userTotalInvestment &&
     profitMinimumPercentage
-      .mul(totalSupply)
+      .mul(userTotalInvestment)
       .div(10 ** 6)
       .div(100)
       .toNumber();
   const profitMaximumValue =
-    totalSupply &&
+    userTotalInvestment &&
     profitMaximumPercentage
-      .mul(totalSupply)
+      .mul(userTotalInvestment)
       .div(10 ** 6)
       .div(100)
       .toNumber();
