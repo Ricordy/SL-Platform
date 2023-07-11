@@ -31,12 +31,6 @@ const Puzzle: FC<PuzzleProps> = ({
   const [userCanClaimLevel, setUserCanClaimLevel] = useState(false);
   const [currentLevel, setCurrentLevel] = useState(1);
 
-  const NFTs: {
-    tokenid: number;
-    title: string;
-    url: string;
-  }[] = [{ tokenid: 1, title: "Tablier", url: "" }];
-
   const SlCoreContract = {
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
     abi: SLCoreABI,
@@ -51,13 +45,6 @@ const Puzzle: FC<PuzzleProps> = ({
     address: process.env.NEXT_PUBLIC_SLLOGIC_ADDRESS as Address,
     abi: SLLogicsABI,
   };
-
-  const { userPuzzlePieces, userPieces, userTotalPieces } =
-    useGetUserPuzzlePieces({
-      userAddress,
-      level: currentLevel,
-      // watch: true,
-    });
 
   // const { isSuccess: userAllowedLevel, error: errorUserLevel } =
   //   useContractRead({
@@ -77,37 +64,36 @@ const Puzzle: FC<PuzzleProps> = ({
       {
         ...SlCoreContract,
         functionName: "getUserPuzzlePiecesForUserCurrentLevel",
-        args: [userAddress, 1],
+        args: [userAddress, BigNumber.from(1)],
       },
       {
         ...SlCoreContract,
         functionName: "getUserPuzzlePiecesForUserCurrentLevel",
-        args: [userAddress, 2],
+        args: [userAddress, BigNumber.from(2)],
       },
       {
         ...SlCoreContract,
         functionName: "getUserPuzzlePiecesForUserCurrentLevel",
-        args: [userAddress, 3],
+        args: [userAddress, BigNumber.from(3)],
       },
       {
         ...SlFactoryContract,
         functionName: "getAddressTotalInLevel",
-        args: [userAddress, 1],
+        args: [userAddress, BigNumber.from(1)],
       },
       {
         ...SlFactoryContract,
         functionName: "getAddressTotalInLevel",
-        args: [userAddress, 2],
+        args: [userAddress, BigNumber.from(2)],
       },
       {
         ...SlFactoryContract,
         functionName: "getAddressTotalInLevel",
-        args: [userAddress, 3],
+        args: [userAddress, BigNumber.from(3)],
       },
       {
         ...SlCoreContract,
         functionName: "whichLevelUserHas",
-        // chainId: Number(process.env.NEXT_PUBLIC_CHAIN_ID),
         args: [userAddress],
       },
       // {
@@ -124,6 +110,19 @@ const Puzzle: FC<PuzzleProps> = ({
   });
 
   data = data ?? [];
+
+  const {
+    userPuzzlePieces,
+    userPieces,
+    userTotalPieces,
+    claimPieceProgressValue,
+    claimPieceProgress,
+  } = useGetUserPuzzlePieces({
+    userAddress,
+    level: currentLevel,
+    totalInvested: data?.[3] as BigNumber,
+    // watch: true,
+  });
 
   // console.log("data>>>>>", data);
   // console.log("currentLEvel == data[6]?????>>>>", currentLevel == data[6]);
@@ -196,11 +195,11 @@ const Puzzle: FC<PuzzleProps> = ({
 
   const levels = dbLevels.map((dbLevel, idx) => ({
     title: dbLevel.basicLevel.title,
-    locked: (data[6] as number) < idx + 1,
+    locked: data?.[6]?.lt(idx + 1),
     profitRange: dbLevel.profitRange,
     description: dbLevel.description,
     progress: (userPieces.length / 10) * 100,
-    invested: noDecimals(Number(data[3 + idx])),
+    invested: noDecimals(Number(data?.[3 + idx])),
     collected: userPieces.length.toString(),
   }));
 
@@ -411,14 +410,18 @@ const Puzzle: FC<PuzzleProps> = ({
                   Progress
                 </span>
                 <span className="text-center text-[40px] font-light leading-10 tracking-widest text-black">
-                  {levels.find((level) => level.title == "Level 1")?.progress}%
+                  {((noDecimals(Number(data?.[3])) - userTotalPieces * 5000) /
+                    5000) *
+                    100}{" "}
+                  /{claimPieceProgress.toString()}%
                 </span>
                 <span className="text-center text-[14px] font-normal leading-none tracking-wide text-neutral-600">
                   You&apos;re almost there!
                 </span>
                 <span className="text-[16px] font-normal leading-normal text-neutral-600">
                   <span className="text-[16px] font-semibold leading-normal text-black">
-                    {noDecimals(Number(data?.[3])) - userTotalPieces * 5000}
+                    {/* {noDecimals(Number(data?.[3])) - userTotalPieces * 5000} */}
+                    {claimPieceProgressValue}
                   </span>{" "}
                   | 5.000$
                 </span>
@@ -433,7 +436,7 @@ const Puzzle: FC<PuzzleProps> = ({
               </Button>
               <div className="bottom-0 left-0 flex h-3 w-full self-end rounded-b-md bg-progressBackground">
                 <div
-                  className={` rounded-b-md bg-progressHighlight`}
+                  className={cn("rounded-bl-md bg-progressHighlight")}
                   style={{
                     width: `${
                       levels.find((level) => level.title == "Level 1")
@@ -460,33 +463,6 @@ const Puzzle: FC<PuzzleProps> = ({
                   }
                 />
               </div>
-              // <div
-              //   key={puzzle.tokenid}
-              //   className="flex h-[393px] flex-col items-center justify-center rounded-md border-2 border-tabInactive/20"
-              // >
-              //   {userPuzzlePieces &&
-              //   userPuzzlePieces?.at(puzzle.tokenid)?.gt(0) ? (
-              //     <Image
-              //       src={puzzle.imageCollected.url}
-              //       alt={puzzle.title}
-              //       width={165}
-              //       height={165}
-              //     />
-              //   ) : (
-              //     <Image
-              //       src={puzzle.image.url}
-              //       alt={puzzle.title}
-              //       width={165}
-              //       height={165}
-              //     />
-              //   )}
-
-              //   <h3 className="text-center text-sm uppercase text-tabInactive">
-              //     Piece
-              //     <br />
-              //     <span className="text-2xl">{puzzle.title}</span>
-              //   </h3>
-              // </div>
             ))}
             <div className="h-90 relative flex flex-col items-center justify-between rounded-md border-2 border-tabInactive/20">
               <Image

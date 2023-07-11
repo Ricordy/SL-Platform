@@ -176,13 +176,14 @@ export const ProjectInfo = ({
 
       <div className="relative flex gap-2 pr-4">
         <span>Price:</span>
-        <span className="font-medium">
+        <span className="now font-medium">
           <NumericFormat
-            value={totalInvestment}
+            value={totalInvestment.toString()}
             displayType="text"
             fixedDecimalScale={true}
             decimalSeparator=","
             thousandSeparator="."
+            decimalScale={2}
             prefix="$ "
           />
         </span>
@@ -192,12 +193,11 @@ export const ProjectInfo = ({
         <span>Progress:</span>
         <span className="font-medium">
           <NumericFormat
-            value={progress}
+            value={progress.toString()}
             displayType="text"
-            fixedDecimalScale={true}
-            decimalSeparator=","
-            thousandSeparator="."
-            // decimalScale={2}
+            fixedDecimalScale
+            decimalSeparator="."
+            decimalScale={2}
             suffix="%"
           />{" "}
           Finished

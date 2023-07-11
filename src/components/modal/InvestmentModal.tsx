@@ -56,8 +56,8 @@ export const InvestmentModal = ({
   const [isInvesting, setisInvesting] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [valueApprovalAndInvestment, setApprovalandInvestment] = useState<
-    number | null
-  >(null);
+    number | undefined
+  >(undefined);
   const debouncedValue = useDebounce<number>(
     valueApprovalAndInvestment || 0,
     500

@@ -7,11 +7,13 @@ interface HookProps {
   userAddress: Address;
   level: number;
   watch?: boolean;
+  totalInvested: BigNumber;
 }
 const useGetUserPuzzlePieces = ({
   userAddress,
   level,
   watch = false,
+  totalInvested,
 }: HookProps) => {
   const getPuzzleCollectionIds = (level: number) => {
     let increment = 0;
@@ -37,22 +39,48 @@ const useGetUserPuzzlePieces = ({
 
   const [userPieces, setUserPieces] = useState<BigNumber[]>([]);
   const [userTotalPieces, setUserTotalPieces] = useState(0);
-
+  const [claimPieceProgress, setClaimPieceProgress] = useState<BigNumber>(
+    BigNumber.from(0)
+  );
+  const [claimPieceProgressValue, setClaimPieceProgressValue] = useState(0);
   useEffect(() => {
     if (!userPuzzlePieces) return;
 
-    // console.log("userPuzzlePieces>>", userPuzzlePieces);
-
-    //   console.log("allpieces", puzzlePieces);
-    //   puzzlePieces.map((piece) => console.log(piece.toNumber()));
-
     setUserPieces(userPuzzlePieces.filter((piece) => piece.gt(0)));
-    let sum = 0;
-    userPieces.map((amount) => (sum += amount.toNumber()));
-    setUserTotalPieces(sum);
   }, [userPuzzlePieces]);
 
-  return { userPieces, userPuzzlePieces, userTotalPieces, error, isLoading };
+  useEffect(() => {
+    const sum = userPieces.reduce(
+      (x, y) => BigNumber.from(x).add(y),
+      BigNumber.from(0)
+    );
+    setUserTotalPieces(sum.toNumber());
+  }, [userPieces]);
+
+  useEffect(() => {
+    const claimPieceProgressValue = totalInvested
+      .div(10 ** 6)
+      .sub(userTotalPieces * 5000);
+    console.log(claimPieceProgressValue.toNumber());
+
+    const claimPieceProgress = claimPieceProgressValue.div(5000).mul(100);
+    console.log(claimPieceProgress.toNumber());
+    /* {((noDecimals(Number(data?.[3])) - userTotalPieces * 5000) /
+                    5000) *
+                    100} */
+    setClaimPieceProgress(claimPieceProgress);
+    setClaimPieceProgressValue(claimPieceProgressValue.toNumber());
+  }, [userTotalPieces]);
+
+  return {
+    userPieces,
+    userPuzzlePieces,
+    userTotalPieces,
+    claimPieceProgress,
+    claimPieceProgressValue,
+    error,
+    isLoading,
+  };
 };
 
 export default useGetUserPuzzlePieces;
