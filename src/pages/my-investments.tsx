@@ -441,6 +441,25 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
 
   const userInv = extractUniqueInvestments(props.userTransactions);
 
+  function getMissingInvestments(allInvestments, userInv) {
+    // Check if the inputs are valid arrays
+    if (!Array.isArray(allInvestments) || !Array.isArray(userInv)) {
+      console.error("Invalid input");
+      return [];
+    }
+
+    // Create a set of investment addresses from the userInv array
+    const userInvAddresses = new Set(
+      userInv.map((investment) => investment.address)
+    );
+
+    // Filter the allInvestments array to get the missing investments
+    const missingInvestments = allInvestments.filter(
+      (investment) => !userInvAddresses.has(investment.address)
+    );
+
+    return missingInvestments;
+  }
 
   // return <div>end</div>;
   if (hasEntryNFTLoading) return <div>Loading...</div>;
@@ -643,7 +662,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
             id="4"
             className="w-full pt-[132px]"
             title={<h2 className="text-2xl">Our Suggestions for you</h2>}
-            items={props.investments?.filter(
+            items={getMissingInvestments(props.investments, userInv).filter(
               (investment) =>
                 investment.basicInvestment.investmentStatus == "Active"
             )}
