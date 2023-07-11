@@ -63,7 +63,6 @@ interface MyInvestmentsProps extends InvestmentsProps, TransactionProps {}
 
 export const TransactionItem = (items, userInvestedContracts) => {
   //console.log(userInvestedContracts);
-  const { address } = useAccount();
   return items?.items?.map((item, idx) => {
     const addressContract = item.investment.address;
     // const { amountInvested } = useGetAddressInvestmentinSingleCar({
@@ -150,15 +149,15 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     },
   });
 
-  const { data: contractsTotalSupply }: { data: BigNumber } = useContractReads({
-    contracts: [
-      {
-        ...SlFactoryContract,
-        functionName: "getAddressTotal",
-        args: [address],
-      },
-    ],
-  });
+  // const { data: contractsTotalSupply }: { data: BigNumber } = useContractReads({
+  //   contracts: [
+  //     {
+  //       ...SlFactoryContract,
+  //       functionName: "getAddressTotal",
+  //       args: [address],
+  //     },
+  //   ],
+  // });
 
   const { hasEntryNFT, hasEntryNFTLoading } = useCheckEntryNFT({
     address: address as Address,
@@ -198,35 +197,35 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
   //   // },
   // });
 
-  const getUserTransactions = async (address: Address) => {
-    const {
-      transactions: userTransactions,
-    }: { transactions: TransactionProps } = await hygraph.request(
-      gql`
-        query UserTransactions {
-          transactions(where: { transactionDetails: { from: "34343434" } }) {
-            amountInvested
-            date
-            investment {
-              address
-              basicInvestment {
-                totalInvestment
-                car {
-                  basicInfo {
-                    cover {
-                      url
-                    }
-                    title
-                  }
-                }
-              }
-            }
-          }
-        }
-      `
-    );
-    return userTransactions;
-  };
+  // const getUserTransactions = async (address: Address) => {
+  //   const {
+  //     transactions: userTransactions,
+  //   }: { transactions: TransactionProps } = await hygraph.request(
+  //     gql`
+  //       query UserTransactions {
+  //         transactions(where: { transactionDetails: { from: "34343434" } }) {
+  //           amountInvested
+  //           date
+  //           investment {
+  //             address
+  //             basicInvestment {
+  //               totalInvestment
+  //               car {
+  //                 basicInfo {
+  //                   cover {
+  //                     url
+  //                   }
+  //                   title
+  //                 }
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }
+  //     `
+  //   );
+  //   return userTransactions;
+  // };
 
   // console.log("user transactions>>", props.userTransactions);
   const userInvestedContracts = [];
