@@ -62,7 +62,6 @@ export interface SessionProps {
 interface MyInvestmentsProps extends InvestmentsProps, TransactionProps {}
 
 export const TransactionItem = (items, userInvestedContracts) => {
-  console.log("items>>>", items);
   return (
     items &&
     items.items.map((item, idx) => {
@@ -71,7 +70,6 @@ export const TransactionItem = (items, userInvestedContracts) => {
       //   walletAddress: address,
       //   watch: true,
       // });
-      console.log("inside item>>>>>", item);
 
       return (
         item.investment && (
@@ -418,6 +416,32 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     //return () => console.log("Cleanup..");
   }, []);
 
+  function extractUniqueInvestments(queryResult) {
+    // Use a map to store unique investments by their address
+    const uniqueInvestments = new Map();
+
+    // Iterate over each transaction
+    queryResult &&
+      queryResult.forEach((transaction) => {
+        // Check if the transaction has an investment
+        if (transaction.investment) {
+          // Use the investment address as the unique identifier
+          const address = transaction.investment.address;
+
+          // If the investment is not already in the map, add it
+          if (!uniqueInvestments.has(address)) {
+            uniqueInvestments.set(address, transaction.investment);
+          }
+        }
+      });
+
+    // Convert the map values to an array and return it
+    return Array.from(uniqueInvestments.values());
+  }
+
+  const userInv = extractUniqueInvestments(props.userTransactions);
+
+
   // return <div>end</div>;
   if (hasEntryNFTLoading) return <div>Loading...</div>;
 
@@ -572,40 +596,46 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       </div>
 
       <div className="relative left-1/2 z-20 mx-auto -ml-[570px] mt-[52px]  min-h-[500px] max-w-[1338px]">
-        <ProjectCarousel
-          id="1"
-          prevNavWhite={true}
-          title={<h2 className="text-2xl text-white">Active</h2>}
-          items={props.investments?.filter(
-            (investment) =>
-              investment.basicInvestment.investmentStatus == "Active"
-          )}
-        />
+        {userInv && (
+          <ProjectCarousel
+            id="1"
+            prevNavWhite={true}
+            title={<h2 className="text-2xl text-white">Active</h2>}
+            items={userInv.filter(
+              (investment) =>
+                investment.basicInvestment.investmentStatus == "Active"
+            )}
+          />
+        )}
 
-        <ProjectCarousel
-          id="2"
-          className="pt-[132px]"
-          title={<h2 className="text-2xl">Upcoming</h2>}
-          items={props.investments?.filter(
-            (investment) =>
-              investment.basicInvestment.investmentStatus == "Upcoming"
-          )}
-        />
+        {/* {userInv && (
+          <ProjectCarousel
+            id="2"
+            className="pt-[132px]"
+            title={<h2 className="text-2xl">Upcoming</h2>}
+            items={userInv.filter(
+              (investment) =>
+                investment.basicInvestment.investmentStatus == "Upcoming"
+            )}
+          />
+        )} */}
         {/* <Carousel
           id="3"
           className="pt-[132px]"
           title={<h2 className="text-2xl">My favorites</h2>}
           items={props.investments}
         /> */}
-        <ProjectCarousel
-          id="4"
-          className="py-[132px]"
-          title={<h2 className="text-2xl">Finished</h2>}
-          items={props.investments?.filter(
-            (investment) =>
-              investment.basicInvestment.investmentStatus == "Finished"
-          )}
-        />
+        {userInv && (
+          <ProjectCarousel
+            id="4"
+            className="py-[132px]"
+            title={<h2 className="text-2xl">Finished</h2>}
+            items={userInv.filter(
+              (investment) =>
+                investment.basicInvestment.investmentStatus == "Finished"
+            )}
+          />
+        )}
       </div>
       <div className="relative z-20 mx-auto flex rounded-t-[56px] bg-black pb-[128px] pt-[72px] text-white">
         <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[52px]">
@@ -715,7 +745,7 @@ export const getServerSideProps: GetServerSideProps<
   const { investments }: { investments: InvestmentsProps } =
     await hygraph.request(
       gql`
-        query Investments {
+        query AllInvestments {
           investments {
             id
             address
@@ -754,12 +784,13 @@ export const getServerSideProps: GetServerSideProps<
               address
               basicInvestment {
                 totalInvestment
+                investmentStatus
                 car {
                   basicInfo {
+                    title
                     cover {
                       url
                     }
-                    title
                   }
                 }
               }
