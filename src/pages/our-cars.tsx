@@ -58,8 +58,6 @@ const ourCars = (props) => {
           id="1"
           prevNavWhite={true}
           title={<h2 className="text-2xl text-white">Our cars</h2>}
-          seeMoreLabel="See more"
-          seeMoreLink="/our-cars"
           items={props.investments}
         />
         <Carousel
