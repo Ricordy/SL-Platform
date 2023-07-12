@@ -16,6 +16,7 @@ interface CarouselItemProps {
   image: string;
   price: string;
   address: string;
+  level?: string;
 }
 
 export const CarouselItem = ({
@@ -23,6 +24,7 @@ export const CarouselItem = ({
   image,
   price,
   address,
+  level,
 }: CarouselItemProps) => {
   return (
     <div className=" w-full rounded-md">
@@ -32,6 +34,11 @@ export const CarouselItem = ({
         )}
         style={{ backgroundImage: `url(${image})` }}
       >
+        {level && (
+          <div className="absolute right-3 top-2 z-10 rounded-lg bg-white px-2 py-1 text-xs text-black">
+            {level}
+          </div>
+        )}
         <h4 className="z-10 text-center text-3xl uppercase text-white">
           {title}
         </h4>
@@ -46,7 +53,7 @@ export const CarouselItem = ({
           href={`/investment/${address}`}
           className={cn(
             "absolute inset-0 rounded-md",
-            "focus:z-10 focus:outline-none focus:ring-2"
+            "z-20 focus:z-10 focus:outline-none focus:ring-2"
           )}
         />
         <div className="absolute z-0 flex min-h-[200px] w-full rounded-b-md bg-[url('/projects/car-gradient.svg')] bg-cover"></div>
@@ -140,6 +147,7 @@ const Carousel: FC<CarouselProps> = ({
                     image={item.basicInvestment.car.basicInfo.cover.url}
                     price={item.basicInvestment.totalInvestment.toString()}
                     address={item.address}
+                    level={item.level.basicLevel.title}
                   />
                 </SwiperSlide>
               ))}

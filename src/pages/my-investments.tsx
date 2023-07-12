@@ -768,6 +768,11 @@ export const getServerSideProps: GetServerSideProps<
           investments {
             id
             address
+            level {
+              basicLevel {
+                title
+              }
+            }
             basicInvestment {
               id
               totalInvestment
@@ -801,6 +806,11 @@ export const getServerSideProps: GetServerSideProps<
             date
             investment {
               address
+              level {
+                basicLevel {
+                  title
+                }
+              }
               basicInvestment {
                 totalInvestment
                 investmentStatus

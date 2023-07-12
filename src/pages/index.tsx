@@ -211,6 +211,11 @@ export async function getServerSideProps(ctx) {
             id
             address
             highlight
+            level {
+              basicLevel {
+                title
+              }
+            }
             basicInvestment {
               id
               totalInvested
@@ -252,6 +257,12 @@ export async function getServerSideProps(ctx) {
           ) {
             id
             address
+            level {
+              basicLevel {
+                title
+              }
+              profitRange
+            }
             basicInvestment {
               totalInvested
               totalInvestment

@@ -19,7 +19,6 @@ import {
   useAccount,
   useContract,
   useContractRead,
-  useContractWrite,
   usePrepareContractWrite,
   useSigner,
   type Address,
@@ -223,7 +222,7 @@ const TransactionItem = ({
         from === wallet ? "bg-red-200/20" : ""
       )}
     >
-      <span>
+      <div className="w-1/4 text-right">
         <NumericFormat
           value={value.toString()}
           displayType="text"
@@ -233,7 +232,7 @@ const TransactionItem = ({
           decimalScale={2}
           prefix="$ "
         />
-      </span>
+      </div>
       <span className="text-xs text-primaryGreen">{type}</span>
       <span>{dayjs(date).format("ll")}</span>
       <Link href={`https://etherscan.io/tx/${hash}`} target="_blank">
@@ -370,7 +369,9 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
       ) {
         setCanWithdraw(false);
       } else {
-        toast.error(err.message);
+        console.log(err.message);
+
+        // toast.error(err.message);
       }
     },
   });

@@ -52,6 +52,9 @@ export interface InvestmentProps {
   salesStart: string;
   estimateClaiming: string;
   level: {
+    basicLevel: {
+      title: string;
+    };
     profitRange: string;
   };
   restorationPhases?: {
