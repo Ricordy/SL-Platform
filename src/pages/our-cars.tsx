@@ -91,7 +91,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { investments } = await hygraph.request(
     gql`
       query AllInvestments {
-        investments(orderBy: createdAt_ASC) {
+        investments(orderBy: createdAt_DESC) {
           id
           address
           basicInvestment {
