@@ -1,8 +1,22 @@
 import Link from "next/link";
 import Carousel from "../components/Carousel";
 import NavBar from "../components/NavBar";
+import { GraphQLClient, gql } from "graphql-request";
 
-const ourCars = () => {
+const ourCars = (props) => {
+  function reverseInvestments(investments) {
+    return investments.slice().reverse();
+  }
+
+  function orderInvestmentsByTotalInvestment(investments) {
+    return investments
+      .slice()
+      .sort(
+        (a, b) =>
+          b.basicInvestment.totalInvestment - a.basicInvestment.totalInvestment
+      );
+  }
+
   return (
     <section className="mx-auto w-full bg-white">
       <div className="relative flex min-h-screen w-full flex-col rounded-bl-[56px] bg-opacity-80 bg-[url('/bg/bg-our-cars.jpg')] bg-contain bg-right bg-no-repeat">
@@ -46,16 +60,19 @@ const ourCars = () => {
           title={<h2 className="text-2xl text-white">Our cars</h2>}
           seeMoreLabel="See more"
           seeMoreLink="/our-cars"
+          items={props.investments}
         />
         <Carousel
           id="2"
           className="pt-[132px]"
           title={<h2 className="text-2xl">Top Investments</h2>}
+          items={orderInvestmentsByTotalInvestment(props.investments)}
         />
         <Carousel
           id="2"
           className="py-[132px]"
           title={<h2 className="text-2xl">Oldest cars</h2>}
+          items={reverseInvestments(props.investments)}
         />
       </div>
     </section>
@@ -63,3 +80,42 @@ const ourCars = () => {
 };
 
 export default ourCars;
+
+const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
+  headers: {
+    Authorization: process.env.HYGRAPH_BEARER as string,
+  },
+});
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { investments } = await hygraph.request(
+    gql`
+      query AllInvestments {
+        investments(orderBy: createdAt_ASC) {
+          id
+          address
+          basicInvestment {
+            id
+            totalInvestment
+            investmentStatus
+            car {
+              basicInfo {
+                title
+                cover {
+                  id
+                  url
+                }
+              }
+            }
+          }
+        }
+      }
+    `
+  );
+
+  return {
+    props: {
+      investments: investments,
+    },
+  };
+};

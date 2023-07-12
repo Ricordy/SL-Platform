@@ -131,7 +131,7 @@ const InvestmentGallery = ({ images }) => {
           <Image
             src={images[1].url}
             width={248}
-            height={193}
+            height={200}
             alt="Gallery"
             className="cursor-pointer rounded-md"
             onClick={() => openLightbox(1)}
@@ -139,7 +139,7 @@ const InvestmentGallery = ({ images }) => {
           <Image
             src={images[2].url}
             width={248}
-            height={193}
+            height={200}
             alt="Gallery"
             className="cursor-pointer rounded-md"
             onClick={() => openLightbox(2)}

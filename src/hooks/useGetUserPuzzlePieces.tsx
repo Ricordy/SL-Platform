@@ -63,8 +63,6 @@ const useGetUserPuzzlePieces = ({
       userTotalPieces * (5000 * 10 ** 6)
     );
 
-    console.log("claimPieceProgressValue", claimPieceProgressValue.toNumber());
-
     const claimPieceProgress = claimPieceProgressValue
       .div(5000)
       .mul(100)
