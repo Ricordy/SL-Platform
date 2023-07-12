@@ -15,6 +15,7 @@ const useGetUserPuzzlePieces = ({
   watch = false,
   totalInvested,
 }: HookProps) => {
+  const claimPieceThreshold = [5000, 10000, 15000];
   const getPuzzleCollectionIds = (level: number) => {
     let increment = 0;
     if (level == 2) {
@@ -60,18 +61,18 @@ const useGetUserPuzzlePieces = ({
 
   useEffect(() => {
     const claimPieceProgressValue = totalInvested?.sub(
-      userTotalPieces * (5000 * 10 ** 6)
+      userTotalPieces * ((claimPieceThreshold[level - 1] || 5000) * 10 ** 6)
     );
 
     const claimPieceProgress = claimPieceProgressValue
-      .div(5000)
+      ?.div(claimPieceThreshold[level - 1] || 5000)
       .mul(100)
       .div(10 ** 6);
 
     // console.log("claimPieceProgress", claimPieceProgress.toString());
     setClaimPieceProgress(claimPieceProgress);
     setClaimPieceProgressValue(claimPieceProgressValue);
-    console.log(level);
+    console.log(level, totalInvested?.toNumber());
   }, [userTotalPieces, level]);
 
   return {

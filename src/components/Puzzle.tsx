@@ -131,7 +131,7 @@ const Puzzle: FC<PuzzleProps> = ({
   } = useGetUserPuzzlePieces({
     userAddress,
     level: currentLevel,
-    totalInvested: data?.[3] as BigNumber,
+    totalInvested: data?.[2 + currentLevel] as BigNumber,
     // watch: true,
   });
 
@@ -186,7 +186,7 @@ const Puzzle: FC<PuzzleProps> = ({
     functionName: "claimLevel",
     enabled:
       Number(data?.[currentLevel - 1]) > 9 &&
-      data?.[6].toNumber() == currentLevel,
+      data?.[6]?.toNumber() == currentLevel,
   });
 
   const { write: claimLevel, isLoading: isLoadingClaimLevel } =
@@ -250,7 +250,7 @@ const Puzzle: FC<PuzzleProps> = ({
     //   dataUserAllowed
     // );
     // console.log(data[6].toNumber());
-    console.log(currentLevel);
+    // console.log(currentLevel);
   }, [currentLevel]);
 
   return (
@@ -474,7 +474,7 @@ const Puzzle: FC<PuzzleProps> = ({
                   >
                     <Level
                       level={idx + 1}
-                      userLevel={data?.[6].toNumber() as number}
+                      userLevel={data?.[6]?.toNumber() as number}
                       bg={level.bg.url}
                       description={level.description}
                       profitRange={level.profitRange}
@@ -501,7 +501,7 @@ const Puzzle: FC<PuzzleProps> = ({
                             </span>
                             <span className="text-center text-[40px] font-light leading-10 tracking-widest text-black">
                               <NumericFormat
-                                value={claimPieceProgress.toString()}
+                                value={claimPieceProgress?.toString()}
                                 displayType="text"
                                 fixedDecimalScale
                                 decimalSeparator="."
@@ -516,10 +516,13 @@ const Puzzle: FC<PuzzleProps> = ({
                             <span className="text-[16px] font-normal leading-normal text-neutral-600">
                               <span className="text-[16px] font-semibold leading-normal text-black">
                                 <NumericFormat
-                                  value={ethers.utils.formatUnits(
-                                    claimPieceProgressValue.toNumber(),
-                                    6
-                                  )}
+                                  value={
+                                    claimPieceProgressValue &&
+                                    ethers.utils.formatUnits(
+                                      claimPieceProgressValue.toNumber(),
+                                      6
+                                    )
+                                  }
                                   displayType="text"
                                   fixedDecimalScale
                                   decimalSeparator="."
@@ -530,7 +533,7 @@ const Puzzle: FC<PuzzleProps> = ({
                               </span>{" "}
                               |{" "}
                               <NumericFormat
-                                value="5000"
+                                value={(5000 * currentLevel).toString()}
                                 displayType="text"
                                 fixedDecimalScale
                                 decimalSeparator="."
@@ -553,42 +556,44 @@ const Puzzle: FC<PuzzleProps> = ({
                             <div
                               className={cn(
                                 "rounded-bl-md bg-progressHighlight",
-                                Math.abs(claimPieceProgress.toNumber()) >= 100
+                                Math.abs(claimPieceProgress?.toNumber()) >= 100
                                   ? "rounded-br-md"
                                   : ""
                               )}
                               style={{
                                 width: `${
-                                  Math.abs(claimPieceProgress.toNumber()) >= 100
+                                  Math.abs(claimPieceProgress?.toNumber()) >=
+                                  100
                                     ? 100
-                                    : Math.abs(claimPieceProgress.toNumber())
+                                    : Math.abs(claimPieceProgress?.toNumber())
                                 }%`,
                               }}
                             ></div>
                           </div>
                         </div>
-                        {puzzlePieces.map((puzzle) => (
-                          <div key={puzzle.tokenid} className="relative">
-                            <CarouselItem
-                              title={puzzle.title}
-                              amount={
-                                userPuzzlePieces
-                                  ?.at(puzzle.tokenid)
-                                  ?.toNumber() as number
-                              }
-                              isConnected={isConnected}
-                              image={
-                                (userPuzzlePieces &&
+
+                        {puzzlePieces
+                          .slice((currentLevel - 1) * 10, currentLevel * 10)
+                          .map((puzzle, idx) => (
+                            <div key={puzzle.tokenid} className="relative">
+                              <CarouselItem
+                                title={puzzle.title}
+                                amount={
                                   userPuzzlePieces
-                                    .at(puzzle?.tokenid)
-                                    ?.toNumber()) ||
-                                0 > 0
-                                  ? puzzle?.imageCollected?.url
-                                  : puzzle.image.url
-                              }
-                            />
-                          </div>
-                        ))}
+                                    ?.at(idx)
+                                    ?.toNumber() as number
+                                }
+                                isConnected={isConnected}
+                                image={
+                                  (userPuzzlePieces &&
+                                    userPuzzlePieces.at(idx)?.toNumber()) ||
+                                  0 > 0
+                                    ? puzzle?.imageCollected?.url
+                                    : puzzle.image.url
+                                }
+                              />
+                            </div>
+                          ))}
                         <div className="h-90 relative flex flex-col items-center justify-between rounded-md border-2 border-tabInactive/20">
                           <Image
                             src="/nfts/next_level.svg"

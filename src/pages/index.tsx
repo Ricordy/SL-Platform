@@ -289,7 +289,7 @@ export async function getServerSideProps(ctx) {
   const { puzzlePieces } = await hygraph.request(
     gql`
       query {
-        puzzlePieces {
+        puzzlePieces(first: 30, orderBy: tokenid_ASC) {
           tokenid
           title
           image {

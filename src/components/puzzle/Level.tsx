@@ -24,6 +24,8 @@ const Level = ({
   nextProfitRange,
   claimLevel,
 }: LevelProps) => {
+  const collectedNFTs = userLevel > level ? 10 : userPieces.length;
+
   return (
     <div
       style={{ backgroundImage: `url(${userLevel >= level ? bg : ""})` }}
@@ -105,7 +107,7 @@ const Level = ({
                     : ""
                 }
               >
-                <span>{userLevel > level ? 10 : userPieces.length}</span>{" "}
+                <span>{collectedNFTs}</span>{" "}
                 <span
                   className={
                     userLevel > level || userPieces.length > 0
@@ -123,7 +125,7 @@ const Level = ({
           <Button
             variant={"outline"}
             onClick={claimLevel}
-            disabled={userLevel > level}
+            disabled={collectedNFTs < 10 || userLevel > level}
             className={cn(
               " border-primaryGold text-primaryGold hover:bg-primaryGold dark:hover:bg-primaryGold",
               userLevel > level ? "bg-primaryGold text-white" : ""
