@@ -206,6 +206,7 @@ export async function getServerSideProps(ctx) {
       gql`
         query ActiveInvestments {
           investments(
+            orderBy: createdAt_DESC
             where: { basicInvestment: { investmentStatus: Active } }
           ) {
             id
@@ -324,6 +325,9 @@ export async function getServerSideProps(ctx) {
           description
           profitRange
           bg {
+            url
+          }
+          nft {
             url
           }
         }

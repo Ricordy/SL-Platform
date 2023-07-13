@@ -1,7 +1,7 @@
+import { GraphQLClient, gql } from "graphql-request";
 import Link from "next/link";
 import Carousel from "../components/Carousel";
 import NavBar from "../components/NavBar";
-import { GraphQLClient, gql } from "graphql-request";
 
 const ourCars = (props) => {
   function reverseInvestments(investments) {
@@ -92,6 +92,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         investments(orderBy: createdAt_DESC) {
           id
           address
+          level {
+            basicLevel {
+              title
+            }
+            profitRange
+          }
           basicInvestment {
             id
             totalInvestment

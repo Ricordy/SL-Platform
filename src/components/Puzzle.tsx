@@ -207,6 +207,7 @@ const Puzzle: FC<PuzzleProps> = ({
     progress: (userPieces.length / 10) * 100,
     invested: noDecimals(Number(data?.[3 + idx])),
     collected: userPieces.length.toString(),
+    nft: dbLevel.nft?.url,
   }));
 
   const [profitNotification, setProfitNotification] = useState(true);
@@ -488,41 +489,76 @@ const Puzzle: FC<PuzzleProps> = ({
                       <h2 className="pb-12 pt-16 text-2xl font-medium uppercase">
                         My Achievements
                       </h2>
+
                       <div className="grid max-w-6xl grid-cols-1 gap-6 pb-36 md:grid-cols-4">
-                        <div className="h-90 relative flex flex-col items-center justify-between rounded-md bg-neutral-100">
-                          <h2 className="pt-6 text-center text-[24px] font-semibold uppercase leading-normal tracking-wider text-black">
-                            Your
-                            <br />
-                            next NFT
-                          </h2>
-                          <div className="flex flex-col items-center justify-center gap-3">
-                            <span className=" text-center text-[14px] font-normal leading-none tracking-wide text-neutral-600">
-                              Progress
-                            </span>
-                            <span className="text-center text-[40px] font-light leading-10 tracking-widest text-black">
-                              <NumericFormat
-                                value={claimPieceProgress?.toString()}
-                                displayType="text"
-                                fixedDecimalScale
-                                decimalSeparator="."
-                                thousandSeparator=","
-                                decimalScale={0}
-                                suffix=" %"
+                        {data?.[6]?.gt(currentLevel) ? (
+                          <div className="h-90 relative col-span-2 flex flex-col items-center justify-between rounded-md bg-neutral-100">
+                            <div
+                              className="absolute left-0 top-0 h-full w-full  rounded-md border-2 border-white"
+                              style={{
+                                boxShadow:
+                                  "4px 7px 30px 0px rgba(195, 162, 121, 1)",
+                              }}
+                            ></div>
+                            <div className="absolute left-0 top-0 h-full w-full rounded-lg border-4 border-white bg-zinc-300">
+                              <Image
+                                alt="NFT"
+                                src={dbLevels.at(idx)?.nft?.url as string}
+                                // width={498}
+                                // height={383}
+                                fill
+                                className="rounded-[5px]"
+                                style={{ objectFit: "cover" }}
                               />
-                            </span>
-                            <span className="text-center text-[14px] font-normal leading-none tracking-wide text-neutral-600">
-                              You&apos;re almost there!
-                            </span>
-                            <span className="text-[16px] font-normal leading-normal text-neutral-600">
-                              <span className="text-[16px] font-semibold leading-normal text-black">
+                            </div>
+                          </div>
+                        ) : (
+                          // </div>
+                          <div className="h-90 relative flex flex-col items-center justify-between rounded-md bg-neutral-100">
+                            <h2 className="pt-6 text-center text-[24px] font-semibold uppercase leading-normal tracking-wider text-black">
+                              Your
+                              <br />
+                              next NFT
+                            </h2>
+                            <div className="flex flex-col items-center justify-center gap-3">
+                              <span className=" text-center text-[14px] font-normal leading-none tracking-wide text-neutral-600">
+                                Progress
+                              </span>
+                              <span className="text-center text-[40px] font-light leading-10 tracking-widest text-black">
                                 <NumericFormat
-                                  value={
-                                    claimPieceProgressValue &&
-                                    ethers.utils.formatUnits(
-                                      claimPieceProgressValue.toNumber(),
-                                      6
-                                    )
-                                  }
+                                  value={claimPieceProgress?.toString()}
+                                  displayType="text"
+                                  fixedDecimalScale
+                                  decimalSeparator="."
+                                  thousandSeparator=","
+                                  decimalScale={0}
+                                  suffix=" %"
+                                />
+                              </span>
+                              <span className="text-center text-[14px] font-normal leading-none tracking-wide text-neutral-600">
+                                You&apos;re almost there!
+                              </span>
+                              <span className="text-[16px] font-normal leading-normal text-neutral-600">
+                                <span className="text-[16px] font-semibold leading-normal text-black">
+                                  <NumericFormat
+                                    value={
+                                      claimPieceProgressValue &&
+                                      ethers.utils.formatUnits(
+                                        claimPieceProgressValue.toNumber(),
+                                        6
+                                      )
+                                    }
+                                    displayType="text"
+                                    fixedDecimalScale
+                                    decimalSeparator="."
+                                    thousandSeparator=","
+                                    decimalScale={2}
+                                    prefix="$ "
+                                  />
+                                </span>{" "}
+                                |{" "}
+                                <NumericFormat
+                                  value={(5000 * currentLevel).toString()}
                                   displayType="text"
                                   fixedDecimalScale
                                   decimalSeparator="."
@@ -530,47 +566,40 @@ const Puzzle: FC<PuzzleProps> = ({
                                   decimalScale={2}
                                   prefix="$ "
                                 />
-                              </span>{" "}
-                              |{" "}
-                              <NumericFormat
-                                value={(5000 * currentLevel).toString()}
-                                displayType="text"
-                                fixedDecimalScale
-                                decimalSeparator="."
-                                thousandSeparator=","
-                                decimalScale={2}
-                                prefix="$ "
-                              />
-                            </span>
-                          </div>
-                          <Button
-                            onClick={claimPiece}
-                            className="whitespace-nowrap border-emerald-700 px-12 text-emerald-700"
-                            variant="outline"
-                            disabled={!userCanClaimPiece}
-                          >
-                            {isLoadingClaimPiece ? "Loading..." : `Claim Piece`}
-                          </Button>
+                              </span>
+                            </div>
+                            <Button
+                              onClick={claimPiece}
+                              className="whitespace-nowrap border-emerald-700 px-12 text-emerald-700"
+                              variant="outline"
+                              disabled={!userCanClaimPiece}
+                            >
+                              {isLoadingClaimPiece
+                                ? "Loading..."
+                                : `Claim Piece`}
+                            </Button>
 
-                          <div className="bottom-0 left-0 flex h-3 w-full self-end rounded-b-md bg-progressBackground">
-                            <div
-                              className={cn(
-                                "rounded-bl-md bg-progressHighlight",
-                                Math.abs(claimPieceProgress?.toNumber()) >= 100
-                                  ? "rounded-br-md"
-                                  : ""
-                              )}
-                              style={{
-                                width: `${
+                            <div className="bottom-0 left-0 flex h-3 w-full self-end rounded-b-md bg-progressBackground">
+                              <div
+                                className={cn(
+                                  "rounded-bl-md bg-progressHighlight",
                                   Math.abs(claimPieceProgress?.toNumber()) >=
-                                  100
-                                    ? 100
-                                    : Math.abs(claimPieceProgress?.toNumber())
-                                }%`,
-                              }}
-                            ></div>
+                                    100
+                                    ? "rounded-br-md"
+                                    : ""
+                                )}
+                                style={{
+                                  width: `${
+                                    Math.abs(claimPieceProgress?.toNumber()) >=
+                                    100
+                                      ? 100
+                                      : Math.abs(claimPieceProgress?.toNumber())
+                                  }%`,
+                                }}
+                              ></div>
+                            </div>
                           </div>
-                        </div>
+                        )}
 
                         {puzzlePieces
                           .slice((currentLevel - 1) * 10, currentLevel * 10)
@@ -585,29 +614,33 @@ const Puzzle: FC<PuzzleProps> = ({
                                 }
                                 isConnected={isConnected}
                                 image={
-                                  (userPuzzlePieces &&
+                                  data?.[6]?.gt(currentLevel) ||
+                                  ((userPuzzlePieces &&
                                     userPuzzlePieces.at(idx)?.toNumber()) ||
-                                  0 > 0
+                                    0) > 0
                                     ? puzzle?.imageCollected?.url
                                     : puzzle.image.url
                                 }
                               />
                             </div>
                           ))}
-                        <div className="h-90 relative flex flex-col items-center justify-between rounded-md border-2 border-tabInactive/20">
-                          <Image
-                            src="/nfts/next_level.svg"
-                            alt="Symbol"
-                            width={165}
-                            height={165}
-                          />
-                          <div className="flex flex-col items-center justify-center text-primaryGold">
-                            <h3>NFT Level {idx + 2}</h3>
-                            <p className="text-center">
-                              You can claim it when you get 10 different pieces
-                            </p>
+                        {currentLevel < 3 && !data?.[6]?.gt(currentLevel) && (
+                          <div className="h-90 relative flex flex-col items-center justify-between rounded-md border-2 border-tabInactive/20">
+                            <Image
+                              src="/nfts/next_level.svg"
+                              alt="Symbol"
+                              width={165}
+                              height={165}
+                            />
+                            <div className="flex flex-col items-center justify-center text-primaryGold">
+                              <h3>NFT Level {idx + 2}</h3>
+                              <p className="text-center">
+                                You can claim it when you get 10 different
+                                pieces
+                              </p>
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     </div>
                   </SwiperSlide>

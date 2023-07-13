@@ -72,7 +72,6 @@ const useGetUserPuzzlePieces = ({
     // console.log("claimPieceProgress", claimPieceProgress.toString());
     setClaimPieceProgress(claimPieceProgress);
     setClaimPieceProgressValue(claimPieceProgressValue);
-    console.log(level, totalInvested?.toNumber());
   }, [userTotalPieces, level]);
 
   return {

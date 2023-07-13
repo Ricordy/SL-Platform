@@ -21,6 +21,9 @@ export interface PuzzleProps {
     bg: {
       url: string;
     };
+    nft: {
+      url: string;
+    };
     description: string;
     profitRange: string;
   }[];
