@@ -259,10 +259,11 @@ const Puzzle: FC<PuzzleProps> = ({
       id="puzzle"
       className={cn("mx-auto flex w-full max-w-[1338px] flex-col", className)}
     >
-      {/* <h2 className="ml-[58px] pb-12 text-2xl font-medium uppercase">
+      <h2 className="ml-[58px] pb-12 text-2xl font-medium uppercase">
         My Puzzle
       </h2>
-      <Tab.Group
+
+      {/*<Tab.Group
         onChange={(index) => {
           setCurrentLevel(index + 1);
         }}
@@ -414,7 +415,6 @@ const Puzzle: FC<PuzzleProps> = ({
           })}
         </Tab.Panels>
       </Tab.Group> */}
-
       {/* {currentLevel < 2 && (
         <Button
           onClick={claimLevel}
@@ -437,12 +437,14 @@ const Puzzle: FC<PuzzleProps> = ({
           <div
             className={`swiper-prev-22 absolute left-0  z-20 flex h-full items-start justify-center pl-16 pt-[190px]`}
           >
-            <Image
-              src={"/icons/pagination-previous-black.svg"}
-              width={38}
-              height={38}
-              alt="Previous"
-            />
+            {currentLevel !== 1 && (
+              <Image
+                src={"/icons/pagination-previous-black.svg"}
+                width={38}
+                height={38}
+                alt="Previous"
+              />
+            )}
           </div>
           <section
             className={cn(" relative z-10 flex w-full flex-col items-center ")}
@@ -485,10 +487,10 @@ const Puzzle: FC<PuzzleProps> = ({
                       userPieces={userPieces}
                       claimLevel={claimLevel}
                     />
-                    <div className="flex flex-col">
-                      <h2 className="pb-12 pt-16 text-2xl font-medium uppercase">
+                    <div className="mt-16 flex flex-col">
+                      {/* <h2 className="pb-12  text-2xl font-medium uppercase">
                         My Achievements
-                      </h2>
+                      </h2> */}
 
                       <div className="grid max-w-6xl grid-cols-1 gap-6 pb-36 md:grid-cols-4">
                         {data?.[6]?.gt(currentLevel) ? (
@@ -604,7 +606,10 @@ const Puzzle: FC<PuzzleProps> = ({
                         {puzzlePieces
                           .slice((currentLevel - 1) * 10, currentLevel * 10)
                           .map((puzzle, idx) => (
-                            <div key={puzzle.tokenid} className="relative">
+                            <div
+                              key={puzzle.tokenid}
+                              className="relative rounded-md border-2 border-[#8C9592]"
+                            >
                               <CarouselItem
                                 title={puzzle.title}
                                 amount={
@@ -625,7 +630,7 @@ const Puzzle: FC<PuzzleProps> = ({
                             </div>
                           ))}
                         {currentLevel < 3 && !data?.[6]?.gt(currentLevel) && (
-                          <div className="h-90 relative flex flex-col items-center justify-between rounded-md border-2 border-tabInactive/20">
+                          <div className="h-90 relative flex flex-col items-center justify-between rounded-md border-2 border-[#C3A279] border-tabInactive/20">
                             <Image
                               src="/nfts/next_level.svg"
                               alt="Symbol"

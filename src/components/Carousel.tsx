@@ -134,8 +134,8 @@ const Carousel: FC<CarouselProps> = ({
               updateOnWindowResize
               observer
               observeParents
-              initialSlide={0}
-              loop={true}
+              // initialSlide={0}
+              // loop={true}
             >
               {items?.map((item, index) => (
                 <SwiperSlide key={index}>

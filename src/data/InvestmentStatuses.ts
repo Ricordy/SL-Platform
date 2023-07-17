@@ -1,1 +1,1 @@
-export const investmentStatusesData = ["Active", "Upcoming", "Finished"];
+export const investmentStatusesData = ["Active", "Finished"];
