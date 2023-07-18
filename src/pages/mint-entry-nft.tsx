@@ -13,7 +13,7 @@ import { utils } from "ethers";
 import { toast } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { slcoreABI } from "../utils/abis";
+import { SLCoreABI } from "../utils/abis";
 
 const MintEntryNFT: NextPage = () => {
   const { address: walletAddress } = useAccount();
@@ -41,7 +41,7 @@ const MintEntryNFT: NextPage = () => {
 
   const puzzleContract = useContract({
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS,
-    abi: slcoreABI,
+    abi: SLCoreABI,
     signerOrProvider: signerData,
   });
 
