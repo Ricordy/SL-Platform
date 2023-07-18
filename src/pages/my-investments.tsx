@@ -53,13 +53,16 @@ interface InvestmentType extends InvestmentDbType, InvestmentBlockchainType {}
 // );
 
 export interface InvestmentsProps {
-  investments: InvestmentProps[];
+  userInvestments: InvestmentProps[];
 }
 export interface SessionProps {
   session: Session;
 }
 
-interface MyInvestmentsProps extends InvestmentsProps, TransactionProps {}
+interface MyInvestmentsProps
+  extends InvestmentsProps,
+    TransactionProps,
+    InvestmentsProps {}
 
 export const TransactionItem = (items, userInvestedContracts) => {
   return (
@@ -620,7 +623,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
             id="1"
             prevNavWhite={true}
             title={<h2 className="text-2xl text-white">Active</h2>}
-            items={userInv.filter(
+            items={props.userInvestments.filter(
               (investment) =>
                 investment.basicInvestment.investmentStatus == "Active"
             )}
@@ -649,7 +652,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
             id="4"
             className="py-[132px]"
             title={<h2 className="text-2xl">Finished</h2>}
-            items={userInv.filter(
+            items={props.userInvestments.filter(
               (investment) =>
                 investment.basicInvestment.investmentStatus == "Finished"
             )}
@@ -662,7 +665,10 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
             id="4"
             className="w-full pt-[132px]"
             title={<h2 className="text-2xl">Our Suggestions for you</h2>}
-            items={getMissingInvestments(props.investments, userInv).filter(
+            items={getMissingInvestments(
+              props.allInvestments,
+              props.userInvestments
+            ).filter(
               (investment) =>
                 investment.basicInvestment.investmentStatus == "Active"
             )}
@@ -761,10 +767,47 @@ export const getServerSideProps: GetServerSideProps<
 > = async (ctx) => {
   const session = await getSession(ctx);
 
-  const { investments }: { investments: InvestmentsProps } =
+  const { investments: userInvestments }: { investments: InvestmentsProps } =
     await hygraph.request(
       gql`
-        query AllInvestments {
+        query UserInvestments {
+          investments(
+            where: {
+              transactions_some: {
+                from: "0xC2Fab2A52DaAe5213c5060800Bf03176818c86c9"
+              }
+            }
+          ) {
+            id
+            address
+            level {
+              basicLevel {
+                title
+              }
+            }
+            basicInvestment {
+              id
+              totalInvestment
+              investmentStatus
+              car {
+                basicInfo {
+                  title
+                  cover {
+                    id
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+      `
+    );
+
+  const { investments: allInvestments }: { investments: InvestmentsProps } =
+    await hygraph.request(
+      gql`
+        query UserInvestments {
           investments {
             id
             address
@@ -799,6 +842,7 @@ export const getServerSideProps: GetServerSideProps<
           transactions(
             where: { from: "${session?.user.id}" }
             orderBy: publishedAt_DESC
+            first: 5
           ) {
             amountInvested
             hash
@@ -831,8 +875,9 @@ export const getServerSideProps: GetServerSideProps<
 
   return {
     props: {
-      investments: session ? investments : null,
+      userInvestments: session ? userInvestments : null,
       userTransactions: session ? userTransactions : null,
+      allInvestments: session ? allInvestments : null,
     },
   };
 };

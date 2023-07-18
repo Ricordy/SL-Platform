@@ -53,7 +53,7 @@ const ourCars = (props) => {
           </div>
         </div>
       </div>
-      <div className="relative left-1/2 z-20 mx-auto -ml-[570px] -mt-[300px]  min-h-[500px] max-w-[1338px]">
+      <div className="relative left-1/2 z-20 mx-auto -ml-[570px] -mt-[300px]  mb-[132px] min-h-[500px] max-w-[1338px]">
         <Carousel
           id="1"
           prevNavWhite={true}

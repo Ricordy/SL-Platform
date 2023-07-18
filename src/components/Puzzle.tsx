@@ -608,7 +608,7 @@ const Puzzle: FC<PuzzleProps> = ({
                           .map((puzzle, idx) => (
                             <div
                               key={puzzle.tokenid}
-                              className="relative rounded-md border-2 border-[#8C9592]"
+                              className="relative rounded-md border-2 border-[#8C9592/20]"
                             >
                               <CarouselItem
                                 title={puzzle.title}
@@ -630,7 +630,7 @@ const Puzzle: FC<PuzzleProps> = ({
                             </div>
                           ))}
                         {currentLevel < 3 && !data?.[6]?.gt(currentLevel) && (
-                          <div className="h-90 relative flex flex-col items-center justify-between rounded-md border-2 border-[#C3A279] border-tabInactive/20">
+                          <div className="h-90 relative flex flex-col items-center justify-between rounded-md border-2 border-[#C3A279]">
                             <Image
                               src="/nfts/next_level.svg"
                               alt="Symbol"
