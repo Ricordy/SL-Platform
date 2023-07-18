@@ -104,7 +104,7 @@ const Carousel: FC<CarouselProps> = ({
         <div
           className={`absolute  left-0 z-20 flex items-center justify-center swiper-prev-${id}`}
         >
-          <Image
+        {  <Image
             src={
               prevNavWhite
                 ? "/icons/pagination-previous.svg"
@@ -113,7 +113,7 @@ const Carousel: FC<CarouselProps> = ({
             width={38}
             height={38}
             alt="Previous"
-          />
+          />}
         </div>
         <section
           className={cn(

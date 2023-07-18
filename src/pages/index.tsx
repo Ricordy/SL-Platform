@@ -95,7 +95,7 @@ const Home: NextPage = (props) => {
                 Don&apos;t miss your limited opportunity to get on this boat.
               </p>
               <Link
-                href="/investments"
+                href="/our-cars"
                 className="self-start rounded-md bg-white px-12 py-1.5 text-center text-sm uppercase text-black dark:hover:bg-white dark:hover:text-black"
               >
                 See More

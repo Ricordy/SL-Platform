@@ -63,14 +63,26 @@ const ourCars = (props) => {
         <Carousel
           id="2"
           className="pt-[132px]"
-          title={<h2 className="text-2xl">Top Investments</h2>}
-          items={orderInvestmentsByTotalInvestment(props.investments)}
+          title={<h2 className="text-2xl">Level 1</h2>}
+          items={props.investments.filter(
+            (i) => i.level.basicLevel.title === "Level 1"
+          )}
         />
         <Carousel
           id="2"
-          className="py-[132px]"
-          title={<h2 className="text-2xl">Oldest cars</h2>}
-          items={reverseInvestments(props.investments)}
+          className="pt-[132px]"
+          title={<h2 className="text-2xl">Level 2</h2>}
+          items={props.investments.filter(
+            (i) => i.level.basicLevel.title === "Level 2"
+          )}
+        />
+        <Carousel
+          id="2"
+          className="pt-[132px]"
+          title={<h2 className="text-2xl">Level 3</h2>}
+          items={props.investments.filter(
+            (i) => i.level.basicLevel.title === "Level 3"
+          )}
         />
       </div>
     </section>
