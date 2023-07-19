@@ -19,7 +19,7 @@ const PuzzleItem: React.FC<PuzzleItemData> = ({
   showProgressInsideBar,
   className,
 }) => {
-  const barWidth = (Number(current) / Number(amount)) * 100;
+  const barWidth = ((Number(current) / Number(amount)) * 100).toFixed(2);
   // console.log(current, amount, (Number(current) / Number(amount)) * 100);
 
   const barWidthFormatted = `${barWidth}%`;

@@ -95,7 +95,10 @@ const Level = ({
                   userLevel > level ? "text-primaryGold" : "text-white"
                 )}
               >
-                {userLevel > level ? "100" : (userPieces.length / 10) * 100}%
+                {userLevel > level
+                  ? "100"
+                  : ((userPieces.length / 10) * 100).toFixed(2)}
+                %
               </span>
               <span className="text-center text-[14px] font-normal leading-none tracking-wide text-neutral-400">
                 NFT Collected:

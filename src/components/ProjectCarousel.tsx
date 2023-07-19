@@ -61,8 +61,12 @@ const CarouselItem = ({
             </div>
             <div className="flex gap-3">
               <span className="font-light text-white">
-                {String((noDecimal(contractProgress) / Number(price)) * 100)}%
-                Finished
+                {String(
+                  ((noDecimal(contractProgress) / Number(price)) * 100).toFixed(
+                    2
+                  )
+                )}
+                % Finished
               </span>
             </div>
           </div>
@@ -72,7 +76,7 @@ const CarouselItem = ({
             className={` rounded-bl-md bg-progressHighlight`}
             style={{
               width: `${String(
-                (noDecimal(contractProgress) / Number(price)) * 100
+                ((noDecimal(contractProgress) / Number(price)) * 100).toFixed(2)
               )}%`,
             }}
           ></div>

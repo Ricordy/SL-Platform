@@ -204,7 +204,7 @@ const Puzzle: FC<PuzzleProps> = ({
     locked: data?.[6]?.lt(idx + 1),
     profitRange: dbLevel.profitRange,
     description: dbLevel.description,
-    progress: (userPieces.length / 10) * 100,
+    progress: ((userPieces.length / 10) * 100).toFixed(2),
     invested: noDecimals(Number(data?.[3 + idx])),
     collected: userPieces.length.toString(),
     nft: dbLevel.nft?.url,
