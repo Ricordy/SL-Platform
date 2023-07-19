@@ -39,12 +39,14 @@ const CarouselItem = ({
     functionName: "totalSupply",
     select: (data) => Number(data),
   });
+  console.log("ola", address);
 
   return (
     <div className=" w-full rounded-md">
       <div
         className={cn(
-          "relative flex min-h-[394px]  w-full flex-col items-center justify-end gap-3 rounded-md bg-cover"
+          "relative flex min-h-[394px] w-full flex-col items-center justify-end gap-3 rounded-md bg-cover",
+          address === undefined ? "mb-96" : "mb-0"
         )}
         style={{ backgroundImage: `url(${image})` }}
       >

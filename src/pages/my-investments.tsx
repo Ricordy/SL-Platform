@@ -546,7 +546,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
             </h3>
             <h2 className="mb-12 text-5xl uppercase text-white">
               Welcome{" "}
-              <span className="font-medium text-primaryGold">Home, sir</span>
+              <span className="font-medium text-primaryGold">Home, Legend</span>
             </h2>
             <div className="grid auto-rows-[1fr] grid-cols-2 gap-12 text-white">
               <div className="flex flex-col  gap-4">
