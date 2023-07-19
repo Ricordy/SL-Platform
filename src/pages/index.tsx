@@ -37,9 +37,7 @@ const Home: NextPage = (props: any) => {
     functionName: "totalSupply",
   });
 
-  console.log("props.highlightContractAddress ", props.highlightInvestment);
 
-  console.log("total invested higlight", totalInvested?.toNumber());
 
   // Carousel
   const images = props.slider.investments;

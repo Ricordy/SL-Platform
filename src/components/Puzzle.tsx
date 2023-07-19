@@ -632,14 +632,15 @@ const Puzzle: FC<PuzzleProps> = ({
                             </div>
                           ))}
                         {currentLevel < 3 && !data?.[6]?.gt(currentLevel) && (
-                          <div className="h-90 relative flex flex-col items-center justify-between rounded-md border-2 border-[#C3A279]">
+                          <div className="h-90 relative flex flex-col items-center justify-center rounded-md border-2 border-[#C3A279] align-middle">
                             <Image
                               src="/nfts/next_level.svg"
                               alt="Symbol"
                               width={165}
                               height={165}
+                              className="m-2"
                             />
-                            <div className="flex flex-col items-center justify-center text-primaryGold">
+                            <div className="m-2 flex flex-col items-center justify-center text-primaryGold">
                               <h3>NFT Level {idx + 2}</h3>
                               <p className="text-center">
                                 You can claim it when you get 10 different
