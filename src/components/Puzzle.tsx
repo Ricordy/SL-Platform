@@ -517,41 +517,53 @@ const Puzzle: FC<PuzzleProps> = ({
                             </div>
                           </div>
                         ) : (
-                          // </div>
-                          <div className="h-90 relative flex flex-col items-center justify-between rounded-md bg-neutral-100">
-                            <h2 className="pt-6 text-center text-[24px] font-semibold uppercase leading-normal tracking-wider text-black">
-                              Your
-                              <br />
-                              next NFT
-                            </h2>
-                            <div className="flex flex-col items-center justify-center gap-3">
-                              <span className=" text-center text-[14px] font-normal leading-none tracking-wide text-neutral-600">
-                                Progress
-                              </span>
-                              <span className="text-center text-[40px] font-light leading-10 tracking-widest text-black">
-                                <NumericFormat
-                                  value={claimPieceProgress?.toString()}
-                                  displayType="text"
-                                  fixedDecimalScale
-                                  decimalSeparator="."
-                                  thousandSeparator=","
-                                  decimalScale={0}
-                                  suffix=" %"
-                                />
-                              </span>
-                              <span className="text-center text-[14px] font-normal leading-none tracking-wide text-neutral-600">
-                                You&apos;re almost there!
-                              </span>
-                              <span className="text-[16px] font-normal leading-normal text-neutral-600">
-                                <span className="text-[16px] font-semibold leading-normal text-black">
+                          (userPieces.length < 9 && (
+                            // </div>
+                            <div className="h-90 relative flex flex-col items-center justify-between rounded-md bg-neutral-100">
+                              <h2 className="pt-6 text-center text-[24px] font-semibold uppercase leading-normal tracking-wider text-black">
+                                Your
+                                <br />
+                                next NFT
+                              </h2>
+                              <div className="flex flex-col items-center justify-center gap-3">
+                                <span className=" text-center text-[14px] font-normal leading-none tracking-wide text-neutral-600">
+                                  Progress
+                                </span>
+                                <span className="text-center text-[40px] font-light leading-10 tracking-widest text-black">
                                   <NumericFormat
-                                    value={
-                                      claimPieceProgressValue &&
-                                      ethers.utils.formatUnits(
-                                        claimPieceProgressValue.toNumber(),
-                                        6
-                                      )
-                                    }
+                                    value={claimPieceProgress?.toString()}
+                                    displayType="text"
+                                    fixedDecimalScale
+                                    decimalSeparator="."
+                                    thousandSeparator=","
+                                    decimalScale={0}
+                                    suffix=" %"
+                                  />
+                                </span>
+                                <span className="text-center text-[14px] font-normal leading-none tracking-wide text-neutral-600">
+                                  You&apos;re almost there!
+                                </span>
+                                <span className="text-[16px] font-normal leading-normal text-neutral-600">
+                                  <span className="text-[16px] font-semibold leading-normal text-black">
+                                    <NumericFormat
+                                      value={
+                                        claimPieceProgressValue &&
+                                        ethers.utils.formatUnits(
+                                          claimPieceProgressValue.toNumber(),
+                                          6
+                                        )
+                                      }
+                                      displayType="text"
+                                      fixedDecimalScale
+                                      decimalSeparator="."
+                                      thousandSeparator=","
+                                      decimalScale={2}
+                                      prefix="$ "
+                                    />
+                                  </span>{" "}
+                                  |{" "}
+                                  <NumericFormat
+                                    value={(5000 * currentLevel).toString()}
                                     displayType="text"
                                     fixedDecimalScale
                                     decimalSeparator="."
@@ -559,50 +571,80 @@ const Puzzle: FC<PuzzleProps> = ({
                                     decimalScale={2}
                                     prefix="$ "
                                   />
-                                </span>{" "}
-                                |{" "}
-                                <NumericFormat
-                                  value={(5000 * currentLevel).toString()}
-                                  displayType="text"
-                                  fixedDecimalScale
-                                  decimalSeparator="."
-                                  thousandSeparator=","
-                                  decimalScale={2}
-                                  prefix="$ "
-                                />
-                              </span>
-                            </div>
-                            <Button
-                              onClick={claimPiece}
-                              className="whitespace-nowrap border-emerald-700 px-12 text-emerald-700"
-                              variant="outline"
-                              disabled={!userCanClaimPiece}
-                            >
-                              {isLoadingClaimPiece
-                                ? "Loading..."
-                                : `Claim Piece`}
-                            </Button>
+                                </span>
+                              </div>
+                              <Button
+                                onClick={claimPiece}
+                                className="whitespace-nowrap border-emerald-700 px-12 text-emerald-700"
+                                variant="outline"
+                                disabled={!userCanClaimPiece}
+                              >
+                                {isLoadingClaimPiece
+                                  ? "Loading..."
+                                  : `Claim Piece`}
+                              </Button>
 
-                            <div className="bottom-0 left-0 flex h-3 w-full self-end rounded-b-md bg-progressBackground">
-                              <div
-                                className={cn(
-                                  "rounded-bl-md bg-progressHighlight",
-                                  Math.abs(claimPieceProgress?.toNumber()) >=
-                                    100
-                                    ? "rounded-br-md"
-                                    : ""
-                                )}
-                                style={{
-                                  width: `${
+                              <div className="bottom-0 left-0 flex h-3 w-full self-end rounded-b-md bg-progressBackground">
+                                <div
+                                  className={cn(
+                                    "rounded-bl-md bg-progressHighlight",
                                     Math.abs(claimPieceProgress?.toNumber()) >=
-                                    100
-                                      ? 100
-                                      : Math.abs(claimPieceProgress?.toNumber())
-                                  }%`,
-                                }}
-                              ></div>
+                                      100
+                                      ? "rounded-br-md"
+                                      : ""
+                                  )}
+                                  style={{
+                                    width: `${
+                                      Math.abs(
+                                        claimPieceProgress?.toNumber()
+                                      ) >= 100
+                                        ? 100
+                                        : Math.abs(
+                                            claimPieceProgress?.toNumber()
+                                          )
+                                    }%`,
+                                  }}
+                                ></div>
+                              </div>
                             </div>
-                          </div>
+                          )) || (
+                            // </div>
+                            <div className="h-90 relative flex flex-col items-center justify-between rounded-md bg-neutral-100 pb-2 align-middle">
+                              <div className="mt-[132px] flex flex-col justify-center align-middle ">
+                                <h2 className="pt-6 text-center text-[24px] font-semibold uppercase leading-normal tracking-wider text-[#C3A279]">
+                                  You got all
+                                  <br />
+                                  Pieces
+                                </h2>
+                                <span className=" text-center text-[14px] font-normal  text-neutral-600">
+                                  Your final NFT is ready
+                                </span>
+                              </div>
+
+                              <div className="bottom-0 left-0 flex h-3 w-full self-end rounded-b-md bg-progressBackground">
+                                <div
+                                  className={cn(
+                                    "rounded-bl-md bg-[#C3A279]",
+                                    Math.abs(claimPieceProgress?.toNumber()) >=
+                                      100
+                                      ? "rounded-br-md"
+                                      : ""
+                                  )}
+                                  style={{
+                                    width: `${
+                                      Math.abs(
+                                        claimPieceProgress?.toNumber()
+                                      ) >= 100
+                                        ? 100
+                                        : Math.abs(
+                                            claimPieceProgress?.toNumber()
+                                          )
+                                    }%`,
+                                  }}
+                                ></div>
+                              </div>
+                            </div>
+                          )
                         )}
 
                         {puzzlePieces
