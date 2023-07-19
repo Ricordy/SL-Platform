@@ -130,7 +130,7 @@ const Level = ({
             onClick={claimLevel}
             disabled={collectedNFTs < 10 || userLevel > level}
             className={cn(
-              " border-primaryGold text-primaryGold hover:bg-primaryGold dark:hover:bg-primaryGold",
+              " mt-[16px] border-primaryGold bg-primaryGold font-sans text-[14px] font-medium text-white hover:bg-primaryGold",
               userLevel > level ? "bg-primaryGold text-white" : ""
             )}
           >
