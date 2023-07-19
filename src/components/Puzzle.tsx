@@ -259,9 +259,11 @@ const Puzzle: FC<PuzzleProps> = ({
       id="puzzle"
       className={cn("mx-auto flex w-full max-w-[1338px] flex-col", className)}
     >
-      <h2 className="ml-[58px] pb-12 text-2xl font-medium uppercase">
-        My Puzzle
-      </h2>
+      {isConnected && (
+        <h2 className="ml-[58px] pb-12 text-2xl font-medium uppercase">
+          My Puzzle
+        </h2>
+      )}
 
       {/*<Tab.Group
         onChange={(index) => {
