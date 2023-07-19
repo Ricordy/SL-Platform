@@ -144,7 +144,7 @@ const Home: NextPage = (props: any) => {
           )} */}
         </div>
         {/* My Investments */}
-        <div className=" relative left-1/2 z-20 mx-auto -ml-[570px] w-full max-w-[1338px]">
+        <div className=" relative left-1/2 z-20 mx-auto -ml-[570px] mt-[132px] w-full max-w-[1338px]">
           <Investments
             isConnected={isConnected}
             userInvestments={props.investments}
@@ -152,7 +152,7 @@ const Home: NextPage = (props: any) => {
         </div>
         {/* My Puzzle */}
 
-        <div className="relative left-1/2 mx-auto -ml-[570px] w-full max-w-[1338px]">
+        <div className="relative left-1/2 mx-auto -ml-[570px] w-full max-w-[1338px] ">
           <Puzzle
             isConnected={isConnected}
             className="relative flex w-full  max-w-[1338px] flex-col pt-[132px]"
