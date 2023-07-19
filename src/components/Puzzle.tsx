@@ -633,20 +633,55 @@ const Puzzle: FC<PuzzleProps> = ({
                           ))}
                         {currentLevel < 3 && !data?.[6]?.gt(currentLevel) && (
                           <div className="h-90 relative flex flex-col items-center justify-center rounded-md border-2 border-[#C3A279] align-middle">
-                            <Image
-                              src="/nfts/next_level.svg"
-                              alt="Symbol"
-                              width={165}
-                              height={165}
-                              className="m-2"
-                            />
-                            <div className="m-2 flex flex-col items-center justify-center text-primaryGold">
-                              <h3>NFT Level {idx + 2}</h3>
-                              <p className="text-center">
-                                You can claim it when you get 10 different
-                                pieces
-                              </p>
-                            </div>
+                            {(userPieces.length < 9 && (
+                              <div className="flex flex-col items-center justify-center align-middle ">
+                                <Image
+                                  src="/nfts/next_level.svg"
+                                  alt="Symbol"
+                                  width={165}
+                                  height={165}
+                                  className="mb-2"
+                                />
+                                <div className="m-2 flex flex-col items-center justify-center text-primaryGold">
+                                  <h3>NFT Level {idx + 2}</h3>
+                                  <p className="text-center">
+                                    You can claim it when you get 10 different
+                                    pieces
+                                  </p>
+                                </div>
+                              </div>
+                            )) || (
+                              <div className="flex flex-col items-center justify-center align-middle ">
+                                <Image
+                                  src="/nfts/car_completed.svg"
+                                  alt="Symbol"
+                                  width={165}
+                                  height={165}
+                                  className="mb-2"
+                                />
+                                <div className="m-2 flex flex-col items-center justify-center text-primaryGold">
+                                  <h3>NFT Level {idx + 2}</h3>
+                                  <Button
+                                    variant={"outline"}
+                                    onClick={claimLevel}
+                                    disabled={
+                                      userPieces.length < 10 ||
+                                      (data?.[6]?.toNumber() as number) >
+                                        idx + 2
+                                    }
+                                    className={cn(
+                                      "mt-[32px] border-primaryGold bg-primaryGold font-sans text-[14px] font-medium text-white hover:bg-primaryGold",
+                                      (data?.[6]?.toNumber() as number) >
+                                        idx + 2
+                                        ? "bg-primaryGold text-white"
+                                        : ""
+                                    )}
+                                  >
+                                    Claim Level {idx + 2}
+                                  </Button>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
