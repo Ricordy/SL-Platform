@@ -6,7 +6,7 @@ import { cn } from "~/lib/utils";
 import { ProjectInfo, badges } from "~/pages/investment/[address]";
 import { Button } from "../ui/Button";
 
-const Highlight = ({ investment }: HighlightProps) => {
+const Highlight = ({ investment, totalInvested }: HighlightProps) => {
   const currentPhase = investment.restorationPhases?.at(0);
   return (
     <div className="ml-[58px] flex flex-col py-[132px]">
@@ -34,7 +34,7 @@ const Highlight = ({ investment }: HighlightProps) => {
             status={investment.basicInvestment.investmentStatus}
             totalInvestment={investment.basicInvestment.totalInvestment}
             progress={
-              (Number(investment.basicInvestment.totalInvested) /
+              (Number(totalInvested) /
                 Number(investment.basicInvestment.totalInvestment)) *
               100
             }

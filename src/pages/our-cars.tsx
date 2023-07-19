@@ -2,6 +2,7 @@ import { GraphQLClient, gql } from "graphql-request";
 import Link from "next/link";
 import Carousel from "../components/Carousel";
 import NavBar from "../components/NavBar";
+import { cn } from "~/lib/utils";
 
 const ourCars = (props) => {
   function reverseInvestments(investments) {
@@ -17,9 +18,26 @@ const ourCars = (props) => {
       );
   }
 
+  const lastCarName =
+    props.investments[0].basicInvestment.car.basicInfo.title.split(" ")[0];
+  const lastCarModel = () => {
+    const titleWords =
+      props.investments[0].basicInvestment.car.basicInfo.title.split(" ");
+    if (titleWords.length > 2) {
+      return titleWords.slice(1).join(" ");
+    } else {
+      return titleWords[1];
+    }
+  };
+
   return (
     <section className="mx-auto w-full bg-white">
-      <div className="relative flex min-h-screen w-full flex-col rounded-bl-[56px] bg-opacity-80 bg-[url('/bg/bg-our-cars.jpg')] bg-contain bg-right bg-no-repeat">
+      <div
+        style={{ "--image-url": `url(${props.investments[0].banner.url})` }}
+        className={
+          "relative flex min-h-screen w-full flex-col rounded-bl-[56px] bg-opacity-80 bg-[image:var(--image-url)] bg-contain bg-right bg-no-repeat"
+        }
+      >
         <div className="absolute top-0 z-0 flex min-h-[83px] w-full bg-[url('/bg/bg-navbar.svg')]"></div>
         <div className="absolute left-0 z-10 flex min-h-screen w-full bg-[url('/bg/gradient-vertical-header.svg')] bg-contain bg-bottom bg-no-repeat"></div>
         <div className="absolute bottom-0 z-0 flex min-h-screen w-full rounded-bl-[56px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat"></div>
@@ -33,9 +51,9 @@ const ourCars = (props) => {
               New
             </span>
             <h3 className="mb-4 text-5xl uppercase tracking-widest text-white">
-              Volkswagen
+              {lastCarName}
               <br />
-              Lorem Ipsum
+              {lastCarModel()}
             </h3>
             <p className="mb-4 text-white">
               Discover the world of{" "}
@@ -45,7 +63,7 @@ const ourCars = (props) => {
               <span className="font-medium">real time</span>.
             </p>
             <Link
-              href="/investments"
+              href={`/investment/${props.investments[0].address}`}
               className="self-start rounded-md bg-white px-12 py-1.5 text-center text-sm font-medium uppercase text-black dark:hover:bg-white dark:hover:text-black"
             >
               Invest now
@@ -104,6 +122,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         investments(orderBy: createdAt_DESC) {
           id
           address
+          banner {
+            url
+          }
           level {
             basicLevel {
               title

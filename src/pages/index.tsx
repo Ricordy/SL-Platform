@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import { getSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useAccount, type Address } from "wagmi";
+import { useAccount, type Address, useContractRead } from "wagmi";
 import { type InvestmentProps } from "~/@types/investment";
 import { type SliderProps } from "~/@types/slider";
 import Investments from "~/components/Investments";
@@ -12,10 +12,11 @@ import Puzzle from "~/components/Puzzle";
 import Highlight from "~/components/investment/Highlight";
 import Carousel from "../components/Carousel";
 import NavBar from "../components/NavBar";
+import { investmentABI } from "~/utils/abis";
 interface ActiveInvestmentsProps {
   investments: InvestmentProps[];
 }
-const Home: NextPage = (props) => {
+const Home: NextPage = (props: any) => {
   const { isConnected, isDisconnected, address: walletAddress } = useAccount();
 
   // const { data: contractTotal } = useContractRead({
@@ -30,21 +31,18 @@ const Home: NextPage = (props) => {
   //   watch: true,
   // });
 
-  // const { data: totalInvestment } = useContractRead({
-  //   address:
-  //     highlightContractAddress.address[
-  //       process.env.NEXT_PUBLIC_CHAIN_ID as Address
-  //     ],
-  //   abi: InvestAbi,
-  //   functionName: "totalInvestment",
-  // });
+  const { data: totalInvested } = useContractRead({
+    address: props.highlightInvestment?.address,
+    abi: investmentABI,
+    functionName: "totalSupply",
+  });
 
-  const contractTotal = 10;
-  const totalInvestment = 1000;
+  console.log("props.highlightContractAddress ", props.highlightInvestment);
+
+  console.log("total invested higlight", totalInvested?.toNumber());
 
   // Carousel
-  const images = props.slider.image;
-
+  const images = props.slider.investments;
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -75,7 +73,12 @@ const Home: NextPage = (props) => {
               className={`absolute left-0 min-h-screen w-full rounded-bl-[156px] bg-black bg-opacity-80 bg-cover transition-opacity duration-1000 ${
                 activeIndex === index ? "opacity-100" : "opacity-0"
               }`}
-              style={{ backgroundImage: `url(${image.url})` }}
+              style={{
+                backgroundImage: `url(${
+                  image.basicInvestment.car.basicInfo.cover
+                    .url /** image.banner.url its the right one but has decievieng images by now */
+                })`,
+              }}
             />
           ))}
           <div className="absolute top-0 z-0 flex min-h-[83px] w-full bg-[url('/bg/bg-navbar.svg')]"></div>
@@ -95,7 +98,7 @@ const Home: NextPage = (props) => {
                 Don&apos;t miss your limited opportunity to get on this boat.
               </p>
               <Link
-                href="/our-cars"
+                href={`/investment/${images[activeIndex].address}`}
                 className="self-start rounded-md bg-white px-12 py-1.5 text-center text-sm uppercase text-black dark:hover:bg-white dark:hover:text-black"
               >
                 See More
@@ -125,7 +128,12 @@ const Home: NextPage = (props) => {
           />
           {/* Highlight Component */}
 
-          {!isConnected && <Highlight investment={props.highlightInvestment} />}
+          {!isConnected && (
+            <Highlight
+              investment={props.highlightInvestment}
+              totalInvested={totalInvested?.toNumber() / 10 ** 6}
+            />
+          )}
 
           {/* {isConnected && (
             <Carousel
@@ -283,15 +291,27 @@ export async function getServerSideProps(ctx) {
       `
     );
 
-  const { slider }: SliderProps = await hygraph.request(
+  const { slider }: any = await hygraph.request(
     gql`
       query SliderHome {
         slider(where: { title: "Home" }) {
           id
           title
-          image {
-            id
-            url
+          investments {
+            banner {
+              url
+            }
+            address
+            basicInvestment {
+              car {
+                basicInfo {
+                  cover {
+                    url
+                  }
+                  title
+                }
+              }
+            }
           }
         }
       }
