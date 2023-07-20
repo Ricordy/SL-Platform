@@ -52,23 +52,24 @@ const CarouselItem = ({
       >
         <h4 className="z-10 text-2xl uppercase text-white">{title}</h4>
         <div className="relative z-10 mt-[16px] flex w-full justify-center gap-3 pb-6 align-middle">
-          <div className="flex w-full items-center justify-evenly gap-3  align-middle">
-            <div className="flex h-fit flex-col  pr-3">
-              <h4 className=" text-white">Status:</h4>
+          <div className="flex w-full items-center justify-evenly gap-3">
+            <div className="ml-3 mr-4 flex h-fit w-max flex-col pr-7">
+              <h4 className="  text-white">Status:</h4>
               <span className="font-bold text-white">{status}</span>
             </div>
-            <div className="flex flex-col border-x-2 pl-2 pr-16">
+            <div className=" flex w-max flex-col border-x-2  pl-3 pr-[100px]">
               <h4 className="text-white">Price:</h4>
-              <span className="font-light text-white">{price}</span>
+              <span className="font-bold text-white">{price}</span>
             </div>
-            <div className="flex h-fit ">
-              <span className="font-light text-white">
+            <div className="mr-10  flex h-fit w-max  flex-col  justify-self-start pl-1">
+              <h4 className="text-white">Progress:</h4>
+              <span className=" font-bold text-white">
                 {String(
                   ((noDecimal(contractProgress) / Number(price)) * 100).toFixed(
                     2
                   )
                 )}
-                % Finished
+                %
               </span>
             </div>
           </div>

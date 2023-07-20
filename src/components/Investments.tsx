@@ -69,7 +69,7 @@ export default function Investments({
                   key={investmentStatus}
                   className={cn(
                     " pt-6",
-                    "h-[394px] ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2"
+                    "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2 "
                   )}
                 >
                   <ProjectCarousel
