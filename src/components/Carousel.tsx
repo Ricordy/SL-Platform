@@ -104,16 +104,18 @@ const Carousel: FC<CarouselProps> = ({
         <div
           className={`absolute  left-0 z-20 flex items-center justify-center swiper-prev-${id}`}
         >
-        {  <Image
-            src={
-              prevNavWhite
-                ? "/icons/pagination-previous.svg"
-                : "/icons/pagination-previous-black.svg"
-            }
-            width={38}
-            height={38}
-            alt="Previous"
-          />}
+          {
+            <Image
+              src={
+                prevNavWhite
+                  ? "/icons/pagination-previous.svg"
+                  : "/icons/pagination-previous-black.svg"
+              }
+              width={38}
+              height={38}
+              alt="Previous"
+            />
+          }
         </div>
         <section
           className={cn(
@@ -143,8 +145,8 @@ const Carousel: FC<CarouselProps> = ({
                     // title="my title"
                     // image="/projects/car-1.jpg"
                     // price="39595"
-                    title={item.basicInvestment.car.basicInfo.title}
-                    image={item.basicInvestment.car.basicInfo.cover.url}
+                    title={item.basicInvestment.car?.basicInfo.title}
+                    image={item.basicInvestment.car?.basicInfo.cover.url}
                     price={item.basicInvestment.totalInvestment.toString()}
                     address={item.address}
                     level={item.level.basicLevel.title}

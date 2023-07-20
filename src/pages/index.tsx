@@ -37,8 +37,6 @@ const Home: NextPage = (props: any) => {
     functionName: "totalSupply",
   });
 
-
-
   // Carousel
   const images = props.slider.investments;
   const [activeIndex, setActiveIndex] = useState(0);
@@ -50,6 +48,7 @@ const Home: NextPage = (props: any) => {
 
     return () => clearInterval(interval);
   }, [images.length]);
+  console.log("props.activeInvestments", props.activeInvestments);
 
   return (
     <>
@@ -73,7 +72,7 @@ const Home: NextPage = (props: any) => {
               }`}
               style={{
                 backgroundImage: `url(${
-                  image.basicInvestment.car.basicInfo.cover
+                  image.basicInvestment.car?.basicInfo.cover
                     .url /** image.banner.url its the right one but has decievieng images by now */
                 })`,
               }}
@@ -115,6 +114,7 @@ const Home: NextPage = (props: any) => {
             ))}
           </div>
         </div>
+
         <div className="relative left-1/2 z-20 mx-auto -ml-[570px] -mt-[100px]  min-h-[500px] max-w-[1338px]">
           <Carousel
             id="1"
@@ -250,6 +250,8 @@ export async function getServerSideProps(ctx) {
         }
       `
     );
+
+  console.log("fuck", activeInvestments);
 
   const { investments }: { investments: InvestmentProps[] } =
     await hygraph.request(

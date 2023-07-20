@@ -774,7 +774,7 @@ export const getServerSideProps: GetServerSideProps<
           investments(
             where: {
               transactions_some: {
-                from: "0xC2Fab2A52DaAe5213c5060800Bf03176818c86c9"
+                from: "${session?.user.id}"
               }
             }
           ) {
