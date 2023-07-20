@@ -21,7 +21,7 @@ import { type InvestmentProps } from "~/@types/investment";
 import { type TransactionProps } from "~/@types/transaction";
 import useCheckEntryNFT from "~/hooks/useCheckEntryNFT";
 import { FactoryABI, SLCoreABI, paymentTokenABI } from "~/utils/abis";
-import Carousel from "../components/Carousel";
+import Carousel, { CarouselItem } from "../components/Carousel";
 import NavBar from "../components/NavBar";
 import ProjectCarousel from "../components/ProjectCarousel";
 
@@ -457,12 +457,30 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     );
 
     // Filter the allInvestments array to get the missing investments
-    const missingInvestments = allInvestments.filter(
+    let missingInvestments = allInvestments.filter(
       (investment) => !userInvAddresses.has(investment.address)
     );
 
+    // If the length of missingInvestments is less than 3, add elements from userInv
+    if (missingInvestments.length < 3) {
+      for (
+        let i = 0;
+        missingInvestments.length < 3 && i < userInv.length;
+        i++
+      ) {
+        missingInvestments.push(userInv[i]);
+      }
+    } else if (missingInvestments.length > 3) {
+      missingInvestments = missingInvestments.slice(0, 3);
+    }
+
     return missingInvestments;
   }
+
+  console.log(
+    "aqui",
+    getMissingInvestments(props.allInvestments, props.userInvestments)
+  );
 
   // return <div>end</div>;
   if (hasEntryNFTLoading) return <div>Loading...</div>;
@@ -660,8 +678,8 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
         )}
       </div>
       <div className="relative z-20 mx-auto flex rounded-t-[56px] bg-black pb-[128px] pt-[72px] text-white">
-        <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[52px]">
-          <Carousel
+        <div className="mx-auto flex  w-full max-w-screen-lg gap-[52px]">
+          {/* <Carousel
             id="4"
             className="w-full pt-[132px]"
             title={<h2 className="text-2xl">Our Suggestions for you</h2>}
@@ -672,7 +690,22 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
               (investment) =>
                 investment.basicInvestment.investmentStatus == "Active"
             )}
-          />
+          /> */}
+          {getMissingInvestments(
+            props.allInvestments,
+            props.userInvestments
+          ).map((investment) => (
+            <CarouselItem
+              // title="my title"
+              // image="/projects/car-1.jpg"
+              // price="39595"
+              title={investment.basicInvestment.car?.basicInfo.title}
+              image={investment.basicInvestment.car?.basicInfo.cover.url}
+              price={investment.basicInvestment.totalInvestment.toString()}
+              address={investment.address}
+              level={investment.level.basicLevel.title}
+            />
+          ))}
 
           {/* {carouselItems.slice(0, 3).map((item, idx) => (
               <CarouselItem
