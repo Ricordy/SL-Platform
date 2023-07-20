@@ -39,10 +39,9 @@ const CarouselItem = ({
     functionName: "totalSupply",
     select: (data) => Number(data),
   });
-  console.log("ola", address);
 
   return (
-    <div className=" relative w-[416px]   rounded-md">
+    <div className="  w-[416px] w-full  rounded-md">
       <div
         className={cn(
           "relative flex min-h-[358px] w-full flex-col items-center justify-end gap-3 rounded-md bg-cover",
@@ -153,7 +152,7 @@ const ProjectCarousel: FC<CarouselProps> = ({
             " relative z-10 ml-[58px] flex w-full flex-col items-center"
           )}
         >
-          <div className="swiper-wrapper relative z-10 flex w-full ">
+          <div className="swiper-wrapper relative z-10 w-full ">
             <Swiper
               modules={[Navigation, A11y]}
               className="swiper w-full"
