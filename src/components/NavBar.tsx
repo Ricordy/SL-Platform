@@ -14,6 +14,7 @@ import { InjectedConnector } from "wagmi/connectors/injected";
 import logoBlack from "../../public/logo-black.svg";
 import logoWhite from "../../public/logo-white.svg";
 import { cn } from "../lib/utils";
+import Modal from "./Modal";
 
 const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
   const { address, isConnected, isConnecting, isDisconnected } = useAccount();
@@ -25,6 +26,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
   const [navbar, setNavbar] = useState(false);
   const { signMessageAsync } = useSignMessage();
   const { data: sessionData } = useSession();
+  const [loading, setLoading] = useState(false);
 
   // State
   const [showConnection, setShowConnection] = useState(false);
@@ -62,7 +64,10 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
    * Sign user out
    */
   const onClickSignOut = async () => {
+    setLoading(true);
     await signOut();
+    disconnect();
+    setLoading(false);
   };
 
   /**
@@ -148,7 +153,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                   </span>
                 </div>
                 {/* Sign Out */}
-                <button
+                {/* <button
                   className="flex w-12 items-center justify-center rounded-full py-3 font-semibold text-white no-underline transition hover:bg-white/20"
                   onClick={onClickSignOut as () => void}
                 >
@@ -161,7 +166,8 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                     width={20}
                     height={18}
                   />
-                </button>
+                  hehehe
+                </button> */}
                 {/* {showConnection && isConnected && (
                   <button
                     className={cn(
@@ -188,12 +194,34 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
             ) : showConnection ? (
               <div className="w-full text-right">
                 {isConnected ? (
-                  <button
-                    className="self-end whitespace-nowrap rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-                    onClick={onClickSignIn as () => void}
+                  <Modal
+                    isOpen={isConnected && showConnection}
+                    toggle={disconnect}
+                    title=""
                   >
-                    Sign In
-                  </button>
+                    <div className="flex w-full flex-col  items-center justify-items-center font-sans">
+                      <Image
+                        src={logoBlack as string}
+                        alt="Something Legendary logo"
+                        className="w-full"
+                      />
+                      <h2 className="my-4 text-4xl font-bold ">
+                        Welcome to SomethingLegendary
+                      </h2>
+                      <div className=" font-serif">
+                        By connecting your wallet and using Something Legendary,
+                        you agree to our Terms of Service and Privacy Policy.
+                      </div>
+                      <div>
+                        <button
+                          className=" mt-10 rounded-full bg-black px-10 py-3 font-semibold text-white no-underline transition hover:bg-black/70"
+                          onClick={onClickSignIn as () => void}
+                        >
+                          Sign In
+                        </button>
+                      </div>
+                    </div>
+                  </Modal>
                 ) : null}
               </div>
             ) : null}
@@ -206,9 +234,9 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                   " w-50 whitespace-nowrap rounded-full  px-10 py-3 font-semibold text-black no-underline transition hover:bg-white/30",
                   bgWhite ? "bg-black/10" : "bg-white/10"
                 )}
-                onClick={() => (isConnected ? disconnect() : connect())}
+                onClick={() => (isConnected ? onClickSignOut() : connect())}
               >
-                {isConnected ? (
+                {isConnected || loading ? (
                   <Image
                     src={
                       bgWhite ? "/icons/logout-black.svg" : "/icons/logout.svg"
