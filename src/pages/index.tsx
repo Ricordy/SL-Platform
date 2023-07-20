@@ -102,7 +102,7 @@ const Home: NextPage = (props: any) => {
               </Link>
             </div>
           </div>
-          <div className="absolute left-[270px] top-[550px] z-40 -translate-x-1/2 transform space-x-2">
+          <div className="absolute left-[235px] top-[512px] z-40 -translate-x-1/2 transform space-x-2">
             {images.map((_, index) => (
               <button
                 key={index}
@@ -142,7 +142,7 @@ const Home: NextPage = (props: any) => {
           )} */}
         </div>
         {/* My Investments */}
-        <div className=" relative left-1/2 z-20 mx-auto -ml-[570px] mt-[132px] min-h-[550px] w-full max-w-[1338px]">
+        <div className=" relative left-1/2 z-20 mx-auto -ml-[570px] mt-[132px] min-h-[532px] w-full max-w-[1338px]">
           <Investments
             isConnected={isConnected}
             userInvestments={props.investments}
