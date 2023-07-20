@@ -198,6 +198,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                     isOpen={isConnected && showConnection}
                     toggle={disconnect}
                     title=""
+                    changeClose={true}
                   >
                     <div className="flex w-full flex-col  items-center justify-items-center font-sans">
                       <Image
@@ -212,9 +213,15 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                         By connecting your wallet and using Something Legendary,
                         you agree to our Terms of Service and Privacy Policy.
                       </div>
-                      <div>
+                      <div className="">
                         <button
-                          className=" mt-10 rounded-full bg-black px-10 py-3 font-semibold text-white no-underline transition hover:bg-black/70"
+                          className="mx-3 mt-10 rounded-full bg-black px-10 py-3 font-semibold text-white no-underline transition hover:bg-black/70"
+                          onClick={disconnect as () => void}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          className="mx-3 mt-10 rounded-full bg-black px-10 py-3 font-semibold text-white no-underline transition hover:bg-black/70"
                           onClick={onClickSignIn as () => void}
                         >
                           Sign In

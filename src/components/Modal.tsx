@@ -10,6 +10,7 @@ interface ModalType {
   toggle: () => void;
   isBlur?: boolean;
   toggleBlur?: () => void;
+  changeClose?: boolean;
 }
 const Modal = ({
   title,
@@ -19,6 +20,7 @@ const Modal = ({
   toggle,
   isBlur,
   toggleBlur,
+  changeClose = false,
 }: ModalType) => {
   return (
     <Transition show={isOpen} as={Fragment}>
@@ -64,14 +66,16 @@ const Modal = ({
                   className="flex justify-between text-3xl font-medium leading-6 tracking-wide text-gray-900"
                 >
                   {title}
-                  <Image
-                    onClick={() => toggle()}
-                    src="/icons/close.svg"
-                    width={18}
-                    height={18}
-                    alt="Close"
-                    className=" cursor-pointer"
-                  />
+                  {!changeClose && (
+                    <Image
+                      onClick={() => toggle()}
+                      src="/icons/close.svg"
+                      width={18}
+                      height={18}
+                      alt="Close"
+                      className=" cursor-pointer"
+                    />
+                  )}
                 </Dialog.Title>
                 <div className="flex w-full justify-center gap-6">
                   {children}
