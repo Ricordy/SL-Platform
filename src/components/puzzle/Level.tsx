@@ -97,7 +97,7 @@ const Level = ({
               >
                 {userLevel > level
                   ? "100"
-                  : ((userPieces.length / 10) * 100).toFixed(2)}
+                  : ((userPieces.length / 10) * 100).toFixed(0)}
                 %
               </span>
               <span className="text-center text-[14px] font-normal leading-none tracking-wide text-neutral-400">

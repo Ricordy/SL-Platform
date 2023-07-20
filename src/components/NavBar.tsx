@@ -13,6 +13,9 @@ import {
 import { InjectedConnector } from "wagmi/connectors/injected";
 import logoBlack from "../../public/logo-black.svg";
 import logoWhite from "../../public/logo-white.svg";
+import logo1 from "../../public/logo-1.svg";
+import logo2 from "../../public/logo-2.svg";
+import logo3 from "../../public/logo-3.svg";
 import { cn } from "../lib/utils";
 import Modal from "./Modal";
 
@@ -202,9 +205,9 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                   >
                     <div className="flex w-full flex-col  items-center justify-items-center font-sans">
                       <Image
-                        src={logoBlack as string}
+                        src={logo1 as string}
                         alt="Something Legendary logo"
-                        className="w-full"
+                        className="max-h-40 w-full"
                       />
                       <h2 className="my-4 text-4xl font-bold ">
                         Welcome to SomethingLegendary

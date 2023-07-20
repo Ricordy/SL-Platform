@@ -498,12 +498,6 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
             <div className="flex flex-col ">
               <h2 className="text-4xl font-medium">
                 {investment.basicInvestment.car.basicInfo.title}{" "}
-                <Image
-                  src="/icons/heart-full.svg"
-                  width={25}
-                  height={20}
-                  alt="Like"
-                />
               </h2>
               <p>{investment.basicInvestment.car.subtitle}</p>
             </div>
