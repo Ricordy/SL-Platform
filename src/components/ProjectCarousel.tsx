@@ -42,7 +42,7 @@ const CarouselItem = ({
   console.log("ola", address);
 
   return (
-    <div className=" w-[416px] w-full rounded-md">
+    <div className=" relative w-[416px]   rounded-md">
       <div
         className={cn(
           "relative flex min-h-[358px] w-full flex-col items-center justify-end gap-3 rounded-md bg-cover",
@@ -153,12 +153,12 @@ const ProjectCarousel: FC<CarouselProps> = ({
             " relative z-10 ml-[58px] flex w-full flex-col items-center"
           )}
         >
-          <div className="swiper-wrapper relative z-10 w-full ">
+          <div className="swiper-wrapper relative z-10 flex w-full ">
             <Swiper
               modules={[Navigation, A11y]}
               className="swiper w-full"
               spaceBetween={24}
-              slidesPerView={4}
+              slidesPerView={3}
               navigation={{
                 nextEl: `.swiper-next-${id}`,
                 prevEl: `.swiper-prev-${id}`,
