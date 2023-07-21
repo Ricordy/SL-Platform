@@ -78,7 +78,7 @@ export const TransactionItem = (items, userInvestedContracts) => {
       return (
         item.investment && (
           <section key={idx}>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pb-2">
               <Image
                 className="rounded-md"
                 src={item.investment.basicInvestment.car.basicInfo.cover.url}
@@ -552,7 +552,13 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                 Amount of tickets already sold
               </span>
               <span className="text-4xl font-semibold text-white">
-                $504.600 not bc
+                <NumericFormat
+                  value={504.6}
+                  displayType="text"
+                  thousandSeparator=","
+                  decimalScale={2}
+                  prefix="$"
+                />
               </span>
             </div>
             <div className="flex flex-col">
@@ -560,7 +566,13 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                 Toal invested in classics:
               </span>
               <span className="text-4xl font-semibold text-white">
-                $504.600 not bc
+                <NumericFormat
+                  value={504.6}
+                  displayType="text"
+                  thousandSeparator=","
+                  decimalScale={2}
+                  prefix="$"
+                />
               </span>
             </div>
           </div>
