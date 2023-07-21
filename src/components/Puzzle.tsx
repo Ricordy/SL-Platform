@@ -609,7 +609,7 @@ const Puzzle: FC<PuzzleProps> = ({
                             </div>
                           )) || (
                             // </div>
-                            <div className="h-90 relative flex flex-col items-center justify-between rounded-md bg-neutral-100 pb-2 align-middle">
+                            <div className="h-90 relative flex flex-col items-center justify-between rounded-md bg-neutral-100 align-middle">
                               <div className="mt-[132px] flex flex-col justify-center align-middle ">
                                 <h2 className="pt-6 text-center text-[24px] font-semibold uppercase leading-normal tracking-wider text-[#C3A279]">
                                   You got all
