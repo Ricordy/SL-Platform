@@ -24,6 +24,7 @@ import { FactoryABI, SLCoreABI, paymentTokenABI } from "~/utils/abis";
 import Carousel, { CarouselItem } from "../components/Carousel";
 import NavBar from "../components/NavBar";
 import ProjectCarousel from "../components/ProjectCarousel";
+import { NumericFormat } from "react-number-format";
 
 interface InvestmentBlockchainType {
   id: number;
@@ -67,7 +68,7 @@ interface MyInvestmentsProps
 export const TransactionItem = (items, userInvestedContracts) => {
   return (
     items &&
-    items.items.map((item, idx) => {
+    items.items?.map((item, idx) => {
       // const { amountInvested } = useGetAddressInvestmentinSingleCar({
       //   contractAddress: addressContract,
       //   walletAddress: address,
@@ -86,7 +87,15 @@ export const TransactionItem = (items, userInvestedContracts) => {
                 alt="Car"
               />
               <span>{item.investment.basicInvestment.car.basicInfo.title}</span>
-              <span>{item.amountInvested}</span>
+              <span className=" text-primaryGold">
+                <NumericFormat
+                  value={item.amountInvested}
+                  displayType="text"
+                  thousandSeparator=","
+                  decimalScale={2}
+                  prefix="$"
+                />
+              </span>
               <span className="text-xs text-primaryGold">
                 {userInvestedContracts[item.investment.address]}
               </span>
@@ -94,7 +103,7 @@ export const TransactionItem = (items, userInvestedContracts) => {
 
               <Link href="#">
                 <Image
-                  src="/icons/external-link.svg"
+                  src="/icons/external-link-gold.svg"
                   width={10}
                   height={10}
                   alt="External link"
@@ -570,37 +579,61 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
               <div className="flex flex-col  gap-4">
                 <span>Overview:</span>
                 {data && (
-                  <div className="flex flex-1 flex-col gap-8 rounded-md bg-myInvestmentsBackground px-12 py-8">
-                    <div className="flex flex-col">
+                  <div className="flex flex-1 flex-col gap-2 rounded-md bg-myInvestmentsBackground px-12 py-8 font-medium leading-6">
+                    <div className="flex flex-col border-b-2 border-gray-700 px-3 py-4">
                       <h5 className="text-base text-primaryGold">
                         Total Invested
                       </h5>
                       <span className="text-4xl font-semibold tracking-widest">
-                        ${data && data[0]?.div(10 ** 6).toNumber()}
+                        <NumericFormat
+                          value={data?.[0].div(10 ** 6).toNumber()}
+                          displayType="text"
+                          thousandSeparator=","
+                          decimalScale={2}
+                          prefix="$"
+                        />
                       </span>
                     </div>
-                    <div className="flex flex-col">
+                    <div className="flex items-center justify-between px-3">
                       <h5 className="text-base text-primaryGold">
-                        Level 1 - Total Invested
+                        Total Invested (Level 1)
                       </h5>
-                      <span className="text-4xl font-semibold tracking-widest">
-                        ${data?.[1].div(10 ** 6).toNumber()}
+                      <span className="text-2xl font-medium tracking-widest">
+                        <NumericFormat
+                          value={data?.[1].div(10 ** 6).toNumber()}
+                          displayType="text"
+                          thousandSeparator=","
+                          decimalScale={2}
+                          prefix="$"
+                        />
                       </span>
                     </div>
-                    <div className="flex flex-col">
+                    <div className="flex items-center justify-between px-3">
                       <h5 className="text-base text-primaryGold">
-                        Level 2 - Total Invested
+                        Total Invested (Level 2)
                       </h5>
-                      <span className="text-4xl font-semibold tracking-widest">
-                        ${data[2].div(10 ** 6).toNumber()}
+                      <span className="text-2xl font-medium tracking-widest">
+                        <NumericFormat
+                          value={data?.[2].div(10 ** 6).toNumber()}
+                          displayType="text"
+                          thousandSeparator=","
+                          decimalScale={2}
+                          prefix="$"
+                        />
                       </span>
                     </div>
-                    <div className="flex flex-col">
+                    <div className="flex items-center justify-between px-3">
                       <h5 className="text-base text-primaryGold">
-                        Level 3 - Total Invested
+                        Total Invested (Level 3)
                       </h5>
-                      <span className="text-4xl font-semibold tracking-widest">
-                        ${data[3].div(10 ** 6).toNumber()}
+                      <span className="text-2xl font-medium tracking-widest">
+                        <NumericFormat
+                          value={data?.[3].div(10 ** 6).toNumber()}
+                          displayType="text"
+                          thousandSeparator=","
+                          decimalScale={2}
+                          prefix="$"
+                        />
                       </span>
                     </div>
                   </div>
@@ -641,7 +674,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
             id="1"
             prevNavWhite={true}
             title={<h2 className="text-2xl text-white">Active</h2>}
-            items={props.userInvestments.filter(
+            items={props.userInvestments?.filter(
               (investment) =>
                 investment.basicInvestment.investmentStatus == "Active"
             )}
@@ -670,14 +703,19 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
             id="4"
             className="py-[132px]"
             title={<h2 className="text-2xl">Finished</h2>}
-            items={props.userInvestments.filter(
+            items={props.userInvestments?.filter(
               (investment) =>
                 investment.basicInvestment.investmentStatus == "Finished"
             )}
           />
         )}
       </div>
-      <div className="relative z-20 mx-auto flex rounded-t-[56px] bg-black pb-[128px] pt-[72px] text-white">
+      <div className="relative z-20 mx-auto rounded-t-[56px] bg-black pb-[128px] pt-[72px] text-white">
+        {
+          <h2 className="mb-[52px] ml-[210px] text-2xl font-medium uppercase">
+            Our Suggestions for you
+          </h2>
+        }
         <div className="mx-auto flex  w-full max-w-screen-lg gap-[52px]">
           {/* <Carousel
             id="4"
@@ -691,6 +729,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                 investment.basicInvestment.investmentStatus == "Active"
             )}
           /> */}
+
           {getMissingInvestments(
             props.allInvestments,
             props.userInvestments
@@ -875,7 +914,7 @@ export const getServerSideProps: GetServerSideProps<
           transactions(
             where: { from: "${session?.user.id}" }
             orderBy: publishedAt_DESC
-            first: 5
+            first: 4
           ) {
             amountInvested
             hash

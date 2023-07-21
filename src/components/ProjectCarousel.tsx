@@ -49,7 +49,9 @@ const CarouselItem = ({
         )}
         style={{ backgroundImage: `url(${image})` }}
       >
-        <h4 className="z-10 text-2xl uppercase text-white">{title}</h4>
+        <h4 className="z-10 text-2xl font-medium uppercase text-white">
+          {title}
+        </h4>
         <div className="relative z-10 mt-[16px] flex w-full justify-center gap-3 pb-6 align-middle">
           <div className="flex w-full items-center justify-evenly gap-3">
             <div className="ml-3 mr-4 flex h-fit w-max flex-col pr-7">
