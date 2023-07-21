@@ -130,6 +130,11 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     abi: FactoryABI,
   };
 
+  const SLCoreContract = {
+    address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
+    abi: SLCoreABI,
+  };
+
   const { data }: { data: BigNumber } = useContractReads({
     contracts: [
       {
@@ -151,6 +156,10 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
         ...SlFactoryContract,
         functionName: "getAddressTotalInLevel",
         args: [address, BigNumber.from(3)],
+      },
+      {
+        ...SLCoreContract,
+        functionName: "getCurrentEntryBatchRemainingTokens",
       },
       // {
       //   ...SlLogicsContract,
@@ -486,72 +495,72 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     return missingInvestments;
   }
 
-  console.log(
-    "aqui",
-    getMissingInvestments(props.allInvestments, props.userInvestments)
-  );
+  console.log("aqui", data?.[4].toNumber());
 
   // return <div>end</div>;
   if (hasEntryNFTLoading) return <div>Loading...</div>;
 
   if (!hasEntryNFTLoading && !hasEntryNFT)
     return (
-      <div className="mx-auto flex min-h-screen w-full flex-col">
+      <div className="mx-auto flex  min-h-screen w-full flex-col">
         <NavBar />
 
-        <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[96px] pt-[52px]">
+        <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[30px] pt-[52px]">
           <div className="grid w-full grid-cols-2 items-start justify-center gap-4">
             <div className="flex w-[434px] flex-col gap-8">
               <div className="flex flex-col rounded-xl  bg-white px-10 py-[72px]">
-                <div className="flex flex-col gap-[52px]">
+                <div className="flex flex-col gap-[32px]">
                   <h1 className="text-5xl font-semibold uppercase text-primaryGold">
                     Buy your
                     <br />
                     <span className="font-medium text-black">Entry NFT!</span>
                   </h1>
                   <p className=" text-sm">
-                    Sed ut perspiciatis unde omnis iste natus error sit
-                    voluptatem accusantium doloremque laudantium, totam rem
-                    aperiam, eaque ipsa quae ab illo inventore veritatis et
-                    quasi architecto beatae vitae dicta sunt explicabo. .
+                    You're one step closer to living the adventure you've always
+                    dreamed of. The opportunity to restore a luxury classic and
+                    earn money from it! Get your entrance ticket now, choose the
+                    project of your dreams and follow the whole process in real
+                    time. The future starts here.
                   </p>
                 </div>
               </div>
-              <Link
+              {/* <Link
                 href="/mint-entry-nft"
                 className="rounded-xl bg-primaryGold px-3 py-1.5 text-center font-medium uppercase text-white dark:bg-primaryGold dark:text-white"
               >
                 Buy it for 100$
-              </Link>
+              </Link> */}
               <button
-                className="inline-flex justify-center rounded-md border border-transparent bg-orange-800 px-4 py-2 text-sm font-medium text-slate-100 transition-colors hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:bg-slate-400"
+                className="rounded-xl bg-primaryGold px-3 py-1.5 text-center font-medium uppercase text-white dark:bg-primaryGold dark:text-white"
                 disabled={!isConnected}
                 onClick={myMint as () => void}
               >
-                {isLoadingMintNFT ? "Minting..." : "Mint NFT"}
+                {isLoadingMintNFT ? "Minting..." : "Buy it for 100$"}
               </button>
             </div>
             <div className="relative flex h-full w-full bg-[url('/bg/bg-buy-entry-nft.jpg')] bg-contain bg-center bg-no-repeat"></div>
           </div>
           <div className="flex justify-center gap-12">
             <div className="flex flex-col">
+              <span className="text-primaryGold">Total of entries left:</span>
+              <span className="text-4xl font-semibold text-white">
+                {data?.[4].toNumber()}
+              </span>
+            </div>
+            <div className="flex flex-col">
               <span className="text-primaryGold">
-                Total Invested until now:
+                Amount of tickets already sold
               </span>
               <span className="text-4xl font-semibold text-white">
-                $504.600
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-primaryGold">Return expected</span>
-              <span className="text-4xl font-semibold text-white">
-                $504.600
+                $504.600 not bc
               </span>
             </div>
             <div className="flex flex-col">
-              <span className="text-primaryGold">NFTs sold until now:</span>
+              <span className="text-primaryGold">
+                Toal invested in classics:
+              </span>
               <span className="text-4xl font-semibold text-white">
-                $504.600
+                $504.600 not bc
               </span>
             </div>
           </div>
