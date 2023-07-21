@@ -10,6 +10,7 @@ import "swiper/css/pagination";
 import { useContractRead, type Address } from "wagmi";
 import { investmentABI } from "~/utils/abis";
 import { type InvestmentProps } from "../pages/my-investments";
+import { NumericFormat } from "react-number-format";
 // import "swiper/css/navigation";
 
 export interface CarouselItemProps {
@@ -60,7 +61,15 @@ const CarouselItem = ({
             </div>
             <div className=" flex w-max flex-col border-x-2  pl-3 pr-[100px]">
               <h4 className="text-white">Price:</h4>
-              <span className="font-bold text-white">{price}</span>
+              <span className="font-bold text-white">
+                <NumericFormat
+                  value={price}
+                  displayType="text"
+                  thousandSeparator=","
+                  decimalScale={2}
+                  prefix="$"
+                />
+              </span>
             </div>
             <div className="mr-10  flex h-fit w-max  flex-col  justify-self-start pl-1">
               <h4 className="text-white">Progress:</h4>

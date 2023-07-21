@@ -9,6 +9,7 @@ import { cn } from "../lib/utils";
 import "swiper/css";
 import "swiper/css/pagination";
 import { type InvestmentProps } from "~/@types/investment";
+import { NumericFormat } from "react-number-format";
 // import "swiper/css/navigation";
 
 interface CarouselItemProps {
@@ -45,7 +46,15 @@ export const CarouselItem = ({
         <div className="relative z-10 flex w-full justify-center gap-3 pb-8">
           <div className="flex">
             <div className="flex gap-3">
-              <span className="font-light text-white">{price}</span>
+              <span className="font-light text-white">
+                <NumericFormat
+                  value={price}
+                  displayType="text"
+                  thousandSeparator=","
+                  decimalScale={2}
+                  prefix="$"
+                />
+              </span>
             </div>
           </div>
         </div>
