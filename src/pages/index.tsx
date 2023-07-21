@@ -13,6 +13,7 @@ import Highlight from "~/components/investment/Highlight";
 import Carousel from "../components/Carousel";
 import NavBar from "../components/NavBar";
 import { investmentABI } from "~/utils/abis";
+import { cn } from "~/lib/utils";
 interface ActiveInvestmentsProps {
   investments: InvestmentProps[];
 }
@@ -142,7 +143,12 @@ const Home: NextPage = (props: any) => {
           )} */}
         </div>
         {/* My Investments */}
-        <div className=" relative left-1/2 z-20 mx-auto -ml-[570px]  min-h-[532px] w-full max-w-[1338px]">
+        <div
+          className={cn(
+            "relative left-1/2 z-20 mx-auto -ml-[570px]  min-h-[532px] w-full max-w-[1338px]",
+            isConnected ? "mt-[132px]" : "mt-0"
+          )}
+        >
           <Investments
             isConnected={isConnected}
             userInvestments={props.investments}
