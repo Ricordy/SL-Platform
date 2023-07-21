@@ -218,8 +218,8 @@ const TransactionItem = ({
   return (
     <div
       className={cn(
-        "flex items-center justify-between",
-        from === wallet ? "bg-red-200/20" : ""
+        "flex h-full items-center justify-between",
+        from === wallet ? "bg-primaryGold/20 hover:bg-primaryGold/30" : ""
       )}
     >
       <div className="w-1/4 text-right">
@@ -916,7 +916,7 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
               </div>
               <div className="flex flex-col">
                 <h3>Transactions:</h3>
-                <div className="flex flex-1 flex-col gap-2 divide-y-2 rounded-md px-4 py-8">
+                <div className="flex flex-1 flex-col  divide-y-2 rounded-md px-4 py-8">
                   {investment.transactions.map((transaction) => (
                     <TransactionItem
                       key={transaction.hash}
