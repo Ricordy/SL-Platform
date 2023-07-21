@@ -687,9 +687,9 @@ const Puzzle: FC<PuzzleProps> = ({
                                 <div className="m-2 flex flex-col items-center justify-center text-primaryGold">
                                   <h3>NFT Level {idx + 2}</h3>
                                   <p className="text-center">
-                                    You can claim it when you get 10 different
-                                    pieces
+                                    You can claim it when you
                                   </p>
+                                  <p>get 10 different pieces</p>
                                 </div>
                               </div>
                             )) || (
