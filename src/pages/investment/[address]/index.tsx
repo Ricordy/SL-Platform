@@ -555,9 +555,9 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                 {investment.basicInvestment.car.shortDescription}
               </p>
             </div>
-            <div className="flex w-2/5 flex-col gap-8">
+            <div className="flex w-2/5 flex-col gap-8 bg-[#F6F9F8] p-6">
               {
-                <div className="flex flex-col gap-2 rounded-md border border-tabInactive py-2 pl-24">
+                <div className="flex flex-col gap-2 border-b border-tabInactive pl-24">
                   <h4 className="text-ogBlack">Total Invested until now</h4>
                   <span className="text-3xl font-medium tracking-wider text-primaryGreen">
                     <NumericFormat
@@ -584,23 +584,28 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                   </h4>
                 </div>
               }
-              <div className="flex flex-col gap-2 rounded-md px-24 py-2 text-ogBlack">
+              <div className="flex flex-col justify-start gap-5 rounded-md px-16 py-2 align-middle text-ogBlack">
                 <h3 className="text-black">Especifications</h3>
-                <span>Contract Address:</span>
-                <span className="text-primaryGreen">
-                  <Link
-                    href={`https://etherscan.io/address/${investment?.address}`}
-                    className="flex items-center gap-3"
-                  >
-                    {formatAddress(investment?.address)} <FiExternalLink />
-                  </Link>
-                </span>
-                <span>Chassis NR:</span>
-                <span className="pb-2 font-normal text-black">
-                  {investment?.basicInvestment.car.chassis}
-                </span>
-                <div className="flex w-full justify-between pb-2">
-                  <div className="flex flex-col ">
+                <div>
+                  <span>Contract Address:</span>
+                  <span className="text-primaryGreen">
+                    <Link
+                      href={`https://etherscan.io/address/${investment?.address}`}
+                      className="flex items-center gap-3"
+                    >
+                      {formatAddress(investment?.address)} <FiExternalLink />
+                    </Link>
+                  </span>
+                </div>
+                <div className="flex flex-col ">
+                  <span>Chassis NR:</span>
+                  <span className="pb-2 font-normal text-black">
+                    {investment?.basicInvestment.car.chassis}
+                  </span>
+                </div>
+
+                <div className="flex w-full justify-between gap-10 pb-2">
+                  <div className="mr-3 flex flex-col ">
                     <span>Total Production</span>
                     <span className="text-black">
                       {investment?.basicInvestment.car.totalProduction}
@@ -613,10 +618,12 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                     </span>
                   </div>
                 </div>
-                <span>Color Combination:</span>
-                <span className="pb-8 font-normal text-black">
-                  {investment?.basicInvestment.car.colorCombination}
-                </span>
+                <div className=" flex flex-col">
+                  <span>Color Combination:</span>
+                  <span className="pb-8 font-normal text-black">
+                    {investment?.basicInvestment.car.colorCombination}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -730,7 +737,7 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                               </span>
                             </div>
                           </div>
-                          <div className="flex flex-col">
+                          <div className="flex flex-col bg-[#F6F9F8] p-8">
                             <h4 className="flex gap-3 pb-4">
                               <Image
                                 src="/icons/updates.svg"
@@ -740,7 +747,7 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
                               />
                               <span>Updates</span>
                             </h4>
-                            <div className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-2 ">
                               {phase.updates.map((update, idx) => (
                                 <div
                                   className={cn(
@@ -793,8 +800,8 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
               />{" "}
               Investments
             </h3>
-            <div className="grid grid-cols-2 gap-8">
-              <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-2 gap-8 ">
+              <div className="flex flex-col gap-4 bg-[#F6F9F8] p-10">
                 <div className="flex">Total Invested:</div>
                 <span className="pb-2 text-4xl font-semibold tracking-widest text-primaryGreen">
                   <NumericFormat
