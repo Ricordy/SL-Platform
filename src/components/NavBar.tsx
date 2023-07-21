@@ -241,23 +241,20 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
             <div className="w-full text-right">
               <button
                 className={cn(
-                  " w-50 whitespace-nowrap rounded-full  px-10 py-3 font-semibold text-black no-underline transition hover:bg-white/30",
-                  bgWhite ? "bg-black/10" : "bg-white/10"
+                  " flex h-[30px] w-[151px] shrink-0 justify-center rounded-md py-1 align-middle font-medium uppercase",
+                  bgWhite ? "bg-black/10" : "bg-white"
                 )}
                 onClick={() => (isConnected ? onClickSignOut() : connect())}
               >
                 {isConnected || loading ? (
                   <Image
-                    src={
-                      bgWhite ? "/icons/logout-black.svg" : "/icons/logout.svg"
-                    }
+                    src={true ? "/icons/logout-black.svg" : "/icons/logout.svg"}
                     alt="Log Out"
-                    className="w-5"
                     width={20}
                     height={18}
                   />
                 ) : (
-                  "Connect Wallet"
+                  <div className="">Connect Wallet</div>
                 )}
               </button>
             </div>

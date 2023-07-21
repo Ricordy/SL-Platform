@@ -99,7 +99,7 @@ const Carousel: FC<CarouselProps> = ({
           </div>
         )}
         {seeMoreLink && seeMoreLabel && (
-          <div className=" mr-[180px]">
+          <div className=" mr-[260px]">
             <Link
               href={seeMoreLink}
               className="border-b-2 border-white text-sm uppercase text-white"
