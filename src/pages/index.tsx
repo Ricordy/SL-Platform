@@ -142,7 +142,7 @@ const Home: NextPage = (props: any) => {
           )} */}
         </div>
         {/* My Investments */}
-        <div className=" relative left-1/2 z-20 mx-auto -ml-[570px] mt-[132px] min-h-[532px] w-full max-w-[1338px]">
+        <div className=" relative left-1/2 z-20 mx-auto -ml-[570px]  min-h-[532px] w-full max-w-[1338px]">
           <Investments
             isConnected={isConnected}
             userInvestments={props.investments}

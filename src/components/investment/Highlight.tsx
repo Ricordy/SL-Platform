@@ -10,12 +10,12 @@ const Highlight = ({ investment, totalInvested }: HighlightProps) => {
   const currentPhase = investment.restorationPhases?.at(0);
   return (
     <div className="ml-[58px] flex flex-col py-[132px]">
-      <h2 className="mb-[52px] text-2xl font-medium uppercase">Highlight</h2>
+      <h2 className=" text-2xl font-medium uppercase">Highlight</h2>
       <div className="flex gap-6">
-        <div className="relative flex w-1/3">
+        <div className="relative flex  w-1/3">
           <Carousel showStatus={false} showThumbs={false}>
             {investment.basicInvestment.car.gallery.map((image, idx) => (
-              <div key={idx} className="relative w-full">
+              <div key={idx} className="relative max-h-[405px] w-full">
                 <Image
                   src={image.url}
                   width={528}
