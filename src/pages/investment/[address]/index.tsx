@@ -1,7 +1,7 @@
 import { Tab } from "@headlessui/react";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
-import { BigNumber } from "ethers";
+import { BigNumber, Transaction } from "ethers";
 import { GraphQLClient, gql } from "graphql-request";
 import { type GetServerSideProps } from "next";
 import Head from "next/head";
@@ -32,7 +32,11 @@ import NavBar from "../../../components/NavBar";
 import { Button } from "../../../components/ui/Button";
 import ProgressBar from "../../../components/ui/ProgressBar";
 import { ExternalLink } from "../../../components/ui/icons/External";
-import { cn, formatAddress } from "../../../lib/utils";
+import { cn, formatAddress, getMissingInvestments } from "../../../lib/utils";
+import { InvestmentsProps } from "~/pages/my-investments";
+import { getSession } from "next-auth/react";
+import Suggestions from "~/components/Suggestions";
+import { TransactionProps } from "~/@types/transaction";
 
 dayjs.extend(localizedFormat);
 
@@ -258,7 +262,19 @@ export const badges = {
   },
 };
 
-const Investment = ({ investment, transactions }: InvestmentProps) => {
+type InvestmentDetailsProps = {
+  investment: InvestmentProps;
+  transactions: TransactionProps[];
+  userInvestments: InvestmentProps[];
+  allInvestments: InvestmentProps[];
+};
+
+const Investment = ({
+  investment,
+  transactions,
+  userInvestments,
+  allInvestments,
+}: InvestmentDetailsProps) => {
   const { address: walletAddress } = useAccount();
   const { data: signerData } = useSigner();
 
@@ -971,16 +987,12 @@ const Investment = ({ investment, transactions }: InvestmentProps) => {
           <div className="relative z-20 mx-auto flex rounded-t-[56px] bg-black pb-[128px] pt-[72px] text-white">
             <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[52px]">
               <h3 className="text-2xl uppercase">Our suggestion for you</h3>
-              {/* <div className="mx-auto flex w-full max-w-screen-lg gap-6">
-                {carouselItems.slice(0, 3).map((item, idx) => (
-                  <CarouselItem
-                    key={idx}
-                    title={item.title}
-                    image={item.image}
-                    price={item.price}
-                  />
-                ))}
-              </div> */}
+              <Suggestions
+                investments={getMissingInvestments(
+                  allInvestments,
+                  userInvestments
+                )}
+              />
             </div>
           </div>
         </section>
@@ -997,9 +1009,10 @@ const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { address } = context.query;
+  const session = await getSession(context);
   const { investment }: { investment: InvestmentProps } = await hygraph.request(
     gql`
-      query {
+      query ContextInvestment{
         investment(
           where: { address: "${address}" }
         ) {
@@ -1073,8 +1086,76 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     `
   );
 
+  const { investments: userInvestments }: { investments: InvestmentsProps } =
+    await hygraph.request(
+      gql`
+        query UserInvestments {
+          investments(
+            where: {
+              transactions_some: {
+                from: "${session?.user.id}"
+              }
+            }
+          ) {
+            id
+            address
+            level {
+              basicLevel {
+                title
+              }
+            }
+            basicInvestment {
+              id
+              totalInvestment
+              investmentStatus
+              car {
+                basicInfo {
+                  title
+                  cover {
+                    id
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+      `
+    );
+
+  const { investments: allInvestments }: { investments: InvestmentsProps } =
+    await hygraph.request(
+      gql`
+        query UserInvestments {
+          investments {
+            id
+            address
+            level {
+              basicLevel {
+                title
+              }
+            }
+            basicInvestment {
+              id
+              totalInvestment
+              investmentStatus
+              car {
+                basicInfo {
+                  title
+                  cover {
+                    id
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+      `
+    );
+
   return {
-    props: { investment, transactions },
+    props: { investment, transactions, userInvestments, allInvestments },
   };
 };
 export default Investment;

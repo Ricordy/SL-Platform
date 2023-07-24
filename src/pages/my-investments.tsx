@@ -25,6 +25,8 @@ import Carousel, { CarouselItem } from "../components/Carousel";
 import NavBar from "../components/NavBar";
 import ProjectCarousel from "../components/ProjectCarousel";
 import { NumericFormat } from "react-number-format";
+import Suggestions from "~/components/Suggestions";
+import { getMissingInvestments } from "~/lib/utils";
 
 interface InvestmentBlockchainType {
   id: number;
@@ -462,41 +464,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
 
   const userInv = extractUniqueInvestments(props.userTransactions);
 
-  function getMissingInvestments(allInvestments, userInv) {
-    // Check if the inputs are valid arrays
-    if (!Array.isArray(allInvestments) || !Array.isArray(userInv)) {
-      console.error("Invalid input");
-      return [];
-    }
-
-    // Create a set of investment addresses from the userInv array
-    const userInvAddresses = new Set(
-      userInv.map((investment) => investment.address)
-    );
-
-    // Filter the allInvestments array to get the missing investments
-    let missingInvestments = allInvestments.filter(
-      (investment) => !userInvAddresses.has(investment.address)
-    );
-
-    // If the length of missingInvestments is less than 3, add elements from userInv
-    if (missingInvestments.length < 3) {
-      for (
-        let i = 0;
-        missingInvestments.length < 3 && i < userInv.length;
-        i++
-      ) {
-        missingInvestments.push(userInv[i]);
-      }
-    } else if (missingInvestments.length > 3) {
-      missingInvestments = missingInvestments.slice(0, 3);
-    }
-
-    return missingInvestments;
-  }
-
-  console.log("aqui", data?.[4].toNumber());
-
   // return <div>end</div>;
   if (hasEntryNFTLoading) return <div>Loading...</div>;
 
@@ -737,8 +704,8 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
             Our Suggestions for you
           </h2>
         }
-        <div className="mx-auto flex  w-full max-w-screen-lg gap-[52px]">
-          {/* <Carousel
+
+        {/* <Carousel
             id="4"
             className="w-full pt-[132px]"
             title={<h2 className="text-2xl">Our Suggestions for you</h2>}
@@ -751,7 +718,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
             )}
           /> */}
 
-          {getMissingInvestments(
+        {/* {getMissingInvestments(
             props.allInvestments,
             props.userInvestments
           ).map((investment) => (
@@ -765,9 +732,15 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
               address={investment.address}
               level={investment.level.basicLevel.title}
             />
-          ))}
+          ))} */}
+        <Suggestions
+          investments={getMissingInvestments(
+            props.allInvestments,
+            props.userInvestments
+          )}
+        />
 
-          {/* {carouselItems.slice(0, 3).map((item, idx) => (
+        {/* {carouselItems.slice(0, 3).map((item, idx) => (
               <CarouselItem
                 key={idx}
                 title={item.title}
@@ -775,7 +748,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                 price={item.price}
               />
             ))} */}
-        </div>
       </div>
     </section>
     // <div className="flex flex-col w-full px-6 lg:px-3 mt-16 md:mt-0">

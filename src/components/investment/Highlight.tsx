@@ -9,7 +9,7 @@ import { Button } from "../ui/Button";
 const Highlight = ({ investment, totalInvested }: HighlightProps) => {
   const currentPhase = investment.restorationPhases?.at(0);
   return (
-    <div className="ml-[58px] flex flex-col py-[132px]">
+    <div className="ml-[58px] flex flex-col gap-12 py-[132px]">
       <h2 className=" text-2xl font-medium uppercase">Highlight</h2>
       <div className="flex gap-6">
         <div className="relative flex  w-1/3">
