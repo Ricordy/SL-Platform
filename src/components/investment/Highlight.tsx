@@ -26,8 +26,8 @@ const Highlight = ({ investment, totalInvested }: HighlightProps) => {
             ))}
           </Carousel>
         </div>
-        <div className="flex flex-col">
-          <h2 className="pb-8 text-3xl font-medium text-primaryGreen">
+        <div className="flex flex-col gap-[32px]">
+          <h2 className="text-3xl font-medium text-primaryGreen">
             {investment.basicInvestment.car.basicInfo.title}
           </h2>
           <ProjectInfo

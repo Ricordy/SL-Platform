@@ -170,7 +170,7 @@ export const ProjectInfo = ({
   totalInvestment: number;
 }) => {
   return (
-    <div className="relative flex gap-4 pb-4">
+    <div className="relative flex gap-4">
       <div className="relative flex gap-2 pr-4">
         <span>Status:</span>
         <span className="font-medium">{status}</span>
