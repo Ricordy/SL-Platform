@@ -571,9 +571,9 @@ const Investment = ({
                 {investment.basicInvestment.car.shortDescription}
               </p>
             </div>
-            <div className="flex w-2/5 flex-col gap-8 bg-[#F6F9F8] p-6">
+            <div className="flex w-2/5 flex-col gap-8  p-6">
               {
-                <div className="flex flex-col gap-2 border-b border-tabInactive pl-24">
+                <div className="flex flex-col gap-2 rounded-md border border-b border-tabInactive bg-[#F6F9F8] py-[15px] pl-24">
                   <h4 className="text-ogBlack">Total Invested until now</h4>
                   <span className="text-3xl font-medium tracking-wider text-primaryGreen">
                     <NumericFormat
@@ -600,7 +600,7 @@ const Investment = ({
                   </h4>
                 </div>
               }
-              <div className="flex flex-col justify-start gap-5 rounded-md px-16 py-2 align-middle text-ogBlack">
+              <div className="flex flex-col justify-start gap-5 rounded-md bg-[#F6F9F8] px-16 py-[32px] align-middle text-ogBlack">
                 <h3 className="text-black">Especifications</h3>
                 <div>
                   <span>Contract Address:</span>
@@ -620,7 +620,7 @@ const Investment = ({
                   </span>
                 </div>
 
-                <div className="flex w-full justify-between gap-10 pb-2">
+                <div className="flex w-full justify-between gap-10">
                   <div className="mr-3 flex flex-col ">
                     <span>Total Production</span>
                     <span className="text-black">
