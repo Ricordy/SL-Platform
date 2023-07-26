@@ -1541,6 +1541,19 @@ export const SLCoreABI = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "level",
+        type: "uint256",
+      },
+    ],
+    name: "mintTest",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "from",
         type: "address",
@@ -2392,6 +2405,19 @@ export const FactoryABI = [
         internalType: "address",
         name: "contractAddress",
         type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getTotalInvestedInPlatform",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "platformTotal",
+        type: "uint256",
       },
     ],
     stateMutability: "view",

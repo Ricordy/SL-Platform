@@ -163,6 +163,10 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
         ...SLCoreContract,
         functionName: "getCurrentEntryBatchRemainingTokens",
       },
+      {
+        ...SlFactoryContract,
+        functionName: "getTotalInvestedInPlatform",
+      },
       // {
       //   ...SlLogicsContract,
       //   functionName: "_userAllowedToClaimPiece",
@@ -511,7 +515,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
             <div className="flex flex-col">
               <span className="text-primaryGold">Total of entries left:</span>
               <span className="text-4xl font-semibold text-white">
-                {data?.[4].toNumber()}
+                {data?.[4]?.toNumber()}
               </span>
             </div>
             <div className="flex flex-col">
@@ -530,11 +534,11 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
             </div>
             <div className="flex flex-col">
               <span className="text-primaryGold">
-                Toal invested in classics:
+                Total invested in classics:
               </span>
               <span className="text-4xl font-semibold text-white">
                 <NumericFormat
-                  value={504.6}
+                  value={data?.[5]?.toNumber() || 0}
                   displayType="text"
                   thousandSeparator=","
                   decimalScale={2}
