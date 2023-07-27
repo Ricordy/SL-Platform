@@ -673,7 +673,7 @@ const Puzzle: FC<PuzzleProps> = ({
                               />
                             </div>
                           ))}
-                        {currentLevel < 3 && !data?.[6]?.gt(currentLevel) && (
+                        {currentLevel < 4 && !data?.[6]?.gt(currentLevel) && (
                           <div className="h-90 relative flex flex-col items-center justify-center rounded-md border-2 border-[#C3A279] align-middle">
                             {(userPieces.length < 9 && (
                               <div className="flex flex-col items-center justify-center align-middle ">

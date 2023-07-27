@@ -124,7 +124,7 @@ const Level = ({
             </>
           )}
         </div>
-        {level < 3 && (
+        {level < 4 && (
           <Button
             variant={"outline"}
             onClick={claimLevel}

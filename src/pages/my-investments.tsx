@@ -511,14 +511,14 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
             </div>
             <div className="relative flex h-full w-full bg-[url('/bg/bg-buy-entry-nft.jpg')] bg-contain bg-center bg-no-repeat"></div>
           </div>
-          <div className="flex justify-center gap-12">
-            <div className="flex flex-col">
+          <div className="mt-[64px] flex justify-center gap-10 divide-x-2 pb-10">
+            <div className="flex flex-col ">
               <span className="text-primaryGold">Total of entries left:</span>
               <span className="text-4xl font-semibold text-white">
                 {data?.[4]?.toNumber()}
               </span>
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col pl-[24px]">
               <span className="text-primaryGold">
                 Amount of tickets already sold
               </span>
@@ -532,7 +532,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                 />
               </span>
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col pl-[24px]">
               <span className="text-primaryGold">
                 Total invested in classics:
               </span>
