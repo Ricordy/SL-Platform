@@ -169,6 +169,10 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
         ...SlFactoryContract,
         functionName: "getTotalInvestedInPlatform",
       },
+      {
+        ...SLCoreContract,
+        functionName: "entryIdsArray",
+      },
       // {
       //   ...SlLogicsContract,
       //   functionName: "_userAllowedToClaimPiece",
@@ -181,6 +185,8 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       console.log("Error", error);
     },
   });
+
+  console.log("data[6]", data?.[5]);
 
   // const { data: contractsTotalSupply }: { data: BigNumber } = useContractReads({
   //   contracts: [
