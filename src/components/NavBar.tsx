@@ -4,10 +4,13 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { SiweMessage } from "siwe";
 import {
+  Address,
   useAccount,
   useConnect,
+  useContractWrite,
   useDisconnect,
   useNetwork,
+  usePrepareContractWrite,
   useSignMessage,
 } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
@@ -18,6 +21,8 @@ import logo2 from "../../public/logo-2.svg";
 import logo3 from "../../public/logo-3.svg";
 import { cn } from "../lib/utils";
 import Modal from "./Modal";
+import { paymentTokenABI } from "~/utils/abis";
+import { BigNumber } from "ethers";
 
 const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
   const { address, isConnected, isConnecting, isDisconnected } = useAccount();
@@ -30,6 +35,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
   const { signMessageAsync } = useSignMessage();
   const { data: sessionData } = useSession();
   const [loading, setLoading] = useState(false);
+  const [TestingOpened, setTestingOpened] = useState(false);
 
   // State
   const [showConnection, setShowConnection] = useState(false);
@@ -80,6 +86,30 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
   useEffect(() => {
     setShowConnection(true);
   }, []);
+
+  /**
+   * Testing purpuses:
+   */
+
+  const PaymentToken = {
+    address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
+    abi: paymentTokenABI,
+  };
+  const { config: configMintPaymentToken } = usePrepareContractWrite({
+    ...PaymentToken,
+    functionName: "mint",
+    enabled: TestingOpened,
+    args: [1000000 as any as BigNumber],
+    onError(err) {
+      console.log(err);
+    },
+    // onSuccess() {
+    //   toast.success("Puzzle reivindicado com sucesso!");
+    // },
+  });
+
+  const { write: mintPaymentToken, isLoading: isLoadingMintToken } =
+    useContractWrite(configMintPaymentToken);
 
   return (
     <>
@@ -237,6 +267,8 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
             ) : null}
           </div>
 
+          {/** JUST FOR TESTING PURPOSES */}
+
           {showConnection && (
             <div className="w-full text-right">
               <button
@@ -259,6 +291,57 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
               </button>
             </div>
           )}
+
+          {sessionData && (
+            <div className="w-full text-right">
+              <button
+                className={cn(
+                  " flex h-[30px] w-[151px] shrink-0 justify-center rounded-md py-1 align-middle font-medium uppercase",
+                  bgWhite ? "bg-black/10" : "bg-white"
+                )}
+                onClick={() =>
+                  TestingOpened
+                    ? setTestingOpened(false)
+                    : setTestingOpened(true)
+                }
+              >
+                <div className="">For tester</div>
+              </button>
+            </div>
+          )}
+
+          {TestingOpened ? (
+            <Modal
+              isOpen={TestingOpened}
+              toggle={() => setTestingOpened(false)}
+              title=""
+              changeClose={true}
+            >
+              <div className="flex w-2/3   flex-col items-center justify-items-center font-sans">
+                Hello, welcome Legendary Tetster:
+                <br />
+                <br />
+                1. Feel free to mint $100.000 of our TestCoin:
+                <button
+                  onClick={mintPaymentToken}
+                  className=" h-8 w-36 rounded-md bg-sky-400"
+                >
+                  {" "}
+                  MINT $100.000
+                </button>
+                <div>
+                  2. From here you can mint your entry nft, do that by going to
+                  /my-investments, or
+                  <a href="/my-investments" className=" text-blue-800">
+                    {" "}
+                    click me
+                  </a>
+                </div>
+              </div>
+            </Modal>
+          ) : null}
+
+          {/** END HERE TESTING PORPUSES */}
 
           {/* <ConnectKitButton
                customTheme={{

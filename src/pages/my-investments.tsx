@@ -16,6 +16,8 @@ import {
   usePrepareContractWrite,
   useWaitForTransaction,
   type Address,
+  useSigner,
+  useContract,
 } from "wagmi";
 import { type InvestmentProps } from "~/@types/investment";
 import { type TransactionProps } from "~/@types/transaction";
@@ -309,13 +311,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       abi: SLCoreABI,
       functionName: "mintEntry",
       enabled: false,
-      // onError(err) {
-      //toast.error(JSON.stringify(err));
-      // console.log("mintEntry", err.data.message);
-      // },
-      // onSuccess() {
-      // console.log("Allowed to mintEntryNFT");
-      // },
     });
 
   const { data: dataMintNFT, write: mintNFT } =
@@ -339,6 +334,21 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     enabled: isConnected,
     // chainId: 31337,
   });
+
+  const { data: signerData } = useSigner();
+
+  const paymentTokenContract = useContract({
+    address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS,
+    abi: paymentTokenABI,
+    signerOrProvider: signerData,
+  });
+
+  const slcoreSigned = useContract({
+    address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS,
+    abi: SLCoreABI,
+    signerOrProvider: signerData,
+  });
+
   const myMint = async () => {
     console.log(userPaymentTokenBalance);
 
@@ -364,9 +374,42 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
           return toast.error("You already minted the NFT!");
         }
         if (result.error.stack.indexOf("ERC20: insufficient allowance") > -1) {
-          await refecthPrepareApprove();
-          approve?.();
-          mintNFT?.();
+          //await refecthPrepareApprove();
+          // approve?.();
+          // mintNFT?.();
+          const results =
+            paymentTokenContract &&
+            (await paymentTokenContract
+              ?.connect(signerData)
+              .approve(
+                process.env.NEXT_PUBLIC_SLLOGIC_ADDRESS as any as Address,
+                entryNFTPrice
+              ));
+
+          await toast.promise(results.wait(), {
+            loading: "Approving...",
+            success: "Approved",
+            error: "Error approving",
+          });
+
+          const results2 =
+            SLCoreContract &&
+            (await slcoreSigned?.connect(signerData)?.mintEntry());
+
+          await toast.promise(
+            results2.wait(),
+            {
+              loading: "Minting entry...",
+              success: "Minted!",
+              error: "Error while minting",
+            },
+            {
+              success: {
+                duration: 5000,
+                icon: "🔥",
+              },
+            }
+          );
         }
       } else {
         mintNFT?.();
