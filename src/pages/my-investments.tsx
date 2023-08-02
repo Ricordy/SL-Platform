@@ -171,7 +171,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       },
       {
         ...SLCoreContract,
-        functionName: "entryIdsArray",
+        functionName: "getAllSoldEntryNfts",
       },
       // {
       //   ...SlLogicsContract,
@@ -572,13 +572,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                 Amount of tickets already sold
               </span>
               <span className="text-4xl font-semibold text-white">
-                <NumericFormat
-                  value={504.6}
-                  displayType="text"
-                  thousandSeparator=","
-                  decimalScale={2}
-                  prefix="$"
-                />
+                {data?.[6]?.toNumber()}
               </span>
             </div>
             <div className="flex flex-col pl-[24px]">
