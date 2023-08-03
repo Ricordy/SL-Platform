@@ -37,6 +37,8 @@ import { InvestmentsProps } from "~/pages/my-investments";
 import { getSession } from "next-auth/react";
 import Suggestions from "~/components/Suggestions";
 import { TransactionProps } from "~/@types/transaction";
+import { Gallery, Item } from "react-photoswipe-gallery";
+import "photoswipe/dist/photoswipe.css";
 
 dayjs.extend(localizedFormat);
 
@@ -118,46 +120,65 @@ const InvestmentGallery = ({ images }) => {
     setPhotoIndex(index == 2 ? 0 : index + 1);
   };
   return (
-    <>
-      <div className="relative mb-9 grid grid-cols-1 gap-3 md:grid-cols-[2fr_1fr]">
-        <div className="flex">
-          <Image
-            src={images[0].url}
-            width={765}
-            height={400}
-            alt="Gallery"
-            className="cursor-pointer rounded-md"
-            onClick={() => openLightbox(0)}
-          />
-        </div>
-        <div className="flex flex-col gap-3">
-          <Image
-            src={images[1].url}
-            width={248}
-            height={200}
-            alt="Gallery"
-            className="cursor-pointer rounded-md"
-            onClick={() => openLightbox(1)}
-          />
-          <Image
-            src={images[2].url}
-            width={248}
-            height={200}
-            alt="Gallery"
-            className="cursor-pointer rounded-md"
-            onClick={() => openLightbox(2)}
-          />
-        </div>
+    <Gallery>
+      <div className="grid grid-cols-3 grid-rows-2 gap-4">
+        <Item
+          original={images[0].url}
+          thumbnail={images[0].url}
+          width="499"
+          height="384"
+        >
+          {({ ref, open }) => (
+            <Image
+              className="col-span-2 row-span-2 cursor-pointer rounded-md"
+              ref={ref as React.MutableRefObject<HTMLImageElement>}
+              alt="Car Image"
+              width={765}
+              height={400}
+              onClick={open}
+              src={images[0].url}
+            />
+          )}
+        </Item>
+
+        <Item
+          original={images[1].url}
+          thumbnail={images[1].url}
+          width="248"
+          height="200"
+        >
+          {({ ref, open }) => (
+            <Image
+              className="w-full max-w-full cursor-pointer rounded-md object-cover"
+              ref={ref as React.MutableRefObject<HTMLImageElement>}
+              alt="Car Image"
+              width={248}
+              height={200}
+              onClick={open}
+              src={images[1].url}
+            />
+          )}
+        </Item>
+        <Item
+          original={images[2].url}
+          thumbnail={images[2].url}
+          width="248"
+          height="200"
+        >
+          {({ ref, open }) => (
+            <Image
+              className="col-start-3 w-full max-w-full cursor-pointer rounded-md object-cover"
+              ref={ref as React.MutableRefObject<HTMLImageElement>}
+              alt="Car Image"
+              width={248}
+              height={200}
+              onClick={open}
+              src={images[2].url}
+            />
+          )}
+        </Item>
       </div>
-      {isOpen && (
-        <Lightbox
-          mainSrc={images[photoIndex].url}
-          onCloseRequest={closeLightbox}
-          clickOutsideToClose={true}
-          onMovePrevRequest={() => moveNext(photoIndex)}
-        />
-      )}
-    </>
+    </Gallery>
   );
 };
 export const ProjectInfo = ({
