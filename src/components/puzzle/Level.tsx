@@ -3,6 +3,8 @@ import Image from "next/image";
 import { type ReactNode } from "react";
 import { cn } from "~/lib/utils";
 import { Button } from "../ui/Button";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
 interface LevelProps {
   level: number;
@@ -25,6 +27,7 @@ const Level = ({
   claimLevel,
 }: LevelProps) => {
   const collectedNFTs = userLevel > level ? 10 : userPieces.length;
+  const percentage = collectedNFTs * 10;
 
   return (
     <div
@@ -72,10 +75,48 @@ const Level = ({
       <div className="flex w-full flex-col items-center justify-center gap-6">
         <div
           className={cn(
-            "flex h-[238px] w-[238px] flex-col items-center justify-center rounded-full border-8 ",
+            "flex h-[238px] w-[238px] flex-col items-center justify-center  ",
             userLevel > level ? "border-primaryGold" : "border-neutral-400/50"
           )}
         >
+          <div className="absolute top-11 w-60">
+            <CircularProgressbar
+              value={percentage}
+              text={level > userLevel ? "" : `${percentage}%`}
+              strokeWidth={3.5}
+              styles={{
+                // Customize the root svg element
+                root: {},
+                // Customize the path, i.e. the "completed progress"
+                path: {
+                  // Path color
+                  stroke: `rgba(195, 162, 121)`, //, ${percentage / 100} for opacity
+                  // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
+                  strokeLinecap: "butt",
+                  // Customize transition animation
+                  transition: "stroke-dashoffset 0.5s ease 0s",
+                },
+                // Customize the circle behind the path, i.e. the "total progress"
+                trail: {
+                  // Trail color
+                  stroke: "#d6d6d6",
+                  // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
+                  strokeLinecap: "butt",
+                  // Rotate the trail
+                  transform: "rotate(0.25turn)",
+                  transformOrigin: "center center",
+                },
+                // Customize the text
+                text: {
+                  // Text color
+                  fill: "#C3A279",
+                  // Text size
+                  fontSize: "22px",
+                },
+              }}
+            />
+          </div>
+
           {level > userLevel ? (
             <Image
               src="/icons/locker.svg"
@@ -86,10 +127,10 @@ const Level = ({
             />
           ) : (
             <>
-              <span className="w-[119.07px] text-center text-[14px] font-normal leading-none tracking-wide text-neutral-400">
+              <span className=" absolute top-28 w-[119.07px]  text-center text-[14px] font-normal leading-none tracking-wide text-neutral-400">
                 Progress:
               </span>
-              <span
+              {/* <span
                 className={cn(
                   "w-[91px] text-center text-[48px] font-normal leading-normal ",
                   userLevel > level ? "text-primaryGold" : "text-white"
@@ -99,16 +140,17 @@ const Level = ({
                   ? "100"
                   : ((userPieces.length / 10) * 100).toFixed(0)}
                 %
-              </span>
-              <span className="text-center text-[14px] font-normal leading-none tracking-wide text-neutral-400">
+              </span> */}
+              <span className="absolute top-48 text-center text-[14px] font-normal leading-none tracking-wide text-neutral-400">
                 NFT Collected:
               </span>
+              <div></div>
               <span
-                className={
+                className={`fixed top-52 ${
                   userLevel > level || userPieces.length > 0
                     ? "text-primaryGold"
                     : ""
-                }
+                }`}
               >
                 <span>{collectedNFTs}</span>{" "}
                 <span

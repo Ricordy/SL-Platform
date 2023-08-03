@@ -14,11 +14,16 @@ import Carousel from "../components/Carousel";
 import NavBar from "../components/NavBar";
 import { investmentABI } from "~/utils/abis";
 import { cn } from "~/lib/utils";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 interface ActiveInvestmentsProps {
   investments: InvestmentProps[];
 }
 const Home: NextPage = (props: any) => {
   const { isConnected, isDisconnected, address: walletAddress } = useAccount();
+
+
+  const percentage = 66;
 
   // const { data: contractTotal } = useContractRead({
   //   address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
@@ -115,7 +120,6 @@ const Home: NextPage = (props: any) => {
             ))}
           </div>
         </div>
-
         <div className="relative left-1/2 z-20 mx-auto -ml-[570px] -mt-[100px]  min-h-[500px] max-w-[1338px]">
           <Carousel
             id="1"
@@ -155,7 +159,6 @@ const Home: NextPage = (props: any) => {
           />
         </div>
         {/* My Puzzle */}
-
         <div className="relative left-1/2 mx-auto -ml-[570px] w-full max-w-[1338px] ">
           <Puzzle
             isConnected={isConnected}
@@ -165,7 +168,6 @@ const Home: NextPage = (props: any) => {
             dbLevels={props.levels}
           />
         </div>
-
         <div className="flex w-full rounded-t-3xl bg-black pb-[132px] pt-[72px]">
           <Posts
             posts={props.posts}
