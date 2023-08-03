@@ -26,7 +26,8 @@ const Level = ({
   nextProfitRange,
   claimLevel,
 }: LevelProps) => {
-  const collectedNFTs = userLevel > level ? 10 : userPieces.length;
+  const collectedNFTs =
+    userLevel && userLevel > level ? 10 : userPieces.length || 0;
   const percentage = collectedNFTs * 10;
 
   return (
@@ -34,9 +35,11 @@ const Level = ({
       style={{ backgroundImage: `url(${userLevel >= level ? bg : ""})` }}
       className={cn(
         "border-primary flex min-h-[395px] max-w-6xl items-center justify-center gap-6 rounded-md border bg-cover ",
-        level > userLevel
-          ? "bg-contactBackground text-tabInactive"
-          : "text-white"
+        userLevel
+          ? level > userLevel
+            ? "bg-contactBackground text-tabInactive"
+            : "text-white"
+          : "bg-contactBackground text-tabInactive"
       )}
     >
       <div className="flex w-full flex-col gap-5 p-6 px-16">
@@ -52,7 +55,11 @@ const Level = ({
         <p
           className={cn(
             " text-[16px] font-light leading-normal ",
-            level > userLevel ? "text-tabInactive" : "text-white"
+            userLevel
+              ? level > userLevel
+                ? "text-tabInactive"
+                : "text-white"
+              : "text-tabInactive"
           )}
         >
           {description}
@@ -61,7 +68,11 @@ const Level = ({
           <span
             className={cn(
               "text-[14px] font-normal uppercase leading-none tracking-wide",
-              level > userLevel ? "text-tabInactive" : "text-white"
+              userLevel
+                ? level > userLevel
+                  ? "text-tabInactive"
+                  : "text-white"
+                : "text-tabInactive"
             )}
           >
             Next level:{" "}
@@ -76,13 +87,19 @@ const Level = ({
         <div
           className={cn(
             "flex h-[238px] w-[238px] flex-col items-center justify-center  ",
-            userLevel > level ? "border-primaryGold" : "border-neutral-400/50"
+            userLevel
+              ? userLevel > level
+                ? "border-primaryGold"
+                : "border-neutral-400/50"
+              : "border-neutral-400/50"
           )}
         >
           <div className="absolute top-11 w-60">
             <CircularProgressbar
               value={percentage}
-              text={level > userLevel ? "" : `${percentage}%`}
+              text={
+                userLevel ? (level > userLevel ? "" : `${percentage}%`) : ""
+              }
               strokeWidth={3.5}
               styles={{
                 // Customize the root svg element
@@ -117,20 +134,21 @@ const Level = ({
             />
           </div>
 
-          {level > userLevel ? (
-            <Image
-              src="/icons/locker.svg"
-              width={0}
-              height={0}
-              className="w-2/3"
-              alt="Locked"
-            />
-          ) : (
-            <>
-              <span className=" absolute top-28 w-[119.07px]  text-center text-[14px] font-normal leading-none tracking-wide text-neutral-400">
-                Progress:
-              </span>
-              {/* <span
+          {userLevel ? (
+            level > userLevel ? (
+              <Image
+                src="/icons/locker.svg"
+                width={0}
+                height={0}
+                className="w-2/3"
+                alt="Locked"
+              />
+            ) : (
+              <>
+                <span className=" absolute top-28 w-[119.07px]  text-center text-[14px] font-normal leading-none tracking-wide text-neutral-400">
+                  Progress:
+                </span>
+                {/* <span
                 className={cn(
                   "w-[91px] text-center text-[48px] font-normal leading-normal ",
                   userLevel > level ? "text-primaryGold" : "text-white"
@@ -141,29 +159,38 @@ const Level = ({
                   : ((userPieces.length / 10) * 100).toFixed(0)}
                 %
               </span> */}
-              <span className="absolute top-48 text-center text-[14px] font-normal leading-none tracking-wide text-neutral-400">
-                NFT Collected:
-              </span>
-              <div></div>
-              <span
-                className={`fixed top-52 ${
-                  userLevel > level || userPieces.length > 0
-                    ? "text-primaryGold"
-                    : ""
-                }`}
-              >
-                <span>{collectedNFTs}</span>{" "}
-                <span
-                  className={
-                    userLevel > level || userPieces.length > 0
-                      ? ""
-                      : "text-white"
-                  }
-                >
-                  | 10
+                <span className="absolute top-48 text-center text-[14px] font-normal leading-none tracking-wide text-neutral-400">
+                  NFT Collected:
                 </span>
-              </span>
-            </>
+                <div></div>
+                <span
+                  className={`fixed top-52 ${
+                    userLevel > level || userPieces.length > 0
+                      ? "text-primaryGold"
+                      : ""
+                  }`}
+                >
+                  <span>{collectedNFTs}</span>{" "}
+                  <span
+                    className={
+                      userLevel > level || userPieces.length > 0
+                        ? ""
+                        : "text-white"
+                    }
+                  >
+                    | 10
+                  </span>
+                </span>
+              </>
+            )
+          ) : (
+            <Image
+              src="/icons/locker.svg"
+              width={0}
+              height={0}
+              className="w-2/3"
+              alt="Locked"
+            />
           )}
         </div>
         {level < 4 && (

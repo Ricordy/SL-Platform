@@ -189,6 +189,8 @@ const Puzzle: FC<PuzzleProps> = ({
       data?.[6]?.toNumber() == currentLevel,
   });
 
+  console.log("dblevels", dbLevels);
+
   const { write: claimLevel, isLoading: isLoadingClaimLevel } =
     useContractWrite(configClaimLevel);
   // console.log("invested>>>", BigNumber.from(data[3]).toNumber());
