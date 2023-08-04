@@ -335,6 +335,14 @@ const Investment = ({
     enabled: !!investment,
   });
 
+  const { data: contractLevel } = useContractRead({
+    address: investment.address,
+    abi: investmentABI,
+    functionName: "CONTRACT_LEVEL",
+    watch: false,
+    // select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
+    enabled: !!investment,
+  });
   const {
     data: userLevel,
     error,
@@ -577,6 +585,7 @@ const Investment = ({
               }
               minToInvest={Number(minToInvest)}
               paymentTokenBalance={Number(paymentTokenBalance?.div(10 ** 6))}
+              contractLevel={contractLevel as any as number}
               userLevel={userLevel as any as number}
             />
           </div>

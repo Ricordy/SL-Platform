@@ -25,6 +25,7 @@ type investmentProps = {
   colorCombination: string;
   className: string;
   paymentTokenBalance: number;
+  contractLevel: number;
   userLevel: number;
 };
 
@@ -42,10 +43,13 @@ export const InvestmentModal = ({
   colorCombination,
   className,
   paymentTokenBalance,
+  contractLevel,
   userLevel,
 }: investmentProps) => {
   const { data: signerData } = useSigner();
   const { isOpen: isOpenModalEntryNFT, toggle: toggleModalEntryNFT } =
+    useModal();
+  const { isOpen: isOpenWrongLevelModal, toggle: toggleWrongLevelModal } =
     useModal();
 
   const {
@@ -249,6 +253,22 @@ export const InvestmentModal = ({
       </Modal>
     );
   }
+
+  function ModalWrongLevel() {
+    return (
+      <Modal
+        isOpen={isOpenWrongLevelModal}
+        toggle={toggleWrongLevelModal}
+        title="Oopss... It seems that you're not such a legend yet"
+      >
+        <div className="flex w-full flex-col justify-between">
+          <div className="mt-2">Try risking a little bit more....</div>
+          <div> Until then, take a look at some cars design just for you:</div>
+          <div>CARS CARS CARS CARS</div>
+        </div>
+      </Modal>
+    );
+  }
   function ModalInvestNow() {
     return (
       <Modal
@@ -366,7 +386,11 @@ export const InvestmentModal = ({
           <Button
             className="bg-primaryGreen text-white"
             onClick={() => {
-              userLevel != 0 ? toggleModalInvest() : toggleModalEntryNFT();
+              userLevel == 0
+                ? toggleModalEntryNFT()
+                : contractLevel > userLevel
+                ? toggleWrongLevelModal()
+                : toggleModalInvest();
             }}
           >
             Invest Now
@@ -390,6 +414,7 @@ export const InvestmentModal = ({
       </aside>
       <ModalInvestNow />
       <ModalEntryNFT />
+      <ModalWrongLevel />
     </>
   );
 };
