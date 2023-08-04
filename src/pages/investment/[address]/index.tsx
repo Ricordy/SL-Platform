@@ -549,6 +549,8 @@ const Investment = ({
     return uniqueFromValues.size;
   }
 
+  console.log("investment", investment);
+
   return (
     <>
       <Head>
@@ -558,10 +560,18 @@ const Investment = ({
         <NavBar bgWhite={true} />
         <div className="mx-auto flex w-full max-w-screen-lg flex-col">
           <div className="sticky top-0 z-20 mx-auto flex w-full items-center justify-between bg-white py-4">
-            <div className="flex flex-col ">
-              <h2 className="text-4xl font-medium">
-                {investment.basicInvestment.car.basicInfo.title}{" "}
-              </h2>
+            <div className="flex flex-col">
+              <div className="flex justify-center gap-2 align-middle ">
+                <h2 className=" text-4xl font-medium">
+                  {investment.basicInvestment.car.basicInfo.title}
+                </h2>
+                {investment.level.basicLevel.title && (
+                  <div className="z-10 mt-2 h-fit w-fit rounded-lg border border-primaryGold bg-white px-2 py-1 text-xs text-primaryGold ">
+                    {investment.level.basicLevel.title}
+                  </div>
+                )}
+              </div>
+
               <p>{investment.basicInvestment.car.subtitle}</p>
             </div>
 
@@ -1092,6 +1102,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           }
           level {
             profitRange
+            basicLevel {
+                title
+              }
           }
           address
           salesEnd
