@@ -25,6 +25,7 @@ type investmentProps = {
   colorCombination: string;
   className: string;
   paymentTokenBalance: number;
+  userLevel: number;
 };
 
 export const InvestmentModal = ({
@@ -41,6 +42,7 @@ export const InvestmentModal = ({
   colorCombination,
   className,
   paymentTokenBalance,
+  userLevel,
 }: investmentProps) => {
   const { data: signerData } = useSigner();
   const { isOpen: isOpenModalEntryNFT, toggle: toggleModalEntryNFT } =
@@ -364,7 +366,7 @@ export const InvestmentModal = ({
           <Button
             className="bg-primaryGreen text-white"
             onClick={() => {
-              toggleModalInvest();
+              userLevel != 0 ? toggleModalInvest() : toggleModalEntryNFT();
             }}
           >
             Invest Now

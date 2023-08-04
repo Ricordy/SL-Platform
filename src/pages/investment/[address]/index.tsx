@@ -27,14 +27,14 @@ import { type TransactionItemProps } from "~/@types/TransactionItem";
 import { type InvestmentProps } from "~/@types/investment";
 import { InvestmentModal } from "~/components/modal/InvestmentModal";
 import { CONTRACT_STATUS_WITHDRAW } from "~/constants";
-import { investmentABI, paymentTokenABI } from "~/utils/abis";
+import { SLCoreABI, investmentABI, paymentTokenABI } from "~/utils/abis";
 import NavBar from "../../../components/NavBar";
 import { Button } from "../../../components/ui/Button";
 import ProgressBar from "../../../components/ui/ProgressBar";
 import { ExternalLink } from "../../../components/ui/icons/External";
 import { cn, formatAddress, getMissingInvestments } from "../../../lib/utils";
 import { InvestmentsProps } from "~/pages/my-investments";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import Suggestions from "~/components/Suggestions";
 import { TransactionProps } from "~/@types/transaction";
 import { Gallery, Item } from "react-photoswipe-gallery";
@@ -298,6 +298,7 @@ const Investment = ({
 }: InvestmentDetailsProps) => {
   const { address: walletAddress } = useAccount();
   const { data: signerData } = useSigner();
+  const { data: sessionData } = useSession();
 
   const [canWithdraw, setCanWithdraw] = useState(false);
   // console.log(investment);
@@ -308,6 +309,11 @@ const Investment = ({
     signerOrProvider: signerData,
   });
 
+  // const SLCoreContract = useContract({
+  //   address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS,
+  //   abi: SLCoreABI,
+  //   signerOrProvider: signerData,
+  // });
   // const paymentTokenContract = useContract({
   //   address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
   //   abi: paymentTokenABI,
@@ -327,6 +333,18 @@ const Investment = ({
     watch: false,
     // select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
     enabled: !!investment,
+  });
+
+  const {
+    data: userLevel,
+    error,
+    isLoading,
+  } = useContractRead({
+    address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
+    abi: SLCoreABI,
+    functionName: "whichLevelUserHas",
+    args: [sessionData?.user.id as Address],
+    // watch: true,
   });
 
   // const { data: contractTotal1 } = useBalance({
@@ -559,6 +577,7 @@ const Investment = ({
               }
               minToInvest={Number(minToInvest)}
               paymentTokenBalance={Number(paymentTokenBalance?.div(10 ** 6))}
+              userLevel={userLevel as any as number}
             />
           </div>
           {investment.basicInvestment.car.gallery.length > 0 && (
