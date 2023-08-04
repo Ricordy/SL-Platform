@@ -517,6 +517,10 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
 
   const userInv = extractUniqueInvestments(props.userTransactions);
 
+  function noDecimal(value) {
+    return value / 10 ** 6;
+  }
+
   // return <div>end</div>;
   if (hasEntryNFTLoading) return <div>Loading...</div>;
 
@@ -581,7 +585,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
               </span>
               <span className="text-4xl font-semibold text-white">
                 <NumericFormat
-                  value={data?.[5]?.toNumber() || 0}
+                  value={noDecimal(data?.[5]?.toNumber()) || 0}
                   displayType="text"
                   thousandSeparator=","
                   decimalScale={2}
