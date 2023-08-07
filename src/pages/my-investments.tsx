@@ -90,7 +90,9 @@ export const TransactionItem = (items, userInvestedContracts) => {
                 height={53}
                 alt="Car"
               />
-              <span>{item.investment.basicInvestment.car.basicInfo.title}</span>
+              <span className=" w-28 truncate">
+                {item.investment.basicInvestment.car.basicInfo.title}
+              </span>
               <span className=" text-primaryGold">
                 <NumericFormat
                   value={item.amountInvested}

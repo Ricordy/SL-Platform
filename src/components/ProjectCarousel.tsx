@@ -11,6 +11,7 @@ import { useContractRead, type Address } from "wagmi";
 import { investmentABI } from "~/utils/abis";
 import { type InvestmentProps } from "../pages/my-investments";
 import { NumericFormat } from "react-number-format";
+import NoInvestments from "./NoInvestments";
 // import "swiper/css/navigation";
 
 export interface CarouselItemProps {
@@ -42,7 +43,7 @@ const CarouselItem = ({
   });
 
   return (
-    <div className="  w-[416px] w-full  rounded-md">
+    <div className="w-full  rounded-md">
       <div
         className={cn(
           "relative flex min-h-[358px] w-full flex-col items-center justify-end gap-3 rounded-md bg-cover",
@@ -53,13 +54,13 @@ const CarouselItem = ({
         <h4 className="z-10 text-center text-2xl font-medium uppercase text-white">
           {title}
         </h4>
-        <div className="relative z-10 mt-[16px] flex w-full justify-center gap-3 pb-6 align-middle">
-          <div className="flex w-full items-center justify-evenly gap-3">
-            <div className="ml-3 mr-4 flex h-fit w-max flex-col pr-7">
+        <div className="relative z-10 mt-[16px] flex w-full justify-around gap-3 pb-6 align-middle">
+          <div className="flex w-full items-center justify-center gap-4">
+            <div className="flex h-fit w-full flex-col border-r-2  pl-4">
               <h4 className="  text-white">Status:</h4>
               <span className="font-bold text-white">{status}</span>
             </div>
-            <div className=" flex w-max flex-col border-x-2  pl-3 pr-[100px]">
+            <div className=" flex w-full flex-col border-r-2">
               <h4 className="text-white">Price:</h4>
               <span className="font-bold text-white">
                 <NumericFormat
@@ -71,7 +72,7 @@ const CarouselItem = ({
                 />
               </span>
             </div>
-            <div className="mr-10  flex h-fit w-max  flex-col  justify-self-start pl-1">
+            <div className="flex h-fit w-full flex-col">
               <h4 className="text-white">Progress:</h4>
               <span className=" font-bold text-white">
                 {String(
@@ -131,7 +132,6 @@ const ProjectCarousel: FC<CarouselProps> = ({
     setcurrentSlider(swiper.activeIndex);
   };
 
-  items = items;
   return (
     <div className={className ?? ""}>
       {title && (

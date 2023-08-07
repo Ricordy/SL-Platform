@@ -243,7 +243,7 @@ const TransactionItem = ({
   return (
     <div
       className={cn(
-        "flex h-full items-center justify-between",
+        "flex h-10 items-center justify-between",
         from === wallet ? "bg-primaryGold/20 hover:bg-primaryGold/30" : ""
       )}
     >
@@ -998,7 +998,7 @@ const Investment = ({
               </div>
               <div className="flex flex-col">
                 <h3>Transactions:</h3>
-                <div className="flex flex-1 flex-col  divide-y-2 rounded-md px-4 py-8">
+                <div className=" overflow-y-scrollable my-8 flex h-10 flex-col divide-y-2 scroll-smooth rounded-md bg-red-200 px-4">
                   {investment.transactions.map((transaction) => (
                     <TransactionItem
                       key={transaction.hash}

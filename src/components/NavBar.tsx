@@ -122,24 +122,8 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
         </Link>
         <div className="flex items-center justify-center gap-6">
           <div className="flex w-full  items-center justify-end gap-4">
-            {sessionData ? (
+            {sessionData && isConnected ? (
               <div className="flex w-full items-center justify-between gap-3">
-                {/* {sessionData?.user?.id ? (
-                      <Image
-                        width={"80"}
-                        height={"80"}
-                        alt={`${sessionData.user.id}`}
-                        className="mx-auto my-4 border-8 border-white/30"
-                        src={`${renderDataURI({
-                          seed: sessionData.user.id,
-                          size: 10,
-                          scale: 8,
-                        })}`}
-                      />
-                    ) : null} */}
-                {/* <code className="block rounded bg-black/20 p-4 text-white">
-                    {JSON.stringify(sessionData)}
-                  </code> */}
                 <Link
                   className={cn(
                     "w-44 text-center",
@@ -162,6 +146,21 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                     alt="Alert"
                   />
                 </Link>
+
+                <button
+                  className={cn(
+                    " flex h-[30px] w-[151px] shrink-0 justify-center rounded-md py-1 align-middle font-medium uppercase",
+                    bgWhite ? "bg-black/10" : "bg-white"
+                  )}
+                  onClick={() =>
+                    TestingOpened
+                      ? setTestingOpened(false)
+                      : setTestingOpened(true)
+                  }
+                >
+                  <div className="">For tester</div>
+                </button>
+
                 <div
                   className={cn(
                     "flex w-44 items-center justify-center gap-3 rounded-full border-2 bg-black bg-opacity-0 p-1 hover:bg-opacity-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75",
@@ -185,44 +184,6 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                     {sessionData.user.id.slice(0, 10)}
                   </span>
                 </div>
-                {/* Sign Out */}
-                {/* <button
-                  className="flex w-12 items-center justify-center rounded-full py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-                  onClick={onClickSignOut as () => void}
-                >
-                  <Image
-                    src={
-                      bgWhite ? "/icons/logout-black.svg" : "/icons/logout.svg"
-                    }
-                    alt="Sign Out"
-                    className="w-5"
-                    width={20}
-                    height={18}
-                  />
-                  hehehe
-                </button> */}
-                {/* {showConnection && isConnected && (
-                  <button
-                    className={cn(
-                      "flex w-12 items-center justify-center rounded-full py-3 font-semibold text-white no-underline transition",
-
-                      "bg-red-400/50 hover:bg-red-400"
-                    )}
-                    onClick={() => disconnect()}
-                  >
-                    <Image
-                      src={
-                        bgWhite
-                          ? "/icons/logout-black.svg"
-                          : "/icons/logout.svg"
-                      }
-                      alt="Log Out"
-                      className="w-5"
-                      width={20}
-                      height={18}
-                    />
-                  </button>
-                )} */}
               </div>
             ) : showConnection ? (
               <div className="w-full text-right">
@@ -270,44 +231,32 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
           {/** JUST FOR TESTING PURPOSES */}
 
           {showConnection && (
-            <div className="w-full text-right">
-              <button
-                className={cn(
-                  " flex h-[30px] w-[151px] shrink-0 justify-center rounded-md py-1 align-middle font-medium uppercase",
-                  bgWhite ? "bg-black/10" : "bg-white"
-                )}
-                onClick={() => (isConnected ? onClickSignOut() : connect())}
-              >
-                {isConnected || loading ? (
-                  <Image
-                    src={true ? "/icons/logout-black.svg" : "/icons/logout.svg"}
-                    alt="Log Out"
-                    width={20}
-                    height={18}
-                  />
-                ) : (
-                  <div className="">Connect Wallet</div>
-                )}
-              </button>
-            </div>
-          )}
-
-          {sessionData && (
-            <div className="w-full text-right">
-              <button
-                className={cn(
-                  " flex h-[30px] w-[151px] shrink-0 justify-center rounded-md py-1 align-middle font-medium uppercase",
-                  bgWhite ? "bg-black/10" : "bg-white"
-                )}
-                onClick={() =>
-                  TestingOpened
-                    ? setTestingOpened(false)
-                    : setTestingOpened(true)
-                }
-              >
-                <div className="">For tester</div>
-              </button>
-            </div>
+            <button
+              className={cn(
+                " flex h-[30px] shrink-0 justify-center rounded-md align-middle font-medium uppercase",
+                bgWhite ? "bg-white" : "",
+                isConnected ? "w-[24.74px]" : "w-[151px]"
+              )}
+              onClick={() => (isConnected ? onClickSignOut() : connect())}
+            >
+              {isConnected || loading ? (
+                <Image
+                  className="h-[24.74px] w-[24.74px] "
+                  src={
+                    bgWhite ? "/icons/logout-black.svg" : "/icons/logout.svg"
+                  }
+                  alt="Log Out"
+                  width={20}
+                  height={18}
+                />
+              ) : (
+                <div className="inline-flex h-[30px] w-[151px] items-center justify-center gap-2.5 rounded-md bg-white px-5 py-2.5">
+                  <div className="whitespace-nowrap text-sm font-medium uppercase leading-tight tracking-wide text-black">
+                    CONNECT WALLET
+                  </div>
+                </div>
+              )}
+            </button>
           )}
 
           {TestingOpened ? (

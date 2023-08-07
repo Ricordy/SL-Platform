@@ -28,10 +28,10 @@ export const CarouselItem = ({
   level,
 }: CarouselItemProps) => {
   return (
-    <div className=" w-full rounded-md">
+    <div className=" w-full rounded-md ">
       <div
         className={cn(
-          "relative flex min-h-[394px] w-full flex-col items-center justify-end gap-4 rounded-md bg-cover bg-center"
+          "relative flex min-h-[394px] w-full flex-col items-center justify-end gap-4 rounded-md border border-transparent bg-cover bg-center hover:border-primaryGold"
         )}
         style={{ backgroundImage: `url(${image})` }}
       >

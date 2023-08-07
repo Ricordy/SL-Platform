@@ -8,6 +8,7 @@ import { investmentStatusesData } from "../data/InvestmentStatuses";
 import { cn } from "../lib/utils";
 import ProjectCarousel from "./ProjectCarousel";
 import { Button } from "./ui/Button";
+import NoInvestments from "./NoInvestments";
 
 interface InvestmentsProps {
   isConnected: boolean;
@@ -127,58 +128,7 @@ export default function Investments({
           </Tab.Panels>
         </Tab.Group>
       )}
-      {!isConnected && (
-        <div className="ml-[58px] grid grid-flow-row auto-rows-auto grid-cols-3 justify-center gap-4 pb-[132px] ">
-          <div className="flex flex-col items-center rounded-md bg-puzzleProfitNotice p-8">
-            <h4 className="mb-4 text-2xl font-medium text-primaryGreen">
-              Start your investments
-            </h4>
-            <p className="mb-8 text-ogBlack">
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-              accusantium doloremque laudantium, totam.
-            </p>
-
-            <Button
-              variant={"outline"}
-              onClick={() => (isConnected ? disconnect() : connect())}
-            >
-              {isConnected ? (
-                <Image
-                  src={"/icons/logout.svg"}
-                  alt="Log Out"
-                  className="w-5"
-                  width={20}
-                  height={18}
-                />
-              ) : (
-                "Connect Wallet"
-              )}
-            </Button>
-            {/* {!isConnected && (
-              <ConnectKitButton
-                label="CONNECT WALLET"
-                customTheme={{
-                  "--ck-focus-color": "rgb(15, 85, 62)",
-                  "--ck-connectbutton-font-size": "14px",
-                  "--ck-connectbutton-color": "rgb(20,116,84)",
-                  "--ck-connectbutton-background": "rgb(255,255,255)",
-                  "--ck-connectbutton-hover-background": "rgb(20,116,84)",
-                  "--ck-connectbutton-hover-color": "rgb(255,255,255)",
-                  "--ck-connectbutton-border-radius": "6px",
-                  "--ck-connectbutton-box-shadow":
-                    "inset 0 0 0 1px rgb(20,116,84)",
-                }}
-              />
-            )} */}
-          </div>
-          <div className="flex justify-center rounded-md bg-puzzleProfitNotice">
-            <Image src="/icons/add.svg" width={63} height={63} alt="Add" />
-          </div>
-          <div className="flex justify-center rounded-md bg-puzzleProfitNotice">
-            <Image src="/icons/add.svg" width={63} height={63} alt="Add" />
-          </div>
-        </div>
-      )}
+      {!isConnected && <NoInvestments isConnected={isConnected} />}
     </section>
   );
 }
