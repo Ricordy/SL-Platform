@@ -73,6 +73,14 @@ export default function Investments({
                     "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2 "
                   )}
                 >
+                  {investmentStatus == investmentStatusesData[0] && (
+                    <NoInvestments
+                      active={false}
+                      buttonLabel="Start Investing"
+                      isConnected={isConnected}
+                      url="/our-cars"
+                    />
+                  )}
                   <ProjectCarousel
                     id={investmentStatus}
                     items={userInvestments.filter(
@@ -80,48 +88,7 @@ export default function Investments({
                         investment.basicInvestment.investmentStatus ==
                         investmentStatus
                     )}
-                    // items={investmentData.filter(
-                    //   (i) => i.status == investmentStatus
-                    // )}
                   />
-                  {/* <ul className="grid sm:grid-cols-2 grid-cols-1 gap-2">
-                {investmentData
-                  .filter((i) => i.status == investmentStatus)
-                  .map((investment) => (
-                    <li
-                      key={investment.id}
-                      className="relative rounded-md border  p-3 h-24 bg-gray-200 hover:bg-gray-100"
-                    >
-                      <h3 className="text-sm font-medium leading-5">
-                        {investment.title}
-                      </h3>
-
-                      <ul className="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500">
-                        <li>{investment.phase}</li>
-                        <li>&middot;</li>
-                        <li>
-                          <NumericFormat
-                            value={investment.amount}
-                            displayType="text"
-                            allowLeadingZeros
-                            thousandSeparator=","
-                            decimalScale={2}
-                          />
-                        </li>
-                        <li>&middot;</li>
-                        <li>{investment.percentage}%</li>
-                      </ul>
-
-                      <a
-                        href={`/investment/${investment.id}`}
-                        className={cn(
-                          "absolute inset-0 rounded-md",
-                          "ring-gray-400 focus:z-10 focus:outline-none focus:ring-2"
-                        )}
-                      />
-                    </li>
-                  ))}
-              </ul> */}
                 </Tab.Panel>
               );
             })}
