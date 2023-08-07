@@ -243,7 +243,7 @@ const TransactionItem = ({
   return (
     <div
       className={cn(
-        "flex h-10 items-center justify-between",
+        "flex h-10 items-center justify-between py-8 first:pt-4",
         from === wallet ? "bg-primaryGold/20 hover:bg-primaryGold/30" : ""
       )}
     >
@@ -260,7 +260,11 @@ const TransactionItem = ({
       </div>
       <span className="text-xs text-primaryGreen">{type}</span>
       <span>{dayjs(date).format("ll")}</span>
-      <Link href={`https://etherscan.io/tx/${hash}`} target="_blank">
+      <Link
+        href={`https://etherscan.io/tx/${hash}`}
+        className="pr-2"
+        target="_blank"
+      >
         <ExternalLink className="h-3 w-3" />
       </Link>
       {/* <div className="flex h-0.5 w-full bg-primaryGold/10"></div> */}
@@ -998,7 +1002,43 @@ const Investment = ({
               </div>
               <div className="flex flex-col">
                 <h3>Transactions:</h3>
-                <div className=" overflow-y-scrollable my-8 flex h-10 flex-col divide-y-2 scroll-smooth rounded-md bg-red-200 px-4">
+                <div className=" my-8 flex h-40 flex-col divide-y-[0.50px] divide-divideTransaction overflow-y-auto scroll-smooth rounded-md px-4">
+                  <TransactionItem
+                    key="3333"
+                    value={445}
+                    date="3333"
+                    type="deposit"
+                    hash="34343424"
+                    wallet="0x343434"
+                    from="0x454545"
+                  />
+                  <TransactionItem
+                    key="3333"
+                    value={445}
+                    date="3333"
+                    type="deposit"
+                    hash="34343424"
+                    wallet="0x343434"
+                    from="0x454545"
+                  />
+                  <TransactionItem
+                    key="3333"
+                    value={445}
+                    date="3333"
+                    type="deposit"
+                    hash="34343424"
+                    wallet="0x343434"
+                    from="0x454545"
+                  />
+                  <TransactionItem
+                    key="3333"
+                    value={445}
+                    date="3333"
+                    type="deposit"
+                    hash="34343424"
+                    wallet="0x343434"
+                    from="0x454545"
+                  />
                   {investment.transactions.map((transaction) => (
                     <TransactionItem
                       key={transaction.hash}

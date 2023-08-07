@@ -34,6 +34,7 @@ module.exports = {
         // tabInactive: "#757C79",
         tabInactive: "#8C9592",
         puzzleProfitNotice: "#F6F9F8",
+        divideTransaction: "#C2D1D9"
       },
     },
   },
