@@ -22,7 +22,6 @@ interface ActiveInvestmentsProps {
 const Home: NextPage = (props: any) => {
   const { isConnected, isDisconnected, address: walletAddress } = useAccount();
 
-
   const percentage = 66;
 
   // const { data: contractTotal } = useContractRead({
@@ -120,7 +119,7 @@ const Home: NextPage = (props: any) => {
             ))}
           </div>
         </div>
-        <div className="relative left-1/2 z-20 mx-auto -ml-[570px] -mt-[100px]  min-h-[500px] max-w-[1338px]">
+        <div className="relative left-1/2 z-20 mx-auto -ml-[570px] -mt-[100px]  min-h-[500px] max-w-[1290px]">
           <Carousel
             id="1"
             items={props.activeInvestments}
@@ -137,19 +136,11 @@ const Home: NextPage = (props: any) => {
               totalInvested={totalInvested?.toNumber() / 10 ** 6}
             />
           )}
-
-          {/* {isConnected && (
-            <Carousel
-              id="2"
-              className="py-[132px]"
-              title={<h2 className="text-2xl">My Favourites</h2>}
-            />
-          )} */}
         </div>
         {/* My Investments */}
         <div
           className={cn(
-            "relative left-1/2 z-20 mx-auto -ml-[570px]  min-h-[532px] w-full max-w-[1338px]",
+            "relative left-1/2 z-20 mx-auto -ml-[570px]  min-h-[532px] w-full max-w-[1290px]",
             isConnected ? "mt-[132px]" : "mt-0"
           )}
         >
@@ -159,7 +150,7 @@ const Home: NextPage = (props: any) => {
           />
         </div>
         {/* My Puzzle */}
-        <div className="relative left-1/2 mx-auto -ml-[570px] w-full max-w-[1338px] ">
+        <div className="relative left-1/2 mx-auto -ml-[570px] w-full max-w-[1290px] ">
           <Puzzle
             isConnected={isConnected}
             className="relative flex w-full  max-w-[1338px] flex-col pt-[132px]"

@@ -14,7 +14,7 @@ import {
 import { type PuzzleProps } from "~/@types/Puzzle";
 import { FactoryABI, SLCoreABI, SLLogicsABI } from "~/utils/abis";
 import useGetUserPuzzlePieces from "../hooks/useGetUserPuzzlePieces";
-import { cn } from "../lib/utils";
+import { cn, getPuzzleCollectionIds } from "../lib/utils";
 import { CarouselItem } from "./puzzle/Carousel";
 import Level from "./puzzle/Level";
 import { Button } from "./ui/Button";
@@ -114,7 +114,7 @@ const Puzzle: FC<PuzzleProps> = ({
       //   args: [userAddress, 1, 1, 0],
       // },
     ],
-    watch: true,
+    // watch: true,
     onError(error) {
       console.log("Error", error);
     },
@@ -125,7 +125,6 @@ const Puzzle: FC<PuzzleProps> = ({
   const {
     userPuzzlePieces,
     userPieces,
-    userTotalPieces,
     claimPieceProgressValue,
     claimPieceProgress,
   } = useGetUserPuzzlePieces({
@@ -134,9 +133,6 @@ const Puzzle: FC<PuzzleProps> = ({
     totalInvested: data?.[2 + currentLevel] as BigNumber,
     // watch: true,
   });
-
-  // console.log("data>>>>>", data);
-  // console.log("currentLEvel == data[6]?????>>>>", currentLevel == data[6]);
 
   const { data: dataUserAllowed, error: errorUserAllowed } = useContractRead({
     ...SlLogicsContract,
@@ -206,55 +202,13 @@ const Puzzle: FC<PuzzleProps> = ({
     locked: data?.[6]?.lt(idx + 1),
     profitRange: dbLevel.profitRange,
     description: dbLevel.description,
-    progress: ((userPieces.length / 10) * 100).toFixed(2),
+    progress: userPieces && ((userPieces.length / 10) * 100).toFixed(2),
     invested: noDecimals(Number(data?.[3 + idx])),
-    collected: userPieces.length.toString(),
+    collected: userPieces && userPieces.length.toString(),
     nft: dbLevel.nft?.url,
   }));
 
   const [profitNotification, setProfitNotification] = useState(true);
-
-  useEffect(() => {
-    // async function callContract() {
-    //   const provider = ethers.getDefaultProvider();
-    //   const contract = new ethers.Contract(
-    //     process.env.NEXT_PUBLIC_LOGICS_ADDRESS as Address,
-    //     SLLogicsABI,
-    //     provider
-    //   );
-    //   const works = await contract.userAllowedToClaimPiece(
-    //     userAddress,
-    //     BigNumber.from(currentLevel),
-    //     BigNumber.from(currentLevel), // data?.[6] as BigNumber,
-    //     BigNumber.from(3) // data?.[currentLevel - 1] as BigNumber,
-    //   );
-    //   console.log(works);
-    // }
-    // void callContract();
-    // console.log(userPieces);
-    // console.log(userPuzzlePieces);
-    // console.log("userAddress", userAddress);
-    // console.log("currentLevel", currentLevel);
-    // console.log("data?.[6]", data?.[6].toNumber());
-    // console.log("data[currentLevel - 1]", data[currentLevel - 1]?.toNumber());
-    // console.log("sllogics", process.env.NEXT_PUBLIC_SLLOGIC_ADDRESS);
-    // console.log("puzzle", process.env.NEXT_PUBLIC_PUZZLE_ADDRESS);
-    // console.log(
-    //   "debug",
-    //   data?.[6].toNumber(),
-    //   "/",
-    //   data?.[currentLevel - 1]?.toNumber(),
-    //   "/",
-    //   currentLevel,
-    //   "/",
-    //   userAddress,
-    //   "/",
-    //   "dataUserAllowed",
-    //   dataUserAllowed
-    // );
-    // console.log(data[6].toNumber());
-    // console.log(currentLevel);
-  }, [currentLevel]);
 
   return (
     <section
@@ -267,175 +221,6 @@ const Puzzle: FC<PuzzleProps> = ({
         </h2>
       )}
 
-      {/*<Tab.Group
-        onChange={(index) => {
-          setCurrentLevel(index + 1);
-        }}
-      >
-        <Tab.List className="ml-[58px] flex w-full border-b border-b-gray-900/20">
-          {levels.map((level) => (
-            <Tab
-              key={level.title}
-              className={({ selected }) =>
-                cn(
-                  "flex min-w-fit justify-center gap-3 px-6 pb-4  text-2xl font-normal leading-5 ",
-                  "focus:outline-none",
-                  selected
-                    ? "border-b-4 border-primaryGreen bg-white font-semibold text-primaryGreen"
-                    : " text-tabInactive hover:bg-white/[0.12] hover:text-tabInactive/80"
-                )
-              }
-            >
-              {(level.locked || !isConnected) && (
-                <Image
-                  alt="Locked"
-                  src="/icons/locked.svg"
-                  width={20}
-                  height={20}
-                />
-              )}
-              {level.title}{" "}
-            </Tab>
-          ))}
-        </Tab.List>
-        <Tab.Panels className=" flex w-full max-w-screen-2xl">
-          {levels.map((level, idx) => {
-            return (
-              <Tab.Panel
-                key={idx}
-                className={cn(
-                  "w-full rounded-xl pb-[132px] pt-8",
-                  "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2"
-                )}
-              >
-                <div className="flex flex-col gap-8">
-                  {isConnected && (
-                    <div className="ml-[58px] mr-[256px] flex flex-col gap-8">
-                      {profitNotification && (
-                        <div className="relative flex w-full flex-col items-start justify-end rounded-md bg-puzzleProfitNotice p-8">
-                          <div className=" items absolute right-4 top-4 flex">
-                            <Image
-                              onClick={() => setProfitNotification(false)}
-                              src="/icons/close.svg"
-                              width={18}
-                              height={18}
-                              alt="Close"
-                              className=" cursor-pointer"
-                            />
-                          </div>
-                          <h3 className="ml-[124px]tracking-wider pb-4 text-2xl uppercase">
-                            You have{" "}
-                            <span className="text-primaryGold">
-                              {level.profitRange.split("-")[0]}% to{" "}
-                              {level.profitRange.split("-")[1]}% profit
-                            </span>
-                          </h3>
-
-                          <p className="max-w-xl pb-4 font-light">
-                            {level.description}
-                          </p>
-                          {idx < 2 && (
-                            <span className="text-xs font-medium uppercase">
-                              Next level:{" "}
-                              {levels.at(idx + 1).profitRange.split("-")[0]}% to{" "}
-                              {levels.at(idx + 1).profitRange.split("-")[1]}%{" "}
-                            </span>
-                          )}
-                        </div>
-                      )}
-                      <div className="flex gap-6">
-                        <div className="flex gap-3">
-                          <p className="text-md">
-                            Progress:{" "}
-                            <span className="font-medium">
-                              {level.progress}%
-                            </span>
-                          </p>
-                        </div>
-                        <div className="flex gap-3">
-                          <p className="text-md">
-                            Invested:{" "}
-                            <span className="font-medium">
-                              {level.invested}$
-                            </span>
-                          </p>
-                        </div>
-                        <div className="flex gap-3">
-                          <p className="text-md">
-                            Collected:{" "}
-                            <span className="font-medium">
-                              {level.collected}
-                            </span>{" "}
-                            | 10
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-center gap-6">
-                        <div className="bottom-0 left-0 flex h-[6px] w-full rounded-md bg-progressBackground">
-                          <div
-                            className={` rounded-md bg-progressHighlight`}
-                            style={{ width: `${level.progress}%` }}
-                          ></div>
-                        </div>
-                        <Button
-                          onClick={claimPiece}
-                          className="whitespace-nowrap px-12"
-                          variant="outline"
-                          disabled={!userCanClaimPiece}
-                        >
-                          {isLoadingClaimPiece ? "Loading..." : `Claim Piece`}
-                        </Button>
-                        {idx < 2 && (
-                          <Button
-                            onClick={claimLevel}
-                            className="whitespace-nowrap px-12"
-                            variant="outline"
-                            disabled={
-                              Number(data[0]) < 10 ||
-                              (data[6] as number) > idx + 1
-                            }
-                          >
-                            Claim Level {idx + 2}
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                  {!level.locked && (
-                    <Carousel
-                      className="pt-5"
-                      id={idx.toString()}
-                      isConnected={isConnected}
-                      userItems={userPuzzlePieces}
-                      items={puzzlePieces}
-                      // items={investmentData.filter(
-                      //   (i) => i.status == investmentStatus
-                      // )}
-                    />
-                  )}
-                </div>
-              </Tab.Panel>
-            );
-          })}
-        </Tab.Panels>
-      </Tab.Group> */}
-      {/* {currentLevel < 2 && (
-        <Button
-          onClick={claimLevel}
-          className="whitespace-nowrap px-12"
-          variant="outline"
-          disabled={data?.[0].lt(10) || data?.[6].gt(currentLevel + 1)}
-        >
-          Claim Level {currentLevel + 1}
-        </Button>
-      )} */}
-      {/* <Carousel
-        className="pt-5"
-        id="1"
-        isConnected={isConnected}
-        userItems={userPuzzlePieces}
-        items={puzzlePieces}
-      /> */}
       {isConnected && (
         <div className="relative ml-[-70px] flex max-w-[1408px] items-center overflow-hidden">
           <div
@@ -477,7 +262,10 @@ const Puzzle: FC<PuzzleProps> = ({
                 {dbLevels.map((level, idx) => (
                   <SwiperSlide
                     key={level.basicLevel.title}
-                    className="flex items-center justify-center  "
+                    className={cn(
+                      "flex items-center justify-center  ",
+                      currentLevel - 1 !== idx ? "blur-md" : ""
+                    )}
                   >
                     <Level
                       level={idx + 1}
@@ -488,7 +276,7 @@ const Puzzle: FC<PuzzleProps> = ({
                       nextProfitRange={
                         dbLevels?.at(idx + 1)?.profitRange as string
                       }
-                      userPieces={userPieces}
+                      userPieces={userPieces as BigNumber[]}
                       claimLevel={claimLevel}
                     />
                     <div className="mt-16 flex flex-col">
@@ -519,7 +307,7 @@ const Puzzle: FC<PuzzleProps> = ({
                             </div>
                           </div>
                         ) : (
-                          (userPieces.length < 9 && (
+                          (userPieces && userPieces.length < 9 && (
                             // </div>
                             <div className="h-90 relative flex flex-col items-center justify-between rounded-md bg-neutral-100">
                               <h2 className="pt-6 text-center text-[24px] font-semibold uppercase leading-normal tracking-wider text-black">
@@ -627,19 +415,20 @@ const Puzzle: FC<PuzzleProps> = ({
                                 <div
                                   className={cn(
                                     "rounded-bl-md bg-[#C3A279]",
-                                    Math.abs(claimPieceProgress?.toNumber()) >=
-                                      100
+                                    Math.abs(
+                                      claimPieceProgress?.toNumber() || 0
+                                    ) >= 100
                                       ? "rounded-br-md"
                                       : ""
                                   )}
                                   style={{
                                     width: `${
                                       Math.abs(
-                                        claimPieceProgress?.toNumber()
+                                        claimPieceProgress?.toNumber() || 0
                                       ) >= 100
                                         ? 100
                                         : Math.abs(
-                                            claimPieceProgress?.toNumber()
+                                            claimPieceProgress?.toNumber() || 0
                                           )
                                     }%`,
                                   }}
@@ -677,7 +466,7 @@ const Puzzle: FC<PuzzleProps> = ({
                           ))}
                         {currentLevel < 4 && !data?.[6]?.gt(currentLevel) && (
                           <div className="h-90 relative flex flex-col items-center justify-center rounded-md border-2 border-[#C3A279] align-middle">
-                            {(userPieces.length < 9 && (
+                            {(userPieces && userPieces.length < 9 && (
                               <div className="flex flex-col items-center justify-center align-middle ">
                                 <Image
                                   src="/nfts/next_level.svg"
@@ -709,7 +498,7 @@ const Puzzle: FC<PuzzleProps> = ({
                                     variant={"outline"}
                                     onClick={claimLevel}
                                     disabled={
-                                      userPieces.length < 10 ||
+                                      (userPieces && userPieces.length < 10) ||
                                       (data?.[6]?.toNumber() as number) >
                                         idx + 2
                                     }

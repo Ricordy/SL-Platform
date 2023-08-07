@@ -1,6 +1,7 @@
 import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 import { useContractRead, type Address } from "wagmi";
+import { getPuzzleCollectionIds } from "~/lib/utils";
 import { SLCoreABI } from "~/utils/abis";
 
 interface HookProps {
@@ -15,16 +16,12 @@ const useGetUserPuzzlePieces = ({
   watch = false,
   totalInvested,
 }: HookProps) => {
+  if (level && level > 3) {
+    return {
+      error: new Error("Invalid level"),
+    };
+  }
   const claimPieceThreshold = [5000, 10000, 15000];
-  const getPuzzleCollectionIds = (level: number) => {
-    let increment = 0;
-    if (level == 2) {
-      increment += 10;
-    } else if (level == 3) {
-      increment += 20;
-    }
-    return Array.from({ length: 10 }, (_, k) => BigNumber.from(k + increment));
-  };
 
   const {
     data: userPuzzlePieces,
@@ -69,7 +66,6 @@ const useGetUserPuzzlePieces = ({
       .mul(100)
       .div(10 ** 6);
 
-    // console.log("claimPieceProgress", claimPieceProgress.toString());
     setClaimPieceProgress(claimPieceProgress);
     setClaimPieceProgressValue(claimPieceProgressValue);
   }, [userTotalPieces, level]);
