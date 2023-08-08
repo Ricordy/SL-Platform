@@ -20,6 +20,7 @@ export interface CarouselItemProps {
   image: string;
   status: string;
   price: string;
+  level?: string;
 }
 
 function noDecimal(value) {
@@ -32,6 +33,7 @@ const CarouselItem = ({
   image,
   status,
   price,
+  level,
 }: CarouselItemProps) => {
   // console.log("addresss>>>>>", address);
 
@@ -51,6 +53,11 @@ const CarouselItem = ({
         )}
         style={{ backgroundImage: `url(${image})` }}
       >
+        {level && (
+          <div className="absolute right-3 top-2 z-10 rounded-lg bg-white px-2 py-1 text-xs text-black">
+            {level}
+          </div>
+        )}
         <h4 className="z-10 text-center text-2xl font-medium uppercase text-white">
           {title}
         </h4>
@@ -139,6 +146,7 @@ const ProjectCarousel: FC<CarouselProps> = ({
           {title ?? ""}
         </div>
       )}
+
       <div className="relative flex max-w-[1338px] items-center overflow-hidden">
         <div
           className={`absolute  left-0 z-20 flex items-center justify-center swiper-prev-${id}`}
@@ -190,6 +198,7 @@ const ProjectCarousel: FC<CarouselProps> = ({
                     status={
                       item.basicInvestment.investmentStatus ?? "Not woking"
                     }
+                    level={item.level.basicLevel.title}
                   />
                 </SwiperSlide>
               ))}
