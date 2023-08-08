@@ -194,28 +194,28 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                     title=""
                     changeClose={true}
                   >
-                    <div className="flex w-full flex-col  items-center justify-items-center font-sans">
+                    <div className="flex w-full flex-col  items-center justify-items-center gap-5 font-sans">
                       <Image
                         src={logo1 as string}
                         alt="Something Legendary logo"
                         className="max-h-40 w-full"
                       />
-                      <h2 className="my-4 w-max font-sans text-4xl font-bold ">
+                      <h3 className="text-center text-[27px] uppercase tracking-widest">
                         Welcome to Something Legendary
-                      </h2>
-                      <div className=" font-serif">
+                      </h3>
+                      <p className="text-center">
                         By connecting your wallet and using Something Legendary,
                         you agree to our Terms of Service and Privacy Policy.
-                      </div>
-                      <div className="">
+                      </p>
+                      <div className="flex gap-10">
                         <button
-                          className="mx-3 mt-10 rounded-full bg-black px-10 py-3 font-semibold text-white no-underline transition hover:bg-black/70"
+                          className="self-start rounded-md bg-black px-12 py-1.5 text-center text-sm uppercase text-white transition-all duration-150 hover:bg-black/80 dark:hover:bg-black dark:hover:text-white"
                           onClick={disconnect as () => void}
                         >
                           Cancel
                         </button>
                         <button
-                          className="mx-3 mt-10 rounded-full bg-black px-10 py-3 font-semibold text-white no-underline transition hover:bg-black/70"
+                          className="self-start rounded-md bg-black px-12 py-1.5 text-center text-sm uppercase text-white transition-all duration-150 hover:bg-black/80 dark:hover:bg-black dark:hover:text-white"
                           onClick={onClickSignIn as () => void}
                         >
                           Sign In
