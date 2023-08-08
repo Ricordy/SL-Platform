@@ -26,13 +26,13 @@ const NoInvestments: React.FC<NoInvestmentProps> = ({
 
   return (
     <div className="ml-[58px] grid grid-flow-row auto-rows-auto grid-cols-3 justify-center gap-4 pb-[132px] ">
-      <div className="flex flex-col items-center rounded-md bg-puzzleProfitNotice p-8">
+      <div className="flex flex-col items-center justify-center rounded-md bg-puzzleProfitNotice p-8 text-justify align-middle">
         <h4 className="mb-4 text-2xl font-medium text-primaryGreen">
           Start your investments
         </h4>
         <p className="mb-8 text-ogBlack">
-          Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-          accusantium doloremque laudantium, totam.
+          If you haven't started your journey yet, don't waste any more time.
+          The dream commands life and it's time to take the reins of yours!
         </p>
 
         {!url && (
@@ -73,7 +73,7 @@ const NoInvestments: React.FC<NoInvestmentProps> = ({
           />
         </svg>
       </div>
-      <div className="flex items-center justify-center rounded-md bg-puzzleProfitNotice">
+      <div className="flex h-[394px] w-[416px] items-center justify-center rounded-md bg-puzzleProfitNotice">
         <svg
           version="1.2"
           xmlns="http://www.w3.org/2000/svg"

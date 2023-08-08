@@ -200,8 +200,8 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                         alt="Something Legendary logo"
                         className="max-h-40 w-full"
                       />
-                      <h2 className="my-4 text-4xl font-bold ">
-                        Welcome to SomethingLegendary
+                      <h2 className="my-4 w-max font-sans text-4xl font-bold ">
+                        Welcome to Something Legendary
                       </h2>
                       <div className=" font-serif">
                         By connecting your wallet and using Something Legendary,

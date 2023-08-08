@@ -41,7 +41,7 @@ const Highlight = ({ investment, totalInvested }: HighlightProps) => {
           />
           <p>{investment.basicInvestment.car.description}</p>
           {currentPhase && (
-            <div className="flex gap-4 py-8">
+            <div className="flex gap-4">
               <Image
                 src="/icons/tasks.svg"
                 width={22}
