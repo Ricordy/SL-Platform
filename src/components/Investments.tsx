@@ -73,14 +73,19 @@ export default function Investments({
                     "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2 "
                   )}
                 >
-                  {investmentStatus == investmentStatusesData[0] && (
-                    <NoInvestments
-                      active={false}
-                      buttonLabel="Start Investing"
-                      isConnected={isConnected}
-                      url="/our-cars"
-                    />
-                  )}
+                  {investmentStatus == investmentStatusesData[0] &&
+                    userInvestments.filter(
+                      (investment) =>
+                        investment.basicInvestment.investmentStatus ==
+                        investmentStatus
+                    ).length == 0 && (
+                      <NoInvestments
+                        active={false}
+                        buttonLabel="Start Investing"
+                        isConnected={isConnected}
+                        url="/our-cars"
+                      />
+                    )}
                   <ProjectCarousel
                     id={investmentStatus}
                     items={userInvestments.filter(
