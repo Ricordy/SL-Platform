@@ -21,6 +21,7 @@
     "@trpc/react-query": "^10.18.0",
     "@trpc/server": "^10.18.0",
     "@typechain/hardhat": "^6.1.5",
+    "@vercel/analytics": "^1.0.1",
     "chai": "^4.3.7",
     "class-variance-authority": "^0.5.1",
     "connectkit": "^1.1.1",
