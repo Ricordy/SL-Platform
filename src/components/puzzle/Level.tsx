@@ -203,7 +203,7 @@ const Level = ({
               userLevel > level ? "bg-primaryGold text-white" : ""
             )}
           >
-            Claim Level {level + 1}
+            {level > 2 ? "Claim Final NFT" : `Claim Level ${level + 1}`}
           </Button>
         )}
       </div>

@@ -476,7 +476,11 @@ const Puzzle: FC<PuzzleProps> = ({
                                   className="mb-2"
                                 />
                                 <div className="m-2 flex flex-col items-center justify-center text-primaryGold">
-                                  <h3>NFT Level {idx + 2}</h3>
+                                  <h3>
+                                    {idx < 2
+                                      ? `NFT Level ${idx + 2}`
+                                      : `Final NFT`}
+                                  </h3>
                                   <p className="text-center">
                                     You can claim it when you
                                   </p>
@@ -493,7 +497,12 @@ const Puzzle: FC<PuzzleProps> = ({
                                   className="mb-2"
                                 />
                                 <div className="m-2 flex flex-col items-center justify-center text-primaryGold">
-                                  <h3>NFT Level {idx + 2}</h3>
+                                  <h3>
+                                    {" "}
+                                    {idx < 2
+                                      ? `NFT Level ${idx + 2}`
+                                      : `Final NFT`}
+                                  </h3>
                                   <Button
                                     variant={"outline"}
                                     onClick={claimLevel}
@@ -510,7 +519,9 @@ const Puzzle: FC<PuzzleProps> = ({
                                         : ""
                                     )}
                                   >
-                                    Claim Level {idx + 2}
+                                    {idx < 2
+                                      ? `Claim Level ${idx + 2}`
+                                      : "CLAIM FINAL LEVEL"}
                                   </Button>
                                 </div>
                               </div>
