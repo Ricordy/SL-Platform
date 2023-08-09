@@ -24,16 +24,13 @@ export default function Investments({
   });
   const { disconnect } = useDisconnect();
   return (
-    <section
-      id="investments"
-      className="relative flex w-full max-w-[1338px] flex-col overflow-hidden"
-    >
-      <div className="mx-auto ml-[58px] flex w-full justify-between">
+    <section id="investments" className="relative flex w-full flex-col">
+      <div className="mx-auto flex w-full justify-between pl-[58px]">
         <h2 className="mb-[52px] text-2xl font-medium uppercase">
           My Investments
         </h2>
         {isConnected && (
-          <div className="mr-[240px]">
+          <div className="mr-36">
             <Link
               href="/my-investments"
               className="border-b-2 border-primaryGreen text-sm uppercase text-primaryGreen"

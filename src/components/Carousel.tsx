@@ -79,6 +79,7 @@ interface CarouselProps {
   items?: InvestmentProps[];
   seeMoreLabel?: string;
   seeMoreLink?: string;
+  seeMoreMr?: string;
 }
 
 const Carousel: FC<CarouselProps> = ({
@@ -88,6 +89,7 @@ const Carousel: FC<CarouselProps> = ({
   prevNavWhite,
   seeMoreLabel,
   seeMoreLink,
+  seeMoreMr,
   items,
 }) => {
   return (
@@ -99,7 +101,7 @@ const Carousel: FC<CarouselProps> = ({
           </div>
         )}
         {seeMoreLink && seeMoreLabel && (
-          <div className=" mr-[260px]">
+          <div className={seeMoreMr ?? "mr-[260px]"}>
             <Link
               href={seeMoreLink}
               className="border-b-2 border-white text-sm uppercase text-white"
