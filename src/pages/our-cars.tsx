@@ -31,16 +31,16 @@ const ourCars = (props) => {
   };
 
   return (
-    <section className="mx-auto w-full bg-white">
+    <section className="max-w-screen mx-auto w-screen overflow-x-hidden bg-white">
       <div
         style={{ "--image-url": `url(${props.investments[0].banner.url})` }}
         className={
-          "relative flex min-h-screen w-full flex-col rounded-bl-[56px] bg-opacity-80 bg-[image:var(--image-url)] bg-contain bg-right bg-no-repeat"
+          "relative flex h-[1000px] min-h-screen w-full flex-col  rounded-bl-[56px]  bg-opacity-80 bg-[image:var(--image-url)] bg-contain bg-right bg-no-repeat"
         }
       >
-        <div className="absolute top-0 z-0 flex min-h-[83px] w-full bg-[url('/bg/bg-navbar.svg')]"></div>
-        <div className="absolute left-0 z-10 flex min-h-screen w-full bg-[url('/bg/gradient-vertical-header.svg')] bg-contain bg-bottom bg-no-repeat"></div>
-        <div className="absolute bottom-0 z-0 flex min-h-screen w-full rounded-bl-[56px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat"></div>
+        <div className="absolute top-0 z-0 flex min-h-[83px]  w-full bg-[url('/bg/bg-navbar.svg')]"></div>
+        <div className="absolute left-0 z-10 flex h-[1000px] min-h-screen w-full bg-[url('/bg/gradient-vertical-header.svg')] bg-contain bg-bottom bg-no-repeat"></div>
+        <div className="absolute bottom-0 z-0 flex h-[1000px] min-h-screen  w-full rounded-bl-[56px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat"></div>
         <NavBar />
         <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
           <div className="flex flex-col gap-4 pt-8">
@@ -71,7 +71,7 @@ const ourCars = (props) => {
           </div>
         </div>
       </div>
-      <div className="relative left-1/2 z-20 mx-auto -ml-[570px] -mt-[300px]  mb-[132px] min-h-[500px] max-w-[1338px]">
+      <div className="relative left-1/2 z-20 mx-auto -ml-[570px] -mt-[400px]  mb-[132px] min-h-[500px] max-w-[1338px]">
         <Carousel
           id="1"
           prevNavWhite={true}
