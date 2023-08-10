@@ -48,6 +48,7 @@ const Highlight = ({
                 Number(investment.basicInvestment.totalInvestment)) *
               100
             }
+            isFlexCol
           />
           <p>{investment.basicInvestment.car.description}</p>
           {currentPhase && (

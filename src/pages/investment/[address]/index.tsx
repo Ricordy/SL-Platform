@@ -185,20 +185,26 @@ export const ProjectInfo = ({
   progress,
   status,
   totalInvestment,
+  isFlexCol,
 }: {
   progress: number;
   status: string;
   totalInvestment: number;
+  isFlexCol?: boolean;
 }) => {
   return (
     <div className="relative flex gap-[24px] ">
-      <div className="relative flex flex-col gap-2 pr-4">
+      <div
+        className={`relative flex gap-2 pr-4 ${isFlexCol ? "flex-col" : ""} `}
+      >
         <span>Status:</span>
         <span className="font-medium">{status}</span>
         <div className="absolute right-0 top-0 hidden h-full min-h-[1em] w-px self-stretch border-t-0 bg-gradient-to-tr from-transparent via-black to-transparent opacity-25 dark:opacity-100 lg:block"></div>
       </div>
 
-      <div className="relative flex flex-col gap-2 pr-4">
+      <div
+        className={`relative flex gap-2 pr-4 ${isFlexCol ? "flex-col" : ""} `}
+      >
         <span>Price:</span>
         <span className="now font-medium">
           <NumericFormat
@@ -213,7 +219,9 @@ export const ProjectInfo = ({
         </span>
         <div className="absolute right-0 top-0 hidden h-full min-h-[1em] w-px self-stretch border-t-0 bg-gradient-to-tr from-transparent via-black to-transparent opacity-25 dark:opacity-100 lg:block"></div>
       </div>
-      <div className="relative flex flex-col gap-2">
+      <div
+        className={`relative flex gap-2 pr-4 ${isFlexCol ? "flex-col" : ""} `}
+      >
         <span>Progress:</span>
         <span className="font-medium">
           <NumericFormat
@@ -562,7 +570,7 @@ const Investment = ({
       </Head>
       <main className="flex min-h-screen w-full flex-col bg-white  px-3 md:mt-0 md:px-0">
         <NavBar bgWhite={true} />
-        <div className="mx-auto flex w-full max-w-screen-lg flex-col">
+        <div className="mx-auto flex h-full w-full max-w-screen-lg flex-col ">
           <div className="sticky top-0 z-20 mx-auto flex w-full items-center justify-between bg-white py-4">
             <div className="flex flex-col">
               <div className="flex justify-center gap-2 align-middle ">
@@ -608,8 +616,8 @@ const Investment = ({
               images={investment.basicInvestment.car.gallery}
             />
           )}
-          <div className="flex items-start justify-between gap-6">
-            <div className="flex w-3/5 flex-col ">
+          <div className="flex items-start  justify-between gap-12">
+            <div className="flex w-[55%] flex-col gap-[16px] ">
               <h3 className="flex items-center gap-6 pb-[52px] tracking-widest">
                 <Image
                   src="/icons/keys.svg"
@@ -619,7 +627,6 @@ const Investment = ({
                 />
                 General Information
               </h3>
-              {}
               <ProjectInfo
                 progress={progress}
                 status={investment.basicInvestment.investmentStatus}
@@ -634,9 +641,9 @@ const Investment = ({
                 {investment.basicInvestment.car.shortDescription}
               </p>
             </div>
-            <div className="flex w-2/5 flex-col gap-8  p-6">
+            <div className="relative right-0 mr-0 flex w-2/5 flex-col gap-8">
               {
-                <div className="flex flex-col gap-2 rounded-md border border-b border-tabInactive bg-[#F6F9F8] py-[15px] pl-24">
+                <div className="flex flex-col gap-2 rounded-md border border-b border-tabInactive bg-[#F6F9F8] py-[15px] pl-16 text-left">
                   <h4 className="text-ogBlack">Total Invested until now</h4>
                   <span className="text-3xl font-medium tracking-wider text-primaryGreen">
                     <NumericFormat
