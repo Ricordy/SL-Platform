@@ -68,11 +68,11 @@ const Home: NextPage = (props: any) => {
           <div class="absolute left-[1149px] top-[12px] h-[1147px] w-[772px] origin-top-left rotate-90 bg-gradient-to-b from-black to-gray-950"></div>
           <div class="absolute left-0 top-[353px] h-[615px] w-[1442px] rounded-bl-[200px] bg-gradient-to-b from-black to-gray-950"></div>
         </div> */}
-        <div className="relative flex min-h-screen w-full flex-col rounded-bl-[126px] bg-opacity-80 bg-cover bg-center bg-no-repeat">
+        <div className="relative flex min-h-[968px] w-full flex-col rounded-bl-[50px] bg-opacity-80 bg-cover bg-center bg-no-repeat">
           {images.map((image, index) => (
             <div
               key={index}
-              className={`absolute left-0 min-h-screen w-full rounded-bl-[156px] bg-black bg-opacity-80 bg-cover transition-opacity duration-1000 ${
+              className={`absolute left-0 min-h-[968px] w-full rounded-bl-[156px] bg-black bg-opacity-80 bg-cover transition-opacity duration-1000 ${
                 activeIndex === index ? "opacity-100" : "opacity-0"
               }`}
               style={{
@@ -83,9 +83,13 @@ const Home: NextPage = (props: any) => {
               }}
             />
           ))}
-          <div className="absolute top-0 z-0 flex min-h-[83px] w-full bg-[url('/bg/bg-navbar.svg')]"></div>
+          <div className="absolute top-0 z-0 flex min-h-[83px] w-full bg-[url('/bg/bg-navbar.svg')]" />
+          <div className="absolute left-0 z-10 flex min-h-[968px] w-full rounded-bl-[116px] bg-[url('/bg/gradient-vertical-header.svg')] bg-cover bg-bottom bg-no-repeat" />
+          <div className="absolute bottom-0 z-0 flex min-h-[968px] w-full rounded-bl-[50px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat" />
+          {/* </div>
           <div className="absolute left-0 z-10 flex min-h-screen w-full rounded-bl-[116px] bg-[url('/bg/gradient-vertical-header.svg')] bg-cover bg-bottom bg-no-repeat"></div>
-          <div className="absolute bottom-0 z-0 flex min-h-screen w-full rounded-bl-[116px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat"></div>
+          <div className="absolute bottom-0 z-0 flex min-h-screen w-full rounded-bl-[116px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat"></div> */}
+          {/* <div className="absolute top-0 z-10 h-[968px] w-[1444px] rounded-bl-[50px] rounded-br-[50px] bg-gray-950" /> */}
           <NavBar />
           <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
             <div className="flex flex-col gap-12 pt-24">
@@ -119,7 +123,7 @@ const Home: NextPage = (props: any) => {
             ))}
           </div>
         </div>
-        <div className="relative left-1/2 z-20 mx-auto -ml-[570px] -mt-[100px]  min-h-[500px] max-w-[1290px]">
+        <div className="relative left-1/2 z-20 -ml-[570px] -mt-[350px] min-h-[500px] w-full max-w-[1290px]">
           <Carousel
             id="1"
             items={props.activeInvestments}
@@ -127,17 +131,17 @@ const Home: NextPage = (props: any) => {
             title={<h2 className="text-2xl text-white">Our cars</h2>}
             seeMoreLabel="See more"
             seeMoreLink="/our-cars"
+            seeMoreMr="mr-36"
           />
           {/* Highlight Component */}
-
-          {!isConnected && (
-            <Highlight
-              investment={props.highlightInvestment}
-              totalInvested={totalInvested?.toNumber() / 10 ** 6}
-            />
-          )}
         </div>
-        {/* My Investments */}
+        {!isConnected && (
+          <Highlight
+            className="mx-auto max-w-screen-lg"
+            investment={props.highlightInvestment}
+            totalInvested={totalInvested?.toNumber() / 10 ** 6}
+          />
+        )}
         <div
           className={cn(
             "relative left-1/2 z-20 mx-auto -ml-[570px]  min-h-[532px] w-full max-w-[1290px]",

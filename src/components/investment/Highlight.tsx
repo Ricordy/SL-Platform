@@ -6,10 +6,19 @@ import { cn } from "~/lib/utils";
 import { ProjectInfo, badges } from "~/pages/investment/[address]";
 import { Button } from "../ui/Button";
 
-const Highlight = ({ investment, totalInvested }: HighlightProps) => {
+const Highlight = ({
+  investment,
+  totalInvested,
+  className,
+}: HighlightProps) => {
   const currentPhase = investment.restorationPhases?.at(0);
   return (
-    <div className="ml-[58px] flex flex-col gap-12 py-[132px]">
+    <div
+      className={cn(
+        "ml-[58px] flex flex-col gap-12 py-[132px]",
+        className ?? ""
+      )}
+    >
       <h2 className=" text-2xl font-medium uppercase">Highlight</h2>
       <div className="flex gap-6">
         <div className="relative flex  w-1/3">
@@ -20,6 +29,7 @@ const Highlight = ({ investment, totalInvested }: HighlightProps) => {
                   src={image.url}
                   width={528}
                   height={396}
+                  className="rounded-md"
                   alt={investment.basicInvestment.car.basicInfo.title}
                 />
               </div>
@@ -38,6 +48,7 @@ const Highlight = ({ investment, totalInvested }: HighlightProps) => {
                 Number(investment.basicInvestment.totalInvestment)) *
               100
             }
+            isFlexCol
           />
           <p>{investment.basicInvestment.car.description}</p>
           {currentPhase && (

@@ -55,7 +55,12 @@ const NoInvestments: React.FC<NoInvestmentProps> = ({
           </Link>
         )}
       </div>
-      <div className="flex items-center justify-center rounded-md bg-puzzleProfitNotice">
+      <div
+        className={cn(
+          "flex items-center justify-center rounded-md",
+          active ? "bg-puzzleProfitNotice" : "bg-contactBackground"
+        )}
+      >
         <svg
           version="1.2"
           xmlns="http://www.w3.org/2000/svg"
@@ -73,7 +78,12 @@ const NoInvestments: React.FC<NoInvestmentProps> = ({
           />
         </svg>
       </div>
-      <div className="flex h-[394px] w-[416px] items-center justify-center rounded-md bg-puzzleProfitNotice">
+      <div
+        className={cn(
+          "flex h-[394px] w-[416px] items-center justify-center rounded-md",
+          active ? "bg-puzzleProfitNotice" : "bg-contactBackground"
+        )}
+      >
         <svg
           version="1.2"
           xmlns="http://www.w3.org/2000/svg"

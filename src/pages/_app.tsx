@@ -9,6 +9,7 @@ import { InjectedConnector } from "wagmi/connectors/injected";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { api } from "~/utils/api";
 import Layout from "../components/Layout";
+import { Analytics } from "@vercel/analytics/react";
 import "../styles/globals.css";
 
 const alchemyApiKey = process.env.ALCHEMY_API_KEY as string;
@@ -49,14 +50,16 @@ const MyApp: AppType<{ session: Session | null }> = ({
   }, []);
 
   return (
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    <WagmiConfig client={client}>
-      <SessionProvider session={session as Session}>
-        {/* <ConnectKitProvider> */}
-        <Layout>{isMounted && <Component {...pageProps} />}</Layout>
-        {/* </ConnectKitProvider> */}
-      </SessionProvider>
-    </WagmiConfig>
+    <>
+      <WagmiConfig client={client}>
+        <SessionProvider session={session as Session}>
+          {/* <ConnectKitProvider> */}
+          <Layout>{isMounted && <Component {...pageProps} />}</Layout>
+          {/* </ConnectKitProvider> */}
+        </SessionProvider>
+      </WagmiConfig>
+      <Analytics />
+    </>
   );
 };
 

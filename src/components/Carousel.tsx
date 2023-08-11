@@ -28,10 +28,10 @@ export const CarouselItem = ({
   level,
 }: CarouselItemProps) => {
   return (
-    <div className=" w-full rounded-md ">
+    <div className=" w-full rounded-[7px] border border-transparent hover:border-primaryGold">
       <div
         className={cn(
-          "relative flex min-h-[394px] w-full flex-col items-center justify-end gap-4 rounded-md border border-transparent bg-cover bg-center hover:border-primaryGold"
+          "relative flex min-h-[394px] w-full flex-col items-center justify-end gap-4 rounded-md  bg-cover bg-center "
         )}
         style={{ backgroundImage: `url(${image})` }}
       >
@@ -79,6 +79,7 @@ interface CarouselProps {
   items?: InvestmentProps[];
   seeMoreLabel?: string;
   seeMoreLink?: string;
+  seeMoreMr?: string;
 }
 
 const Carousel: FC<CarouselProps> = ({
@@ -88,6 +89,7 @@ const Carousel: FC<CarouselProps> = ({
   prevNavWhite,
   seeMoreLabel,
   seeMoreLink,
+  seeMoreMr,
   items,
 }) => {
   return (
@@ -99,7 +101,7 @@ const Carousel: FC<CarouselProps> = ({
           </div>
         )}
         {seeMoreLink && seeMoreLabel && (
-          <div className=" mr-[260px]">
+          <div className={seeMoreMr ?? "mr-[260px]"}>
             <Link
               href={seeMoreLink}
               className="border-b-2 border-white text-sm uppercase text-white"

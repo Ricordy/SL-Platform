@@ -8,7 +8,7 @@ export default function Layout({ children }) {
         <title>Something Legendary</title>
       </Head>
       <Toaster position="top-center" reverseOrder={false} />
-      <main className="mx-auto flex w-full max-w-screen-2xl shrink-0 grow flex-col">
+      <main className="mx-auto flex w-full max-w-[1440px] shrink-0 grow flex-col">
         {children}
       </main>
     </div>
