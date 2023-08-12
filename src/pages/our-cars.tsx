@@ -75,49 +75,52 @@ const ourCars = (props) => {
         </div>
       </div>
       <div className="relative left-1/2 z-20 mx-auto -ml-[570px] -mt-[300px]  mb-[132px] min-h-[500px] max-w-[1338px]">
-        {true && (
-          <Tab.Group>
-            <Tab.List className="ml-[58px] flex w-fit border-b border-b-gray-900/20">
-              {investmentLevelsData.map((investmentLevel) => (
-                <Tab
+        <Tab.Group>
+          <Tab.List className="ml-[58px] flex w-fit border-b border-b-gray-900/20">
+            {investmentLevelsData.map((investmentLevel) => (
+              <Tab
+                key={investmentLevel}
+                className={({ selected }) =>
+                  cn(
+                    "flex min-w-fit justify-center gap-3 px-6 pb-4  text-2xl font-normal  leading-5 text-tabInactive",
+                    "focus:outline-none",
+                    selected
+                      ? "border-b-4 border-primaryGreen bg-white font-semibold text-primaryGreen"
+                      : " hover:bg-white/[0.12] hover:text-tabInactive/80"
+                  )
+                }
+              >
+                {investmentLevel.split("l")[0] +
+                  "l " +
+                  investmentLevel.split("l")[1]}
+              </Tab>
+            ))}
+          </Tab.List>
+          <Tab.Panels className="mt-2">
+            {investmentLevelsData.map((investmentLevel) => {
+              return (
+                <Tab.Panel
                   key={investmentLevel}
-                  className={({ selected }) =>
-                    cn(
-                      "flex min-w-fit justify-center gap-3 px-6 pb-4  text-2xl font-normal  leading-5 text-tabInactive",
-                      "focus:outline-none",
-                      selected
-                        ? "border-b-4 border-primaryGreen bg-white font-semibold text-primaryGreen"
-                        : " hover:bg-white/[0.12] hover:text-tabInactive/80"
-                    )
-                  }
+                  className={cn(
+                    " pt-6",
+                    "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2 "
+                  )}
                 >
-                  {investmentLevel.split("l")[0]+ "l " + investmentLevel.split("l")[1]}
-                </Tab>
-              ))}
-            </Tab.List>
-            <Tab.Panels className="mt-2">
-              {investmentLevelsData.map((investmentLevel) => {
-                return (
-                  <Tab.Panel
-                    key={investmentLevel}
-                    className={cn(
-                      " pt-6",
-                      "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2 "
+                  <Carousel
+                    id={investmentLevel}
+                    items={props.investments.filter(
+                      (i) =>
+                        i.level.basicLevel.title ===
+                        investmentLevel.split("l")[0] +
+                          "l " +
+                          investmentLevel.split("l")[1]
                     )}
-                  >
-                    <Carousel
-                      id={investmentLevel}
-                      items={props.investments.filter(
-                        (i) =>
-                          i.level.basicLevel.title === investmentLevel.split("l")[0]+ "l " + investmentLevel.split("l")[1]
-                      )}
-                    />
-                  </Tab.Panel>
-                );
-              })}
-            </Tab.Panels>
-          </Tab.Group>
-        )}
+                  />
+                </Tab.Panel>
+              );
+            })}
+          </Tab.Panels>
+        </Tab.Group>
         <Carousel
           id="1"
           prevNavWhite={true}
