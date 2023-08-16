@@ -34,7 +34,7 @@ const ourCars = (props) => {
   };
 
   return (
-    <section className="max-w-screen mx-auto w-screen overflow-x-hidden bg-white">
+    <section className=" mx-auto w-full  bg-white">
       <div
         style={{ "--image-url": `url(${props.investments[0].banner.url})` }}
         className={
@@ -74,7 +74,7 @@ const ourCars = (props) => {
           </div>
         </div>
       </div>
-      <div className="relative left-1/2 z-20 mx-auto -ml-[570px] -mt-[300px]  mb-[132px] min-h-[500px] max-w-[1338px]">
+      <div className="relative left-1/2 z-20 -ml-[570px] -mt-[350px] min-h-[500px] w-full max-w-[1290px]">
         <Tab.Group>
           <Tab.List className="ml-[58px] flex w-fit border-b border-b-gray-900/20">
             {investmentLevelsData.map((investmentLevel) => (
@@ -108,6 +108,7 @@ const ourCars = (props) => {
                 >
                   <Carousel
                     id={investmentLevel}
+                    prevNavWhite={true}
                     items={props.investments.filter(
                       (i) =>
                         i.level.basicLevel.title ===
@@ -122,13 +123,13 @@ const ourCars = (props) => {
           </Tab.Panels>
         </Tab.Group>
         <Carousel
-          id="1"
+          id="4"
           className="pt-[132px]"
           title={<h2 className="text-2xl ">Our cars</h2>}
           items={props.investments}
         />
         <Carousel
-          id="2"
+          id="5"
           className="pt-[132px]"
           title={<h2 className="text-2xl">Level 1</h2>}
           items={props.investments.filter(
@@ -136,7 +137,7 @@ const ourCars = (props) => {
           )}
         />
         <Carousel
-          id="2"
+          id="6"
           className="pt-[132px]"
           title={<h2 className="text-2xl">Level 2</h2>}
           items={props.investments.filter(
@@ -144,7 +145,7 @@ const ourCars = (props) => {
           )}
         />
         <Carousel
-          id="2"
+          id="7"
           className="pt-[132px]"
           title={<h2 className="text-2xl">Level 3</h2>}
           items={props.investments.filter(
