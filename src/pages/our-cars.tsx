@@ -85,7 +85,7 @@ const ourCars = (props) => {
                     "flex min-w-fit justify-center gap-3 px-6 pb-4  text-2xl font-normal  leading-5 text-tabInactive",
                     "focus:outline-none",
                     selected
-                      ? "border-b-4 border-primaryGreen bg-white font-semibold text-primaryGreen"
+                      ? "border-b-4 border-primaryGreen  font-semibold text-primaryGreen"
                       : " hover:bg-white/[0.12] hover:text-tabInactive/80"
                   )
                 }
@@ -123,8 +123,8 @@ const ourCars = (props) => {
         </Tab.Group>
         <Carousel
           id="1"
-          prevNavWhite={true}
-          title={<h2 className="text-2xl text-white">Our cars</h2>}
+          className="pt-[132px]"
+          title={<h2 className="text-2xl ">Our cars</h2>}
           items={props.investments}
         />
         <Carousel

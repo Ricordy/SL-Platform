@@ -643,7 +643,7 @@ const Investment = ({
             </div>
             <div className="relative right-0 mr-0 flex w-2/5 flex-col gap-8">
               {
-                <div className="flex flex-col gap-2 rounded-md border border-b border-tabInactive bg-[#F6F9F8] py-[15px] pl-16 text-left">
+                <div className="flex flex-col gap-2 rounded-md border border-b border-tabInactive bg-[#F6F9F8] py-[15px]  text-center">
                   <h4 className="text-ogBlack">Total Invested until now</h4>
                   <span className="text-3xl font-medium tracking-wider text-primaryGreen">
                     <NumericFormat
@@ -656,7 +656,7 @@ const Investment = ({
                       prefix="$ "
                     />
                   </span>
-                  <h4 className="flex gap-3 text-primaryGrey">
+                  <h4 className="flex w-full  justify-center gap-3  text-primaryGrey">
                     Investing here: {countUniques(transactions)}
                     <Image
                       src="/icons/mini-avatar.svg"
