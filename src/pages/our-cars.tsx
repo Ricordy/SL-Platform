@@ -85,7 +85,7 @@ const ourCars = (props) => {
                     "flex min-w-fit justify-center gap-3 px-6 pb-4  text-2xl font-normal  leading-5 text-tabInactive",
                     "focus:outline-none",
                     selected
-                      ? "border-b-4 border-primaryGreen  font-semibold text-primaryGreen"
+                      ? "border-b-4 border-primaryGold  font-semibold text-primaryGold"
                       : " hover:bg-white/[0.12] hover:text-tabInactive/80"
                   )
                 }

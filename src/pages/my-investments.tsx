@@ -539,7 +539,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                   <h1 className="text-5xl font-semibold uppercase text-primaryGold">
                     Buy your
                     <br />
-                    <span className="font-medium text-black">Entry NFT!</span>
+                    <span className="font-medium text-black">Membership Card!</span>
                   </h1>
                   <p className=" text-sm">
                     You're one step closer to living the adventure you've always
