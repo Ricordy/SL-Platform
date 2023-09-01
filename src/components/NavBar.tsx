@@ -23,6 +23,7 @@ import { cn } from "../lib/utils";
 import Modal from "./Modal";
 import { paymentTokenABI } from "~/utils/abis";
 import { BigNumber } from "ethers";
+import TestingGuides from "./testingModal/TestingGuides";
 
 const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
   const { address, isConnected, isConnecting, isDisconnected } = useAccount();
@@ -266,27 +267,10 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
               title=""
               changeClose={true}
             >
-              <div className="flex w-2/3   flex-col items-center justify-items-center font-sans">
-                Hello, welcome Legendary Tetster:
-                <br />
-                <br />
-                1. Feel free to mint $100.000 of our TestCoin:
-                <button
-                  onClick={mintPaymentToken}
-                  className=" h-8 w-36 rounded-md bg-sky-400"
-                >
-                  {" "}
-                  MINT $100.000
-                </button>
-                <div>
-                  2. From here you can mint your entry nft, do that by going to
-                  /my-investments, or
-                  <a href="/my-investments" className=" text-blue-800">
-                    {" "}
-                    click me
-                  </a>
-                </div>
-              </div>
+              <TestingGuides
+                mintPaymentToken={mintPaymentToken}
+                closeModal={() => setTestingOpened(false)}
+              />
             </Modal>
           ) : null}
 
