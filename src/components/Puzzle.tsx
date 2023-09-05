@@ -115,8 +115,7 @@ const Puzzle: FC<PuzzleProps> = ({
       // },
     ],
     // watch: true,
-    onError(error) {
-    },
+    onError(error) {},
   });
 
   data = data ?? [];
@@ -145,13 +144,12 @@ const Puzzle: FC<PuzzleProps> = ({
     // watch: true,
     enabled: data && currentLevel === data?.[6]?.toNumber(),
     onSettled(data, error) {
-
       if (!error) {
         // data[6] == currentLevel
 
         setUserCanClaimPiece(true);
       } else {
-        //setUserCanClaimPiece(false);
+        setUserCanClaimPiece(false);
       }
     },
   });
@@ -161,9 +159,7 @@ const Puzzle: FC<PuzzleProps> = ({
     abi: SLCoreABI,
     functionName: "claimPiece",
     enabled: userCanClaimPiece,
-    onError(err) {
-
-    },
+    onError(err) {},
     // onSuccess() {
     //   toast.success("Puzzle reivindicado com sucesso!");
     // },
@@ -180,7 +176,6 @@ const Puzzle: FC<PuzzleProps> = ({
       Number(data?.[currentLevel - 1]) > 9 &&
       data?.[6]?.toNumber() == currentLevel,
   });
-
 
   const { write: claimLevel, isLoading: isLoadingClaimLevel } =
     useContractWrite(configClaimLevel);
