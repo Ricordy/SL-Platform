@@ -1,9 +1,12 @@
 import { Menu, Transition } from "@headlessui/react";
-import { forwardRef, Fragment } from "react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import Image from "next/image";
 import Link from "next/link";
+import { Fragment, forwardRef } from "react";
+import { useAccount } from "wagmi";
+import { cn } from "../lib/utils";
 
 type MenuProps = {
+  bgWhite?: boolean;
   logout: () => void;
 };
 type MyLinkProps = {
@@ -24,21 +27,37 @@ const MyLink = forwardRef<HTMLAnchorElement, MyLinkProps>((props, ref) => {
 });
 MyLink.displayName = "MyLink";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
-export default function ProfileMenu(props: MenuProps) {
+export default function ProfileMenu({ logout, bgWhite }: MenuProps) {
+  const { address } = useAccount();
   return (
-    <div className="top-16 w-56 md:text-right">
+    <>
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button className="inline-flex w-full justify-center rounded-md bg-black bg-opacity-0 px-4 py-2 font-medium hover:bg-opacity-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            <ProfileIcon className="mr-2 h-5 w-5" aria-hidden="true" />
-            <ChevronDownIcon
+          <Menu.Button
+            className={cn(
+              "inline-flex w-full items-center justify-center gap-3 rounded-full border-2 bg-black bg-opacity-0 p-1 hover:bg-opacity-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75",
+              bgWhite ? "border-primaryGrey" : "border-white"
+            )}
+          >
+            <Image
+              src={bgWhite ? "/icons/avatar-grey.svg" : "/icons/avatar.svg"}
+              width={27}
+              height={27}
+              alt="Profile icon"
+            />
+            {/* <ProfileIcon className="mr-2 h-5 w-5" aria-hidden="true" /> */}
+            {/* <ChevronDownIcon
               className="ml-2 -mr-1 h-5 w-5 text-gray-300 hover:text-gray-100"
               aria-hidden="true"
-            />
+            /> */}
+            <span
+              className={cn(
+                " pr-2 text-xs",
+                bgWhite ? "text-secondaryGrey" : "text-white"
+              )}
+            >
+              {address.slice(0, 10)}
+            </span>
           </Menu.Button>
         </div>
         <Transition
@@ -50,7 +69,7 @@ export default function ProfileMenu(props: MenuProps) {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute z-10 right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div className="px-1 py-1">
               <Menu.Item>
                 {({ active }) => (
@@ -61,7 +80,7 @@ export default function ProfileMenu(props: MenuProps) {
                       } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                     >
                       <ProfileIcon
-                        className="mr-2 h-5 w-5 text-gray-400"
+                        className="h-5 w-5 text-gray-400"
                         aria-hidden="true"
                       />
                       Profile
@@ -75,7 +94,7 @@ export default function ProfileMenu(props: MenuProps) {
                 {({ active }) => (
                   <MyLink
                     href="/my-investments"
-                    className={classNames(
+                    className={cn(
                       active ? "bg-gray-500 text-white" : "text-gray-900",
                       "group flex w-full items-center rounded-md px-2 py-2 text-sm"
                     )}
@@ -107,11 +126,11 @@ export default function ProfileMenu(props: MenuProps) {
                 )}
               </Menu.Item>
             </div>
-            <div className="px-1 py-1 z-100">
+            <div className="z-100 px-1 py-1">
               <Menu.Item>
                 {({ active }) => (
                   <button
-                    onClick={props.logout}
+                    onClick={logout}
                     className={`${
                       active ? "bg-gray-500 text-white" : "text-gray-900"
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
@@ -128,7 +147,7 @@ export default function ProfileMenu(props: MenuProps) {
           </Menu.Items>
         </Transition>
       </Menu>
-    </div>
+    </>
   );
 }
 

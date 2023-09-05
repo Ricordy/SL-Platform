@@ -1,1079 +1,374 @@
+import { GraphQLClient, gql } from "graphql-request";
 import type { NextPage } from "next";
-import Head from "next/head";
-import Slider from "../components/Slider";
-import Hero from "../components/Hero";
-import Investments from "../components/Investments";
-import Puzzle from "../components/Puzzle";
-import { investmentData } from "../data/Investments";
-import { useContractReads } from "wagmi";
+import { getSession } from "next-auth/react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useAccount, type Address, useContractRead } from "wagmi";
+import { type InvestmentProps } from "~/@types/investment";
+import { type SliderProps } from "~/@types/slider";
+import Investments from "~/components/Investments";
+import Posts from "~/components/Posts";
+import Puzzle from "~/components/Puzzle";
+import Highlight from "~/components/investment/Highlight";
+import Carousel from "../components/Carousel";
+import NavBar from "../components/NavBar";
+import { investmentABI } from "~/utils/abis";
+import { cn } from "~/lib/utils";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+interface ActiveInvestmentsProps {
+  investments: InvestmentProps[];
+}
+const Home: NextPage = (props: any) => {
+  const { isConnected, isDisconnected, address: walletAddress } = useAccount();
 
+  const percentage = 66;
 
-const Home: NextPage = () => {
-  const investContracts = []; 
+  // const { data: contractTotal } = useContractRead({
+  //   address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
+  //   abi: CoinTestAbi,
+  //   functionName: "balanceOf",
+  //   args: [
+  //     highlightContractAddress?.address[
+  //       process.env.NEXT_PUBLIC_CHAIN_ID as Address
+  //     ],
+  //   ],
+  //   watch: true,
+  // });
 
-  const InvestAbi = [
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_totalInvestment",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "_entryNFTAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_paymentTokenAddress",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "maxAllowed",
-          "type": "uint256"
-        }
-      ],
-      "name": "InvestmentExceedMax",
-      "type": "error"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "owner",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "spender",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "value",
-          "type": "uint256"
-        }
-      ],
-      "name": "Approval",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "time",
-          "type": "uint256"
-        }
-      ],
-      "name": "ContractFilled",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "profit",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "time",
-          "type": "uint256"
-        }
-      ],
-      "name": "ContractRefilled",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "previousOwner",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "OwnershipTransferred",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "time",
-          "type": "uint256"
-        }
-      ],
-      "name": "SLWithdraw",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "value",
-          "type": "uint256"
-        }
-      ],
-      "name": "Transfer",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "user",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "time",
-          "type": "uint256"
-        }
-      ],
-      "name": "UserInvest",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "user",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "time",
-          "type": "uint256"
-        }
-      ],
-      "name": "Withdraw",
-      "type": "event"
-    },
-    {
-      "inputs": [],
-      "name": "DECIMALSUSDC",
-      "outputs": [
-        {
-          "internalType": "uint8",
-          "name": "",
-          "type": "uint8"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "LEVEL1",
-      "outputs": [
-        {
-          "internalType": "uint8",
-          "name": "",
-          "type": "uint8"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "MINIMUM_INVESTMENT",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "owner",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "spender",
-          "type": "address"
-        }
-      ],
-      "name": "allowance",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "spender",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "approve",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        }
-      ],
-      "name": "balanceOf",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "enum Investment.Status",
-          "name": "_status",
-          "type": "uint8"
-        }
-      ],
-      "name": "changeStatus",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "decimals",
-      "outputs": [
-        {
-          "internalType": "uint8",
-          "name": "",
-          "type": "uint8"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "spender",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "subtractedValue",
-          "type": "uint256"
-        }
-      ],
-      "name": "decreaseAllowance",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "entryNFTAddress",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getMaxToInvest",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "maxToInvest",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "spender",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "addedValue",
-          "type": "uint256"
-        }
-      ],
-      "name": "increaseAllowance",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "newTotal",
-          "type": "uint256"
-        }
-      ],
-      "name": "incrementMax",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "invest",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "name",
-      "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "owner",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "paymentTokenAddress",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_amount",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_profitRate",
-          "type": "uint256"
-        }
-      ],
-      "name": "refill",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "renounceOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "returnProfit",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "status",
-      "outputs": [
-        {
-          "internalType": "enum Investment.Status",
-          "name": "",
-          "type": "uint8"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "symbol",
-      "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract ERC20",
-          "name": "_token",
-          "type": "address"
-        }
-      ],
-      "name": "totalContractBalanceStable",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "totalBalance",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "totalInvestment",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "totalSupply",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "transfer",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "transferFrom",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "transferOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "withdraw",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "withdrawSL",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
-  ]
-
-  const CoinTestAbi = [
-    {
-      "inputs": [],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "owner",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "spender",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "value",
-          "type": "uint256"
-        }
-      ],
-      "name": "Approval",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "value",
-          "type": "uint256"
-        }
-      ],
-      "name": "Transfer",
-      "type": "event"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "owner",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "spender",
-          "type": "address"
-        }
-      ],
-      "name": "allowance",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "spender",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "approve",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        }
-      ],
-      "name": "balanceOf",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "decimals",
-      "outputs": [
-        {
-          "internalType": "uint8",
-          "name": "",
-          "type": "uint8"
-        }
-      ],
-      "stateMutability": "pure",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "spender",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "subtractedValue",
-          "type": "uint256"
-        }
-      ],
-      "name": "decreaseAllowance",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "spender",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "addedValue",
-          "type": "uint256"
-        }
-      ],
-      "name": "increaseAllowance",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "mint",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "name",
-      "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "symbol",
-      "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "totalSupply",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "transfer",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "transferFrom",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
-  ]
-
-  investmentData.forEach(function(element) { 
-    console.log(element.address);
-    
-    const contract ={
-      address: element.address,
-      abi: InvestAbi,
-    }
-    investContracts.push(contract);
+  const { data: totalInvested } = useContractRead({
+    address: props.highlightInvestment?.address,
+    abi: investmentABI,
+    functionName: "totalSupply",
   });
 
-  const contractCoin ={
-    address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS,
-    abi: CoinTestAbi,
-  }
-  const { data, isError, isLoading } = useContractReads({
-    contracts: [
-      {
-      ...investContracts[0],
-      functionName: "status", 
-      },
-      {
-      ...investContracts[1],
-      functionName: "status", 
-      },
-      {
-      ...investContracts[2],
-      functionName: "status", 
-      },
-      {
-        ...investContracts[0],
-        functionName: "totalInvestment", 
-      },
-      {
-        ...investContracts[1],
-        functionName: "totalInvestment", 
-      },
-      {
-        ...investContracts[2],
-        functionName: "totalInvestment", 
-      },
-      {
-        ...contractCoin,
-        functionName: "balanceOf",
-        args: [process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS],
-      },
-      {
-        ...contractCoin,
-        functionName: "balanceOf",
-        args: [process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS_2],
-      },
-      {
-        ...contractCoin,
-        functionName: "balanceOf",
-        args: [process.env.NEXT_PUBLIC_INVESTMENT_ADDRESS_3],
-      },
-    ],
-    
-  })
+  // Carousel
+  const images = props.slider.investments;
+  const [activeIndex, setActiveIndex] = useState(0);
 
-    console.log(data)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 10000);
 
-    let counter = 0;
-    investmentData.map(function(element) { 
-      
-      if(data?.[counter] == 0)
-        element.phase = "Paused"
-      if(data?.[counter] == 1)
-        element.phase = "In Progress"
-      if(data?.[counter] == 2)
-        element.phase= "In Process"
-      if(data?.[counter] == 3)
-        element.phase= "In Withdraw"
-      if(data?.[counter] == 4)
-        element.phase= "In Withdraw"
+    return () => clearInterval(interval);
+  }, [images.length]);
 
-
-      element.amount = String(Number(data?.[3 + counter])/ 10**6)
-      element.percentage = String(Number(data?.[6 + counter]) / Number(element.amount) / 10**4 )
-      counter++;
-
-      
-      })
   return (
     <>
-      <Head>
-        <title>Something Legendary</title>
-      </Head>
-
-      <main className="container mx-auto flex flex-col max-w-4xl p-4">
-        <Hero className="my-12" />
-        <Slider /> 
-        <Investments />
-        <Puzzle />
-      </main>
+      <section className="mx-auto w-full bg-white">
+        {/* <div className="absolute z-20 h-[615px] w-full rounded-bl-[200px] bg-gradient-to-b from-black to-gray-950"></div> */}
+        {/* <div class="relative h-[968px] w-[1444px]">
+          <div class="absolute left-0 top-0 h-[968px] w-[1444px] rounded-bl-[50px] rounded-br-[50px] bg-gray-950"></div>
+          <img
+            class="absolute left-[2px] top-0 h-[784px] w-[1442px] opacity-80"
+            src="https://via.placeholder.com/1442x784"
+          />
+          <div class="absolute left-[1149px] top-[12px] h-[1147px] w-[772px] origin-top-left rotate-90 bg-gradient-to-b from-black to-gray-950"></div>
+          <div class="absolute left-0 top-[353px] h-[615px] w-[1442px] rounded-bl-[200px] bg-gradient-to-b from-black to-gray-950"></div>
+        </div> */}
+        <div className="relative flex min-h-[968px] w-full flex-col rounded-bl-[50px] bg-opacity-80 bg-cover bg-center bg-no-repeat">
+          {images.map((image, index) => (
+            <div
+              key={index}
+              className={`absolute left-0 min-h-[968px] w-full rounded-bl-[156px] bg-black bg-opacity-80 bg-cover transition-opacity duration-1000 ${
+                activeIndex === index ? "opacity-100" : "opacity-0"
+              }`}
+              style={{
+                backgroundImage: `url(${
+                  image.basicInvestment.car?.basicInfo.cover
+                    .url /** image.banner.url its the right one but has decievieng images by now */
+                })`,
+              }}
+            />
+          ))}
+          <div className="absolute top-0 z-0 flex min-h-[83px] w-full bg-[url('/bg/bg-navbar.svg')]" />
+          <div className="absolute left-0 z-10 flex min-h-[968px] w-full rounded-bl-[116px] bg-[url('/bg/gradient-vertical-header.svg')] bg-cover bg-bottom bg-no-repeat" />
+          <div className="absolute bottom-0 z-0 flex min-h-[968px] w-full rounded-bl-[50px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat" />
+          {/* </div>
+          <div className="absolute left-0 z-10 flex min-h-screen w-full rounded-bl-[116px] bg-[url('/bg/gradient-vertical-header.svg')] bg-cover bg-bottom bg-no-repeat"></div>
+          <div className="absolute bottom-0 z-0 flex min-h-screen w-full rounded-bl-[116px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat"></div> */}
+          {/* <div className="absolute top-0 z-10 h-[968px] w-[1444px] rounded-bl-[50px] rounded-br-[50px] bg-gray-950" /> */}
+          <NavBar />
+          <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
+            <div className="flex flex-col gap-12 pt-24">
+              <h3 className="text-5xl uppercase tracking-widest text-white">
+                New Classic
+                <br />
+                in town!
+              </h3>
+              <p className="text-white">
+                There&apos;s a new classic ready to be invested!
+                <br />
+                Don&apos;t miss your limited opportunity to get on this boat.
+              </p>
+              <Link
+                href={`/investment/${images[activeIndex].address}`}
+                className="self-start rounded-md bg-white px-12 py-1.5 text-center text-sm uppercase text-black dark:hover:bg-white dark:hover:text-black"
+              >
+                See More
+              </Link>
+            </div>
+          </div>
+          <div className="absolute left-[235px] top-[512px] z-40 -translate-x-1/2 transform space-x-2">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                className={`h-2.5 w-2.5 rounded-full ${
+                  activeIndex === index ? "bg-white" : "bg-gray-500"
+                } focus:outline-none`}
+                onClick={() => setActiveIndex(index)}
+              ></button>
+            ))}
+          </div>
+        </div>
+        <div className="relative left-1/2 z-20 -ml-[570px] -mt-[350px] min-h-[500px] w-full max-w-[1290px]">
+          <Carousel
+            id="1"
+            items={props.activeInvestments}
+            prevNavWhite={true}
+            title={<h2 className="text-2xl text-white">Our cars</h2>}
+            seeMoreLabel="See more"
+            seeMoreLink="/our-cars"
+            seeMoreMr="mr-36"
+          />
+          {/* Highlight Component */}
+        </div>
+        {!isConnected && (
+          <Highlight
+            className="mx-auto max-w-screen-lg"
+            investment={props.highlightInvestment}
+            totalInvested={totalInvested?.toNumber() / 10 ** 6}
+          />
+        )}
+        <div
+          className={cn(
+            "relative left-1/2 z-20 mx-auto -ml-[570px]  min-h-[532px] w-full max-w-[1290px]",
+            isConnected ? "mt-[132px]" : "mt-0"
+          )}
+        >
+          <Investments
+            isConnected={isConnected}
+            userInvestments={props.investments}
+          />
+        </div>
+        {/* My Puzzle */}
+        <div className="relative left-1/2 mx-auto -ml-[570px] w-full max-w-[1290px] ">
+          <Puzzle
+            isConnected={isConnected}
+            className="relative flex w-full  max-w-[1338px] flex-col pt-[132px]"
+            userAddress={walletAddress as Address}
+            puzzlePieces={props.puzzlePieces}
+            dbLevels={props.levels}
+          />
+        </div>
+        <div className="flex w-full rounded-t-3xl bg-black pb-[132px] pt-[72px]">
+          <Posts
+            posts={props.posts}
+            title="Learn More"
+            titleColor="text-white"
+            buttonMoreLink="https://beta.somethinglegendary.com/learn"
+            buttonMoreText="See More"
+          />
+        </div>
+      </section>
     </>
   );
 };
 
 export default Home;
+
+const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
+  headers: {
+    Authorization: process.env.HYGRAPH_BEARER as string,
+  },
+});
+
+export async function getServerSideProps(ctx) {
+  const session = await getSession(ctx);
+
+  const { posts } = await hygraph.request(
+    gql`
+      query MyQuery {
+        posts {
+          id
+          slug
+          basic {
+            title
+          }
+          shortDescription {
+            html
+          }
+          image {
+            url
+          }
+          postCategory
+          locale
+        }
+      }
+    `
+  );
+
+  const { investments: activeInvestments }: ActiveInvestmentsProps =
+    await hygraph.request(
+      gql`
+        query ActiveInvestments {
+          investments(
+            orderBy: createdAt_DESC
+            where: { basicInvestment: { investmentStatus: Active } }
+          ) {
+            id
+            address
+            highlight
+            level {
+              basicLevel {
+                title
+              }
+            }
+            basicInvestment {
+              id
+              totalInvested
+              totalInvestment
+              investmentStatus
+              car {
+                basicInfo {
+                  title
+                  cover {
+                    id
+                    url
+                  }
+                }
+                description
+                gallery {
+                  url
+                }
+              }
+            }
+            restorationPhases(where: { restorationStatus: InProgress }) {
+              title
+              restorationStatus
+            }
+          }
+        }
+      `
+    );
+
+
+  const { investments }: { investments: InvestmentProps[] } =
+    await hygraph.request(
+      gql`
+        query UserInvestments {
+          investments(
+            where: {
+              transactions_some: {
+                from: "${session?.user.id}"
+              }
+            }
+          ) {
+            id
+            address
+            level {
+              basicLevel {
+                title
+              }
+              profitRange
+            }
+            basicInvestment {
+              totalInvested
+              totalInvestment
+              investmentStatus
+              car {
+                id
+                basicInfo {
+                  cover {
+                    url
+                  }
+                  title
+                }
+              }
+            }
+          }
+        }
+      `
+    );
+
+  const { slider }: any = await hygraph.request(
+    gql`
+      query SliderHome {
+        slider(where: { title: "Home" }) {
+          id
+          title
+          investments {
+            banner {
+              url
+            }
+            address
+            basicInvestment {
+              car {
+                basicInfo {
+                  cover {
+                    url
+                  }
+                  title
+                }
+              }
+            }
+          }
+        }
+      }
+    `
+  );
+
+  const { puzzlePieces } = await hygraph.request(
+    gql`
+      query {
+        puzzlePieces(first: 30, orderBy: tokenid_ASC) {
+          tokenid
+          title
+          image {
+            url
+          }
+          imageCollected {
+            url
+          }
+        }
+      }
+    `
+  );
+
+  const { levels } = await hygraph.request(
+    gql`
+      query {
+        levels {
+          basicLevel {
+            title
+          }
+          description
+          profitRange
+          bg {
+            url
+          }
+          nft {
+            url
+          }
+        }
+      }
+    `
+  );
+
+  const highlightInvestment = activeInvestments.find(
+    (investment) => investment.highlight === true
+  );
+
+  return {
+    props: {
+      posts,
+      activeInvestments,
+      highlightInvestment,
+      investments,
+      slider,
+      puzzlePieces,
+      levels,
+    },
+  };
+}

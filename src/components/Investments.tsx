@@ -1,89 +1,129 @@
-import { useState } from "react";
 import { Tab } from "@headlessui/react";
-import { investmentData } from "../data/Investments";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { useConnect, useDisconnect } from "wagmi";
+import { InjectedConnector } from "wagmi/connectors/injected";
 import { investmentStatusesData } from "../data/InvestmentStatuses";
-import { NumericFormat } from "react-number-format";
+import { cn } from "../lib/utils";
+import ProjectCarousel from "./ProjectCarousel";
+import { Button } from "./ui/Button";
+import NoInvestments from "./NoInvestments";
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
+interface InvestmentsProps {
+  isConnected: boolean;
+  userInvestments;
 }
-
-export default function Investments() {
+export default function Investments({
+  isConnected,
+  userInvestments,
+}: InvestmentsProps) {
   const [investmentStatuses] = useState(investmentStatusesData);
-
+  const { connect } = useConnect({
+    connector: new InjectedConnector(),
+  });
+  const { disconnect } = useDisconnect();
   return (
-    <section id="investments" className="w-full px-2 py-16 sm:px-0">
-      <h2 className="text-3xl mx-auto my-6">Investments</h2>
-      <Tab.Group>
-        <Tab.List className="flex space-x-1 rounded-xl bg-gray-900/20 p-1">
-          {investmentStatuses.map((investmentStatus) => (
-            <Tab
-              key={investmentStatus}
-              className={({ selected }) =>
-                classNames(
-                  "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-gray-700",
-                  "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2",
-                  selected
-                    ? "bg-white shadow"
-                    : "text-gray-100 hover:bg-white/[0.12] hover:text-white"
-                )
-              }
+    <section id="investments" className="relative flex w-full flex-col">
+      <div className="mx-auto flex w-full justify-between pl-[58px]">
+        <h2 className="mb-[52px] text-2xl font-medium uppercase">
+          My Investments
+        </h2>
+        {isConnected && (
+          <div className="mr-36">
+            <Link
+              href="/my-investments"
+              className="border-b-2 border-primaryGreen text-sm uppercase text-primaryGreen"
             >
-              {investmentStatus}
-            </Tab>
-          ))}
-        </Tab.List>
-        <Tab.Panels className="mt-2">
-          {investmentStatuses.map((investmentStatus, idx) => (
-            <Tab.Panel
-              key={idx}
-              className={classNames(
-                "rounded-xl bg-white p-3",
-                "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2"
-              )}
-            >
-              <ul className="grid sm:grid-cols-2 grid-cols-1 gap-2">
-                {investmentData
-                  .filter((i) => i.status == investmentStatus)
-                  .map((investment) => (
-                    <li
-                      key={investment.id}
-                      className="relative rounded-md border  p-3 h-24 bg-gray-200 hover:bg-gray-100"
-                    >
-                      <h3 className="text-sm font-medium leading-5">
-                        {investment.title}
-                      </h3>
-
-                      <ul className="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500">
-                        <li>{investment.phase}</li>
-                        <li>&middot;</li>
-                        <li>
-                          <NumericFormat
-                            value={investment.amount}
-                            displayType="text"
-                            allowLeadingZeros
-                            thousandSeparator=","
-                            decimalScale={2}
-                          />
-                        </li>
-                        <li>&middot;</li>
-                        <li>{investment.percentage}%</li>
-                      </ul>
-
-                      <a
-                        href={`/investment/${investment.id}`}
-                        className={classNames(
-                          "absolute inset-0 rounded-md",
-                          "ring-gray-400 focus:z-10 focus:outline-none focus:ring-2"
-                        )}
+              See more
+            </Link>
+          </div>
+        )}
+      </div>
+      {isConnected && (
+        <Tab.Group>
+          <Tab.List className="ml-[58px] flex w-fit border-b border-b-gray-900/20">
+            {investmentStatusesData.map((investmentStatus) => (
+              <Tab
+                key={investmentStatus}
+                className={({ selected }) =>
+                  cn(
+                    "flex min-w-fit justify-center gap-3 px-6 pb-4  text-2xl font-normal  leading-5 text-tabInactive",
+                    "focus:outline-none",
+                    selected
+                      ? "border-b-4 border-primaryGreen bg-white font-semibold text-primaryGreen"
+                      : " hover:bg-white/[0.12] hover:text-tabInactive/80"
+                  )
+                }
+              >
+                {investmentStatus}
+              </Tab>
+            ))}
+          </Tab.List>
+          <Tab.Panels className="mt-2">
+            {investmentStatusesData.map((investmentStatus) => {
+              return (
+                <Tab.Panel
+                  key={investmentStatus}
+                  className={cn(
+                    " pt-6",
+                    "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2 "
+                  )}
+                >
+                  {investmentStatus == investmentStatusesData[0] &&
+                    userInvestments.filter(
+                      (investment) =>
+                        investment.basicInvestment.investmentStatus ==
+                        investmentStatus
+                    ).length == 0 && (
+                      <NoInvestments
+                        active={false}
+                        buttonLabel="Start Investing"
+                        isConnected={isConnected}
+                        url="/our-cars"
                       />
-                    </li>
-                  ))}
-              </ul>
-            </Tab.Panel>
-          ))}
-        </Tab.Panels>
-      </Tab.Group>
+                    )}
+                  <ProjectCarousel
+                    id={investmentStatus}
+                    items={userInvestments.filter(
+                      (investment) =>
+                        investment.basicInvestment.investmentStatus ==
+                        investmentStatus
+                    )}
+                  />
+                </Tab.Panel>
+              );
+            })}
+          </Tab.Panels>
+        </Tab.Group>
+      )}
+      {!isConnected && <NoInvestments isConnected={isConnected} />}
     </section>
   );
+}
+function clearQueryForRender(query) {
+  const newQuery = [];
+  query.map((item) => {
+    console.log(item);
+
+    newQuery.push({
+      id: item.id,
+      address: item.address,
+      basicInvestment: {
+        totalInvested: item.basicInvestment.totalInvested,
+        totalInvestment: item.basicInvestment.totalInvestment,
+        investmentStatus: item.basicInvestment.investmentStatus,
+        car: {
+          id: item.basicInvestment.car.id,
+          basicInfo: {
+            cover: {
+              url: item.basicInvestment.car.basicInfo.cover.url,
+            },
+            title: item.basicInvestment.car.basicInfo.title,
+          },
+        },
+      },
+    });
+  });
+  return newQuery;
 }
