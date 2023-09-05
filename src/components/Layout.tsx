@@ -6,6 +6,11 @@ export default function Layout({ children }) {
     <div className="flex flex-col items-stretch bg-buyNFTBackground">
       <Head>
         <title>Something Legendary</title>
+        <meta
+          name="description"
+          content="Somenthing Legendary: It is in the solitude that legends are born."
+        />
+        <link rel="icon" href="/slicon.ico" />
       </Head>
       <Toaster position="top-center" reverseOrder={false} />
       <main className="mx-auto flex w-full max-w-[1440px] shrink-0 grow flex-col">

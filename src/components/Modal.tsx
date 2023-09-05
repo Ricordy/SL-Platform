@@ -6,6 +6,7 @@ interface ModalType {
   title: string;
   children?: ReactNode;
   className?: string;
+  titleClassName?: string;
   isOpen: boolean;
   toggle: () => void;
   isBlur?: boolean;
@@ -20,6 +21,7 @@ const Modal = ({
   toggle,
   isBlur,
   toggleBlur,
+  titleClassName,
   changeClose = false,
 }: ModalType) => {
   return (
@@ -65,16 +67,19 @@ const Modal = ({
                   as="h3"
                   className="flex justify-between text-3xl font-medium leading-6 tracking-wide text-gray-900"
                 >
-                  {title}
+                  <div className={` ${titleClassName}`}>{title}</div>
+
                   {!changeClose && (
-                    <Image
-                      onClick={() => toggle()}
-                      src="/icons/close.svg"
-                      width={18}
-                      height={18}
-                      alt="Close"
-                      className=" cursor-pointer"
-                    />
+                    <div className="text-black">
+                      <Image
+                        onClick={() => toggle()}
+                        src="/icons/close.svg"
+                        width={18}
+                        height={18}
+                        alt="Close"
+                        className=" cursor-pointer"
+                      />
+                    </div>
                   )}
                 </Dialog.Title>
                 <div className="flex w-full justify-center gap-6">

@@ -150,7 +150,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
 
                 <button
                   className={cn(
-                    " flex h-[30px] w-[151px] shrink-0 justify-center rounded-md py-1 align-middle font-medium uppercase",
+                    " mr-7 flex h-[30px] w-[151px] shrink-0 justify-center rounded-md py-1 align-middle font-medium uppercase",
                     bgWhite ? "bg-black/10" : "bg-white"
                   )}
                   onClick={() =>
@@ -264,8 +264,8 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
             <Modal
               isOpen={TestingOpened}
               toggle={() => setTestingOpened(false)}
-              title=""
-              changeClose={true}
+              title="S "
+              titleClassName=" invisible"
             >
               <TestingGuides
                 mintPaymentToken={mintPaymentToken}
