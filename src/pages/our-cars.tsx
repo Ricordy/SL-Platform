@@ -128,7 +128,7 @@ const ourCars = (props) => {
           title={<h2 className="text-2xl ">Our cars</h2>}
           items={props.investments}
         />
-        <Carousel
+        {/* <Carousel
           id="5"
           className="pt-[132px]"
           title={<h2 className="text-2xl">Level 1</h2>}
@@ -151,7 +151,7 @@ const ourCars = (props) => {
           items={props.investments.filter(
             (i) => i.level.basicLevel.title === "Level 3"
           )}
-        />
+        /> */}
       </div>
     </section>
   );

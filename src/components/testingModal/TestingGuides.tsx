@@ -179,8 +179,44 @@ const TeestingPanels = (props: TestingPanelsProps) => {
       )}
       {activeIndex === 2 && (
         <div className="flex w-full  flex-col items-center justify-items-center  gap-[52px]">
+          <h3 className="whitespace-nowrap text-center text-[27px] uppercase tracking-widest">
+            Step 2<br /> <p className="font-normal">Claim Testnet USDC</p>
+          </h3>
+          <p className="text-justify">
+            To obtain your{" "}
+            <a
+              className=" font-medium text-primaryGold"
+              href="/Something-Legendary-Beginner's-guide.pdf#page=4"
+              target="__blank"
+            >
+              Membership Card
+            </a>
+            , you'll require some funds. These funds are represented by{" "}
+            <a
+              className=" font-medium text-primaryGold"
+              href="/Something-Legendary-Beginner's-guide.pdf#page=2"
+              target="__blank"
+            >
+              testnet USDC
+            </a>
+            , which simulates real USDC in our testing environment. To claim
+            these testnet USDC ,{" "}
+            <a
+              className=" cursor-pointer font-medium text-primaryGold"
+              onClick={mintPaymentToken}
+            >
+              click here
+            </a>{" "}
+            and follow the instructions. USDC, short for USD Coin, is a digital
+            cryptocurrency that mirrors the value of the US dollar, providing a
+            stable and reliable means of transacting in the crypto world.
+          </p>
+        </div>
+      )}
+      {activeIndex === 3 && (
+        <div className="flex w-full  flex-col items-center justify-items-center  gap-[52px]">
           <h3 className="text-center text-[27px] uppercase tracking-widest">
-            Step 2<br />
+            Step 3<br />
             <p className="font-normal">
               Purchase the <br /> Membership Card
             </p>
@@ -194,49 +230,15 @@ const TeestingPanels = (props: TestingPanelsProps) => {
             >
               Membership Card
             </a>{" "}
-            (NFT) and gain full access to the platform's Level 1 features,
-            navigate to the "My Investments" page or click{" "}
+            and gain full access to the platform's Level 1 features, navigate to
+            the "My Investments" page or click{" "}
             <a className=" font-medium text-primaryGold" href="/my-investments">
-              [here]
+              here
             </a>{" "}
             to go directly to the purchase page.
           </p>
         </div>
       )}
-      {activeIndex === 3 && (
-        <div className="flex w-full  flex-col items-center justify-items-center  gap-[52px]">
-          <h3 className="whitespace-nowrap text-center text-[27px] uppercase tracking-widest">
-            Step 3<br /> <p className="font-normal">Claim Testnet USDC</p>
-          </h3>
-          <p className="text-justify">
-            After purchasing the{" "}
-            <a
-              className=" font-medium text-primaryGold"
-              href="/Something-Legendary-Beginner's-guide.pdf#page=4"
-              target="__blank"
-            >
-              Membership Card
-            </a>
-            , you can now claim the{" "}
-            <a
-              className=" font-medium text-primaryGold"
-              href="/Something-Legendary-Beginner's-guide.pdf#page=2"
-              target="__blank"
-            >
-              testnet USDC
-            </a>{" "}
-            used to simulate USDC in the testnet. To claim it,{" "}
-            <a
-              className=" cursor-pointer font-medium text-primaryGold"
-              onClick={mintPaymentToken}
-            >
-              click here
-            </a>{" "}
-            and follow the instructions.
-          </p>
-        </div>
-      )}
-
       {activeIndex === 4 && (
         <div className="flex w-full  flex-col items-center justify-items-center  gap-[52px]">
           <h3 className="whitespace-nowrap text-center text-[27px] uppercase tracking-widest">
