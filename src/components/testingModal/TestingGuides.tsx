@@ -231,9 +231,9 @@ const TeestingPanels = (props: TestingPanelsProps) => {
               Membership Card
             </a>{" "}
             and gain full access to the platform's Level 1 features, navigate to
-            the "My Investments" page or click{" "}
+            the "My Investments" page or{" "}
             <a className=" font-medium text-primaryGold" href="/my-investments">
-              here
+              click here
             </a>{" "}
             to go directly to the purchase page.
           </p>
