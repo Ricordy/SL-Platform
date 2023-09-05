@@ -53,7 +53,6 @@ const Home: NextPage = (props: any) => {
 
     return () => clearInterval(interval);
   }, [images.length]);
-  console.log("props.activeInvestments", props.activeInvestments);
 
   return (
     <>
@@ -254,7 +253,6 @@ export async function getServerSideProps(ctx) {
       `
     );
 
-  console.log("fuck", activeInvestments);
 
   const { investments }: { investments: InvestmentProps[] } =
     await hygraph.request(

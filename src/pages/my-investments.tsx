@@ -184,11 +184,11 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     ],
     // watch: true,
     onError(error) {
-      console.log("Error", error);
+
     },
   });
 
-  console.log("data[6]", data?.[5]);
+
 
   // const { data: contractsTotalSupply }: { data: BigNumber } = useContractReads({
   //   contracts: [
@@ -295,7 +295,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     ],
     enabled: false,
     onError(err) {
-      console.log("configApprove", err.message);
+
 
       // toast.error(err.message);
     },
@@ -358,7 +358,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
   });
 
   const myMint = async () => {
-    console.log(userPaymentTokenBalance);
+
 
     try {
       if (
@@ -423,7 +423,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
         mintNFT?.();
       }
     } catch (error) {
-      console.log(error);
+
     }
   };
 

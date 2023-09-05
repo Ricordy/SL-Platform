@@ -205,11 +205,11 @@ export const InvestmentModal = ({
         if (!response.ok)
           toast.error(JSON.stringify("Error on fecthing API", response.text));
         // throw new Error(`Something went wrong submitting the form.`);
-        console.log(response);
+
 
         toast.success("Saved to the DB");
       } catch (err) {
-        console.log(err);
+
 
         // toast.error(err.message);
       }
@@ -229,7 +229,6 @@ export const InvestmentModal = ({
       } else if (error.code && error.code == -32603) {
         toast.error("Nonce to high for Metamask");
       } else {
-        console.log(error);
         // toast.error(error);
       }
     }

@@ -478,7 +478,6 @@ const Investment = ({
       if (!response.ok)
         toast.error(JSON.stringify("Error on fecthing API", response.text));
       // throw new Error(`Something went wrong submitting the form.`);
-      console.log(response);
 
       toast.success("Saved to the DB");
     } catch (err) {
@@ -487,14 +486,6 @@ const Investment = ({
   }
 
   useEffect(() => {
-    console.log("walletAddress", walletAddress);
-    console.log("totalSupply", totalSupply);
-    console.log("userTotalInvestment", userTotalInvestment);
-    console.log("maxToInvest", maxToInvest);
-    console.log("minToInvest", minToInvest);
-    console.log("paymentTokenBalance", paymentTokenBalance);
-    console.log("contractStatus", contractStatus);
-
     // getContractTotal().then((data) => {
     //   console.log("contractTotal", data?.toNumber());
     // });

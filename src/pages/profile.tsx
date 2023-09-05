@@ -1072,14 +1072,14 @@ const Profile: NextPage = () => {
   function howMany() {
     let total = 0;
     // const userTotalInvestmentNumber = Number(userTotalInvestment) / 10 ** 6;
-    console.log(userTotalInvestment.toString());
+
 
     if (userTotalInvestment?.lt(minClaimAmount as BigNumber)) {
       return userTotalInvestment;
     } else {
       if (userBalancePuzzle) {
         for (let i = 0; i < 10; i++) {
-          console.log(i, userBalancePuzzle[i].toString());
+
 
           total += Number(userBalancePuzzle[i]);
         }

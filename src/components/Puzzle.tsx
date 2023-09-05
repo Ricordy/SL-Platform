@@ -116,7 +116,6 @@ const Puzzle: FC<PuzzleProps> = ({
     ],
     // watch: true,
     onError(error) {
-      console.log("Error", error);
     },
   });
 
@@ -146,15 +145,12 @@ const Puzzle: FC<PuzzleProps> = ({
     // watch: true,
     enabled: data && currentLevel === data?.[6]?.toNumber(),
     onSettled(data, error) {
-      console.log("Erro??>>>>>", error);
 
       if (!error) {
         // data[6] == currentLevel
-        console.log("claimPiece>>>>> TRUE");
 
         setUserCanClaimPiece(true);
       } else {
-        console.log("claimPiece>>>>> FALSE");
         //setUserCanClaimPiece(false);
       }
     },
@@ -166,7 +162,7 @@ const Puzzle: FC<PuzzleProps> = ({
     functionName: "claimPiece",
     enabled: userCanClaimPiece,
     onError(err) {
-      console.log(err);
+
     },
     // onSuccess() {
     //   toast.success("Puzzle reivindicado com sucesso!");
@@ -185,7 +181,6 @@ const Puzzle: FC<PuzzleProps> = ({
       data?.[6]?.toNumber() == currentLevel,
   });
 
-  console.log("dblevels", dbLevels);
 
   const { write: claimLevel, isLoading: isLoadingClaimLevel } =
     useContractWrite(configClaimLevel);

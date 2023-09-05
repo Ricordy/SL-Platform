@@ -76,7 +76,7 @@ const MintEntryNFT: NextPage = () => {
           error: "Error approving",
         });
 
-        console.log("approved>>>>", entryNFTPrice);
+
 
         const tx = await puzzleContract.mintEntry();
 
@@ -97,7 +97,7 @@ const MintEntryNFT: NextPage = () => {
 
         toast.error(parsedError.message);
       } else {
-        console.log(JSON.stringify(error));
+
       }
     }
   };
