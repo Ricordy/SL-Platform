@@ -145,7 +145,7 @@ const TeestingPanels = (props: TestingPanelsProps) => {
       {activeIndex === 1 && (
         <div className="flex w-full flex-col  items-center justify-items-center gap-[52px]">
           <h3 className="whitespace-nowrap text-center text-[27px] uppercase tracking-widest">
-            Step 1 <br /> <p className="font-normal">Connect you wallet</p>
+            Step 1 <br /> <p className="font-normal">Connect your wallet</p>
           </h3>
           <p className="text-justify ">
             When you arrive at the{" "}
