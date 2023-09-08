@@ -236,8 +236,9 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
               {!isConnected && (
                 <button
                   className={cn(
-                    " mr-7 flex h-[30px] w-[151px] shrink-0 justify-center rounded-md py-1 align-middle font-medium uppercase",
-                    bgWhite ? "bg-black/10" : "bg-white"
+                    " flex h-[30px] shrink-0 justify-center rounded-md align-middle font-medium uppercase",
+                    bgWhite ? "bg-white" : "",
+                    isConnected ? "w-[24.74px]" : "w-[151px]"
                   )}
                   onClick={() =>
                     TestingOpened
@@ -245,7 +246,11 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                       : setTestingOpened(true)
                   }
                 >
-                  <h5 className="">For tester</h5>
+                  <div className="inline-flex h-[30px] w-[151px] items-center justify-center gap-2.5 rounded-md bg-white px-5 py-2.5">
+                    <div className="whitespace-nowrap  text-sm font-medium uppercase leading-tight tracking-wide text-black">
+                      For tester
+                    </div>
+                  </div>
                 </button>
               )}
               <button

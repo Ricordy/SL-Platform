@@ -200,6 +200,10 @@ const Puzzle: FC<PuzzleProps> = ({
 
   const [profitNotification, setProfitNotification] = useState(true);
 
+  useEffect(() => {
+    return () => {};
+  }, [userCanClaimPiece, data]);
+
   return (
     <section
       id="puzzle"
