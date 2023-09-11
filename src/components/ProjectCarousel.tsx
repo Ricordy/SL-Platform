@@ -74,7 +74,7 @@ const CarouselItem = ({
                   value={price}
                   displayType="text"
                   thousandSeparator=","
-                  decimalScale={2}
+                  decimalScale={0}
                   prefix="$"
                 />
               </span>
@@ -84,7 +84,7 @@ const CarouselItem = ({
               <span className=" font-bold text-white">
                 {String(
                   ((noDecimal(contractProgress) / Number(price)) * 100).toFixed(
-                    2
+                    0
                   )
                 )}
                 %
@@ -97,7 +97,7 @@ const CarouselItem = ({
             className={` rounded-bl-md bg-progressHighlight`}
             style={{
               width: `${String(
-                ((noDecimal(contractProgress) / Number(price)) * 100).toFixed(2)
+                ((noDecimal(contractProgress) / Number(price)) * 100).toFixed(0)
               )}%`,
             }}
           ></div>

@@ -28,7 +28,7 @@ const InvestmentHistory = ({
                   fixedDecimalScale={true}
                   displayType="text"
                   thousandSeparator=","
-                  decimalScale={2}
+                  decimalScale={0}
                   prefix="$ "
                 />
               </span>

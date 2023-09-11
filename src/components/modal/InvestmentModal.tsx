@@ -325,7 +325,7 @@ export const InvestmentModal = ({
                 fixedDecimalScale
                 decimalSeparator="."
                 thousandSeparator=","
-                decimalScale={2}
+                decimalScale={0}
                 prefix="$ "
               />
             </div>
@@ -344,7 +344,7 @@ export const InvestmentModal = ({
                   fixedDecimalScale={true}
                   decimalSeparator="."
                   thousandSeparator=","
-                  decimalScale={2}
+                  decimalScale={0}
                   prefix="$ "
                 />
               </div>
@@ -358,7 +358,7 @@ export const InvestmentModal = ({
                   fixedDecimalScale={true}
                   decimalSeparator="."
                   thousandSeparator=","
-                  decimalScale={2}
+                  decimalScale={0}
                   prefix="$ "
                 />{" "}
                 <span className="text-xs text-primaryGold">(10%)</span>

@@ -691,7 +691,7 @@ const ExpectedReturn = ({
             value={totalInvested * 1.12}
             displayType="text"
             thousandSeparator=","
-            decimalScale={2}
+            decimalScale={0}
             prefix="$ "
           />
         </span>
@@ -702,7 +702,7 @@ const ExpectedReturn = ({
             value={totalInvested * 1.15}
             displayType="text"
             thousandSeparator=","
-            decimalScale={2}
+            decimalScale={0}
             prefix="$ "
           />
         </span>

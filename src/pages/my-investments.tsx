@@ -98,7 +98,7 @@ export const TransactionItem = (items, userInvestedContracts) => {
                   value={item.amountInvested}
                   displayType="text"
                   thousandSeparator=","
-                  decimalScale={2}
+                  decimalScale={0}
                   prefix="$"
                 />
               </span>
@@ -590,7 +590,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                   value={noDecimal(data?.[5]?.toNumber()) || 0}
                   displayType="text"
                   thousandSeparator=","
-                  decimalScale={2}
+                  decimalScale={0}
                   prefix="$"
                 />
               </span>
@@ -630,7 +630,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                           value={data?.[0].div(10 ** 6).toNumber()}
                           displayType="text"
                           thousandSeparator=","
-                          decimalScale={2}
+                          decimalScale={0}
                           prefix="$"
                         />
                       </span>
@@ -644,7 +644,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                           value={data?.[1].div(10 ** 6).toNumber()}
                           displayType="text"
                           thousandSeparator=","
-                          decimalScale={2}
+                          decimalScale={0}
                           prefix="$"
                         />
                       </span>
@@ -658,7 +658,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                           value={data?.[2].div(10 ** 6).toNumber()}
                           displayType="text"
                           thousandSeparator=","
-                          decimalScale={2}
+                          decimalScale={0}
                           prefix="$"
                         />
                       </span>
@@ -672,7 +672,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                           value={data?.[3].div(10 ** 6).toNumber()}
                           displayType="text"
                           thousandSeparator=","
-                          decimalScale={2}
+                          decimalScale={0}
                           prefix="$"
                         />
                       </span>

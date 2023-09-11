@@ -51,7 +51,7 @@ export const CarouselItem = ({
                   value={price}
                   displayType="text"
                   thousandSeparator=","
-                  decimalScale={2}
+                  decimalScale={0}
                   prefix="$"
                 />
               </span>

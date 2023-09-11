@@ -283,7 +283,7 @@ export const InvestmentSidebar = ({
                 fixedDecimalScale={true}
                 decimalSeparator="."
                 thousandSeparator=","
-                decimalScale={2}
+                decimalScale={0}
                 prefix="$ "
               />
             </div>
@@ -295,7 +295,7 @@ export const InvestmentSidebar = ({
                 fixedDecimalScale={true}
                 decimalSeparator="."
                 thousandSeparator=","
-                decimalScale={2}
+                decimalScale={0}
                 prefix="$ "
               />
             </div>
@@ -307,7 +307,7 @@ export const InvestmentSidebar = ({
                 fixedDecimalScale={true}
                 decimalSeparator="."
                 thousandSeparator=","
-                decimalScale={2}
+                decimalScale={0}
                 prefix="$ "
               />{" "}
               <span className="text-xs">(10%)</span>

@@ -213,7 +213,7 @@ export const ProjectInfo = ({
             fixedDecimalScale={true}
             decimalSeparator=","
             thousandSeparator="."
-            decimalScale={2}
+            decimalScale={0}
             prefix="$ "
           />
         </span>
@@ -229,7 +229,7 @@ export const ProjectInfo = ({
             displayType="text"
             fixedDecimalScale
             decimalSeparator="."
-            decimalScale={2}
+            decimalScale={0}
             suffix="%"
           />{" "}
           Finished
@@ -262,7 +262,7 @@ const TransactionItem = ({
           fixedDecimalScale={true}
           decimalSeparator=","
           thousandSeparator="."
-          decimalScale={2}
+          decimalScale={0}
           prefix="$ "
         />
       </div>
@@ -643,7 +643,7 @@ const Investment = ({
                       fixedDecimalScale={true}
                       decimalSeparator=","
                       thousandSeparator="."
-                      decimalScale={2}
+                      decimalScale={0}
                       prefix="$ "
                     />
                   </span>
@@ -794,7 +794,7 @@ const Investment = ({
                                   fixedDecimalScale={true}
                                   decimalSeparator=","
                                   thousandSeparator="."
-                                  decimalScale={2}
+                                  decimalScale={0}
                                   prefix="$ "
                                 />
                               </span>
@@ -808,7 +808,7 @@ const Investment = ({
                                   fixedDecimalScale={true}
                                   decimalSeparator=","
                                   thousandSeparator="."
-                                  decimalScale={2}
+                                  decimalScale={0}
                                   prefix="$ "
                                 />
                               </span>
@@ -887,7 +887,7 @@ const Investment = ({
                     fixedDecimalScale={true}
                     decimalSeparator=","
                     thousandSeparator="."
-                    decimalScale={2}
+                    decimalScale={0}
                     prefix="$ "
                   />
                 </span>
@@ -909,7 +909,7 @@ const Investment = ({
                         fixedDecimalScale={true}
                         decimalSeparator=","
                         thousandSeparator="."
-                        decimalScale={2}
+                        decimalScale={0}
                         prefix="$ "
                       />
                       <span className="text-sm text-primaryGreen">
@@ -933,7 +933,7 @@ const Investment = ({
                         fixedDecimalScale={true}
                         decimalSeparator=","
                         thousandSeparator="."
-                        decimalScale={2}
+                        decimalScale={0}
                         prefix="$ "
                       />
                       <span className="text-sm text-primaryGreen">

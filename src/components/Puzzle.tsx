@@ -192,7 +192,7 @@ const Puzzle: FC<PuzzleProps> = ({
     locked: data?.[6]?.lt(idx + 1),
     profitRange: dbLevel.profitRange,
     description: dbLevel.description,
-    progress: userPieces && ((userPieces.length / 10) * 100).toFixed(2),
+    progress: userPieces && ((userPieces.length / 10) * 100).toFixed(0),
     invested: noDecimals(Number(data?.[3 + idx])),
     collected: userPieces && userPieces.length.toString(),
     nft: dbLevel.nft?.url,
@@ -341,7 +341,7 @@ const Puzzle: FC<PuzzleProps> = ({
                                       fixedDecimalScale
                                       decimalSeparator="."
                                       thousandSeparator=","
-                                      decimalScale={2}
+                                      decimalScale={0}
                                       prefix="$ "
                                     />
                                   </span>{" "}
@@ -352,7 +352,7 @@ const Puzzle: FC<PuzzleProps> = ({
                                     fixedDecimalScale
                                     decimalSeparator="."
                                     thousandSeparator=","
-                                    decimalScale={2}
+                                    decimalScale={0}
                                     prefix="$ "
                                   />
                                 </span>
