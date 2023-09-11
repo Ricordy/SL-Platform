@@ -183,12 +183,8 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       // },
     ],
     // watch: true,
-    onError(error) {
-
-    },
+    onError(error) {},
   });
-
-
 
   // const { data: contractsTotalSupply }: { data: BigNumber } = useContractReads({
   //   contracts: [
@@ -295,8 +291,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     ],
     enabled: false,
     onError(err) {
-
-
       // toast.error(err.message);
     },
     // onSuccess() {
@@ -358,8 +352,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
   });
 
   const myMint = async () => {
-
-
     try {
       if (
         userPaymentTokenBalance &&
@@ -422,9 +414,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       } else {
         mintNFT?.();
       }
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -539,7 +529,9 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                   <h1 className="text-5xl font-semibold uppercase text-primaryGold">
                     Buy your
                     <br />
-                    <span className="font-medium text-black">Membership Card!</span>
+                    <span className="font-medium text-black">
+                      Membership Card!
+                    </span>
                   </h1>
                   <p className=" text-sm">
                     You're one step closer to living the adventure you've always
@@ -697,7 +689,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                   <TransactionItem /> */}
                   <Link
                     className="flex self-start"
-                    href="https://etherscan.io/"
+                    href={`https://etherscan.io/address/${sessionData?.user.id}`}
                     target="_blank"
                   >
                     See more
