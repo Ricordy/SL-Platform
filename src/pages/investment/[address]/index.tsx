@@ -1000,43 +1000,7 @@ const Investment = ({
               </div>
               <div className="flex flex-col">
                 <h3>Transactions:</h3>
-                <div className=" my-8 flex h-40 flex-col divide-y-[0.50px] divide-divideTransaction overflow-y-auto scroll-smooth rounded-md px-4">
-                  <TransactionItem
-                    key="3333"
-                    value={445}
-                    date="3333"
-                    type="deposit"
-                    hash="34343424"
-                    wallet="0x343434"
-                    from="0x454545"
-                  />
-                  <TransactionItem
-                    key="3333"
-                    value={445}
-                    date="3333"
-                    type="deposit"
-                    hash="34343424"
-                    wallet="0x343434"
-                    from="0x454545"
-                  />
-                  <TransactionItem
-                    key="3333"
-                    value={445}
-                    date="3333"
-                    type="deposit"
-                    hash="34343424"
-                    wallet="0x343434"
-                    from="0x454545"
-                  />
-                  <TransactionItem
-                    key="3333"
-                    value={445}
-                    date="3333"
-                    type="deposit"
-                    hash="34343424"
-                    wallet="0x343434"
-                    from="0x454545"
-                  />
+                <div className=" my-8 flex h-96 flex-col divide-y-[0.50px] divide-divideTransaction overflow-y-auto scroll-smooth rounded-md px-4">
                   {investment.transactions.map((transaction) => (
                     <TransactionItem
                       key={transaction.hash}
