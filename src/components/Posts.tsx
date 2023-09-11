@@ -88,18 +88,21 @@ const Posts: FC<PostProps> = ({
       </div>
       <div className="grid w-full grid-cols-3 justify-between gap-6">
         {posts &&
-          posts.map((post) => (
-            <PostItem
-              key={post.slug}
-              shortDescription={post.shortDescription}
-              basic={post.basic}
-              titleColor="text-white"
-              image={post.image}
-              slug={post.slug}
-            >
-              {post.shortDescription.html}
-            </PostItem>
-          ))}
+          posts.map(
+            (post, index) =>
+              index < 3 && (
+                <PostItem
+                  key={post.slug}
+                  shortDescription={post.shortDescription}
+                  basic={post.basic}
+                  titleColor="text-white"
+                  image={post.image}
+                  slug={post.slug}
+                >
+                  {post.shortDescription.html}
+                </PostItem>
+              )
+          )}
       </div>
     </section>
   );
