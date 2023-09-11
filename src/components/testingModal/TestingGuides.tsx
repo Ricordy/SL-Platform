@@ -271,7 +271,7 @@ const TeestingPanels = (props: TestingPanelsProps) => {
             Once you've made your investment, you can now claim a Level 1{" "}
             <a
               className=" font-medium text-primaryGold"
-              href="/Something-Legendary-Beginner's-guide.pdf#page=6"
+              href="/Something-Legendary-Beginner's-guide.pdf#page=5"
               target="__blank"
             >
               puzzle piece
@@ -294,7 +294,7 @@ const TeestingPanels = (props: TestingPanelsProps) => {
             After successfully claiming the{" "}
             <a
               className=" font-medium text-primaryGold"
-              href="/Something-Legendary-Beginner's-guide.pdf#page=6"
+              href="/Something-Legendary-Beginner's-guide.pdf#page=5"
               target="__blank"
             >
               puzzle piece
@@ -337,7 +337,7 @@ const TeestingPanels = (props: TestingPanelsProps) => {
             , you can now explore and participate in the{" "}
             <a
               className=" font-medium text-primaryGold"
-              href="/Something-Legendary-Beginner's-guide.pdf#page=5"
+              href="/Something-Legendary-Beginner's-guide.pdf#page=6"
               target="__blank"
             >
               Level 1
