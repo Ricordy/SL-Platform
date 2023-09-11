@@ -150,8 +150,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
 
                 <button
                   className={cn(
-                    " mr-7 flex h-[30px] w-[151px] shrink-0 justify-center rounded-md align-middle font-medium uppercase",
-                    bgWhite ? "bg-black/10" : "bg-white"
+                    " mr-7 flex h-[30px] w-[151px] shrink-0 justify-center rounded-md align-middle font-medium uppercase"
                   )}
                   onClick={() =>
                     TestingOpened
@@ -159,8 +158,18 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                       : setTestingOpened(true)
                   }
                 >
-                  <div className="inline-flex h-[30px] w-[151px] items-center justify-center gap-2.5 rounded-md bg-white px-5 py-2.5">
-                    <div className="whitespace-nowrap  text-sm font-medium uppercase leading-tight tracking-wide text-black">
+                  <div
+                    className={cn(
+                      "inline-flex h-[30px] w-[151px] items-center justify-center gap-2.5 rounded-md bg-white px-5 py-2.5",
+                      bgWhite ? " bg-black" : "bg-white"
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "whitespace-nowrap  text-sm font-medium uppercase leading-tight tracking-wide text-black",
+                        bgWhite ? " text-white" : "text-black"
+                      )}
+                    >
                       For tester
                     </div>
                   </div>
@@ -250,8 +259,18 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                       : setTestingOpened(true)
                   }
                 >
-                  <div className="inline-flex h-[30px] w-[151px] items-center justify-center gap-2.5 rounded-md bg-white px-5 py-2.5">
-                    <div className="whitespace-nowrap  text-sm font-medium uppercase leading-tight tracking-wide text-black">
+                  <div
+                    className={cn(
+                      "inline-flex h-[30px] w-[151px] items-center justify-center gap-2.5 rounded-md bg-white px-5 py-2.5",
+                      bgWhite ? " bg-black " : "bg-white"
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "whitespace-nowrap  text-sm font-medium uppercase leading-tight tracking-wide text-black",
+                        bgWhite ? " text-white" : "text-black"
+                      )}
+                    >
                       For tester
                     </div>
                   </div>
@@ -276,8 +295,18 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                     height={18}
                   />
                 ) : (
-                  <div className="inline-flex h-[30px] w-[151px] items-center justify-center gap-2.5 rounded-md bg-white px-5 py-2.5">
-                    <div className="whitespace-nowrap text-sm font-medium uppercase leading-tight tracking-wide text-black">
+                  <div
+                    className={cn(
+                      "inline-flex h-[30px] w-[151px] items-center justify-center gap-2.5 rounded-md bg-white px-5 py-2.5",
+                      bgWhite ? " bg-black" : "bg-white"
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "whitespace-nowrap  text-sm font-medium uppercase leading-tight tracking-wide text-black",
+                        bgWhite ? " text-white" : "text-black"
+                      )}
+                    >
                       CONNECT WALLET
                     </div>
                   </div>
