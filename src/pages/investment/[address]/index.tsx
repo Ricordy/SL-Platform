@@ -878,7 +878,7 @@ const Investment = ({
               Investments
             </h3>
             <div className="grid grid-cols-2 gap-8 ">
-              <div className="flex flex-col gap-4 bg-[#F6F9F8] p-10">
+              <div className="flex h-fit flex-col gap-4 bg-[#F6F9F8] p-10">
                 <div className="flex">Total Invested:</div>
                 <span className="pb-2 text-4xl font-semibold tracking-widest text-primaryGreen">
                   <NumericFormat
@@ -969,7 +969,7 @@ const Investment = ({
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-center gap-8 pb-8">
+                <div className="flex justify-center gap-8">
                   {/* <InvestmentModal
                     className="flex flex-col justify-between align-middle"
                     title={investment?.basicInvestment.car.basicInfo.title}
@@ -998,9 +998,9 @@ const Investment = ({
                   </Button>
                 </div>
               </div>
-              <div className="flex flex-col">
+              <div className="flex max-h-[492px]   flex-col">
                 <h3>Transactions:</h3>
-                <div className=" my-8 flex h-96 flex-col divide-y-[0.50px] divide-divideTransaction overflow-y-auto scroll-smooth rounded-md px-4">
+                <div className=" mt-8 flex flex-col divide-y-[0.50px] divide-divideTransaction overflow-y-auto scroll-smooth rounded-md px-4">
                   {investment.transactions.map((transaction) => (
                     <TransactionItem
                       key={transaction.hash}
