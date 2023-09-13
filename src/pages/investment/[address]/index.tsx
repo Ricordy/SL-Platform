@@ -116,67 +116,70 @@ const InvestmentGallery = ({ images }) => {
     setIsOpen(false);
   };
 
-  const moveNext = (index) => {
+  const moveNext = (index: number) => {
     setPhotoIndex(index == 2 ? 0 : index + 1);
   };
   return (
     <Gallery>
-      <div className="grid grid-cols-3 grid-rows-2 gap-4">
-        <Item
-          original={images[0].url}
-          thumbnail={images[0].url}
-          width="499"
-          height="384"
-        >
-          {({ ref, open }) => (
-            <Image
-              className="col-span-2 row-span-2 cursor-pointer rounded-md"
-              ref={ref as React.MutableRefObject<HTMLImageElement>}
-              alt="Car Image"
-              width={765}
-              height={400}
-              onClick={open}
-              src={images[0].url}
-            />
-          )}
-        </Item>
+      <div className="gallery items-center justify-center">
+        <div className="grid  justify-around gap-4 ">
+          <Item
+            original={images[0].url}
+            thumbnail={images[0].url}
+            width="1432"
+            height="955"
+          >
+            {({ ref, open }) => (
+              <Image
+                className="col-span-2 row-span-2 h-full w-full cursor-pointer rounded-md"
+                ref={ref as React.MutableRefObject<HTMLImageElement>}
+                alt="Car Image"
+                width={767}
+                height={400}
+                style={{ objectFit: "cover" }}
+                onClick={open}
+                src={images[0].url}
+              />
+            )}
+          </Item>
 
-        <Item
-          original={images[1].url}
-          thumbnail={images[1].url}
-          width="248"
-          height="200"
-        >
-          {({ ref, open }) => (
-            <Image
-              className="w-full max-w-full cursor-pointer rounded-md object-cover"
-              ref={ref as React.MutableRefObject<HTMLImageElement>}
-              alt="Car Image"
-              width={248}
-              height={200}
-              onClick={open}
-              src={images[1].url}
-            />
-          )}
-        </Item>
-        <Item
-          original={images[2].url}
-          thumbnail={images[2].url}
-          width="248"
-          height="200"
-        >
-          {({ ref, open }) => (
-            <Image
-              className="col-start-3 w-full max-w-full cursor-pointer rounded-md object-cover"
-              ref={ref as React.MutableRefObject<HTMLImageElement>}
-              alt="Car Image"
-              width={248}
-              height={200}
-              onClick={open}
-              src={images[2].url}
-            />
-          )}
-        </Item>
+          <Item
+            original={images[1].url}
+            thumbnail={images[1].url}
+            width="767"
+            height="400"
+          >
+            {({ ref, open }) => (
+              <Image
+                className=" max-h-full w-full cursor-pointer rounded-md object-cover"
+                ref={ref as React.MutableRefObject<HTMLImageElement>}
+                alt="Car Image"
+                width={767}
+                height={400}
+                onClick={open}
+                src={images[1].url}
+              />
+            )}
+          </Item>
+          <Item
+            original={images[2].url}
+            thumbnail={images[2].url}
+            width="248"
+            height="100"
+          >
+            {({ ref, open }) => (
+              <Image
+                className="col-start-3 max-h-full w-full cursor-pointer rounded-md object-cover"
+                ref={ref as React.MutableRefObject<HTMLImageElement>}
+                alt="Car Image"
+                width={248}
+                height={100}
+                onClick={open}
+                src={images[2].url}
+              />
+            )}
+          </Item>
+        </div>
       </div>
     </Gallery>
   );
@@ -561,7 +564,7 @@ const Investment = ({
       </Head>
       <main className="flex min-h-screen w-full flex-col bg-white  px-3 md:mt-0 md:px-0">
         <NavBar bgWhite={true} />
-        <div className="mx-auto flex h-full w-full max-w-screen-lg flex-col ">
+        <div className="mx-auto flex h-full w-full max-w-screen-lg flex-col md:gap-12 ">
           <div className="sticky top-0 z-20 mx-auto flex w-full items-center justify-between bg-white py-4">
             <div className="flex flex-col">
               <div className="flex justify-center gap-2 align-middle ">
