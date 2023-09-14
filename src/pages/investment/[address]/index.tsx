@@ -610,8 +610,8 @@ const Investment = ({
               images={investment.basicInvestment.car.gallery}
             />
           )}
-          <div className="flex items-start  justify-between gap-12">
-            <div className="flex w-[55%] flex-col gap-[16px] ">
+          <div className="flex max-h-full items-start  justify-between gap-12">
+            <div className="flex max-h-full w-[55%] flex-col gap-[14px]  ">
               <h3 className="flex items-center gap-6 pb-[52px] tracking-widest">
                 <Image
                   src="/icons/keys.svg"
@@ -630,10 +630,12 @@ const Investment = ({
                 color="bg-progressActiveBackground"
                 progress={progress}
               />
-              <h3 className="pb-8 pt-[52px]">Description</h3>
-              <p className="font-normal text-ogBlack">
-                {investment.basicInvestment.car.shortDescription}
-              </p>
+              <div className=" h-full max-h-[436px] overflow-scroll">
+                <h3 className="pb-5 pt-[52px]">Description</h3>
+                <p className="font-normal text-ogBlack">
+                  {investment.basicInvestment.car.shortDescription}
+                </p>
+              </div>
             </div>
             <div className="relative right-0 mr-0 flex w-2/5 flex-col gap-8">
               {
