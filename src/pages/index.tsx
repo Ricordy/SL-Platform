@@ -129,7 +129,7 @@ const Home: NextPage = (props: any) => {
             seeMoreLabel="See more"
             seeMoreLink="/our-cars"
             seeMoreMr="mr-36"
-            userAddress={walletAddress}
+            userAddress={walletAddress!}
           />
           {/* Highlight Component */}
         </div>

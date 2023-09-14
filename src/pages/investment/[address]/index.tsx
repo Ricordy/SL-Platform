@@ -147,8 +147,8 @@ const InvestmentGallery = ({ images }) => {
           <Item
             original={images[1].url}
             thumbnail={images[1].url}
-            width="767"
-            height="400"
+            width="1432"
+            height="955"
           >
             {({ ref, open }) => (
               <Image
@@ -165,8 +165,8 @@ const InvestmentGallery = ({ images }) => {
           <Item
             original={images[2].url}
             thumbnail={images[2].url}
-            width="248"
-            height="100"
+            width="1432"
+            height="955"
           >
             {({ ref, open }) => (
               <Image
