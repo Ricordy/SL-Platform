@@ -52,6 +52,8 @@ const Home: NextPage = (props: any) => {
     return () => clearInterval(interval);
   }, [images.length]);
 
+  console.log("posts", props.posts);
+
   return (
     <>
       <section className="mx-auto w-full bg-white">
@@ -192,6 +194,7 @@ export async function getServerSideProps(ctx) {
         posts {
           id
           slug
+          link
           basic {
             title
           }

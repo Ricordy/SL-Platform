@@ -19,4 +19,6 @@ export type PostItemProps = {
   slug: string;
   category?: string;
   children: ReactNode;
+  postCategory?: string;
+  link: string;
 };

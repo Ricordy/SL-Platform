@@ -11,10 +11,12 @@ const PostItem: FC<PostItemProps> = ({
   titleColor,
   children,
   slug,
+  link,
 }) => {
   const purifiedChildren = () => ({
     __html: DOMPurify.sanitize(children as string),
   });
+  console.log("link", link);
 
   return (
     <div className="relative flex flex-col gap-6">
@@ -26,20 +28,20 @@ const PostItem: FC<PostItemProps> = ({
         height={264}
       />
       <h3 className={cn("text-2xl", titleColor ?? "text-black")}>
-        {/* {basic.title} */}
+        {basic.title}
       </h3>
       <div
         className="text-white"
         dangerouslySetInnerHTML={purifiedChildren()}
       ></div>
       <Link
-        href={`/learn/${slug}`}
+        href={link ? link : `/learn/${slug}`}
         className="self-start border-b-2 border-b-primaryGreen py-1 text-center text-xs uppercase text-primaryGreen"
       >
         Know more
       </Link>
       <a
-        href={`/learn/${slug}`}
+        href={link ? link : `/learn/${slug}`}
         className={cn(
           "absolute inset-0 rounded-md",
           "ring-blue-400 focus:z-10 focus:outline-none focus:ring-2"
@@ -59,6 +61,10 @@ const Posts: FC<PostProps> = ({
   className,
   contentPadding,
 }) => {
+  posts = posts.filter((post) => {
+    return post.postCategory === "beginners";
+    console.log(post);
+  });
   return (
     <section
       className={cn(
@@ -76,6 +82,7 @@ const Posts: FC<PostProps> = ({
           )}
         >
           {title}
+
           {buttonMoreLink && buttonMoreText && (
             <Link
               href={buttonMoreLink}
@@ -98,6 +105,7 @@ const Posts: FC<PostProps> = ({
                   titleColor="text-white"
                   image={post.image}
                   slug={post.slug}
+                  link={post.link}
                 >
                   {post.shortDescription.html}
                 </PostItem>

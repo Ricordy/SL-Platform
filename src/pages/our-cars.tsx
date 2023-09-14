@@ -6,8 +6,10 @@ import { cn } from "~/lib/utils";
 import { Tab } from "@headlessui/react";
 import ProjectCarousel from "~/components/ProjectCarousel";
 import { investmentLevelsData } from "~/data/InvestmentStatuses";
+import { useAccount } from "wagmi";
 
 const ourCars = (props) => {
+  const { address: walletAddress } = useAccount();
   function reverseInvestments(investments) {
     return investments.slice().reverse();
   }
@@ -116,6 +118,7 @@ const ourCars = (props) => {
                           "l " +
                           investmentLevel.split("l")[1]
                     )}
+                    userAddress={walletAddress!}
                   />
                 </Tab.Panel>
               );
@@ -127,6 +130,7 @@ const ourCars = (props) => {
           className="pt-[132px]"
           title={<h2 className="text-2xl ">Our cars</h2>}
           items={props.investments}
+          userAddress={walletAddress!}
         />
         {/* <Carousel
           id="5"
