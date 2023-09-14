@@ -273,7 +273,7 @@ const TransactionItem = ({
       <span className="text-xs text-primaryGreen">{type}</span>
       <span>{dayjs(date).format("ll")}</span>
       <Link
-        href={`https://etherscan.io/tx/${hash}`}
+        href={`https://goerli.etherscan.io/tx/${hash}`}
         className="pr-2"
         target="_blank"
       >
@@ -674,7 +674,7 @@ const Investment = ({
                   <span>Contract Address:</span>
                   <span className="text-primaryGreen">
                     <Link
-                      href={`https://etherscan.io/address/${investment?.address}`}
+                      href={`https://goerli.etherscan.io/address/${investment?.address}`}
                       className="flex items-center gap-3"
                     >
                       {formatAddress(investment?.address)} <FiExternalLink />
