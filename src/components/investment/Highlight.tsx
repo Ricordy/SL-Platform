@@ -21,7 +21,7 @@ const Highlight = ({
     >
       <h2 className=" text-2xl font-medium uppercase">Highlight</h2>
       <div className="flex gap-6">
-        <div className="relative flex  w-1/3">
+        <div className="relative flex  min-w-[50%]">
           <Carousel showStatus={false} showThumbs={false}>
             {investment.basicInvestment.car.gallery.map((image, idx) => (
               <div key={idx} className="relative max-h-[405px] w-full">
@@ -36,7 +36,7 @@ const Highlight = ({
             ))}
           </Carousel>
         </div>
-        <div className="flex flex-col gap-[32px]">
+        <div className="flex max-w-[50%] flex-col gap-[32px]">
           <h2 className="text-3xl font-medium text-primaryGreen">
             {investment.basicInvestment.car.basicInfo.title}
           </h2>
@@ -50,7 +50,9 @@ const Highlight = ({
             }
             isFlexCol
           />
-          <p>{investment.basicInvestment.car.description}</p>
+          <p className=" max-h-24 overflow-scroll">
+            {investment.basicInvestment.car.description}
+          </p>
           {currentPhase && (
             <div className="flex gap-4">
               <Image
