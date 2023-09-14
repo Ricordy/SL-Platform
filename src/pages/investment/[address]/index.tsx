@@ -119,6 +119,7 @@ const InvestmentGallery = ({ images }) => {
   const moveNext = (index: number) => {
     setPhotoIndex(index == 2 ? 0 : index + 1);
   };
+
   return (
     <Gallery>
       <div className="gallery items-center justify-center">
@@ -556,6 +557,7 @@ const Investment = ({
   }
 
   console.log("investment", investment);
+  console.log("image chart", investment?.basicInvestment.car.chart.url);
 
   return (
     <>
@@ -667,7 +669,7 @@ const Investment = ({
                 </div>
               }
               <div className="flex flex-col justify-start gap-5 rounded-md bg-[#F6F9F8] px-16 py-[32px] align-middle text-ogBlack">
-                <h3 className="text-black">Especifications</h3>
+                <h3 className="text-black">Specifications</h3>
                 <div>
                   <span>Contract Address:</span>
                   <span className="text-primaryGreen">
@@ -887,7 +889,11 @@ const Investment = ({
                 <div className="flex">Total Invested:</div>
                 <span className="pb-2 text-4xl font-semibold tracking-widest text-primaryGreen">
                   <NumericFormat
-                    value={(Number(userTotalInvestment) / 10 ** 6).toString()}
+                    value={
+                      userTotalInvestment
+                        ? (Number(userTotalInvestment) / 10 ** 6).toString()
+                        : 0
+                    }
                     displayType="text"
                     fixedDecimalScale={true}
                     decimalSeparator=","
@@ -1036,7 +1042,10 @@ const Investment = ({
                 <h4 className="pb-8 text-2xl font-medium">
                   {investment?.basicInvestment.car.basicInfo.title}
                 </h4>
-                {investment?.basicInvestment.car.description}
+                <div className=" max-h-[358px] overflow-scroll">
+                  {" "}
+                  {investment?.basicInvestment.car.description}
+                </div>
               </div>
               <div className="flex">
                 <Image
