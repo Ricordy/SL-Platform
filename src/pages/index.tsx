@@ -12,7 +12,7 @@ import Puzzle from "~/components/Puzzle";
 import Highlight from "~/components/investment/Highlight";
 import Carousel from "../components/Carousel";
 import NavBar from "../components/NavBar";
-import { investmentABI } from "~/utils/abis";
+import { SLCoreABI, investmentABI } from "~/utils/abis";
 import { cn } from "~/lib/utils";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
@@ -21,8 +21,6 @@ interface ActiveInvestmentsProps {
 }
 const Home: NextPage = (props: any) => {
   const { isConnected, isDisconnected, address: walletAddress } = useAccount();
-
-  const percentage = 66;
 
   // const { data: contractTotal } = useContractRead({
   //   address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
@@ -131,6 +129,7 @@ const Home: NextPage = (props: any) => {
             seeMoreLabel="See more"
             seeMoreLink="/our-cars"
             seeMoreMr="mr-36"
+            userAddress={walletAddress}
           />
           {/* Highlight Component */}
         </div>
@@ -252,7 +251,6 @@ export async function getServerSideProps(ctx) {
         }
       `
     );
-
 
   const { investments }: { investments: InvestmentProps[] } =
     await hygraph.request(
