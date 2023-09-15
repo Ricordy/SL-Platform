@@ -16,6 +16,8 @@ import { SLCoreABI, investmentABI } from "~/utils/abis";
 import { cn } from "~/lib/utils";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import DOMPurify from "isomorphic-dompurify";
+
 interface ActiveInvestmentsProps {
   investments: InvestmentProps[];
 }
@@ -43,6 +45,34 @@ const Home: NextPage = (props: any) => {
   // Carousel
   const images = props.slider.investments;
   const [activeIndex, setActiveIndex] = useState(0);
+  const highlights = [
+    {
+      title: "First",
+      description: (
+        <p className="text-white">
+          There&apos;s a new classic ready to be invested in!
+          <br />
+          Don&apos;t miss your limited opportunity to join this investment
+          journey.
+        </p>
+      ),
+      linkTitle: "See more",
+      linkUrl: "/investment/0x71f9e0C7d21Ff94Abd7Cf3620AD42743A701b588",
+    },
+    {
+      title: "Second",
+      description: (
+        <p className="text-white">
+          There&apos;s a new classic ready to be invested in!
+          <br />
+          Don&apos;t miss your limited opportunity to join this investment
+          journey.
+        </p>
+      ),
+      linkTitle: "See more",
+      linkUrl: "/investment/0x71f9e0C7d21Ff94Abd7Cf3620AD42743A701b588",
+    },
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -93,16 +123,20 @@ const Home: NextPage = (props: any) => {
           <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
             <div className="flex flex-col gap-12 pt-24">
               <h3 className="text-5xl uppercase tracking-widest text-white">
-                New Classic
-                <br />
-                in town!
+                {images.at(activeIndex).basicInvestment.car?.sliderTitle}
               </h3>
-              <p className="text-white">
-                There&apos;s a new classic ready to be invested in!
-                <br />
-                Don&apos;t miss your limited opportunity to join this investment
-                journey.
-              </p>
+              {/* <p className="text-white">
+                {images.at(activeIndex).basicInvestment.car?.sliderDescription}
+              </p> */}
+              <div
+                className="text-white"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(
+                    images.at(activeIndex).basicInvestment.car
+                      ?.sliderDescription
+                  ),
+                }}
+              ></div>
               <Link
                 href={`/investment/${images[activeIndex].address}`}
                 className="self-start rounded-md bg-white px-12 py-1.5 text-center text-sm uppercase text-black dark:hover:bg-white dark:hover:text-black"
@@ -313,6 +347,8 @@ export async function getServerSideProps(ctx) {
                   }
                   title
                 }
+                sliderTitle
+                sliderDescription
               }
             }
           }
