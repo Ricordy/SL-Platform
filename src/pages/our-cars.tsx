@@ -105,7 +105,7 @@ const ourCars = (props) => {
                   key={investmentLevel}
                   className={cn(
                     " pt-6",
-                    "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2 "
+                    "min-h-[420px] ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-200 focus:outline-none focus:ring-2"
                   )}
                 >
                   <Carousel
