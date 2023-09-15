@@ -122,9 +122,14 @@ const Home: NextPage = (props: any) => {
           <NavBar />
           <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
             <div className="flex flex-col gap-12 pt-24">
-              <h3 className="text-5xl uppercase tracking-widest text-white">
-                {images.at(activeIndex).basicInvestment.car?.sliderTitle}
-              </h3>
+              <div
+                className="text-5xl uppercase tracking-widest text-white"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(
+                    images.at(activeIndex).basicInvestment.car?.sliderTitle
+                  ),
+                }}
+              ></div>
               {/* <p className="text-white">
                 {images.at(activeIndex).basicInvestment.car?.sliderDescription}
               </p> */}
