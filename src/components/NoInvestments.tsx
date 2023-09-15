@@ -31,8 +31,8 @@ const NoInvestments: React.FC<NoInvestmentProps> = ({
           Start your investments
         </h4>
         <p className="mb-8 text-ogBlack opacity-70">
-          If you haven't started your journey yet, don't waste any more time.
-          The dream commands life and it's time to take the reins of yours!
+          If you haven't started investing yet, what are you waiting for? Your
+          dream is just a click away!
         </p>
 
         {!url && (

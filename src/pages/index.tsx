@@ -98,9 +98,10 @@ const Home: NextPage = (props: any) => {
                 in town!
               </h3>
               <p className="text-white">
-                There&apos;s a new classic ready to be invested!
+                There&apos;s a new classic ready to be invested in!
                 <br />
-                Don&apos;t miss your limited opportunity to get on this boat.
+                Don&apos;t miss your limited opportunity to join this investment
+                journey.
               </p>
               <Link
                 href={`/investment/${images[activeIndex].address}`}
