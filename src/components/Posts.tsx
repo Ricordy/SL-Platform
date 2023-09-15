@@ -30,10 +30,10 @@ const PostItem: FC<PostItemProps> = ({
       <h3 className={cn("text-2xl", titleColor ?? "text-black")}>
         {basic.title}
       </h3>
-      <div
+      {/* <div
         className="text-white"
         dangerouslySetInnerHTML={purifiedChildren()}
-      ></div>
+      ></div> */}
       <Link
         href={link ? link : `/learn/${slug}`}
         className="self-start border-b-2 border-b-primaryGreen py-1 text-center text-xs uppercase text-primaryGreen"
