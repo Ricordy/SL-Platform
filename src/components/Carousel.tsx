@@ -95,15 +95,22 @@ export const CarouselItem = ({
             </svg>
           </div>
 
-          <h4 className="z-10 max-w-[90%] text-center text-3xl uppercase text-white">
-            Achieve next <br /> level
-          </h4>
-          <a href="#puzzle">
+          {(userLevel !== 0 && (
+            <h4 className="z-10 max-w-[90%] text-center text-3xl uppercase text-white">
+              Achieve next <br /> level
+            </h4>
+          )) || (
+            <h4 className="z-10 max-w-[90%] text-center text-3xl uppercase text-white">
+              Buy your
+              <br /> Membership Card
+            </h4>
+          )}
+          <a href={userLevel !== 0 ? "#puzzle" : "/my-investments"}>
             <Button
               variant={"outline"}
               className=" border-primaryGold text-primaryGold dark:hover:bg-primaryGold"
             >
-              See your progress
+              {(userLevel !== 0 && "See your progress") || "Buy now"}
             </Button>
           </a>
         </div>
