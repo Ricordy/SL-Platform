@@ -175,7 +175,7 @@ const Carousel: FC<CarouselProps> = ({
           </div>
         )}
       </div>
-      <div className="relative flex max-w-[1338px] items-center overflow-hidden">
+      <div className="relative flex max-w-[1224px] items-center">
         <div
           className={`absolute  left-0 z-20 flex items-center justify-center swiper-prev-${id}`}
         >
@@ -233,7 +233,7 @@ const Carousel: FC<CarouselProps> = ({
           </div>
         </section>
         <div
-          className={`absolute right-0 z-20 flex h-full items-center bg-gradient-to-r from-transparent to-black pr-10 swiper-next-${id}`}
+          className={`absolute right-0 z-20 -mr-[58px] flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent to-black pr-10 swiper-next-${id}`}
         >
           <Image
             src="/icons/pagination-next.svg"
