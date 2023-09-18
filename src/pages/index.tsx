@@ -16,6 +16,8 @@ import { SLCoreABI, investmentABI } from "~/utils/abis";
 import { cn } from "~/lib/utils";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import DOMPurify from "isomorphic-dompurify";
+
 interface ActiveInvestmentsProps {
   investments: InvestmentProps[];
 }
@@ -51,8 +53,6 @@ const Home: NextPage = (props: any) => {
 
     return () => clearInterval(interval);
   }, [images.length]);
-
-  console.log("posts", props.posts);
 
   return (
     <>
@@ -92,17 +92,23 @@ const Home: NextPage = (props: any) => {
           <NavBar />
           <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
             <div className="flex flex-col gap-12 pt-24">
-              <h3 className="text-5xl uppercase tracking-widest text-white">
-                New Classic
-                <br />
-                in town!
-              </h3>
-              <p className="text-white">
-                There&apos;s a new classic ready to be invested in!
-                <br />
-                Don&apos;t miss your limited opportunity to join this investment
-                journey.
-              </p>
+              <h3
+                className="text-5xl uppercase tracking-widest text-white"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(
+                    images.at(activeIndex).basicInvestment.car?.sliderTitle
+                  ),
+                }}
+              />
+              <p
+                className="text-white"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(
+                    images.at(activeIndex).basicInvestment.car
+                      ?.sliderDescription
+                  ),
+                }}
+              />
               <Link
                 href={`/investment/${images[activeIndex].address}`}
                 className="self-start rounded-md bg-white px-12 py-1.5 text-center text-sm uppercase text-black dark:hover:bg-white dark:hover:text-black"
@@ -313,6 +319,8 @@ export async function getServerSideProps(ctx) {
                   }
                   title
                 }
+                sliderTitle
+                sliderDescription
               }
             }
           }
