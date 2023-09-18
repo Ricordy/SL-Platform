@@ -1,7 +1,8 @@
 import { Toaster } from "react-hot-toast";
 import Head from "next/head";
+import AlertMessage from "./ui/AlertMessage";
 
-export default function Layout({ children }) {
+export default function Layout({ children }: React.PropsWithChildren<{}>) {
   return (
     <div className="flex flex-col items-stretch bg-buyNFTBackground">
       <Head>
@@ -14,6 +15,7 @@ export default function Layout({ children }) {
       </Head>
       <Toaster position="top-center" reverseOrder={false} />
       <main className="mx-auto flex w-full max-w-[1440px] shrink-0 grow flex-col">
+        <AlertMessage message="For the best experience, we recommend using our app on desktop." />
         {children}
       </main>
     </div>
