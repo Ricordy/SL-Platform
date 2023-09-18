@@ -45,34 +45,6 @@ const Home: NextPage = (props: any) => {
   // Carousel
   const images = props.slider.investments;
   const [activeIndex, setActiveIndex] = useState(0);
-  const highlights = [
-    {
-      title: "First",
-      description: (
-        <p className="text-white">
-          There&apos;s a new classic ready to be invested in!
-          <br />
-          Don&apos;t miss your limited opportunity to join this investment
-          journey.
-        </p>
-      ),
-      linkTitle: "See more",
-      linkUrl: "/investment/0x71f9e0C7d21Ff94Abd7Cf3620AD42743A701b588",
-    },
-    {
-      title: "Second",
-      description: (
-        <p className="text-white">
-          There&apos;s a new classic ready to be invested in!
-          <br />
-          Don&apos;t miss your limited opportunity to join this investment
-          journey.
-        </p>
-      ),
-      linkTitle: "See more",
-      linkUrl: "/investment/0x71f9e0C7d21Ff94Abd7Cf3620AD42743A701b588",
-    },
-  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -81,8 +53,6 @@ const Home: NextPage = (props: any) => {
 
     return () => clearInterval(interval);
   }, [images.length]);
-
-  console.log("posts", props.posts);
 
   return (
     <>
@@ -130,9 +100,6 @@ const Home: NextPage = (props: any) => {
                   ),
                 }}
               />
-              {/* <p className="text-white">
-                {images.at(activeIndex).basicInvestment.car?.sliderDescription}
-              </p> */}
               <p
                 className="text-white"
                 dangerouslySetInnerHTML={{
