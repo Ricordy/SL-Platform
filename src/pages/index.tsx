@@ -122,18 +122,18 @@ const Home: NextPage = (props: any) => {
           <NavBar />
           <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
             <div className="flex flex-col gap-12 pt-24">
-              <div
+              <h3
                 className="text-5xl uppercase tracking-widest text-white"
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(
                     images.at(activeIndex).basicInvestment.car?.sliderTitle
                   ),
                 }}
-              ></div>
+              />
               {/* <p className="text-white">
                 {images.at(activeIndex).basicInvestment.car?.sliderDescription}
               </p> */}
-              <div
+              <p
                 className="text-white"
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(
@@ -141,7 +141,7 @@ const Home: NextPage = (props: any) => {
                       ?.sliderDescription
                   ),
                 }}
-              ></div>
+              />
               <Link
                 href={`/investment/${images[activeIndex].address}`}
                 className="self-start rounded-md bg-white px-12 py-1.5 text-center text-sm uppercase text-black dark:hover:bg-white dark:hover:text-black"
