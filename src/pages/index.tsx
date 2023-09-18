@@ -129,7 +129,7 @@ const Home: NextPage = (props: any) => {
             ))}
           </div>
         </div>
-        <div className="relative left-1/2 z-20 -ml-[570px] -mt-[350px] min-h-[500px] w-full max-w-[1290px]">
+        <div className="relative left-1/2 z-20 -ml-[570px] -mt-[350px] min-h-[500px] w-full max-w-[1282px]">
           <Carousel
             id="1"
             items={props.activeInvestments}
@@ -151,7 +151,7 @@ const Home: NextPage = (props: any) => {
         )}
         <div
           className={cn(
-            "relative left-1/2 z-20 mx-auto -ml-[570px]  min-h-[532px] w-full max-w-[1290px]",
+            "relative left-1/2 z-20 mx-auto -ml-[570px]  min-h-[532px] w-full max-w-[1282px]",
             isConnected ? "mt-[132px]" : "mt-0"
           )}
         >
@@ -161,7 +161,7 @@ const Home: NextPage = (props: any) => {
           />
         </div>
         {/* My Puzzle */}
-        <div className="relative left-1/2 mx-auto -ml-[570px] w-full max-w-[1290px] ">
+        <div className="relative left-1/2 mx-auto -ml-[570px] w-full max-w-[1282px] ">
           <Puzzle
             isConnected={isConnected}
             className="relative flex w-full  max-w-[1338px] flex-col pt-[132px]"
