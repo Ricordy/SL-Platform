@@ -57,16 +57,6 @@ const Home: NextPage = (props: any) => {
   return (
     <>
       <section className="mx-auto w-full bg-white">
-        {/* <div className="absolute z-20 h-[615px] w-full rounded-bl-[200px] bg-gradient-to-b from-black to-gray-950"></div> */}
-        {/* <div class="relative h-[968px] w-[1444px]">
-          <div class="absolute left-0 top-0 h-[968px] w-[1444px] rounded-bl-[50px] rounded-br-[50px] bg-gray-950"></div>
-          <img
-            class="absolute left-[2px] top-0 h-[784px] w-[1442px] opacity-80"
-            src="https://via.placeholder.com/1442x784"
-          />
-          <div class="absolute left-[1149px] top-[12px] h-[1147px] w-[772px] origin-top-left rotate-90 bg-gradient-to-b from-black to-gray-950"></div>
-          <div class="absolute left-0 top-[353px] h-[615px] w-[1442px] rounded-bl-[200px] bg-gradient-to-b from-black to-gray-950"></div>
-        </div> */}
         <div className="relative flex min-h-[968px] w-full flex-col rounded-bl-[50px] bg-opacity-80 bg-cover bg-center bg-no-repeat">
           {images.map((image, index) => (
             <div
@@ -83,8 +73,8 @@ const Home: NextPage = (props: any) => {
             />
           ))}
           <div className="absolute top-0 z-0 flex min-h-[83px] w-full bg-[url('/bg/bg-navbar.svg')]" />
-          <div className="absolute left-0 z-10 flex min-h-[968px] w-full rounded-bl-[116px] bg-[url('/bg/gradient-vertical-header.svg')] bg-cover bg-bottom bg-no-repeat" />
-          <div className="absolute bottom-0 z-0 flex min-h-[968px] w-full rounded-bl-[50px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat" />
+          <div className="absolute left-0 z-10 hidden min-h-[968px] w-full rounded-bl-[116px] bg-opacity-10 bg-[url('/bg/gradient-vertical-header.svg')] bg-cover bg-bottom bg-no-repeat md:flex" />
+          <div className="absolute bottom-0 z-0 hidden min-h-[968px] w-full rounded-bl-[50px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat md:flex" />
           {/* </div>
           <div className="absolute left-0 z-10 flex min-h-screen w-full rounded-bl-[116px] bg-[url('/bg/gradient-vertical-header.svg')] bg-cover bg-bottom bg-no-repeat"></div>
           <div className="absolute bottom-0 z-0 flex min-h-screen w-full rounded-bl-[116px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat"></div> */}
@@ -170,7 +160,7 @@ const Home: NextPage = (props: any) => {
             dbLevels={props.levels}
           />
         </div>
-        <div className="flex w-full rounded-t-3xl bg-black pb-[132px] pt-[72px]">
+        <div className="hidden w-full rounded-t-3xl bg-black pb-[132px] pt-[72px] md:flex">
           <Posts
             posts={props.posts}
             title="Learn More"

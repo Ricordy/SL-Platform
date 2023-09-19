@@ -20,7 +20,7 @@ const Highlight = ({
       )}
     >
       <h2 className=" text-2xl font-medium uppercase">Highlight</h2>
-      <div className="flex gap-6">
+      <div className="flex flex-col gap-6 md:flex-row">
         <div className="relative flex  min-w-[50%]">
           <Carousel showStatus={false} showThumbs={false}>
             {investment.basicInvestment.car.gallery.map((image, idx) => (
@@ -54,7 +54,7 @@ const Highlight = ({
             {investment.basicInvestment.car.description}
           </p>
           {currentPhase && (
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-4 md:flex-row">
               <Image
                 src="/icons/tasks.svg"
                 width={22}
