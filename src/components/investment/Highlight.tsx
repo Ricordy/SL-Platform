@@ -15,7 +15,7 @@ const Highlight = ({
   return (
     <div
       className={cn(
-        "ml-[58px] flex flex-col gap-12 py-[132px]",
+        "ml-[58px] flex flex-col gap-12 px-6 md:px-0 md:py-[132px]",
         className ?? ""
       )}
     >
@@ -36,7 +36,7 @@ const Highlight = ({
             ))}
           </Carousel>
         </div>
-        <div className="flex max-w-[50%] flex-col gap-[32px]">
+        <div className="flex flex-col gap-[32px] md:max-w-[50%]">
           <h2 className="text-3xl font-medium text-primaryGreen">
             {investment.basicInvestment.car.basicInfo.title}
           </h2>
@@ -54,20 +54,24 @@ const Highlight = ({
             {investment.basicInvestment.car.description}
           </p>
           {currentPhase && (
-            <div className="flex flex-col gap-4 md:flex-row">
-              <Image
-                src="/icons/tasks.svg"
-                width={22}
-                height={22}
-                style={{ width: "auto" }}
-                alt="Tasks"
-              />
-              <span className="whitespace-nowrap pr-2 text-xl font-medium">
-                {currentPhase.title}
-              </span>
+            <div className="flex flex-col gap-4 sm:flex-row">
+              <div className="flex w-full items-center justify-start">
+                <div className="w-10">
+                  <Image
+                    src="/icons/tasks.svg"
+                    width={22}
+                    height={22}
+                    style={{ width: "auto" }}
+                    alt="Tasks"
+                  />
+                </div>
+                <span className="whitespace-nowrap pr-2 text-xl font-medium">
+                  {currentPhase.title}
+                </span>
+              </div>
               <span
                 className={cn(
-                  "flex items-center justify-center gap-2 whitespace-nowrap rounded-full px-2 py-1 text-xs",
+                  "flex w-36 items-center justify-center gap-2 whitespace-nowrap rounded-full px-2 py-1 text-xs md:w-full ",
                   badges[currentPhase.restorationStatus.toLocaleLowerCase()].bg,
                   badges[currentPhase.restorationStatus.toLocaleLowerCase()]
                     .text

@@ -24,9 +24,12 @@ export default function Investments({
   });
   const { disconnect } = useDisconnect();
   return (
-    <section id="investments" className="relative flex w-full flex-col">
-      <div className="mx-auto flex w-full justify-between pl-[58px]">
-        <h2 className="mb-[52px] text-2xl font-medium uppercase">
+    <section
+      id="investments"
+      className="relative flex w-full flex-col px-6 md:px-0"
+    >
+      <div className="mx-auto flex w-full justify-between md:pl-[58px]">
+        <h2 className="mb-12 text-2xl font-medium uppercase md:mb-[52px]">
           My Investments
         </h2>
         {isConnected && (
@@ -42,7 +45,7 @@ export default function Investments({
       </div>
       {isConnected && (
         <Tab.Group>
-          <Tab.List className="ml-[58px] flex w-fit border-b border-b-gray-900/20">
+          <Tab.List className="flex w-fit border-b border-b-gray-900/20 md:ml-[58px]">
             {investmentStatusesData.map((investmentStatus) => (
               <Tab
                 key={investmentStatus}

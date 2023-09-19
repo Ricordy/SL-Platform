@@ -73,7 +73,7 @@ const Home: NextPage = (props: any) => {
             />
           ))}
           <div className="absolute top-0 z-0 flex min-h-[83px] w-full bg-[url('/bg/bg-navbar.svg')]" />
-          <div className="absolute left-0 z-10 hidden min-h-[968px] w-full rounded-bl-[116px] bg-opacity-10 bg-[url('/bg/gradient-vertical-header.svg')] bg-cover bg-bottom bg-no-repeat md:flex" />
+          <div className="absolute left-0 z-10 min-h-[968px] w-full bg-[linear-gradient(to_right,rgba(10,10,10,0.8),rgba(16,71,52,0.2)),url('/bg/gradient-vertical-header.svg')] bg-cover bg-bottom bg-no-repeat md:flex md:rounded-bl-[116px]" />
           <div className="absolute bottom-0 z-0 hidden min-h-[968px] w-full rounded-bl-[50px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat md:flex" />
           {/* </div>
           <div className="absolute left-0 z-10 flex min-h-screen w-full rounded-bl-[116px] bg-[url('/bg/gradient-vertical-header.svg')] bg-cover bg-bottom bg-no-repeat"></div>
@@ -81,7 +81,7 @@ const Home: NextPage = (props: any) => {
           {/* <div className="absolute top-0 z-10 h-[968px] w-[1444px] rounded-bl-[50px] rounded-br-[50px] bg-gray-950" /> */}
           <NavBar />
           <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
-            <div className="flex flex-col gap-12 pt-24">
+            <div className="flex flex-col gap-12 px-6 pt-24 md:px-0">
               <h3
                 className="text-5xl uppercase tracking-widest text-white"
                 dangerouslySetInnerHTML={{
@@ -107,7 +107,7 @@ const Home: NextPage = (props: any) => {
               </Link>
             </div>
           </div>
-          <div className="absolute left-[235px] top-[512px] z-40 -translate-x-1/2 transform space-x-2">
+          <div className="absolute left-16 top-[512px] z-40 -translate-x-1/2 transform space-x-2 md:left-[235px]">
             {images.map((_, index) => (
               <button
                 key={index}
@@ -119,15 +119,16 @@ const Home: NextPage = (props: any) => {
             ))}
           </div>
         </div>
-        <div className="relative left-1/2 z-20 -ml-[570px] -mt-[350px] min-h-[500px] w-full max-w-[1282px]">
+        <div className="relative z-20 -mt-[350px] min-h-[500px] w-full max-w-[1282px]  px-6 md:left-1/2 md:-ml-[570px] md:-mt-[350px] md:px-0">
           <Carousel
             id="1"
             items={props.activeInvestments}
+            className="pb-12 md:pb-0"
             prevNavWhite={true}
             title={<h2 className="text-2xl text-white">Our cars</h2>}
             seeMoreLabel="See more"
             seeMoreLink="/our-cars"
-            seeMoreMr="mr-36"
+            seeMoreMr="md:mr-36"
             userAddress={walletAddress!}
           />
           {/* Highlight Component */}
@@ -141,8 +142,8 @@ const Home: NextPage = (props: any) => {
         )}
         <div
           className={cn(
-            "relative left-1/2 z-20 mx-auto -ml-[570px]  min-h-[532px] w-full max-w-[1282px]",
-            isConnected ? "mt-[132px]" : "mt-0"
+            "relative left-auto z-20 mx-auto min-h-[532px] w-full  md:left-1/2 md:-ml-[570px] md:max-w-[1282px]",
+            isConnected ? "md:mt-[132px]" : "mt-12 md:mt-0"
           )}
         >
           <Investments
