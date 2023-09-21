@@ -149,9 +149,9 @@ export const TransactionItem = (props) => {
                     prefix="$"
                   />
                 </span>
-                <span className="text-xs text-primaryGold">
+                {/* <span className="text-xs text-primaryGold">
                   {userInvestedContracts[item.investment.address]}
-                </span>
+                </span> */}
                 <span>{item.date}</span>
 
                 <Link href="#">
@@ -734,7 +734,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                     />
                   )}
 
-                  {props.userTransactions.length > 4 &&
+                  {props.userTransactions?.length > 4 &&
                     numberOfTransactions < props.userTransactions.length && (
                       <button
                         className="flex self-start"
