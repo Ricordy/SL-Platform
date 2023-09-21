@@ -102,7 +102,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
     enabled: TestingOpened,
     args: [1000000 as any as BigNumber],
     onError(err) {
-      console.log(err);
+
     },
     // onSuccess() {
     //   toast.success("Puzzle reivindicado com sucesso!");

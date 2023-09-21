@@ -65,8 +65,6 @@ export default async function handler(req: NextApiRequest, res: MyResponse) {
         }
       );
 
-    console.log("data>>>>>", createTransaction);
-
     if (createTransaction && createTransaction.id) {
       const { publishTransaction }: PublishTransaction = await hygraph.request(
         `

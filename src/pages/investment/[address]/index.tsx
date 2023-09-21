@@ -448,8 +448,6 @@ const Investment = ({
       ) {
         setCanWithdraw(false);
       } else {
-        console.log(err.message);
-
         // toast.error(err.message);
       }
     },
@@ -555,9 +553,6 @@ const Investment = ({
     }
     return uniqueFromValues.size;
   }
-
-  console.log("investment", investment);
-  console.log("image chart", investment?.basicInvestment.car.chart.url);
 
   return (
     <>

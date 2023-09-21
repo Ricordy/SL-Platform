@@ -16,7 +16,6 @@ const PostItem: FC<PostItemProps> = ({
   const purifiedChildren = () => ({
     __html: DOMPurify.sanitize(children as string),
   });
-  console.log("link", link);
 
   return (
     <div className="relative flex flex-col gap-6">
@@ -63,7 +62,7 @@ const Posts: FC<PostProps> = ({
 }) => {
   posts = posts.filter((post) => {
     return post.postCategory === "beginners";
-    console.log(post);
+
   });
   return (
     <section
