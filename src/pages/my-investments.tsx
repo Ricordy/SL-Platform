@@ -116,7 +116,6 @@ export const TransactionItem = (items, userInvestedContracts) => {
                 />
               </Link>
             </div>
-            <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
           </section>
         )
       );
@@ -674,7 +673,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
               </div>
               <div className="flex flex-col gap-4">
                 <span>Last transactions:</span>
-                <div className="flex flex-1 flex-col gap-2 rounded-md bg-myInvestmentsBackground px-4 py-8">
+                <div className="flex max-h-[282px] flex-1 flex-col gap-2 overflow-scroll rounded-md bg-myInvestmentsBackground px-4 py-8">
                   {userInvestedContracts && (
                     <TransactionItem
                       items={props.userTransactions}
@@ -687,13 +686,16 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                   <TransactionItem />
                   <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
                   <TransactionItem /> */}
-                  <Link
-                    className="flex self-start"
-                    href={`https://etherscan.io/address/${sessionData?.user.id}`}
-                    target="_blank"
-                  >
-                    See more
-                  </Link>
+
+                  {props.userTransactions.length > 4 && (
+                    <Link
+                      className="flex self-start"
+                      href={`https://etherscan.io/address/${sessionData?.user.id}`}
+                      target="_blank"
+                    >
+                      See more
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
@@ -952,7 +954,7 @@ export const getServerSideProps: GetServerSideProps<
           transactions(
             where: { from: "${session?.user.id}" }
             orderBy: publishedAt_DESC
-            first: 4
+            first: 25
           ) {
             amountInvested
             hash
