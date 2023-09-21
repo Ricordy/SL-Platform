@@ -69,56 +69,104 @@ interface MyInvestmentsProps
     TransactionProps,
     InvestmentsProps {}
 
-export const TransactionItem = (items, userInvestedContracts) => {
+export const TransactionItem = (props) => {
+  const { items, userInvestedContracts, numberOfTransactions } = props;
+
   return (
     items &&
-    items.items?.map((item, idx) => {
+    items?.map((item, idx) => {
       // const { amountInvested } = useGetAddressInvestmentinSingleCar({
       //   contractAddress: addressContract,
       //   walletAddress: address,
       //   watch: true,
       // });
 
-      return (
-        item.investment && (
-          <section key={idx}>
-            <div className="flex items-center justify-between pb-2">
-              <Image
-                className="rounded-md"
-                src={item.investment.basicInvestment.car.basicInfo.cover.url}
-                width={64}
-                height={53}
-                alt="Car"
-              />
-              <span className=" w-28 truncate">
-                {item.investment.basicInvestment.car.basicInfo.title}
-              </span>
-              <span className=" text-primaryGold">
-                <NumericFormat
-                  value={item.amountInvested}
-                  displayType="text"
-                  thousandSeparator=","
-                  decimalScale={0}
-                  prefix="$"
-                />
-              </span>
-              <span className="text-xs text-primaryGold">
-                {userInvestedContracts[item.investment.address]}
-              </span>
-              <span>{item.date}</span>
-
-              <Link href="#">
+      if (numberOfTransactions === undefined) {
+        return (
+          item.investment && (
+            <section key={idx}>
+              ola
+              {numberOfTransactions}
+              <div className="flex items-center justify-between pb-2">
                 <Image
-                  src="/icons/external-link-gold.svg"
-                  width={10}
-                  height={10}
-                  alt="External link"
+                  className="rounded-md"
+                  src={item.investment.basicInvestment.car.basicInfo.cover.url}
+                  width={64}
+                  height={53}
+                  alt="Car"
                 />
-              </Link>
-            </div>
-          </section>
-        )
-      );
+                <span className=" w-28 truncate">
+                  {item.investment.basicInvestment.car.basicInfo.title}
+                </span>
+                <span className=" text-primaryGold">
+                  <NumericFormat
+                    value={item.amountInvested}
+                    displayType="text"
+                    thousandSeparator=","
+                    decimalScale={0}
+                    prefix="$"
+                  />
+                </span>
+                <span className="text-xs text-primaryGold">
+                  {userInvestedContracts[item.investment.address]}
+                </span>
+                <span>{item.date}</span>
+
+                <Link href="#">
+                  <Image
+                    src="/icons/external-link-gold.svg"
+                    width={10}
+                    height={10}
+                    alt="External link"
+                  />
+                </Link>
+              </div>
+            </section>
+          )
+        );
+      } else {
+        return (
+          item.investment &&
+          idx < numberOfTransactions && (
+            <section key={idx}>
+              <div className="flex items-center justify-between pb-2">
+                <Image
+                  className="rounded-md"
+                  src={item.investment.basicInvestment.car.basicInfo.cover.url}
+                  width={64}
+                  height={53}
+                  alt="Car"
+                />
+                <span className=" w-28 truncate">
+                  {item.investment.basicInvestment.car.basicInfo.title}
+                </span>
+                <span className=" text-primaryGold">
+                  <NumericFormat
+                    value={item.amountInvested}
+                    displayType="text"
+                    thousandSeparator=","
+                    decimalScale={0}
+                    prefix="$"
+                  />
+                </span>
+                <span className="text-xs text-primaryGold">
+                  {userInvestedContracts[item.investment.address]}
+                </span>
+                <span>{item.date}</span>
+
+                <Link href="#">
+                  <Image
+                    src="/icons/external-link-gold.svg"
+                    width={10}
+                    height={10}
+                    alt="External link"
+                  />
+                </Link>
+              </div>
+            </section>
+          )
+        );
+      }
     })
   );
 };
@@ -129,7 +177,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
   const entryNFTPrice = utils.parseUnits("100", 6);
 
   const { address } = useAccount();
-
+  const [numberOfTransactions, setNumberOfTransactions] = useState(4);
   const SlFactoryContract = {
     address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
     abi: FactoryABI,
@@ -138,6 +186,10 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
   const SLCoreContract = {
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
     abi: SLCoreABI,
+  };
+
+  const incrementTransaction = () => {
+    setNumberOfTransactions(numberOfTransactions + 4);
   };
 
   const { data }: { data: BigNumber } = useContractReads({
@@ -678,24 +730,19 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                     <TransactionItem
                       items={props.userTransactions}
                       userInvestedContracts={userInvestedContracts}
+                      numberOfTransactions={numberOfTransactions}
                     />
                   )}
 
-                  {/* <TransactionItem />
-                  <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
-                  <TransactionItem />
-                  <div className="flex h-0.5 w-full bg-primaryGold/10"></div>
-                  <TransactionItem /> */}
-
-                  {props.userTransactions.length > 4 && (
-                    <Link
-                      className="flex self-start"
-                      href={`https://etherscan.io/address/${sessionData?.user.id}`}
-                      target="_blank"
-                    >
-                      See more
-                    </Link>
-                  )}
+                  {props.userTransactions.length > 4 &&
+                    numberOfTransactions < props.userTransactions.length && (
+                      <button
+                        className="flex self-start"
+                        onClick={incrementTransaction}
+                      >
+                        See more
+                      </button>
+                    )}
                 </div>
               </div>
             </div>
@@ -954,7 +1001,7 @@ export const getServerSideProps: GetServerSideProps<
           transactions(
             where: { from: "${session?.user.id}" }
             orderBy: publishedAt_DESC
-            first: 25
+            first: 28
           ) {
             amountInvested
             hash
