@@ -199,17 +199,25 @@ const TeestingPanels = (props: TestingPanelsProps) => {
             >
               testnet USDC
             </a>
-            , which simulates real USDC in our testing environment. To claim
-            these testnet USDC ,{" "}
+            , which simulates real USDC in our testing environment. However,
+            before claiming these testnet USDC, it's important to ensure you're
+            connected to the Goerli network instead of the Ethereum Mainnet. To
+            make this network switch,{" "}
+            <a
+              className=" font-medium text-primaryGold"
+              href="https://metaschool.so/articles/how-to-change-add-new-network-metamask-wallet/"
+              target="__blank"
+            >
+              click here
+            </a>{" "}
+            and follow the instructions. Once you're on the Goerli network, you
+            can proceed to claim your testnet USDC by{" "}
             <a
               className=" cursor-pointer font-medium text-primaryGold"
               onClick={mintPaymentToken}
             >
-              click here
-            </a>{" "}
-            and follow the instructions. USDC, short for USD Coin, is a digital
-            cryptocurrency that mirrors the value of the US dollar, providing a
-            stable and reliable means of transacting in the crypto world.
+              clicking here!
+            </a>
           </p>
         </div>
       )}
