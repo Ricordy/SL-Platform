@@ -35,7 +35,7 @@ export const CarouselItem = ({
   userLevel,
 }: CarouselItemProps) => {
   return (
-    <div className=" relative w-full rounded-[7px] border border-transparent hover:border-primaryGold">
+    <div className=" relative w-full rounded-[6px] border border-transparent hover:border-primaryGold">
       <div
         className={cn(
           "br relative flex min-h-[394px] w-full flex-col items-center justify-end gap-4  rounded-md bg-cover bg-center ",
@@ -178,7 +178,7 @@ const Carousel: FC<CarouselProps> = ({
           </div>
         )}
       </div>
-      <div className="relative flex items-center md:max-w-[1224px]">
+      <div className="relative flex items-center rounded-md md:max-w-[1224px]">
         <div
           className={`absolute  left-0 z-20 flex h-full items-center justify-center bg-gradient-to-r from-black/70  pl-5 md:bg-none md:pl-0 swiper-prev-${id}`}
         >
@@ -221,9 +221,6 @@ const Carousel: FC<CarouselProps> = ({
               {items?.map((item, index) => (
                 <SwiperSlide key={index}>
                   <CarouselItem
-                    // title="my title"
-                    // image="/projects/car-1.jpg"
-                    // price="39595"
                     title={item.basicInvestment.car?.basicInfo.title}
                     image={item.basicInvestment.car?.basicInfo.cover.url}
                     price={item.basicInvestment.totalInvestment.toString()}

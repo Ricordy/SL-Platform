@@ -142,7 +142,7 @@ const Home: NextPage = (props: any) => {
         )}
         <div
           className={cn(
-            "relative left-auto z-20 mx-auto min-h-[532px] w-full  md:left-1/2 md:-ml-[570px] md:max-w-[1282px]",
+            "relative left-auto z-20 mx-auto w-full md:left-1/2  md:-ml-[570px] md:min-h-[532px] md:max-w-[1282px]",
             isConnected ? "md:mt-[132px]" : "mt-12 md:mt-0"
           )}
         >
@@ -152,10 +152,10 @@ const Home: NextPage = (props: any) => {
           />
         </div>
         {/* My Puzzle */}
-        <div className="relative left-1/2 mx-auto -ml-[570px] w-full max-w-[1282px] ">
+        <div className="relative mx-auto w-full max-w-[1282px] md:left-1/2 md:-ml-[570px] ">
           <Puzzle
             isConnected={isConnected}
-            className="relative flex w-full  max-w-[1338px] flex-col pt-[132px]"
+            className="relative flex w-full  max-w-[1338px] flex-col pt-12 md:pt-[132px]"
             userAddress={walletAddress as Address}
             puzzlePieces={props.puzzlePieces}
             dbLevels={props.levels}

@@ -33,7 +33,7 @@ export default function Investments({
           My Investments
         </h2>
         {isConnected && (
-          <div className="mr-36">
+          <div className="md:mr-36">
             <Link
               href="/my-investments"
               className="border-b-2 border-primaryGreen text-sm uppercase text-primaryGreen"

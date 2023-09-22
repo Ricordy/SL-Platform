@@ -22,6 +22,7 @@ import { Button } from "./ui/Button";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
+import { useBreakpoint } from "~/hooks/useBreakpoints";
 
 function noDecimals(value: number) {
   return value / 10 ** 6;
@@ -199,30 +200,34 @@ const Puzzle: FC<PuzzleProps> = ({
   }));
 
   const [profitNotification, setProfitNotification] = useState(true);
-
-  useEffect(() => {
-    return () => {};
-  }, [userCanClaimPiece, data]);
+  const { isAboveMd, isBelowMd } = useBreakpoint("md");
 
   return (
     <section
       id="puzzle"
-      className={cn("mx-auto flex w-full max-w-[1338px] flex-col", className)}
+      className={cn(
+        "mx-auto flex w-full max-w-[1338px] flex-col px-6 md:px-0",
+        className
+      )}
     >
       {isConnected && (
-        <h2 className="ml-[58px] pb-12 text-2xl font-medium uppercase">
+        <h2 className="pb-12 text-2xl font-medium uppercase md:ml-[58px]">
           My Puzzle
         </h2>
       )}
 
       {isConnected && (
-        <div className="relative ml-[-70px] flex max-w-[1408px] items-center overflow-hidden">
+        <div className="relative flex max-w-[1408px] items-center overflow-hidden md:ml-[-70px]">
           <div
-            className={`swiper-prev-22 absolute left-0  z-20 flex h-full items-start justify-center pl-16 pt-[190px]`}
+            className={`swiper-prev-22 absolute left-0 z-20 flex h-full items-start justify-center pl-3 pt-6 md:pl-16 md:pt-[190px]`}
           >
             {currentLevel !== 1 && (
               <Image
-                src={"/icons/pagination-previous-black.svg"}
+                src={
+                  isAboveMd || levels.at(currentLevel - 1)?.locked
+                    ? "/icons/pagination-previous-black.svg"
+                    : "/icons/pagination-previous.svg"
+                }
                 width={38}
                 height={38}
                 alt="Previous"
@@ -237,7 +242,7 @@ const Puzzle: FC<PuzzleProps> = ({
                 modules={[Navigation, A11y]}
                 className="swiper w-full"
                 spaceBetween={80}
-                slidesPerView={1.2}
+                slidesPerView={isAboveMd ? 1.2 : "auto"}
                 navigation={{
                   nextEl: `.swiper-next-22`,
                   prevEl: `.swiper-prev-22`,
@@ -274,10 +279,6 @@ const Puzzle: FC<PuzzleProps> = ({
                       claimLevel={claimLevel}
                     />
                     <div className="mt-16 flex flex-col">
-                      {/* <h2 className="pb-12  text-2xl font-medium uppercase">
-                        My Achievements
-                      </h2> */}
-
                       <div className="grid max-w-6xl grid-cols-1 gap-6 pb-36 md:grid-cols-4">
                         {data?.[6]?.gt(currentLevel) ? (
                           <div className="h-90 relative col-span-2 flex flex-col items-center justify-between rounded-md bg-neutral-100">
@@ -303,7 +304,7 @@ const Puzzle: FC<PuzzleProps> = ({
                         ) : (
                           (userPieces && userPieces.length < 9 && (
                             // </div>
-                            <div className="h-90 relative flex flex-col items-center justify-between rounded-md bg-neutral-100">
+                            <div className="h-90 relative flex flex-col items-center justify-between gap-6 rounded-md bg-neutral-100">
                               <h2 className="pt-6 text-center text-[24px] font-semibold uppercase leading-normal tracking-wider text-black">
                                 Your
                                 <br />
@@ -531,12 +532,16 @@ const Puzzle: FC<PuzzleProps> = ({
           </section>
           <div
             className={cn(
-              "swiper-next-22 absolute right-0 z-20 flex h-full items-start pr-16 pt-[195px]",
+              "swiper-next-22 absolute right-0 z-20 flex h-full items-start pr-3 pt-6 md:pr-16 md:pt-[190px]",
               currentLevel > 2 ? "hidden" : ""
             )}
           >
             <Image
-              src="/icons/pagination-next-black.svg"
+              src={
+                isAboveMd || levels.at(currentLevel - 1)?.locked
+                  ? "/icons/pagination-next-black.svg"
+                  : "/icons/pagination-next.svg"
+              }
               // className="fill-black text-black"
               width={38}
               height={38}
