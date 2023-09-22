@@ -80,7 +80,7 @@ const Home: NextPage = (props: any) => {
           <div className="absolute bottom-0 z-0 flex min-h-screen w-full rounded-bl-[116px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat"></div> */}
           {/* <div className="absolute top-0 z-10 h-[968px] w-[1444px] rounded-bl-[50px] rounded-br-[50px] bg-gray-950" /> */}
           <NavBar />
-          <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
+          <div className="z-10 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
             <div className="flex flex-col gap-12 px-6 pt-24 md:px-0">
               <h3
                 className="text-5xl uppercase tracking-widest text-white"
