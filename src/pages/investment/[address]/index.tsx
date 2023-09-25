@@ -232,7 +232,8 @@ export const ProjectInfo = ({
             value={progress.toString()}
             displayType="text"
             fixedDecimalScale
-            decimalSeparator="."
+            decimalSeparator=","
+            thousandSeparator="."
             decimalScale={0}
             suffix="%"
           />{" "}

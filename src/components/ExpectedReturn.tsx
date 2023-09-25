@@ -682,15 +682,16 @@ const ExpectedReturn = ({
   const { write: withdraw } = useContractWrite(withdrawCallConfig);
 
   return (
-    <div className="flex flex-col w-full">
-      <h2 className="text-xs pb-3 flex flex-col">
+    <div className="flex w-full flex-col">
+      <h2 className="flex flex-col pb-3 text-xs">
         Minimum expected Return:{" "}
         <span className="text-bold text-xl">
           <NumericFormat
             className="text-bold text-xl"
             value={totalInvested * 1.12}
             displayType="text"
-            thousandSeparator=","
+            decimalSeparator=","
+            thousandSeparator="."
             decimalScale={0}
             prefix="$ "
           />
@@ -701,7 +702,8 @@ const ExpectedReturn = ({
             className="text-bold text-xl"
             value={totalInvested * 1.15}
             displayType="text"
-            thousandSeparator=","
+            decimalSeparator=","
+            thousandSeparator="."
             decimalScale={0}
             prefix="$ "
           />
@@ -711,7 +713,7 @@ const ExpectedReturn = ({
         disabled={
           totalInvested === 0 || contractStatus !== CONTRACT_STATUS_WITHDRAW
         }
-        className="border rounded-md p-2 bg-slate-800 text-slate-50 disabled:bg-slate-400"
+        className="rounded-md border bg-slate-800 p-2 text-slate-50 disabled:bg-slate-400"
         onClick={() => withdraw?.()}
       >
         Withdraw

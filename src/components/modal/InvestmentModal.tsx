@@ -323,8 +323,8 @@ export const InvestmentModal = ({
                 value={paymentTokenBalance.toString()}
                 displayType="text"
                 fixedDecimalScale
-                decimalSeparator="."
-                thousandSeparator=","
+                decimalSeparator=","
+                thousandSeparator="."
                 decimalScale={0}
                 prefix="$ "
               />
@@ -342,8 +342,8 @@ export const InvestmentModal = ({
                   value={minToInvest.toString()}
                   displayType="text"
                   fixedDecimalScale={true}
-                  decimalSeparator="."
-                  thousandSeparator=","
+                  decimalSeparator=","
+                  thousandSeparator="."
                   decimalScale={0}
                   prefix="$ "
                 />
@@ -356,8 +356,8 @@ export const InvestmentModal = ({
                   value={maxToInvest.toString()}
                   displayType="text"
                   fixedDecimalScale={true}
-                  decimalSeparator="."
-                  thousandSeparator=","
+                  decimalSeparator=","
+                  thousandSeparator="."
                   decimalScale={0}
                   prefix="$ "
                 />{" "}
