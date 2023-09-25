@@ -130,6 +130,7 @@ interface CarouselProps {
   seeMoreLink?: string;
   seeMoreMr?: string;
   userAddress: Address;
+  slidesPerView?: number;
 }
 
 const Carousel: FC<CarouselProps> = ({
@@ -142,6 +143,7 @@ const Carousel: FC<CarouselProps> = ({
   seeMoreMr,
   items,
   userAddress,
+  slidesPerView = 4,
 }) => {
   const SlCoreContract = {
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
@@ -209,7 +211,7 @@ const Carousel: FC<CarouselProps> = ({
               className="swiper w-full"
               spaceBetween={24}
               centeredSlides={isAboveMd ? false : true}
-              slidesPerView={isAboveMd ? 4 : "auto"}
+              slidesPerView={isAboveMd ? slidesPerView ?? 4 : "auto"}
               navigation={{
                 nextEl: `.swiper-next-${id}`,
                 prevEl: `.swiper-prev-${id}`,
@@ -221,7 +223,7 @@ const Carousel: FC<CarouselProps> = ({
               // loop={true}
             >
               {items?.map((item, index) => (
-                <SwiperSlide key={index}>
+                <SwiperSlide key={index} className="">
                   <CarouselItem
                     title={item.basicInvestment.car?.basicInfo.title}
                     image={item.basicInvestment.car?.basicInfo.cover.url}
