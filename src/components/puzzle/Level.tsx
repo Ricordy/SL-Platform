@@ -5,6 +5,7 @@ import { cn } from "~/lib/utils";
 import { Button } from "../ui/Button";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { useBreakpoint } from "~/hooks/useBreakpoints";
 
 interface LevelProps {
   level: number;
@@ -34,7 +35,7 @@ const Level = ({
     <div
       style={{ backgroundImage: `url(${userLevel >= level ? bg : ""})` }}
       className={cn(
-        "border-primary flex min-h-[395px] max-w-6xl items-center justify-center gap-6 rounded-md border bg-cover ",
+        "border-primary flex max-w-6xl flex-col items-center justify-center gap-6 rounded-md border bg-cover md:min-h-[395px] md:flex-row ",
         userLevel
           ? level > userLevel
             ? "bg-contactBackground text-tabInactive"
@@ -42,11 +43,11 @@ const Level = ({
           : "bg-contactBackground text-tabInactive"
       )}
     >
-      <div className="flex w-full flex-col gap-5 p-6 px-16">
-        <h2 className="pb-6 text-[40px] font-light uppercase leading-10 tracking-widest">
+      <div className="flex w-full flex-col gap-5 p-6 md:px-16">
+        <h2 className="pb-6 text-center text-[40px] font-light uppercase leading-10 tracking-widest md:text-left">
           Level {level}
         </h2>
-        <h3 className="ml-[124px]tracking-wider text-2xl uppercase">
+        <h3 className="text-2xl uppercase tracking-wider">
           You have{" "}
           <span className="text-primaryGold">
             {profitRange.split("-")[0]}% to {profitRange.split("-")[1]}% profit
@@ -83,10 +84,10 @@ const Level = ({
           </span>
         )}
       </div>
-      <div className="flex w-full flex-col items-center justify-center gap-6">
+      <div className="flex w-full flex-col items-center justify-center gap-6 pb-6 md:pb-0">
         <div
           className={cn(
-            "flex h-[238px] w-[238px] flex-col items-center justify-center  ",
+            "relative flex h-[238px] w-[238px] flex-col items-center justify-center  ",
             userLevel
               ? userLevel > level
                 ? "border-primaryGold"
@@ -94,7 +95,7 @@ const Level = ({
               : "border-neutral-400/50"
           )}
         >
-          <div className="absolute top-11 w-60">
+          <div className="absolute top-0 w-60">
             <CircularProgressbar
               value={percentage}
               text={
@@ -145,26 +146,15 @@ const Level = ({
               />
             ) : (
               <>
-                <span className=" absolute top-28 w-[119.07px]  text-center text-[14px] font-normal leading-none tracking-wide text-neutral-400">
+                <span className=" absolute top-16 w-[119.07px]  text-center text-[14px] font-normal leading-none tracking-wide text-neutral-400">
                   Progress:
                 </span>
-                {/* <span
-                className={cn(
-                  "w-[91px] text-center text-[48px] font-normal leading-normal ",
-                  userLevel > level ? "text-primaryGold" : "text-white"
-                )}
-              >
-                {userLevel > level
-                  ? "100"
-                  : ((userPieces.length / 10) * 100).toFixed(0)}
-                %
-              </span> */}
-                <span className="absolute top-48 text-center text-[14px] font-normal leading-none tracking-wide text-neutral-400">
+                <span className="absolute top-40 text-center text-[14px] font-normal leading-none tracking-wide text-neutral-400">
                   NFT Collected:
                 </span>
                 <div></div>
                 <span
-                  className={`fixed top-52 ${
+                  className={`absolute top-48 ${
                     userLevel > level || userPieces.length > 0
                       ? "text-primaryGold"
                       : ""

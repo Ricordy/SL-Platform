@@ -1,6 +1,7 @@
 import { getCsrfToken, signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import burguer from "public/icons/burguer-menu.svg";
 import { useEffect, useState } from "react";
 import { SiweMessage } from "siwe";
 import {
@@ -15,7 +16,9 @@ import {
 } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import logoBlack from "../../public/logo-black.svg";
+import logoMiniBlack from "../../public/logo-mini-black.svg";
 import logoWhite from "../../public/logo-white.svg";
+import logoMiniWhite from "../../public/logo-mini-white.svg";
 import logo1 from "../../public/logo-1.svg";
 import logo2 from "../../public/logo-2.svg";
 import logo3 from "../../public/logo-3.svg";
@@ -24,6 +27,7 @@ import Modal from "./Modal";
 import { paymentTokenABI } from "~/utils/abis";
 import { BigNumber } from "ethers";
 import TestingGuides from "./testingModal/TestingGuides";
+import { useBreakpoint } from "~/hooks/useBreakpoints";
 
 const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
   const { address, isConnected, isConnecting, isDisconnected } = useAccount();
@@ -40,6 +44,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
 
   // State
   const [showConnection, setShowConnection] = useState(false);
+  const [navIsOpen, setNavIsOpen] = useState(false);
 
   // Functions
   /**
@@ -112,29 +117,65 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
   const { write: mintPaymentToken, isLoading: isLoadingMintToken } =
     useContractWrite(configMintPaymentToken);
 
+  const { isAboveMd, isBelowMd } = useBreakpoint("md");
+
   return (
     <>
-      <nav className="relative z-20 mx-auto hidden w-full max-w-screen-lg shrink-0 justify-between gap-12 py-6 md:flex lg:px-0">
-        <Link href="/">
-          <Image
-            src={bgWhite ? (logoBlack as string) : (logoWhite as string)}
-            alt="Something Legendary logo"
-          />
-        </Link>
-        <div className="flex items-center justify-center gap-6">
-          <div className="flex w-full  items-center justify-end gap-4">
+      <nav
+        className={cn(
+          "relative z-20 mx-auto flex w-full items-center justify-between gap-6 px-6 py-6 md:max-w-screen-lg md:flex-col md:gap-12 lg:px-0",
+          navIsOpen ? (isAboveMd ? "" : "bg-black") : ""
+        )}
+      >
+        <div
+          className={cn(
+            "flex w-full flex-col justify-between",
+            isAboveMd ? "flex-row gap-6" : ""
+          )}
+        >
+          <Link href="/">
+            <Image
+              src={bgWhite ? logoBlack : logoWhite}
+              alt="Something Legendary logo"
+            />
+          </Link>
+          <div
+            className={cn(
+              " flex w-full items-center justify-center gap-6",
+              navIsOpen
+                ? "absolute right-0 top-20 z-20 flex-col items-end justify-end bg-black px-6 pb-6"
+                : isAboveMd
+                ? ""
+                : "hidden"
+            )}
+          >
             {sessionData && isConnected ? (
-              <div className="flex w-full items-center justify-between gap-3">
+              <div
+                className={cn(
+                  "flex w-full items-center justify-end gap-6",
+                  navIsOpen ? "items-end" : "",
+                  isBelowMd ? "flex-col" : ""
+                )}
+              >
                 <Link
                   className={cn(
-                    "w-44 text-center",
-                    bgWhite ? "text-black" : "text-white"
+                    "text-center",
+                    bgWhite ? "text-black" : "text-white",
+                    isBelowMd ? "block w-full rounded-sm bg-white/10 py-2" : ""
                   )}
                   href="/my-investments"
                 >
                   my Investments
                 </Link>
-                <Link className="w-12 text-white" href="/#investments">
+                <Link
+                  className={cn(
+                    "text-white",
+                    isBelowMd
+                      ? "flex w-full justify-center rounded-sm bg-white/10 py-2"
+                      : ""
+                  )}
+                  href="/#investments"
+                >
                   <Image
                     src={
                       bgWhite
@@ -150,7 +191,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
 
                 <button
                   className={cn(
-                    " mr-7 flex h-[30px] w-[151px] shrink-0 justify-center rounded-md align-middle font-medium uppercase"
+                    " hidden h-[30px] shrink-0 justify-center rounded-md align-middle font-medium uppercase md:mr-7 md:flex"
                   )}
                   onClick={() =>
                     TestingOpened
@@ -160,7 +201,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                 >
                   <div
                     className={cn(
-                      "inline-flex h-[30px] w-[151px] items-center justify-center gap-2.5 rounded-md bg-white px-5 py-2.5",
+                      "inline-flex h-[30px] items-center justify-center gap-2.5 rounded-md bg-white px-5 py-2.5",
                       bgWhite ? " bg-black" : "bg-white"
                     )}
                   >
@@ -177,7 +218,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
 
                 <div
                   className={cn(
-                    "flex w-44 items-center justify-center gap-3 rounded-full border-2 bg-black bg-opacity-0 p-1 hover:bg-opacity-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75",
+                    "flex items-center justify-center gap-3 rounded-full border-2 bg-black bg-opacity-0 p-1 hover:bg-opacity-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75",
                     bgWhite ? "border-primaryGrey" : "border-white"
                   )}
                 >
@@ -200,7 +241,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                 </div>
               </div>
             ) : showConnection ? (
-              <div className="w-full text-right">
+              <div className="w-full">
                 {isConnected ? (
                   <Modal
                     isOpen={isConnected && showConnection}
@@ -229,7 +270,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                           Cancel
                         </button>
                         <button
-                          className="self-start rounded-md bg-black px-12 py-1.5 text-center text-sm uppercase text-white transition-all duration-150 hover:bg-black/80 dark:hover:bg-black dark:hover:text-white"
+                          className="self-start whitespace-nowrap rounded-md bg-black px-12 py-1.5 text-center text-sm uppercase text-white transition-all duration-150 hover:bg-black/80 dark:hover:bg-black dark:hover:text-white"
                           onClick={onClickSignIn as () => void}
                         >
                           Sign In
@@ -240,80 +281,79 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                 ) : null}
               </div>
             ) : null}
-          </div>
-
-          {/** JUST FOR TESTING PURPOSES */}
-
-          {showConnection && (
-            <div className="flex gap-7">
-              {!isConnected && (
+            {showConnection && (
+              <div className="flex justify-end gap-6">
+                {!isConnected && (
+                  <button
+                    className={cn(
+                      " flex h-[30px] shrink-0 justify-center rounded-md align-middle font-medium uppercase",
+                      bgWhite ? "bg-white" : "",
+                      isConnected ? "w-full" : "w-[151px]"
+                    )}
+                    onClick={() =>
+                      TestingOpened
+                        ? setTestingOpened(false)
+                        : setTestingOpened(true)
+                    }
+                  >
+                    <div
+                      className={cn(
+                        "inline-flex h-[30px] w-full items-center justify-center gap-2.5 rounded-md bg-white px-5 py-2.5",
+                        bgWhite ? " bg-black " : "bg-white"
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          "whitespace-nowrap  text-sm font-medium uppercase leading-tight tracking-wide text-black",
+                          bgWhite ? " text-white" : "text-black"
+                        )}
+                      >
+                        For tester
+                      </div>
+                    </div>
+                  </button>
+                )}
                 <button
                   className={cn(
-                    " flex h-[30px] shrink-0 justify-center rounded-md align-middle font-medium uppercase",
-                    bgWhite ? "bg-white" : "",
-                    isConnected ? "w-[24.74px]" : "w-[151px]"
+                    " flex w-full justify-end rounded-md font-medium  uppercase md:justify-start",
+                    // bgWhite ? "bg-white" : "",
+                    isConnected ? "w-full" : "w-[151px]"
                   )}
-                  onClick={() =>
-                    TestingOpened
-                      ? setTestingOpened(false)
-                      : setTestingOpened(true)
-                  }
+                  onClick={() => (isConnected ? onClickSignOut() : connect())}
                 >
-                  <div
-                    className={cn(
-                      "inline-flex h-[30px] w-[151px] items-center justify-center gap-2.5 rounded-md bg-white px-5 py-2.5",
-                      bgWhite ? " bg-black " : "bg-white"
-                    )}
-                  >
+                  {isConnected || loading ? (
+                    <Image
+                      className="h-[24.74px] w-10 "
+                      src={
+                        bgWhite
+                          ? "/icons/logout-black.svg"
+                          : "/icons/logout.svg"
+                      }
+                      alt="Log Out"
+                      width={20}
+                      height={18}
+                    />
+                  ) : (
                     <div
                       className={cn(
-                        "whitespace-nowrap  text-sm font-medium uppercase leading-tight tracking-wide text-black",
-                        bgWhite ? " text-white" : "text-black"
+                        "inline-flex h-[30px] w-full items-center justify-center gap-2.5 rounded-md bg-white px-5 py-2.5",
+                        bgWhite ? " bg-black" : "bg-white"
                       )}
                     >
-                      For tester
+                      <div
+                        className={cn(
+                          "whitespace-nowrap  text-sm font-medium uppercase leading-tight tracking-wide text-black",
+                          bgWhite ? " text-white" : "text-black"
+                        )}
+                      >
+                        CONNECT WALLET
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </button>
-              )}
-              <button
-                className={cn(
-                  " flex h-[30px] shrink-0 justify-center rounded-md align-middle font-medium uppercase",
-                  bgWhite ? "bg-white" : "",
-                  isConnected ? "w-[24.74px]" : "w-[151px]"
-                )}
-                onClick={() => (isConnected ? onClickSignOut() : connect())}
-              >
-                {isConnected || loading ? (
-                  <Image
-                    className="h-[24.74px] w-[24.74px] "
-                    src={
-                      bgWhite ? "/icons/logout-black.svg" : "/icons/logout.svg"
-                    }
-                    alt="Log Out"
-                    width={20}
-                    height={18}
-                  />
-                ) : (
-                  <div
-                    className={cn(
-                      "inline-flex h-[30px] w-[151px] items-center justify-center gap-2.5 rounded-md bg-white px-5 py-2.5",
-                      bgWhite ? " bg-black" : "bg-white"
-                    )}
-                  >
-                    <div
-                      className={cn(
-                        "whitespace-nowrap  text-sm font-medium uppercase leading-tight tracking-wide text-black",
-                        bgWhite ? " text-white" : "text-black"
-                      )}
-                    >
-                      CONNECT WALLET
-                    </div>
-                  </div>
-                )}
-              </button>
-            </div>
-          )}
+              </div>
+            )}
+          </div>
 
           {TestingOpened ? (
             <Modal
@@ -340,8 +380,16 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                }}
              /> */}
         </div>
+        <button
+          className="flex w-full justify-end rounded-md border-none font-semibold  uppercase leading-none md:hidden"
+          onClick={(e) => {
+            setNavIsOpen((prev) => !prev);
+          }}
+        >
+          <Image className=" " src={burguer} alt="menu" />
+        </button>
       </nav>
-      <nav className="fixed z-20 flex w-full items-center justify-around bg-white  px-3 py-0 shadow-sm drop-shadow-md md:hidden">
+      <nav className="fixed z-20 hidden w-full items-center justify-around  bg-white px-3 py-0 shadow-sm drop-shadow-md">
         <div className="w-full justify-between px-4 md:flex md:items-center md:px-8 ">
           <div>
             <div className="flex w-full items-center justify-between py-3 md:block md:py-2">

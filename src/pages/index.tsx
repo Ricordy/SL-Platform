@@ -57,16 +57,6 @@ const Home: NextPage = (props: any) => {
   return (
     <>
       <section className="mx-auto w-full bg-white">
-        {/* <div className="absolute z-20 h-[615px] w-full rounded-bl-[200px] bg-gradient-to-b from-black to-gray-950"></div> */}
-        {/* <div class="relative h-[968px] w-[1444px]">
-          <div class="absolute left-0 top-0 h-[968px] w-[1444px] rounded-bl-[50px] rounded-br-[50px] bg-gray-950"></div>
-          <img
-            class="absolute left-[2px] top-0 h-[784px] w-[1442px] opacity-80"
-            src="https://via.placeholder.com/1442x784"
-          />
-          <div class="absolute left-[1149px] top-[12px] h-[1147px] w-[772px] origin-top-left rotate-90 bg-gradient-to-b from-black to-gray-950"></div>
-          <div class="absolute left-0 top-[353px] h-[615px] w-[1442px] rounded-bl-[200px] bg-gradient-to-b from-black to-gray-950"></div>
-        </div> */}
         <div className="relative flex min-h-[968px] w-full flex-col rounded-bl-[50px] bg-opacity-80 bg-cover bg-center bg-no-repeat">
           {images.map((image, index) => (
             <div
@@ -83,17 +73,17 @@ const Home: NextPage = (props: any) => {
             />
           ))}
           <div className="absolute top-0 z-0 flex min-h-[83px] w-full bg-[url('/bg/bg-navbar.svg')]" />
-          <div className="absolute left-0 z-10 flex min-h-[968px] w-full rounded-bl-[116px] bg-[url('/bg/gradient-vertical-header.svg')] bg-cover bg-bottom bg-no-repeat" />
-          <div className="absolute bottom-0 z-0 flex min-h-[968px] w-full rounded-bl-[50px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat" />
+          <div className="absolute left-0 z-10 min-h-[968px] w-full bg-[linear-gradient(to_right,rgba(10,10,10,0.8),rgba(16,71,52,0.2)),url('/bg/gradient-vertical-header.svg')] bg-cover bg-bottom bg-no-repeat md:flex md:rounded-bl-[116px]" />
+          <div className="absolute bottom-0 z-0 hidden min-h-[968px] w-full rounded-bl-[50px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat md:flex" />
           {/* </div>
           <div className="absolute left-0 z-10 flex min-h-screen w-full rounded-bl-[116px] bg-[url('/bg/gradient-vertical-header.svg')] bg-cover bg-bottom bg-no-repeat"></div>
           <div className="absolute bottom-0 z-0 flex min-h-screen w-full rounded-bl-[116px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat"></div> */}
           {/* <div className="absolute top-0 z-10 h-[968px] w-[1444px] rounded-bl-[50px] rounded-br-[50px] bg-gray-950" /> */}
           <NavBar />
-          <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
-            <div className="flex flex-col gap-12 pt-24">
+          <div className="z-10 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
+            <div className="flex flex-col gap-12 px-6 pt-24 md:px-0">
               <h3
-                className="text-5xl uppercase tracking-widest text-white"
+                className="text-3xl uppercase tracking-widest text-white md:text-5xl"
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(
                     images.at(activeIndex).basicInvestment.car?.sliderTitle
@@ -117,7 +107,7 @@ const Home: NextPage = (props: any) => {
               </Link>
             </div>
           </div>
-          <div className="absolute left-[235px] top-[512px] z-40 -translate-x-1/2 transform space-x-2">
+          <div className="absolute left-16 top-[512px] z-40 -translate-x-1/2 transform space-x-2 md:left-[235px]">
             {images.map((_, index) => (
               <button
                 key={index}
@@ -129,15 +119,16 @@ const Home: NextPage = (props: any) => {
             ))}
           </div>
         </div>
-        <div className="relative left-1/2 z-20 -ml-[570px] -mt-[350px] min-h-[500px] w-full max-w-[1282px]">
+        <div className="relative z-20 -mt-[350px] min-h-[500px] w-full max-w-[1282px]  px-6 md:left-1/2 md:-ml-[570px] md:-mt-[350px] md:px-0">
           <Carousel
             id="1"
             items={props.activeInvestments}
+            className="pb-12 md:pb-0"
             prevNavWhite={true}
             title={<h2 className="text-2xl text-white">Our cars</h2>}
             seeMoreLabel="See more"
             seeMoreLink="/our-cars"
-            seeMoreMr="mr-36"
+            seeMoreMr="md:mr-36"
             userAddress={walletAddress!}
           />
           {/* Highlight Component */}
@@ -151,8 +142,8 @@ const Home: NextPage = (props: any) => {
         )}
         <div
           className={cn(
-            "relative left-1/2 z-20 mx-auto -ml-[570px]  min-h-[532px] w-full max-w-[1282px]",
-            isConnected ? "mt-[132px]" : "mt-0"
+            "relative left-auto z-20 mx-auto w-full md:left-1/2  md:-ml-[570px] md:min-h-[532px] md:max-w-[1282px]",
+            isConnected ? "md:mt-[132px]" : "mt-12 md:mt-0"
           )}
         >
           <Investments
@@ -161,16 +152,16 @@ const Home: NextPage = (props: any) => {
           />
         </div>
         {/* My Puzzle */}
-        <div className="relative left-1/2 mx-auto -ml-[570px] w-full max-w-[1282px] ">
+        <div className="relative mx-auto w-full max-w-[1282px] md:left-1/2 md:-ml-[570px] ">
           <Puzzle
             isConnected={isConnected}
-            className="relative flex w-full  max-w-[1338px] flex-col pt-[132px]"
+            className="relative flex w-full  max-w-[1338px] flex-col pt-12 md:pt-[132px]"
             userAddress={walletAddress as Address}
             puzzlePieces={props.puzzlePieces}
             dbLevels={props.levels}
           />
         </div>
-        <div className="flex w-full rounded-t-3xl bg-black pb-[132px] pt-[72px]">
+        <div className="hidden w-full rounded-t-3xl bg-black pb-[132px] pt-[72px] md:flex">
           <Posts
             posts={props.posts}
             title="Learn More"

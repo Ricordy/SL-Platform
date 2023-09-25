@@ -32,3 +32,14 @@ p {
   height: 100%;
   object-fit: cover;
 }
+
+.swiper-button-next, .swiper-button-prev {
+  opacity: 1;
+  transition: 0.5s ease-in-out;
+}
+    
+.swiper-button-disabled {
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.5s ease-in-out;
+}

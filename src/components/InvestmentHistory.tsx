@@ -15,19 +15,20 @@ const InvestmentHistory = ({
   totalInvested,
 }: historyProps) => {
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex w-full flex-col">
       <Disclosure>
         {({ open }) => (
           <>
-            <Disclosure.Button className="flex w-full justify-between items-center rounded-lg bg-gray-100 px-4 py-2 text-left text-sm font-medium text-gray-900 hover:bg-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75">
-              <span className="flex items-center justify-center gap-2 flex-wrap">
+            <Disclosure.Button className="flex w-full items-center justify-between rounded-lg bg-gray-100 px-4 py-2 text-left text-sm font-medium text-gray-900 hover:bg-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75">
+              <span className="flex flex-wrap items-center justify-center gap-2">
                 Total Invested:
                 <NumericFormat
                   className="text-bold text-xl"
                   value={totalInvested}
                   fixedDecimalScale={true}
                   displayType="text"
-                  thousandSeparator=","
+                  decimalSeparator=","
+                  thousandSeparator="."
                   decimalScale={0}
                   prefix="$ "
                 />
@@ -38,7 +39,7 @@ const InvestmentHistory = ({
                 } h-5 w-5 text-gray-500`}
               />
             </Disclosure.Button>
-            <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+            <Disclosure.Panel className="px-4 pb-2 pt-4 text-sm text-gray-500">
               <table>
                 <thead>
                   <tr>

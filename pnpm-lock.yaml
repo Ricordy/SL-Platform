@@ -104,6 +104,9 @@ dependencies:
   react-photoswipe-gallery:
     specifier: ^2.2.7
     version: 2.2.7(photoswipe@5.3.8)(prop-types@15.8.1)(react@18.2.0)
+  react-responsive:
+    specifier: ^9.0.2
+    version: 9.0.2(react@18.2.0)
   react-responsive-carousel:
     specifier: ^3.2.23
     version: 3.2.23
@@ -139,6 +142,9 @@ devDependencies:
   '@openzeppelin/contracts':
     specifier: ^4.8.0
     version: 4.8.0
+  '@tailwindcss/line-clamp':
+    specifier: ^0.4.4
+    version: 0.4.4(tailwindcss@3.3.0)
   '@types/eslint':
     specifier: ^8.21.3
     version: 8.21.3
@@ -2032,6 +2038,14 @@ packages:
     dependencies:
       tslib: 2.5.3
     dev: false
+
+  /@tailwindcss/line-clamp@0.4.4(tailwindcss@3.3.0):
+    resolution: {integrity: sha512-5U6SY5z8N42VtrCrKlsTAA35gy2VSyYtHWCsg1H87NU1SXnEfekTVlrga9fzUDrrHcGi2Lb5KenUWb4lRQT5/g==}
+    peerDependencies:
+      tailwindcss: '>=2.0.0 || >=3.0.0 || >=3.0.0-alpha.1'
+    dependencies:
+      tailwindcss: 3.3.0(postcss@8.4.21)(ts-node@10.9.1)
+    dev: true
 
   /@tanstack/query-core@4.27.0:
     resolution: {integrity: sha512-sm+QncWaPmM73IPwFlmWSKPqjdTXZeFf/7aEmWh00z7yl2FjqophPt0dE1EHW9P1giMC5rMviv7OUbSDmWzXXA==}
@@ -4027,6 +4041,10 @@ packages:
   /css-color-keywords@1.0.0:
     resolution: {integrity: sha512-FyyrDHZKEjXDpNJYvVsV960FiqQyXc/LlYmsxl2BcdMb2WPx0OGRVgTg55rPSyLSNMqP52R9r8geSp7apN3Ofg==}
     engines: {node: '>=4'}
+    dev: false
+
+  /css-mediaquery@0.1.2:
+    resolution: {integrity: sha512-COtn4EROW5dBGlE/4PiKnh6rZpAPxDeFLaEEwt4i10jpDMFt2EhQGS79QmmrO+iKCHv0PU/HrOWEhijFd1x99Q==}
     dev: false
 
   /css-to-react-native@3.2.0:
@@ -6089,6 +6107,10 @@ packages:
     dependencies:
       ms: 2.1.3
 
+  /hyphenate-style-name@1.0.4:
+    resolution: {integrity: sha512-ygGZLjmXfPHj+ZWh6LwbC37l43MhfztxetbFCoYTM2VjkIUpeHgSNn7QIyVFj7YQ1Wl9Cbw5sholVJPzWvC2MQ==}
+    dev: false
+
   /iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
     engines: {node: '>=0.10.0'}
@@ -6789,6 +6811,12 @@ packages:
 
   /markdown-table@1.1.3:
     resolution: {integrity: sha512-1RUZVgQlpJSPWYbFSpmudq5nHY1doEIv89gBtF0s4gW1GF2XorxcA/70M5vq7rLv0a6mhOUccRsqkwhwLCIQ2Q==}
+
+  /matchmediaquery@0.3.1:
+    resolution: {integrity: sha512-Hlk20WQHRIm9EE9luN1kjRjYXAQToHOIAHPJn9buxBwuhfTHoKUcX+lXBbxc85DVQfXYbEQ4HcwQdd128E3qHQ==}
+    dependencies:
+      css-mediaquery: 0.1.2
+    dev: false
 
   /mcl-wasm@0.7.9:
     resolution: {integrity: sha512-iJIUcQWA88IJB/5L15GnJVnSQJmf/YaxxV6zRavv83HILHaJQb6y0iFyDMdDO0gN8X37tdxmAOrH/P8B6RB8sQ==}
@@ -8011,6 +8039,19 @@ packages:
       react-easy-swipe: 0.0.21
     dev: false
 
+  /react-responsive@9.0.2(react@18.2.0):
+    resolution: {integrity: sha512-+4CCab7z8G8glgJoRjAwocsgsv6VA2w7JPxFWHRc7kvz8mec1/K5LutNC2MG28Mn8mu6+bu04XZxHv5gyfT7xQ==}
+    engines: {node: '>=0.10'}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      hyphenate-style-name: 1.0.4
+      matchmediaquery: 0.3.1
+      prop-types: 15.8.1
+      react: 18.2.0
+      shallow-equal: 1.2.1
+    dev: false
+
   /react-ssr-prepass@1.5.0(react@18.2.0):
     resolution: {integrity: sha512-yFNHrlVEReVYKsLI5lF05tZoHveA5pGzjFbFJY/3pOqqjGOmMmqx83N4hIjN2n6E1AOa+eQEUxs3CgRnPmT0RQ==}
     peerDependencies:
@@ -8438,6 +8479,10 @@ packages:
     dependencies:
       charenc: 0.0.2
       crypt: 0.0.2
+
+  /shallow-equal@1.2.1:
+    resolution: {integrity: sha512-S4vJDjHHMBaiZuT9NPb616CSmLf618jawtv3sufLl6ivK8WocjAo58cXwbRV1cgqxH0Qbv+iUt6m05eqEa2IRA==}
+    dev: false
 
   /shallowequal@1.1.0:
     resolution: {integrity: sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==}

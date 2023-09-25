@@ -281,8 +281,8 @@ export const InvestmentSidebar = ({
                 value={paymentTokenBalance}
                 displayType="text"
                 fixedDecimalScale={true}
-                decimalSeparator="."
-                thousandSeparator=","
+                decimalSeparator=","
+                thousandSeparator="."
                 decimalScale={0}
                 prefix="$ "
               />
@@ -293,8 +293,8 @@ export const InvestmentSidebar = ({
                 value={minToInvest}
                 displayType="text"
                 fixedDecimalScale={true}
-                decimalSeparator="."
-                thousandSeparator=","
+                decimalSeparator=","
+                thousandSeparator="."
                 decimalScale={0}
                 prefix="$ "
               />
@@ -305,8 +305,8 @@ export const InvestmentSidebar = ({
                 value={maxToInvest}
                 displayType="text"
                 fixedDecimalScale={true}
-                decimalSeparator="."
-                thousandSeparator=","
+                decimalSeparator=","
+                thousandSeparator="."
                 decimalScale={0}
                 prefix="$ "
               />{" "}
