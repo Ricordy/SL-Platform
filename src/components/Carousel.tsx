@@ -164,6 +164,8 @@ const Carousel: FC<CarouselProps> = ({
 
   return (
     <div className={className ?? ""}>
+      {items?.length % 4}
+      {currentSlider}
       <div className="mx-auto flex justify-between">
         {title && (
           <div className="ml-[58px] self-start pb-[52px] text-center font-medium uppercase">
@@ -184,9 +186,12 @@ const Carousel: FC<CarouselProps> = ({
       <div className="relative flex max-w-[1224px] items-center">
         {items && items?.length > 2 && (
           <div
-            className={`absolute  left-0 z-20 flex items-center justify-center swiper-prev-${id}`}
+            className={cn(
+              `absolute  left-0 z-20 flex items-center justify-center swiper-prev-${id}`,
+              currentSlider !== 0 ? "visible" : "invisible"
+            )}
           >
-            {currentSlider !== 0 && (
+            {
               <Image
                 src={
                   prevNavWhite
@@ -197,7 +202,7 @@ const Carousel: FC<CarouselProps> = ({
                 height={38}
                 alt="Previous"
               />
-            )}
+            }
           </div>
         )}
         <section
@@ -241,18 +246,22 @@ const Carousel: FC<CarouselProps> = ({
             </Swiper>
           </div>
         </section>
+
         {items && items?.length > 2 && (
           <div
-            className={`absolute right-0 z-20 -mr-[58px] flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent to-black pr-10 swiper-next-${id}`}
+            className={cn(
+              `absolute right-0 z-20 -mr-[58px] flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent to-black pr-10 swiper-next-${id}  `,
+              currentSlider === items?.length % 4 ? "invisible" : "visible"
+            )}
           >
-            {currentSlider !== items?.length - 1 && (
+            {
               <Image
                 src="/icons/pagination-next.svg"
                 width={38}
                 height={38}
                 alt="Next"
               />
-            )}
+            }
           </div>
         )}
       </div>
