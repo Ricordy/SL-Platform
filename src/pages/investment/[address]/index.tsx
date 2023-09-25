@@ -229,12 +229,12 @@ export const ProjectInfo = ({
         <span>Progress:</span>
         <span className="font-medium">
           <NumericFormat
-            value={progress.toString()}
+            value={progress}
             displayType="text"
             fixedDecimalScale
             decimalSeparator=","
             thousandSeparator="."
-            decimalScale={0}
+            decimalScale={2}
             suffix="%"
           />{" "}
           Finished
