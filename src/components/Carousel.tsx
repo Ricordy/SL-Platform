@@ -59,7 +59,8 @@ export const CarouselItem = ({
                 <NumericFormat
                   value={price}
                   displayType="text"
-                  thousandSeparator=","
+                  decimalSeparator=","
+                  thousandSeparator="."
                   decimalScale={0}
                   prefix="$"
                 />

@@ -319,8 +319,8 @@ const Puzzle: FC<PuzzleProps> = ({
                                     value={claimPieceProgress?.toString()}
                                     displayType="text"
                                     fixedDecimalScale
-                                    decimalSeparator="."
-                                    thousandSeparator=","
+                                    decimalSeparator=","
+                                    thousandSeparator="."
                                     decimalScale={0}
                                     suffix=" %"
                                   />
@@ -340,8 +340,8 @@ const Puzzle: FC<PuzzleProps> = ({
                                       }
                                       displayType="text"
                                       fixedDecimalScale
-                                      decimalSeparator="."
-                                      thousandSeparator=","
+                                      decimalSeparator=","
+                                      thousandSeparator="."
                                       decimalScale={0}
                                       prefix="$ "
                                     />
@@ -351,8 +351,8 @@ const Puzzle: FC<PuzzleProps> = ({
                                     value={(5000 * currentLevel).toString()}
                                     displayType="text"
                                     fixedDecimalScale
-                                    decimalSeparator="."
-                                    thousandSeparator=","
+                                    decimalSeparator=","
+                                    thousandSeparator="."
                                     decimalScale={0}
                                     prefix="$ "
                                   />

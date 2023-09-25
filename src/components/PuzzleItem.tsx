@@ -35,8 +35,8 @@ const PuzzleItem: React.FC<PuzzleItemData> = ({
               value={current}
               displayType="text"
               fixedDecimalScale={true}
-              decimalSeparator="."
-              thousandSeparator=","
+              decimalSeparator=","
+              thousandSeparator="."
               decimalScale={0}
               prefix="$ "
             />
@@ -45,8 +45,8 @@ const PuzzleItem: React.FC<PuzzleItemData> = ({
               value={amount}
               displayType="text"
               fixedDecimalScale={true}
-              decimalSeparator="."
-              thousandSeparator=","
+              decimalSeparator=","
+              thousandSeparator="."
               decimalScale={0}
               prefix="$ "
             />
