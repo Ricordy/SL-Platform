@@ -229,7 +229,7 @@ export const ProjectInfo = ({
         <span>Progress:</span>
         <span className="font-medium">
           <NumericFormat
-            value={progress}
+            value={progress % 1 === 0 ? progress.toString() : progress}
             displayType="text"
             fixedDecimalScale
             decimalSeparator=","
@@ -619,6 +619,7 @@ const Investment = ({
                 />
                 General Information
               </h3>
+              {progress}
               <ProjectInfo
                 progress={progress}
                 status={investment.basicInvestment.investmentStatus}
