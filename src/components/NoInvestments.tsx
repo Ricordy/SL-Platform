@@ -25,7 +25,7 @@ const NoInvestments: React.FC<NoInvestmentProps> = ({
   });
 
   return (
-    <div className="ml-[58px] grid grid-flow-row auto-rows-auto grid-cols-3 justify-center gap-4 overflow-x-hidden pb-[132px] ">
+    <div className="grid grid-flow-row auto-rows-auto grid-cols-1 justify-center gap-4 overflow-x-hidden  md:ml-[58px] md:grid-cols-3 md:pb-[132px] ">
       <div className="flex flex-col items-center justify-center rounded-md bg-puzzleProfitNotice p-8 text-justify align-middle">
         <h4 className="mb-4 text-2xl font-medium text-primaryGreen">
           Start your investments
@@ -57,7 +57,7 @@ const NoInvestments: React.FC<NoInvestmentProps> = ({
       </div>
       <div
         className={cn(
-          "flex items-center justify-center rounded-md",
+          "hidden items-center justify-center rounded-md md:flex",
           active ? "bg-puzzleProfitNotice" : "bg-contactBackground"
         )}
       >
@@ -80,7 +80,7 @@ const NoInvestments: React.FC<NoInvestmentProps> = ({
       </div>
       <div
         className={cn(
-          "flex h-[394px] w-[416px] items-center justify-center rounded-md",
+          "hidden h-[394px] w-[416px] items-center justify-center rounded-md md:flex",
           active ? "bg-puzzleProfitNotice" : "bg-contactBackground"
         )}
       >

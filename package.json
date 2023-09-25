@@ -43,6 +43,7 @@
     "react-image-lightbox": "^5.1.4",
     "react-number-format": "^5.0.0-beta.4",
     "react-photoswipe-gallery": "^2.2.7",
+    "react-responsive": "^9.0.2",
     "react-responsive-carousel": "^3.2.23",
     "siwe": "^1.1.6",
     "solidity-coverage": "^0.8.2",
@@ -56,6 +57,7 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
     "@openzeppelin/contracts": "^4.8.0",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "@types/eslint": "^8.21.3",
     "@types/node": "^18.15.5",
     "@types/prettier": "^2.7.2",

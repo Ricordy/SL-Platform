@@ -102,7 +102,8 @@ export const TransactionItem = (props) => {
                   <NumericFormat
                     value={item.amountInvested}
                     displayType="text"
-                    thousandSeparator=","
+                    decimalSeparator=","
+                    thousandSeparator="."
                     decimalScale={0}
                     prefix="$"
                   />
@@ -144,7 +145,8 @@ export const TransactionItem = (props) => {
                   <NumericFormat
                     value={item.amountInvested}
                     displayType="text"
-                    thousandSeparator=","
+                    decimalSeparator=","
+                    thousandSeparator="."
                     decimalScale={0}
                     prefix="$"
                   />
@@ -632,7 +634,8 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                 <NumericFormat
                   value={noDecimal(data?.[5]?.toNumber()) || 0}
                   displayType="text"
-                  thousandSeparator=","
+                  decimalSeparator=","
+                  thousandSeparator="."
                   decimalScale={0}
                   prefix="$"
                 />
@@ -672,7 +675,8 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                         <NumericFormat
                           value={data?.[0].div(10 ** 6).toNumber()}
                           displayType="text"
-                          thousandSeparator=","
+                          decimalSeparator=","
+                          thousandSeparator="."
                           decimalScale={0}
                           prefix="$"
                         />
@@ -686,7 +690,8 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                         <NumericFormat
                           value={data?.[1].div(10 ** 6).toNumber()}
                           displayType="text"
-                          thousandSeparator=","
+                          decimalSeparator=","
+                          thousandSeparator="."
                           decimalScale={0}
                           prefix="$"
                         />
@@ -700,7 +705,8 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                         <NumericFormat
                           value={data?.[2].div(10 ** 6).toNumber()}
                           displayType="text"
-                          thousandSeparator=","
+                          decimalSeparator=","
+                          thousandSeparator="."
                           decimalScale={0}
                           prefix="$"
                         />
@@ -714,7 +720,8 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                         <NumericFormat
                           value={data?.[3].div(10 ** 6).toNumber()}
                           displayType="text"
-                          thousandSeparator=","
+                          decimalSeparator=","
+                          thousandSeparator="."
                           decimalScale={0}
                           prefix="$"
                         />

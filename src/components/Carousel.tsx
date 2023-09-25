@@ -14,6 +14,7 @@ import { Button } from "./ui/Button";
 import { type Address } from "wagmi";
 import { useContractRead } from "wagmi";
 import { SLCoreABI } from "~/utils/abis";
+import { useBreakpoint } from "~/hooks/useBreakpoints";
 // import "swiper/css/navigation";
 
 interface CarouselItemProps {
@@ -34,7 +35,7 @@ export const CarouselItem = ({
   userLevel,
 }: CarouselItemProps) => {
   return (
-    <div className=" relative w-full rounded-[7px] border border-transparent hover:border-primaryGold">
+    <div className=" relative w-full rounded-[6px] border border-transparent hover:border-primaryGold">
       <div
         className={cn(
           "br relative flex min-h-[394px] w-full flex-col items-center justify-end gap-4  rounded-md bg-cover bg-center ",
@@ -44,7 +45,7 @@ export const CarouselItem = ({
         style={{ backgroundImage: `url(${image})` }}
       >
         {level && (
-          <div className="absolute right-3 top-2 z-10 rounded-lg bg-white px-2 py-1 text-xs text-black">
+          <div className=" absolute left-1/2 top-2 z-10 -ml-5 rounded-lg bg-white px-2 py-1 text-xs text-black md:left-auto md:right-3 md:-ml-0">
             {level}
           </div>
         )}
@@ -58,7 +59,8 @@ export const CarouselItem = ({
                 <NumericFormat
                   value={price}
                   displayType="text"
-                  thousandSeparator=","
+                  decimalSeparator=","
+                  thousandSeparator="."
                   decimalScale={0}
                   prefix="$"
                 />
@@ -166,12 +168,12 @@ const Carousel: FC<CarouselProps> = ({
     <div className={className ?? ""}>
       <div className="mx-auto flex justify-between">
         {title && (
-          <div className="ml-[58px] self-start pb-[52px] text-center font-medium uppercase">
+          <div className="self-start pb-12 text-center font-medium uppercase md:ml-[58px] md:pb-[52px]">
             {title ?? ""}
           </div>
         )}
         {seeMoreLink && seeMoreLabel && (
-          <div className={seeMoreMr ?? "mr-[260px]"}>
+          <div className={seeMoreMr ?? "md:mr-[260px]"}>
             <Link
               href={seeMoreLink}
               className="border-b-2 border-white text-sm uppercase text-white"
@@ -181,6 +183,7 @@ const Carousel: FC<CarouselProps> = ({
           </div>
         )}
       </div>
+
       <div className="relative flex max-w-[1224px] items-center">
         {items && items?.length > 2 && (
           <div
@@ -205,7 +208,7 @@ const Carousel: FC<CarouselProps> = ({
         )}
         <section
           className={cn(
-            " relative z-10  ml-[58px] flex w-full flex-col items-center"
+            " relative z-10  flex w-full flex-col items-center md:ml-[58px]"
           )}
         >
           <div className="swiper-wrapper relative z-10 flex w-1/2 ">
@@ -214,7 +217,8 @@ const Carousel: FC<CarouselProps> = ({
               modules={[Navigation, A11y]}
               className="swiper w-full"
               spaceBetween={24}
-              slidesPerView={4}
+              centeredSlides={isAboveMd ? false : true}
+              slidesPerView={isAboveMd ? 4 : "auto"}
               navigation={{
                 nextEl: `.swiper-next-${id}`,
                 prevEl: `.swiper-prev-${id}`,
@@ -229,10 +233,6 @@ const Carousel: FC<CarouselProps> = ({
               {items?.map((item, index) => (
                 <SwiperSlide key={index}>
                   <CarouselItem
-                    // title="my title"
-                    // image="/projects/car-1.jpg"
-                    // price="39595"
-
                     title={item.basicInvestment.car?.basicInfo.title}
                     image={item.basicInvestment.car?.basicInfo.cover.url}
                     price={item.basicInvestment.totalInvestment.toString()}
@@ -245,6 +245,7 @@ const Carousel: FC<CarouselProps> = ({
             </Swiper>
           </div>
         </section>
+
 
         {items && items?.length > 2 && (
           <div
@@ -263,6 +264,7 @@ const Carousel: FC<CarouselProps> = ({
             }
           </div>
         )}
+
       </div>
     </div>
   );
