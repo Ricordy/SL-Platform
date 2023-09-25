@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 const defaultTheme = require("tailwindcss/defaultTheme");
 module.exports = {
+  mode: "jit",
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
@@ -34,7 +35,7 @@ module.exports = {
         // tabInactive: "#757C79",
         tabInactive: "#8C9592",
         puzzleProfitNotice: "#F6F9F8",
-        divideTransaction: "#C2D1D9"
+        divideTransaction: "#C2D1D9",
       },
     },
   },
