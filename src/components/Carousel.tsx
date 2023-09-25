@@ -160,6 +160,8 @@ const Carousel: FC<CarouselProps> = ({
 
   const [currentSlider, setcurrentSlider] = useState(0);
 
+  const { isAboveMd, isBelowMd } = useBreakpoint("md");
+
   const handleSlideChange = (swiper: any) => {
     setcurrentSlider(swiper.activeIndex);
   };
@@ -246,7 +248,6 @@ const Carousel: FC<CarouselProps> = ({
           </div>
         </section>
 
-
         {items && items?.length > 2 && (
           <div
             className={cn(
@@ -264,7 +265,6 @@ const Carousel: FC<CarouselProps> = ({
             }
           </div>
         )}
-
       </div>
     </div>
   );
