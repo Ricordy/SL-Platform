@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { type FC, type ReactNode } from "react";
+import { useState, type FC, type ReactNode } from "react";
 import { A11y, Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { cn } from "../lib/utils";
@@ -158,11 +158,17 @@ const Carousel: FC<CarouselProps> = ({
     args: [userAddress],
   });
 
-  const { isAboveMd, isBelowMd, md } = useBreakpoint("md");
+  const [currentSlider, setcurrentSlider] = useState(0);
+
+  const { isAboveMd, isBelowMd } = useBreakpoint("md");
+
+  const handleSlideChange = (swiper: any) => {
+    setcurrentSlider(swiper.activeIndex);
+  };
 
   return (
     <div className={className ?? ""}>
-      <div className="mx-auto flex w-full justify-between">
+      <div className="mx-auto flex justify-between">
         {title && (
           <div className="self-start pb-12 text-center font-medium uppercase md:ml-[58px] md:pb-[52px]">
             {title ?? ""}
@@ -179,25 +185,29 @@ const Carousel: FC<CarouselProps> = ({
           </div>
         )}
       </div>
-      <div className="relative flex items-center rounded-md md:max-w-[1224px]">
-        <div
-          className={`absolute  left-0 z-20 flex h-full items-center justify-center rounded-l-md bg-gradient-to-r from-black/70  pl-5 md:bg-none md:pl-0 swiper-prev-${id}`}
-        >
-          {
-            <Image
-              src={
-                prevNavWhite
-                  ? "/icons/pagination-previous.svg"
-                  : isAboveMd
-                  ? "/icons/pagination-previous-black.svg"
-                  : "/icons/pagination-previous.svg"
-              }
-              width={38}
-              height={38}
-              alt="Previous"
-            />
-          }
-        </div>
+
+      <div className="relative flex max-w-[1224px] items-center">
+        {items && items?.length > 2 && (
+          <div
+            className={cn(
+              `absolute  left-0 z-20 flex items-center justify-center swiper-prev-${id}`,
+              currentSlider !== 0 ? "visible" : "invisible"
+            )}
+          >
+            {
+              <Image
+                src={
+                  prevNavWhite
+                    ? "/icons/pagination-previous.svg"
+                    : "/icons/pagination-previous-black.svg"
+                }
+                width={38}
+                height={38}
+                alt="Previous"
+              />
+            }
+          </div>
+        )}
         <section
           className={cn(
             " relative z-10  flex w-full flex-col items-center md:ml-[58px]"
@@ -218,6 +228,7 @@ const Carousel: FC<CarouselProps> = ({
               updateOnWindowResize
               observer
               observeParents
+              onSlideChange={handleSlideChange}
               // initialSlide={0}
               // loop={true}
             >
@@ -236,16 +247,24 @@ const Carousel: FC<CarouselProps> = ({
             </Swiper>
           </div>
         </section>
-        <div
-          className={`absolute right-0 z-20 flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent to-black pr-5 md:-mr-[58px] md:pr-10 swiper-next-${id}`}
-        >
-          <Image
-            src="/icons/pagination-next.svg"
-            width={38}
-            height={38}
-            alt="Next"
-          />
-        </div>
+
+        {items && items?.length > 2 && (
+          <div
+            className={cn(
+              `absolute right-0 z-20 -mr-[58px] flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent to-black pr-10 swiper-next-${id}  `,
+              currentSlider === items?.length % 4 ? "invisible" : "visible"
+            )}
+          >
+            {
+              <Image
+                src="/icons/pagination-next.svg"
+                width={38}
+                height={38}
+                alt="Next"
+              />
+            }
+          </div>
+        )}
       </div>
     </div>
   );

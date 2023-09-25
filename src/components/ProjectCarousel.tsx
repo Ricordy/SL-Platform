@@ -149,24 +149,29 @@ const ProjectCarousel: FC<CarouselProps> = ({
       )}
 
       <div className="relative flex max-w-[1338px] items-center overflow-hidden">
-        <div
-          className={`absolute  left-0 z-20 flex items-center justify-center swiper-prev-${id}`}
-        >
-          <Image
-            src={
-              (
-                currentSlider == 0 || currentSlider == items?.length - 1
-                  ? true
-                  : false
-              )
-                ? "/icons/pagination-previous.svg"
-                : "/icons/pagination-previous-black.svg"
-            }
-            width={38}
-            height={38}
-            alt="Previous"
-          />
-        </div>
+        {items && items?.length > 2 && (
+          <div
+            className={cn(
+              `absolute  left-0 z-20 flex items-center justify-center swiper-prev-${id}`,
+              currentSlider !== 0 ? "visible" : "invisible"
+            )}
+          >
+            <Image
+              src={
+                (
+                  currentSlider == 0 || currentSlider == items?.length - 1
+                    ? true
+                    : false
+                )
+                  ? "/icons/pagination-previous.svg"
+                  : "/icons/pagination-previous-black.svg"
+              }
+              width={38}
+              height={38}
+              alt="Previous"
+            />
+          </div>
+        )}
         <section
           className={cn(
             " relative z-10 ml-[58px] flex w-full flex-col items-center"
@@ -206,16 +211,21 @@ const ProjectCarousel: FC<CarouselProps> = ({
             </Swiper>
           </div>
         </section>
-        <div
-          className={`absolute right-0 z-20 flex h-full items-center bg-gradient-to-r from-transparent to-black pr-10 swiper-next-${id}`}
-        >
-          <Image
-            src="/icons/pagination-next.svg"
-            width={38}
-            height={38}
-            alt="Next"
-          />
-        </div>
+        {items && items?.length > 2 && (
+          <div
+            className={cn(
+              `absolute right-0 z-20 -mr-[58px] flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent to-black pr-10 swiper-next-${id}  `,
+              currentSlider === items?.length % 3 ? "invisible" : "visible"
+            )}
+          >
+            <Image
+              src="/icons/pagination-next.svg"
+              width={38}
+              height={38}
+              alt="Next"
+            />
+          </div>
+        )}
       </div>
     </div>
   );
