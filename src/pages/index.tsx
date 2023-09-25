@@ -83,7 +83,7 @@ const Home: NextPage = (props: any) => {
           <div className="z-10 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
             <div className="flex flex-col gap-12 px-6 pt-24 md:px-0">
               <h3
-                className="text-5xl uppercase tracking-widest text-white"
+                className="text-3xl uppercase tracking-widest text-white md:text-5xl"
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(
                     images.at(activeIndex).basicInvestment.car?.sliderTitle

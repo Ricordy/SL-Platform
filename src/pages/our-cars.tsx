@@ -38,24 +38,24 @@ const ourCars = (props) => {
   return (
     <section className=" mx-auto w-full  bg-white">
       <div
-        style={{ "--image-url": `url(${props.investments[0].banner.url})` }}
+        style={{ backgroundImage: `url(${props.investments[0].banner.url})` }}
         className={
-          "relative flex h-[1000px] min-h-screen w-full flex-col  rounded-bl-[56px]  bg-opacity-80 bg-[image:var(--image-url)] bg-contain bg-right bg-no-repeat"
+          "relative flex min-h-screen w-full flex-col bg-cover bg-right  bg-no-repeat md:h-[1000px] md:rounded-bl-[56px] md:bg-contain"
         }
       >
         <div className="absolute top-0 z-0 flex min-h-[83px]  w-full bg-[url('/bg/bg-navbar.svg')]"></div>
-        <div className="absolute left-0 z-10 flex h-[1000px] min-h-screen w-full bg-[url('/bg/gradient-vertical-header.svg')] bg-contain bg-bottom bg-no-repeat"></div>
-        <div className="absolute bottom-0 z-0 flex h-[1000px] min-h-screen  w-full rounded-bl-[56px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat"></div>
+        <div className="absolute left-0 z-10 min-h-[968px] w-full bg-[linear-gradient(to_right,rgba(10,10,10,0.8),rgba(16,71,52,0.2)),url('/bg/gradient-vertical-header.svg')] bg-cover bg-bottom bg-no-repeat md:flex md:rounded-bl-[116px]" />
+        <div className="absolute bottom-0 z-0 hidden h-[1000px] min-h-screen  w-full rounded-bl-[56px] bg-[url('/bg/gradient-horizontal-header.svg')] bg-cover bg-left bg-no-repeat md:flex"></div>
         <NavBar />
-        <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
-          <div className="flex flex-col gap-4 pt-8">
-            <h3 className="mb-16 text-3xl uppercase tracking-widest text-white">
+        <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center px-6 md:px-0">
+          <div className="flex flex-col gap-4  pt-24 md:pt-8">
+            <h3 className="hidden text-3xl uppercase tracking-widest text-white md:mb-16 md:block">
               Our Cars
             </h3>
             <span className="flex self-start rounded-full border border-primaryGold px-3 uppercase text-primaryGold">
               New
             </span>
-            <h3 className="mb-4 text-5xl uppercase tracking-widest text-white">
+            <h3 className="mb-4 text-3xl uppercase tracking-widest text-white md:text-5xl">
               {lastCarName}
               <br />
               {lastCarModel()}
@@ -63,8 +63,7 @@ const ourCars = (props) => {
             <p className="mb-4 text-white">
               Discover the world of{" "}
               <span className="font-medium">investment in the classics</span>
-              <br />
-              and follow the process in{" "}
+              <br className="hidden md:block" /> and follow the process in{" "}
               <span className="font-medium">real time</span>.
             </p>
             <Link
@@ -76,9 +75,9 @@ const ourCars = (props) => {
           </div>
         </div>
       </div>
-      <div className="relative left-1/2 z-20 -ml-[570px] -mt-[350px] min-h-[500px] w-full max-w-[1290px]">
+      <div className="relative z-20 w-full max-w-[1290px] md:left-1/2 md:-ml-[570px] md:-mt-[350px] md:min-h-[500px]">
         <Tab.Group>
-          <Tab.List className="ml-[58px] flex w-fit border-b border-b-gray-900/20">
+          <Tab.List className="flex w-fit border-b border-b-gray-900/20 md:ml-[58px]">
             {investmentLevelsData.map((investmentLevel) => (
               <Tab
                 key={investmentLevel}
@@ -98,7 +97,7 @@ const ourCars = (props) => {
               </Tab>
             ))}
           </Tab.List>
-          <Tab.Panels className="mt-2">
+          <Tab.Panels className="mt-2 px-6 md:px-0">
             {investmentLevelsData.map((investmentLevel) => {
               return (
                 <Tab.Panel
@@ -127,7 +126,7 @@ const ourCars = (props) => {
         </Tab.Group>
         <Carousel
           id="4"
-          className="pt-[132px]"
+          className="mb-12 px-6 pt-12 md:mb-0 md:px-0 md:pt-[132px]"
           title={<h2 className="text-2xl ">Our cars</h2>}
           items={props.investments}
           userAddress={walletAddress!}

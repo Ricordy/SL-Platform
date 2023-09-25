@@ -157,7 +157,7 @@ const Carousel: FC<CarouselProps> = ({
     args: [userAddress],
   });
 
-  const { isAboveMd } = useBreakpoint("md");
+  const { isAboveMd, isBelowMd, md } = useBreakpoint("md");
 
   return (
     <div className={className ?? ""}>
@@ -180,14 +180,16 @@ const Carousel: FC<CarouselProps> = ({
       </div>
       <div className="relative flex items-center rounded-md md:max-w-[1224px]">
         <div
-          className={`absolute  left-0 z-20 flex h-full items-center justify-center bg-gradient-to-r from-black/70  pl-5 md:bg-none md:pl-0 swiper-prev-${id}`}
+          className={`absolute  left-0 z-20 flex h-full items-center justify-center rounded-l-md bg-gradient-to-r from-black/70  pl-5 md:bg-none md:pl-0 swiper-prev-${id}`}
         >
           {
             <Image
               src={
                 prevNavWhite
                   ? "/icons/pagination-previous.svg"
-                  : "/icons/pagination-previous-black.svg"
+                  : isAboveMd
+                  ? "/icons/pagination-previous-black.svg"
+                  : "/icons/pagination-previous.svg"
               }
               width={38}
               height={38}
