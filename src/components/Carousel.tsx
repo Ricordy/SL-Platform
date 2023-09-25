@@ -164,8 +164,6 @@ const Carousel: FC<CarouselProps> = ({
 
   return (
     <div className={className ?? ""}>
-      {items?.length % 4}
-      {currentSlider}
       <div className="mx-auto flex justify-between">
         {title && (
           <div className="ml-[58px] self-start pb-[52px] text-center font-medium uppercase">
@@ -234,6 +232,7 @@ const Carousel: FC<CarouselProps> = ({
                     // title="my title"
                     // image="/projects/car-1.jpg"
                     // price="39595"
+
                     title={item.basicInvestment.car?.basicInfo.title}
                     image={item.basicInvestment.car?.basicInfo.cover.url}
                     price={item.basicInvestment.totalInvestment.toString()}
