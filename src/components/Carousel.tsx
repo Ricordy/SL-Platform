@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { type FC, type ReactNode } from "react";
+import { useState, type FC, type ReactNode } from "react";
 import { A11y, Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { cn } from "../lib/utils";
@@ -156,6 +156,12 @@ const Carousel: FC<CarouselProps> = ({
     args: [userAddress],
   });
 
+  const [currentSlider, setcurrentSlider] = useState(0);
+
+  const handleSlideChange = (swiper: any) => {
+    setcurrentSlider(swiper.activeIndex);
+  };
+
   return (
     <div className={className ?? ""}>
       <div className="mx-auto flex justify-between">
@@ -176,22 +182,24 @@ const Carousel: FC<CarouselProps> = ({
         )}
       </div>
       <div className="relative flex max-w-[1224px] items-center">
-        <div
-          className={`absolute  left-0 z-20 flex items-center justify-center swiper-prev-${id}`}
-        >
-          {
-            <Image
-              src={
-                prevNavWhite
-                  ? "/icons/pagination-previous.svg"
-                  : "/icons/pagination-previous-black.svg"
-              }
-              width={38}
-              height={38}
-              alt="Previous"
-            />
-          }
-        </div>
+        {items && items?.length > 2 && (
+          <div
+            className={`absolute  left-0 z-20 flex items-center justify-center swiper-prev-${id}`}
+          >
+            {currentSlider !== 0 && (
+              <Image
+                src={
+                  prevNavWhite
+                    ? "/icons/pagination-previous.svg"
+                    : "/icons/pagination-previous-black.svg"
+                }
+                width={38}
+                height={38}
+                alt="Previous"
+              />
+            )}
+          </div>
+        )}
         <section
           className={cn(
             " relative z-10  ml-[58px] flex w-full flex-col items-center"
@@ -211,6 +219,7 @@ const Carousel: FC<CarouselProps> = ({
               updateOnWindowResize
               observer
               observeParents
+              onSlideChange={handleSlideChange}
               // initialSlide={0}
               // loop={true}
             >
@@ -232,16 +241,20 @@ const Carousel: FC<CarouselProps> = ({
             </Swiper>
           </div>
         </section>
-        <div
-          className={`absolute right-0 z-20 -mr-[58px] flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent to-black pr-10 swiper-next-${id}`}
-        >
-          <Image
-            src="/icons/pagination-next.svg"
-            width={38}
-            height={38}
-            alt="Next"
-          />
-        </div>
+        {items && items?.length > 2 && (
+          <div
+            className={`absolute right-0 z-20 -mr-[58px] flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent to-black pr-10 swiper-next-${id}`}
+          >
+            {currentSlider !== items?.length - 1 && (
+              <Image
+                src="/icons/pagination-next.svg"
+                width={38}
+                height={38}
+                alt="Next"
+              />
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
