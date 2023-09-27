@@ -418,73 +418,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     } catch (error) {}
   };
 
-  useEffect(() => {
-    // console.log(getUserTransactions(address));
-    // const populateInvestment = async () => {
-    //   if (!userInvestments || !investmentData) return;
-    //   userInvestments.map((ui, idx) => {
-    //     if (ui) {
-    //       const inv = investmentData?.find((i) => i.address[31337] == ui[idx]);
-    //       if (inv) {
-    //         console.log(ui[idx]);
-    //         const uc: InvestmentType = {
-    //           id: inv.id,
-    //           title: inv.title,
-    //           address: ui[idx] as Address,
-    //           chassis: inv.chassis,
-    //           totalProduction: inv.totalProduction,
-    //           totalModelProduction: inv.totalModelProduction,
-    //           colorCombination: inv.colorCombination,
-    //         };
-    //         setUserContracts([...userContracts, uc]);
-    //       }
-    //     }
-    //   });
-    // };
-    // populateInvestment();
-    /*
-    const getFactory = async () => {
-      try {
-        let contractAddress: Address;
-        const contractsToAdd = [];
-        let userInvested: BigNumber;
-        for (let i = 0; i < contractCount.toNumber(); i++) {
-          contractAddress = await factoryContract
-            ?.connect(signerData)
-            .getContractDeployed(BigNumber.from(i));
-          console.log(contractAddress);
-
-          userInvested = await factoryContract
-            .connect(signerData)
-            .getAddressOnContract(contractAddress);
-          if (userInvested.gt(0)) {
-            console.log("adding", contractAddress);
-
-            contractsToAdd.push({
-              id: i + 1,
-              title: `title-${i}`,
-              address: contractAddress,
-              abi: InvestAbi,
-              phase: "none",
-              functionName: "status",
-              args: [i],
-            });
-          }
-
-          // categories["Level 1"].push();
-        }
-
-        setContractsToRead(contractsToAdd);
-        // console.log(contractsToRead);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getFactory();
-    */
-    //return () => console.log("Cleanup..");
-  }, []);
-
   function extractUniqueInvestments(queryResult) {
     // Use a map to store unique investments by their address
     const uniqueInvestments = new Map();
@@ -522,12 +455,12 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       <div className="mx-auto flex  min-h-screen w-full flex-col">
         <NavBar />
 
-        <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[30px] pt-[52px]">
-          <div className="grid w-full grid-cols-2 items-start justify-center gap-4">
-            <div className="flex w-[434px] flex-col gap-8">
-              <div className="flex flex-col rounded-xl  bg-white px-10 py-[72px]">
+        <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[30px] px-6 md:px-0 md:pt-[52px]">
+          <div className="grid w-full grid-cols-1 items-start justify-center gap-4 md:grid-cols-2">
+            <div className="row-start-2 flex flex-col gap-8 md:row-start-auto md:w-[434px]">
+              <div className="flex flex-col rounded-xl  bg-white px-10 py-6 md:py-[72px]">
                 <div className="flex flex-col gap-[32px]">
-                  <h1 className="text-5xl font-semibold uppercase text-primaryGold">
+                  <h1 className="text-3xl font-semibold uppercase text-primaryGold md:text-5xl">
                     Buy your
                     <br />
                     <span className="font-medium text-black">
@@ -543,12 +476,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                   </p>
                 </div>
               </div>
-              {/* <Link
-                href="/mint-entry-nft"
-                className="rounded-xl bg-primaryGold px-3 py-1.5 text-center font-medium uppercase text-white dark:bg-primaryGold dark:text-white"
-              >
-                Buy it for 100$
-              </Link> */}
               <button
                 className="rounded-xl bg-primaryGold px-3 py-1.5 text-center font-medium uppercase text-white dark:bg-primaryGold dark:text-white"
                 disabled={!isConnected}
@@ -557,16 +484,23 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                 {isLoadingMintNFT ? "Minting..." : "Buy it for 100$"}
               </button>
             </div>
-            <div className="relative flex h-full w-full bg-[url('/bg/bg-buy-entry-nft.jpg')] bg-contain bg-center bg-no-repeat"></div>
+            <div className="relative row-start-1 flex h-full w-full items-center justify-center md:row-start-auto">
+              <Image
+                src="/bg/bg-buy-entry-nft.jpg"
+                width={250}
+                height={68}
+                alt="Previous"
+              />
+            </div>
           </div>
-          <div className="mt-[64px] flex justify-center gap-10 divide-x-2 pb-10">
+          <div className="flex flex-col justify-center gap-10 pb-10 md:mt-[64px] md:flex-row md:divide-x-2">
             <div className="flex flex-col ">
               <span className="text-primaryGold">Total of entries left:</span>
               <span className="text-4xl font-semibold text-white">
                 {data?.[4]?.toNumber()}
               </span>
             </div>
-            <div className="flex flex-col pl-[24px]">
+            <div className="flex flex-col md:pl-[24px]">
               <span className="text-primaryGold">
                 Amount of tickets already sold
               </span>
@@ -574,7 +508,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                 {data?.[6]?.toNumber()}
               </span>
             </div>
-            <div className="flex flex-col pl-[24px]">
+            <div className="flex flex-col md:pl-[24px]">
               <span className="text-primaryGold">
                 Total invested in classics:
               </span>
