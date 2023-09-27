@@ -268,56 +268,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
   const [userContracts, setUserContracts] = useState([]);
   const investContracts = [];
 
-  // const { data: userInvestments } = useContractRead({
-  //   address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
-  //   abi: FactoryAbi,
-  //   functionName: "getInvestments",
-  //   overrides: { from: address },
-  //   // select: (data) => convertData(data),
-  //   // onSuccess(data) {
-  //   //   data.map((investment) =>
-  //   //     Object.assign(
-  //   //       investment,
-  //   //       investmentData.find(
-  //   //         (i) => i.address[3177] == investment.contractAddress
-  //   //       )
-  //   //     )
-  //   //   );
-  //   //   console.log(data);
-  //   // },
-  // });
-
-  // const getUserTransactions = async (address: Address) => {
-  //   const {
-  //     transactions: userTransactions,
-  //   }: { transactions: TransactionProps } = await hygraph.request(
-  //     gql`
-  //       query UserTransactions {
-  //         transactions(where: { transactionDetails: { from: "34343434" } }) {
-  //           amountInvested
-  //           date
-  //           investment {
-  //             address
-  //             basicInvestment {
-  //               totalInvestment
-  //               car {
-  //                 basicInfo {
-  //                   cover {
-  //                     url
-  //                   }
-  //                   title
-  //                 }
-  //               }
-  //             }
-  //           }
-  //         }
-  //       }
-  //     `
-  //   );
-  //   return userTransactions;
-  // };
-
-  // console.log("user transactions>>", props.userTransactions);
   const userInvestedContracts = [];
   props.userTransactions?.map((transaction) => {
     if (userInvestedContracts[transaction.to]) {
@@ -326,8 +276,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
       userInvestedContracts[transaction.to] = transaction.amountInvested;
     }
   });
-  // console.log("userInvestedContracts", userInvestedContracts);
-  // setUserContracts(userInvestedContracts);
 
   // Approve spend payment token
   const {
@@ -652,21 +600,21 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
         <div className="absolute top-0 h-[1092px] w-full rounded-bl-[56px] bg-black"></div>
         <NavBar />
 
-        <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
+        <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center px-6 md:px-0">
           <div className="flex flex-col gap-4 pt-8">
             <h3 className="mb-8 text-3xl uppercase tracking-widest text-white">
               My Investments
               {/* <div>Here{JSON.stringify(props, null, 2)}</div> */}
             </h3>
-            <h2 className="mb-12 text-5xl uppercase text-white">
+            <h2 className="mb-12 text-3xl uppercase text-white md:text-5xl">
               Welcome{" "}
               <span className="font-medium text-primaryGold">Home, Legend</span>
             </h2>
-            <div className="grid auto-rows-[1fr] grid-cols-2 gap-12 text-white">
+            <div className="grid auto-rows-[1fr] grid-cols-1 gap-12 text-white md:grid-cols-2">
               <div className="flex flex-col  gap-4">
                 <span>Overview:</span>
                 {data && (
-                  <div className="flex flex-1 flex-col gap-2 rounded-md bg-myInvestmentsBackground px-12 py-8 font-medium leading-6">
+                  <div className="flex flex-1 flex-col gap-2 rounded-md bg-myInvestmentsBackground px-6 py-8 font-medium leading-6 md:px-12">
                     <div className="flex flex-col border-b-2 border-gray-700 px-3 py-4">
                       <h5 className="text-base text-primaryGold">
                         Total Invested
@@ -757,7 +705,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
         </div>
       </div>
 
-      <div className="relative left-1/2 z-20 mx-auto -ml-[570px] mt-[52px]  min-h-[500px] max-w-[1338px]">
+      <div className="relative z-20 mx-auto mt-[52px] min-h-[500px] max-w-[1338px]  px-6 md:left-1/2 md:-ml-[570px] md:px-0">
         {userInv && (
           <ProjectCarousel
             id="1"
@@ -770,27 +718,10 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
           />
         )}
 
-        {/* {userInv && (
-          <ProjectCarousel
-            id="2"
-            className="pt-[132px]"
-            title={<h2 className="text-2xl">Upcoming</h2>}
-            items={userInv.filter(
-              (investment) =>
-                investment.basicInvestment.investmentStatus == "Upcoming"
-            )}
-          />
-        )} */}
-        {/* <Carousel
-          id="3"
-          className="pt-[132px]"
-          title={<h2 className="text-2xl">My favorites</h2>}
-          items={props.investments}
-        /> */}
         {userInv && (
           <ProjectCarousel
             id="4"
-            className="py-[132px]"
+            className="md:py-[132px]"
             title={<h2 className="text-2xl">Finished</h2>}
             items={props.userInvestments?.filter(
               (investment) =>
@@ -799,124 +730,21 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
           />
         )}
       </div>
-      <div className="relative z-20 mx-auto rounded-t-[56px] bg-black pb-[128px] pt-[72px] text-white">
+      {/* <div className="relative z-20 mx-auto rounded-t-[56px] bg-black pb-[128px] pt-[72px] text-white">
         {
           <h2 className="mb-[52px] ml-[210px] text-2xl font-medium uppercase">
             Our Suggestions for you
           </h2>
         }
 
-        {/* <Carousel
-            id="4"
-            className="w-full pt-[132px]"
-            title={<h2 className="text-2xl">Our Suggestions for you</h2>}
-            items={getMissingInvestments(
-              props.allInvestments,
-              props.userInvestments
-            ).filter(
-              (investment) =>
-                investment.basicInvestment.investmentStatus == "Active"
-            )}
-          /> */}
-
-        {/* {getMissingInvestments(
-            props.allInvestments,
-            props.userInvestments
-          ).map((investment) => (
-            <CarouselItem
-              // title="my title"
-              // image="/projects/car-1.jpg"
-              // price="39595"
-              title={investment.basicInvestment.car?.basicInfo.title}
-              image={investment.basicInvestment.car?.basicInfo.cover.url}
-              price={investment.basicInvestment.totalInvestment.toString()}
-              address={investment.address}
-              level={investment.level.basicLevel.title}
-            />
-          ))} */}
         <Suggestions
           investments={getMissingInvestments(
             props.allInvestments,
             props.userInvestments
           )}
         />
-
-        {/* {carouselItems.slice(0, 3).map((item, idx) => (
-              <CarouselItem
-                key={idx}
-                title={item.title}
-                image={item.image}
-                price={item.price}
-              />
-            ))} */}
-      </div>
+      </div> */}
     </section>
-    // <div className="flex flex-col w-full px-6 lg:px-3 mt-16 md:mt-0">
-    //   <h2 className="text-2xl py-6">My Investments</h2>
-
-    //   <Tab.Group>
-    //     <Tab.List className="flex space-x-1 rounded-xl bg-gray-900/20 p-1">
-    //       {Object.keys(categories).map((category) => (
-    //         <Tab
-    //           key={category}
-    //           className={({ selected }) =>
-    //             classNames(
-    //               "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-gray-700",
-    //               "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-400 focus:outline-none focus:ring-2",
-    //               selected
-    //                 ? "bg-white shadow"
-    //                 : "text-gray-100 hover:bg-white/[0.12] hover:text-white"
-    //             )
-    //           }
-    //         >
-    //           {category}
-    //         </Tab>
-    //       ))}
-    //     </Tab.List>
-    //     <Tab.Panels className="mt-2">
-    //       {Object.values(categories).map((investments, idx) => (
-    //         <Tab.Panel
-    //           key={idx}
-    //           className={classNames(
-    //             "rounded-xl bg-white p-3",
-    //             "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-400 focus:outline-none focus:ring-2"
-    //           )}
-    //         >
-    //           {/* {userContracts && JSON.stringify(userContracts)} */}
-    //           <ul className="grid  sm:grid-cols-2 grid-cols-1 gap-2">
-    //             {Object.values(userContracts).map((investment) => (
-    //               <li
-    //                 key={investment.address}
-    //                 className="relative rounded-md p-3 border  flex  flex-col gap-3 justify-around hover:bg-gray-100"
-    //               >
-    //                 <h3 className="text-sm font-medium leading-5 pb-3">
-    //                   <Link href={`/investment/${investment.address}`}>
-    //                     {investment.title ?? "none"}
-    //                   </Link>
-    //                 </h3>
-
-    //                 {investment?.phase !== "Withdraw" ? (
-    //                   <div className="border p-2 text-xs rounded-md">
-    //                     {investment?.phase}
-    //                   </div>
-    //                 ) : (
-    //                   <button className="border p-2 text-xs rounded-md bg-slate-500 text-slate-100">
-    //                     Withdraw
-    //                   </button>
-    //                 )}
-    //                 <Link href={`/investment/${investment.address}/monitor`}>
-    //                   <a className="border p-2 text-xs rounded-md bg-slate-500 text-slate-100 text-center">
-    //                     Monitor Investment
-    //                   </a>
-    //                 </Link>
-    //               </li>
-    //             ))}
-    //           </ul>
-    //         </Tab.Panel>
-    //       ))}
-    //     </Tab.Panels>
-    //   </Tab.Group>
-    // </div>
   );
 };
 

@@ -143,90 +143,96 @@ const ProjectCarousel: FC<CarouselProps> = ({
   return (
     <div className={className ?? ""}>
       {title && (
-        <div className="ml-[58px] self-start pb-[52px] uppercase">
+        <div className="self-start pb-[52px] uppercase md:ml-[58px]">
           {title ?? ""}
         </div>
       )}
 
-      <div className="relative flex max-w-[1338px] items-center overflow-hidden">
-        {items && items?.length > 2 && (
-          <div
-            className={cn(
-              `absolute  left-0 z-20 flex items-center justify-center swiper-prev-${id}`,
-              currentSlider !== 0 ? "visible" : "invisible"
-            )}
-          >
-            <Image
-              src={
-                (
-                  currentSlider == 0 || currentSlider == items?.length - 1
-                    ? true
-                    : false
-                )
-                  ? "/icons/pagination-previous.svg"
-                  : "/icons/pagination-previous-black.svg"
-              }
-              width={38}
-              height={38}
-              alt="Previous"
-            />
-          </div>
-        )}
-        <section
-          className={cn(
-            " relative z-10 ml-[58px] flex w-full flex-col items-center"
-          )}
-        >
-          <div className="swiper-wrapper relative z-10 w-full ">
-            <Swiper
-              modules={[Navigation, A11y]}
-              className="swiper w-full"
-              spaceBetween={24}
-              slidesPerView={3}
-              navigation={{
-                nextEl: `.swiper-next-${id}`,
-                prevEl: `.swiper-prev-${id}`,
-              }}
-              updateOnWindowResize
-              observer
-              observeParents
-              initialSlide={0}
-              loop={true}
-              onSlideChange={handleSlideChange}
+      {items && items.length > 0 ? (
+        <div className="relative flex max-w-[1338px] items-center overflow-hidden">
+          {items.length > 2 && (
+            <div
+              className={cn(
+                `absolute  left-0 z-20 flex items-center justify-center swiper-prev-${id}`,
+                currentSlider !== 0 ? "visible" : "invisible"
+              )}
             >
-              {items?.map((item, index) => (
-                <SwiperSlide key={index}>
-                  <CarouselItem
-                    address={item.address}
-                    title={item.basicInvestment.car.basicInfo.title ?? ""}
-                    image={item.basicInvestment.car.basicInfo.cover.url ?? ""}
-                    price={item.basicInvestment.totalInvestment}
-                    status={
-                      item.basicInvestment.investmentStatus ?? "Not woking"
-                    }
-                    level={item.level.basicLevel.title}
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-        </section>
-        {items && items?.length > 2 && (
-          <div
+              <Image
+                src={
+                  (
+                    currentSlider == 0 || currentSlider == items?.length - 1
+                      ? true
+                      : false
+                  )
+                    ? "/icons/pagination-previous.svg"
+                    : "/icons/pagination-previous-black.svg"
+                }
+                width={38}
+                height={38}
+                alt="Previous"
+              />
+            </div>
+          )}
+          <section
             className={cn(
-              `absolute right-0 z-20 -mr-[58px] flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent to-black pr-10 swiper-next-${id}  `,
-              currentSlider === items?.length % 3 ? "invisible" : "visible"
+              " relative z-10 ml-[58px] flex w-full flex-col items-center"
             )}
           >
-            <Image
-              src="/icons/pagination-next.svg"
-              width={38}
-              height={38}
-              alt="Next"
-            />
-          </div>
-        )}
-      </div>
+            <div className="swiper-wrapper relative z-10 w-full ">
+              <Swiper
+                modules={[Navigation, A11y]}
+                className="swiper w-full"
+                spaceBetween={24}
+                slidesPerView={3}
+                navigation={{
+                  nextEl: `.swiper-next-${id}`,
+                  prevEl: `.swiper-prev-${id}`,
+                }}
+                updateOnWindowResize
+                observer
+                observeParents
+                initialSlide={0}
+                loop={true}
+                onSlideChange={handleSlideChange}
+              >
+                {items?.map((item, index) => (
+                  <SwiperSlide key={index}>
+                    <CarouselItem
+                      address={item.address}
+                      title={item.basicInvestment.car.basicInfo.title ?? ""}
+                      image={item.basicInvestment.car.basicInfo.cover.url ?? ""}
+                      price={item.basicInvestment.totalInvestment}
+                      status={
+                        item.basicInvestment.investmentStatus ?? "Not woking"
+                      }
+                      level={item.level.basicLevel.title}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+          </section>
+          {items.length > 2 && (
+            <div
+              className={cn(
+                `absolute right-0 z-20 -mr-[58px] flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent to-black pr-10 swiper-next-${id}  `,
+                currentSlider === items?.length % 3 ? "invisible" : "visible"
+              )}
+            >
+              <Image
+                src="/icons/pagination-next.svg"
+                width={38}
+                height={38}
+                alt="Next"
+              />
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="relative flex max-w-[1338px] items-center overflow-hidden">
+          <h3 className="text-white">No ivestments to show</h3>
+        </div>
+      )}
     </div>
   );
 };
