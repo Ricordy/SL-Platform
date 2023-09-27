@@ -30,7 +30,7 @@ import TestingGuides from "./testingModal/TestingGuides";
 import { useBreakpoint } from "~/hooks/useBreakpoints";
 
 const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
-  const { address, isConnected, isConnecting, isDisconnected } = useAccount();
+  const { address, isConnected, status } = useAccount();
   const { connect } = useConnect({
     connector: new InjectedConnector(),
   });
@@ -225,7 +225,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                   </span>
                 </div>
               </div>
-            ) : showConnection ? (
+            ) : status === "connected" && showConnection ? (
               <div className="w-full">
                 {isConnected ? (
                   <Modal
