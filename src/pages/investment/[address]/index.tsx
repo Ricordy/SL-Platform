@@ -13,7 +13,8 @@ import { FiExternalLink } from "react-icons/fi";
 import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
 import { NumericFormat } from "react-number-format";
-import { Carousel } from "react-responsive-carousel";
+import { Carousel as ResponsiveCarousel } from "react-responsive-carousel";
+import Carousel from "../../../components/Carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import {
   useAccount,
@@ -104,22 +105,6 @@ dayjs.extend(localizedFormat);
 // }
 
 const InvestmentGallery = ({ images }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [photoIndex, setPhotoIndex] = useState(0);
-
-  const openLightbox = (index) => {
-    setIsOpen(true);
-    setPhotoIndex(index);
-  };
-
-  const closeLightbox = () => {
-    setIsOpen(false);
-  };
-
-  const moveNext = (index: number) => {
-    setPhotoIndex(index == 2 ? 0 : index + 1);
-  };
-
   return (
     <Gallery>
       <div className="gallery items-center justify-center">
@@ -198,17 +183,13 @@ export const ProjectInfo = ({
 }) => {
   return (
     <div className="relative flex gap-[24px] ">
-      <div
-        className={`relative flex gap-2 pr-4 ${isFlexCol ? "flex-col" : ""} `}
-      >
+      <div className={`relative flex flex-col gap-2 pr-4 md:flex-row `}>
         <span>Status:</span>
         <span className="font-medium">{status}</span>
         <div className="absolute right-0 top-0 hidden h-full min-h-[1em] w-px self-stretch border-t-0 bg-gradient-to-tr from-transparent via-black to-transparent opacity-25 dark:opacity-100 lg:block"></div>
       </div>
 
-      <div
-        className={`relative flex gap-2 pr-4 ${isFlexCol ? "flex-col" : ""} `}
-      >
+      <div className={`relative flex flex-col gap-2 pr-4 md:flex-row`}>
         <span>Price:</span>
         <span className="now font-medium">
           <NumericFormat
@@ -223,9 +204,7 @@ export const ProjectInfo = ({
         </span>
         <div className="absolute right-0 top-0 hidden h-full min-h-[1em] w-px self-stretch border-t-0 bg-gradient-to-tr from-transparent via-black to-transparent opacity-25 dark:opacity-100 lg:block"></div>
       </div>
-      <div
-        className={`relative flex gap-2 pr-4 ${isFlexCol ? "flex-col" : ""} `}
-      >
+      <div className={`relative flex flex-col gap-2 pr-4 md:flex-row `}>
         <span>Progress:</span>
         <span className="font-medium">
           <NumericFormat
@@ -488,17 +467,6 @@ const Investment = ({
     }
   }
 
-  useEffect(() => {
-    // getContractTotal().then((data) => {
-    //   console.log("contractTotal", data?.toNumber());
-    // });
-    // return () => {
-    //   second
-    // }
-  }, []);
-
-  // return <div className="text-center text-white">hello</div>;
-
   if (!investment) {
     return (
       <div className="flex min-h-screen items-center justify-center text-center text-white">
@@ -562,15 +530,15 @@ const Investment = ({
       </Head>
       <main className="flex min-h-screen w-full flex-col bg-white  px-3 md:mt-0 md:px-0">
         <NavBar bgWhite={true} />
-        <div className="mx-auto flex h-full w-full max-w-screen-lg flex-col md:gap-12 ">
-          <div className="sticky top-0 z-20 mx-auto flex w-full items-center justify-between bg-white py-4">
-            <div className="flex flex-col">
+        <div className="mx-auto flex h-full w-full max-w-screen-lg flex-col gap-6 md:gap-12 ">
+          <div className="sticky top-0 z-20 mx-auto flex w-full flex-col items-center justify-between bg-white py-4 md:flex-row">
+            <div className="flex flex-col gap-6">
               <div className="flex justify-center gap-2 align-middle ">
-                <h2 className=" text-4xl font-medium">
+                <h2 className="text-3xl font-medium md:text-4xl">
                   {investment.basicInvestment.car.basicInfo.title}
                 </h2>
                 {investment.level.basicLevel.title && (
-                  <div className="z-10 mt-2 h-fit w-fit rounded-lg border border-primaryGold bg-white px-2 py-1 text-xs text-primaryGold ">
+                  <div className="z-10 mt-2 h-fit w-fit whitespace-nowrap rounded-lg border border-primaryGold bg-white px-2 py-1 text-xs text-primaryGold ">
                     {investment.level.basicLevel.title}
                   </div>
                 )}
@@ -608,9 +576,9 @@ const Investment = ({
               images={investment.basicInvestment.car.gallery}
             />
           )}
-          <div className="flex max-h-full items-start  justify-between gap-12">
-            <div className="flex max-h-full w-[55%] flex-col gap-[14px]  ">
-              <h3 className="flex items-center gap-6 pb-[52px] tracking-widest">
+          <div className="flex max-h-full flex-col items-start justify-between  gap-12 md:flex-row">
+            <div className="flex max-h-full flex-col gap-[14px] md:w-[55%]  ">
+              <h3 className="flex items-center gap-6 tracking-widest md:pb-[52px]">
                 <Image
                   src="/icons/keys.svg"
                   width={35}
@@ -636,7 +604,7 @@ const Investment = ({
                 </p>
               </div>
             </div>
-            <div className="relative right-0 mr-0 flex w-2/5 flex-col gap-8">
+            <div className="relative right-0 mr-0 flex flex-col gap-8 md:w-2/5">
               {
                 <div className="flex flex-col gap-2 rounded-md border border-b border-tabInactive bg-[#F6F9F8] py-[15px]  text-center">
                   <h4 className="text-ogBlack">Total Invested until now</h4>
@@ -665,7 +633,7 @@ const Investment = ({
                   </h4>
                 </div>
               }
-              <div className="flex flex-col justify-start gap-5 rounded-md bg-[#F6F9F8] px-16 py-[32px] align-middle text-ogBlack">
+              <div className="flex flex-col justify-start gap-5 rounded-md bg-[#F6F9F8] px-6 py-[32px] align-middle text-ogBlack md:px-16">
                 <h3 className="text-black">Specifications</h3>
                 <div>
                   <span>Contract Address:</span>
@@ -849,7 +817,10 @@ const Investment = ({
                           </div>
                         </div>
                         <div className="relative flex w-full">
-                          <Carousel showStatus={false} showThumbs={false}>
+                          <ResponsiveCarousel
+                            showStatus={false}
+                            showThumbs={false}
+                          >
                             {phase.gallery.map((image, idx) => (
                               <div key={idx} className="relative w-full">
                                 <Image
@@ -862,7 +833,7 @@ const Investment = ({
                                 />
                               </div>
                             ))}
-                          </Carousel>
+                          </ResponsiveCarousel>
                         </div>
                       </div>
                     </Tab.Panel>
@@ -881,7 +852,7 @@ const Investment = ({
               />{" "}
               Investments
             </h3>
-            <div className="grid grid-cols-2 gap-8 ">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 ">
               <div className="flex h-fit flex-col gap-4 bg-[#F6F9F8] p-10">
                 <div className="flex">Total Invested:</div>
                 <span className="pb-2 text-4xl font-semibold tracking-widest text-primaryGreen">
@@ -1034,17 +1005,17 @@ const Investment = ({
               />{" "}
               Car details
             </h3>
-            <div className="mb-[132px] grid grid-cols-2 gap-8">
-              <div className="flex flex-col">
-                <h4 className="pb-8 text-2xl font-medium">
-                  {investment?.basicInvestment.car.basicInfo.title}
-                </h4>
+            <div className="mb-6 grid  grid-flow-dense grid-cols-1 gap-8 md:mb-[132px] md:grid-cols-2">
+              <h4 className="row-start-1 pb-8 text-2xl font-medium md:row-auto">
+                {investment?.basicInvestment.car.basicInfo.title}
+              </h4>
+              <div className=" row-start-3 flex flex-col md:row-auto md:row-start-2">
                 <div className=" max-h-[358px] overflow-scroll">
-                  {" "}
                   {investment?.basicInvestment.car.description}
                 </div>
               </div>
-              <div className="flex">
+
+              <div className="row-start-2 flex md:col-start-2 md:row-span-2 md:row-start-1">
                 <Image
                   src={investment.basicInvestment.car.chart.url}
                   width={592}
@@ -1056,15 +1027,22 @@ const Investment = ({
           </section>
         </div>
         <section>
-          <div className="relative z-20 mx-auto flex rounded-t-[56px] bg-black pb-[128px] pt-[72px] text-white">
+          <div className="relative z-20 mx-auto flex rounded-t-[56px] bg-black pt-[72px] text-white md:pb-[128px]">
             <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[52px]">
-              <h3 className="text-2xl uppercase">Our suggestion for you</h3>
-              <Suggestions
+              <Carousel
+                id="4"
+                className="mb-6 px-6 pt-6 md:mb-0 md:px-0 "
+                title={<h2 className="text-2xl ">Our suggestion for you</h2>}
+                items={getMissingInvestments(allInvestments, userInvestments)}
+                userAddress={walletAddress!}
+                slidesPerView={3}
+              />
+              {/* <Suggestions
                 investments={getMissingInvestments(
                   allInvestments,
                   userInvestments
                 )}
-              />
+              /> */}
             </div>
           </div>
         </section>
