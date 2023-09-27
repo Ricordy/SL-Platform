@@ -106,9 +106,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
     functionName: "mint",
     enabled: TestingOpened,
     args: [1000000 as any as BigNumber],
-    onError(err) {
-
-    },
+    onError(err) {},
     // onSuccess() {
     //   toast.success("Puzzle reivindicado com sucesso!");
     // },
@@ -191,7 +189,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
 
                 <button
                   className={cn(
-                    "hidden  shrink-0 items-center justify-center gap-2.5 whitespace-nowrap rounded-md bg-white  px-5 py-1.5 align-middle text-sm font-medium uppercase leading-tight tracking-wide  text-black  md:flex",
+                    "hidden w-40 shrink-0 items-center justify-center gap-2.5 whitespace-nowrap rounded-md bg-white  px-5 py-1.5 align-middle text-sm font-medium uppercase leading-tight tracking-wide  text-black  md:flex",
                     bgWhite ? " bg-black text-white" : ""
                   )}
                   onClick={() =>
@@ -273,8 +271,8 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                 {!isConnected && (
                   <button
                     className={cn(
-                      " flex  shrink-0 items-center justify-center  gap-2.5 whitespace-nowrap rounded-md bg-white px-5 align-middle text-sm font-medium uppercase leading-tight tracking-wide text-black",
-                      bgWhite ? " bg-black " : "bg-white"
+                      "flex w-40 shrink-0 items-center justify-center  gap-2.5 whitespace-nowrap rounded-md bg-white px-5 align-middle text-sm font-medium uppercase leading-tight tracking-wide text-black",
+                      bgWhite ? " bg-black text-white" : ""
                     )}
                     onClick={() =>
                       TestingOpened
@@ -314,7 +312,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                     >
                       <div
                         className={cn(
-                          "whitespace-nowrap  text-sm font-medium uppercase leading-tight tracking-wide text-black",
+                          "w-40 whitespace-nowrap  text-sm font-medium uppercase leading-tight tracking-wide text-black",
                           bgWhite ? " text-white" : "text-black"
                         )}
                       >
