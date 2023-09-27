@@ -1005,17 +1005,17 @@ const Investment = ({
               />{" "}
               Car details
             </h3>
-            <div className="mb-6 grid  grid-cols-1 gap-8 md:mb-[132px] md:grid-cols-2">
-              <div className="flex flex-col">
-                <h4 className="pb-8 text-2xl font-medium">
-                  {investment?.basicInvestment.car.basicInfo.title}
-                </h4>
+            <div className="mb-6 grid  grid-flow-dense grid-cols-1 gap-8 md:mb-[132px] md:grid-cols-2">
+              <h4 className="row-start-1 pb-8 text-2xl font-medium md:row-auto">
+                {investment?.basicInvestment.car.basicInfo.title}
+              </h4>
+              <div className=" row-start-3 flex flex-col md:row-auto md:row-start-2">
                 <div className=" max-h-[358px] overflow-scroll">
-                  {" "}
                   {investment?.basicInvestment.car.description}
                 </div>
               </div>
-              <div className="flex">
+
+              <div className="row-start-2 flex md:col-start-2 md:row-span-2 md:row-start-1">
                 <Image
                   src={investment.basicInvestment.car.chart.url}
                   width={592}
