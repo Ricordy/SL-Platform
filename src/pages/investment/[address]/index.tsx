@@ -528,9 +528,9 @@ const Investment = ({
       <Head>
         <title>Something Legendary | Investment</title>
       </Head>
-      <main className="flex min-h-screen w-full flex-col bg-white  px-3 md:mt-0 md:px-0">
+      <main className="mx-auto flex  min-h-screen w-full flex-col bg-white md:mt-0 md:px-0">
         <NavBar bgWhite={true} />
-        <div className="mx-auto flex h-full w-full max-w-screen-lg flex-col gap-6 md:gap-12 ">
+        <div className="mx-auto flex h-full w-full max-w-screen-lg flex-col gap-6 px-6 md:gap-12 md:px-0 ">
           <div className="sticky top-0 z-20 mx-auto flex w-full flex-col items-center justify-between bg-white py-4 md:flex-row">
             <div className="flex flex-col gap-6">
               <div className="flex justify-center gap-2 align-middle ">
