@@ -247,7 +247,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                         By connecting your wallet and using Something Legendary,
                         you agree to our Terms of Service and Privacy Policy.
                       </p>
-                      <div className="flex gap-10">
+                      <div className="flex gap-3 md:gap-10">
                         <button
                           className="self-start rounded-md bg-black px-12 py-1.5 text-center text-sm uppercase text-white transition-all duration-150 hover:bg-black/80 dark:hover:bg-black dark:hover:text-white"
                           onClick={disconnect as () => void}
