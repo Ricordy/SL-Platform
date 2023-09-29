@@ -776,7 +776,7 @@ const Investment = ({
                   }
                 </div>
               </Tab.List>
-              {(userTotalInvestment?.gt(0) || true) && phases.length > 0 && (
+              {userTotalInvestment?.gt(0) && phases.length > 0 && (
                 <Tab.Panels className="mt-6 md:mt-[52px]">
                   {phases.map((phase, idx) => (
                     <Tab.Panel
