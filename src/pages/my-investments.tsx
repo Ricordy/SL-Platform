@@ -29,6 +29,7 @@ import ProjectCarousel from "../components/ProjectCarousel";
 import { NumericFormat } from "react-number-format";
 import Suggestions from "~/components/Suggestions";
 import { getMissingInvestments } from "~/lib/utils";
+import { useInvestments } from "~/lib/zustand";
 
 interface InvestmentBlockchainType {
   id: number;
@@ -177,7 +178,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
   const { data: sessionData } = useSession();
   const { isConnected } = useAccount();
   const entryNFTPrice = utils.parseUnits("100", 6);
-
+  const userInvestments = useInvestments((state) => state.userInvestments);
   const { address } = useAccount();
   const [numberOfTransactions, setNumberOfTransactions] = useState(4);
   const SlFactoryContract = {
@@ -763,7 +764,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
             id="1"
             prevNavWhite={true}
             title={<h2 className="text-2xl text-white">Active</h2>}
-            items={props.userInvestments?.filter(
+            items={userInvestments?.filter(
               (investment) =>
                 investment.basicInvestment.investmentStatus == "Active"
             )}
@@ -792,7 +793,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
             id="4"
             className="py-[132px]"
             title={<h2 className="text-2xl">Finished</h2>}
-            items={props.userInvestments?.filter(
+            items={userInvestments?.filter(
               (investment) =>
                 investment.basicInvestment.investmentStatus == "Finished"
             )}
@@ -928,74 +929,6 @@ export const getServerSideProps: GetServerSideProps<
 > = async (ctx) => {
   const session = await getSession(ctx);
 
-  const { investments: userInvestments }: { investments: InvestmentsProps } =
-    await hygraph.request(
-      gql`
-        query UserInvestments {
-          investments(
-            where: {
-              transactions_some: {
-                from: "${session?.user.id}"
-              }
-            }
-          ) {
-            id
-            address
-            level {
-              basicLevel {
-                title
-              }
-            }
-            basicInvestment {
-              id
-              totalInvestment
-              investmentStatus
-              car {
-                basicInfo {
-                  title
-                  cover {
-                    id
-                    url
-                  }
-                }
-              }
-            }
-          }
-        }
-      `
-    );
-
-  const { investments: allInvestments }: { investments: InvestmentsProps } =
-    await hygraph.request(
-      gql`
-        query UserInvestments {
-          investments {
-            id
-            address
-            level {
-              basicLevel {
-                title
-              }
-            }
-            basicInvestment {
-              id
-              totalInvestment
-              investmentStatus
-              car {
-                basicInfo {
-                  title
-                  cover {
-                    id
-                    url
-                  }
-                }
-              }
-            }
-          }
-        }
-      `
-    );
-
   const { transactions: userTransactions }: { transactions: TransactionProps } =
     await hygraph.request(
       gql`
@@ -1036,9 +969,7 @@ export const getServerSideProps: GetServerSideProps<
 
   return {
     props: {
-      userInvestments: session ? userInvestments : null,
       userTransactions: session ? userTransactions : null,
-      allInvestments: session ? allInvestments : null,
     },
   };
 };
