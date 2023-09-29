@@ -187,29 +187,6 @@ const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
 export async function getServerSideProps(ctx) {
   const session = await getSession(ctx);
 
-  const { posts } = await hygraph.request(
-    gql`
-      query MyQuery {
-        posts {
-          id
-          slug
-          link
-          basic {
-            title
-          }
-          shortDescription {
-            html
-          }
-          image {
-            url
-          }
-          postCategory
-          locale
-        }
-      }
-    `
-  );
-
   const { investments: activeInvestments }: ActiveInvestmentsProps =
     await hygraph.request(
       gql`
@@ -364,7 +341,6 @@ export async function getServerSideProps(ctx) {
 
   return {
     props: {
-      posts,
       activeInvestments,
       highlightInvestment,
       investments,
