@@ -304,14 +304,12 @@ type InvestmentDetailsProps = {
   investment: InvestmentProps;
   transactions: TransactionProps[];
   userInvestments: InvestmentProps[];
-  allInvestments: InvestmentProps[];
 };
 
 const Investment = ({
   investment,
   transactions,
   userInvestments,
-  allInvestments,
 }: InvestmentDetailsProps) => {
   const { address: walletAddress } = useAccount();
   const { data: signerData } = useSigner();
@@ -1059,12 +1057,7 @@ const Investment = ({
           <div className="relative z-20 mx-auto flex rounded-t-[56px] bg-black pb-[128px] pt-[72px] text-white">
             <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[52px]">
               <h3 className="text-2xl uppercase">Our suggestion for you</h3>
-              <Suggestions
-                investments={getMissingInvestments(
-                  allInvestments,
-                  userInvestments
-                )}
-              />
+              <Suggestions investments={userInvestments} />
             </div>
           </div>
         </section>
@@ -1198,39 +1191,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       `
     );
 
-  const { investments: allInvestments }: { investments: InvestmentsProps } =
-    await hygraph.request(
-      gql`
-        query UserInvestments {
-          investments {
-            id
-            address
-            level {
-              basicLevel {
-                title
-              }
-            }
-            basicInvestment {
-              id
-              totalInvestment
-              investmentStatus
-              car {
-                basicInfo {
-                  title
-                  cover {
-                    id
-                    url
-                  }
-                }
-              }
-            }
-          }
-        }
-      `
-    );
-
   return {
-    props: { investment, transactions, userInvestments, allInvestments },
+    props: { investment, transactions, userInvestments },
   };
 };
 export default Investment;

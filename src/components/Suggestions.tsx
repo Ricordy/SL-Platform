@@ -1,7 +1,8 @@
 import React from "react";
 import { CarouselItem } from "./Carousel";
 import { type InvestmentProps } from "~/@types/investment";
-import { cn } from "~/lib/utils";
+import { cn, getMissingInvestments } from "~/lib/utils";
+import { useInvestments } from "~/lib/zustand";
 
 type HeroPops = {
   className?: string;
@@ -13,6 +14,8 @@ interface SuggestionsProps {
 }
 
 const Suggestions = ({ investments, className }: SuggestionsProps) => {
+  const allInvestments = useInvestments((state) => state.investments);
+  investments = getMissingInvestments(allInvestments, investments);
   return (
     <div
       className={cn(

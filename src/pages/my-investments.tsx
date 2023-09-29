@@ -834,12 +834,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
               level={investment.level.basicLevel.title}
             />
           ))} */}
-        <Suggestions
-          investments={getMissingInvestments(
-            props.allInvestments,
-            props.userInvestments
-          )}
-        />
+        <Suggestions investments={props.userInvestments} />
 
         {/* {carouselItems.slice(0, 3).map((item, idx) => (
               <CarouselItem
