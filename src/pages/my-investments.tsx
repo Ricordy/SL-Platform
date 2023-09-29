@@ -19,7 +19,7 @@ import {
   useSigner,
   useContract,
 } from "wagmi";
-import { type InvestmentProps } from "~/@types/investment";
+import { InvestmentPropsItem, type InvestmentProps } from "~/@types/investment";
 import { type TransactionProps } from "~/@types/transaction";
 import useCheckEntryNFT from "~/hooks/useCheckEntryNFT";
 import { FactoryABI, SLCoreABI, paymentTokenABI } from "~/utils/abis";
@@ -69,23 +69,20 @@ interface MyInvestmentsProps
     TransactionProps,
     InvestmentsProps {}
 
-export const TransactionItem = (props) => {
-  const { items, userInvestedContracts, numberOfTransactions } = props;
-
+export const TransactionItem = ({
+  items,
+  userInvestedContracts,
+  numberOfTransactions,
+}: {
+  items: TransactionProps;
+}) => {
   return (
     items &&
     items?.map((item, idx) => {
-      // const { amountInvested } = useGetAddressInvestmentinSingleCar({
-      //   contractAddress: addressContract,
-      //   walletAddress: address,
-      //   watch: true,
-      // });
-
       if (numberOfTransactions === undefined) {
         return (
           item.investment && (
             <section key={idx}>
-              ola
               {numberOfTransactions}
               <div className="flex items-center justify-between pb-2">
                 <Image
@@ -239,16 +236,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     onError(error) {},
   });
 
-  // const { data: contractsTotalSupply }: { data: BigNumber } = useContractReads({
-  //   contracts: [
-  //     {
-  //       ...SlFactoryContract,
-  //       functionName: "getAddressTotal",
-  //       args: [address],
-  //     },
-  //   ],
-  // });
-
   const { hasEntryNFT, hasEntryNFTLoading } = useCheckEntryNFT({
     address: address as Address,
   });
@@ -269,6 +256,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
   const investContracts = [];
 
   const userInvestedContracts = [];
+
   props.userTransactions?.map((transaction) => {
     if (userInvestedContracts[transaction.to]) {
       userInvestedContracts[transaction.to] += transaction.amountInvested;
@@ -450,6 +438,170 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
   // return <div>end</div>;
   if (hasEntryNFTLoading) return <div>Loading...</div>;
 
+  const fakeTransactions: TransactionProps = {
+    userTransactions: [
+      {
+        amountInvested: 100,
+        hash: "string",
+        to: "string",
+        date: "string",
+        investment: {
+          address: "string",
+          basicInvestment: {
+            totalInvestment: 100000,
+            car: {
+              basicInfo: {
+                cover: {
+                  url: "https://media.graphassets.com/80EHWXSMST2wLnr3tV68",
+                },
+                title: "THE NEW CAR",
+              },
+            },
+          },
+        },
+        totalInvested: 20,
+      },
+    ],
+  };
+  const fakeInvestments: InvestmentProps[] = [
+    {
+      address: "0x71f9e0C7d21Ff94Abd7Cf3620AD42743A701b588",
+      basicInvestment: {
+        totalInvestment: 1000,
+        investmentStatus: "active",
+        car: {
+          basicInfo: {
+            title: "the car",
+            cover: {
+              url: "https://media.graphassets.com/80EHWXSMST2wLnr3tV68",
+            },
+          },
+          subtitle: "the subtitle",
+          description: "The description",
+          shortDescription: "the short description",
+        },
+      },
+      level: {
+        basicLevel: {
+          title: "Level 1",
+        },
+        profitRange: "10-12",
+      },
+      transactions: [
+        {
+          date: "2023-11-09",
+          amountInvested: 200,
+          hash: "232j4lk234lk3sdfsfd",
+          from: "0x74D21EcF4F112c33037FB133ae6BeB7EBF5B01e3",
+          wallet: "0x39343443",
+          type: "deposit",
+        },
+      ],
+    },
+    {
+      address: "0x71f9e0C7d21Ff94Abd7Cf3620AD42743A701b588",
+      basicInvestment: {
+        totalInvestment: 1000,
+        investmentStatus: "active",
+        car: {
+          basicInfo: {
+            title: "the car",
+            cover: {
+              url: "https://media.graphassets.com/80EHWXSMST2wLnr3tV68",
+            },
+          },
+          subtitle: "the subtitle",
+          description: "The description",
+          shortDescription: "the short description",
+        },
+      },
+      level: {
+        basicLevel: {
+          title: "Level 1",
+        },
+        profitRange: "10-12",
+      },
+      transactions: [
+        {
+          date: "2023-11-09",
+          amountInvested: 200,
+          hash: "232j4lk234lk3sdfsfd",
+          from: "0x74D21EcF4F112c33037FB133ae6BeB7EBF5B01e3",
+          wallet: "0x39343443",
+          type: "deposit",
+        },
+      ],
+    },
+    {
+      address: "0x71f9e0C7d21Ff94Abd7Cf3620AD42743A701b588",
+      basicInvestment: {
+        totalInvestment: 1000,
+        investmentStatus: "active",
+        car: {
+          basicInfo: {
+            title: "the car",
+            cover: {
+              url: "https://media.graphassets.com/80EHWXSMST2wLnr3tV68",
+            },
+          },
+          subtitle: "the subtitle",
+          description: "The description",
+          shortDescription: "the short description",
+        },
+      },
+      level: {
+        basicLevel: {
+          title: "Level 1",
+        },
+        profitRange: "10-12",
+      },
+      transactions: [
+        {
+          date: "2023-11-09",
+          amountInvested: 200,
+          hash: "232j4lk234lk3sdfsfd",
+          from: "0x74D21EcF4F112c33037FB133ae6BeB7EBF5B01e3",
+          wallet: "0x39343443",
+          type: "deposit",
+        },
+      ],
+    },
+    {
+      address: "0x71f9e0C7d21Ff94Abd7Cf3620AD42743A701b588",
+      basicInvestment: {
+        totalInvestment: 1000,
+        investmentStatus: "active",
+        car: {
+          basicInfo: {
+            title: "the car",
+            cover: {
+              url: "https://media.graphassets.com/80EHWXSMST2wLnr3tV68",
+            },
+          },
+          subtitle: "the subtitle",
+          description: "The description",
+          shortDescription: "the short description",
+        },
+      },
+      level: {
+        basicLevel: {
+          title: "Level 1",
+        },
+        profitRange: "10-12",
+      },
+      transactions: [
+        {
+          date: "2023-11-09",
+          amountInvested: 200,
+          hash: "232j4lk234lk3sdfsfd",
+          from: "0x74D21EcF4F112c33037FB133ae6BeB7EBF5B01e3",
+          wallet: "0x39343443",
+          type: "deposit",
+        },
+      ],
+    },
+  ];
+
   if (!hasEntryNFTLoading && !hasEntryNFT)
     return (
       <div className="mx-auto flex  min-h-screen w-full flex-col">
@@ -538,7 +690,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
           <div className="flex flex-col gap-4 pt-8">
             <h3 className="mb-8 text-3xl uppercase tracking-widest text-white">
               My Investments
-              {/* <div>Here{JSON.stringify(props, null, 2)}</div> */}
             </h3>
             <h2 className="mb-12 text-3xl uppercase text-white md:text-5xl">
               Welcome{" "}
@@ -615,13 +766,12 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
               <div className="flex flex-col gap-4">
                 <span>Last transactions:</span>
                 <div className="flex max-h-[282px] flex-1 flex-col gap-2 overflow-scroll rounded-md bg-myInvestmentsBackground px-4 py-8">
-                  {userInvestedContracts && (
-                    <TransactionItem
-                      items={props.userTransactions}
-                      userInvestedContracts={userInvestedContracts}
-                      numberOfTransactions={numberOfTransactions}
-                    />
-                  )}
+                  <TransactionItem
+                    items={props.userTransactions}
+                    // items={fakeTransactions.userTransactions}
+                    userInvestedContracts={userInvestedContracts}
+                    numberOfTransactions={numberOfTransactions}
+                  />
 
                   {props.userTransactions?.length > 4 &&
                     numberOfTransactions < props.userTransactions.length && (
@@ -639,12 +789,14 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
         </div>
       </div>
 
-      <div className="relative z-20 mx-auto mt-[52px] min-h-[500px] max-w-[1338px]  px-6 md:left-1/2 md:-ml-[570px] md:px-0">
+      <div className="relative z-20 mx-auto mt-[52px] min-h-[500px] max-w-[1224px]  px-6 md:left-1/2 md:-ml-[570px] md:px-0">
         {userInv && (
           <ProjectCarousel
             id="1"
+            className="pt-6 md:pt-0"
             prevNavWhite={true}
-            title={<h2 className="text-2xl text-white">Active</h2>}
+            title={<h2 className="text-2xl md:text-white">Active</h2>}
+            // items={fakeInvestments}
             items={props.userInvestments?.filter(
               (investment) =>
                 investment.basicInvestment.investmentStatus == "Active"
@@ -655,8 +807,9 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
         {userInv && (
           <ProjectCarousel
             id="4"
-            className="md:py-[132px]"
-            title={<h2 className="text-2xl">Finished</h2>}
+            className="py-12 md:py-[132px]"
+            title={<h2 className="text-2xl md:text-white">Finished</h2>}
+            // items={fakeInvestments}
             items={props.userInvestments?.filter(
               (investment) =>
                 investment.basicInvestment.investmentStatus == "Finished"
