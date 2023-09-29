@@ -1,8 +1,24 @@
 import { Toaster } from "react-hot-toast";
 import Head from "next/head";
 import AlertMessage from "./ui/AlertMessage";
+import { useInvestments, usePosts } from "~/lib/zustand";
+import { useEffect } from "react";
 
 export default function Layout({ children }: React.PropsWithChildren<{}>) {
+  const allInvestments = useInvestments((state) => state.investments);
+  const fetchInvestments = useInvestments((state) => state.fetch);
+  const posts = usePosts((state) => state.posts);
+  const fetchPosts = usePosts((state) => state.fetch);
+
+  useEffect(() => {
+    if (!allInvestments) {
+      fetchInvestments();
+    }
+    if (!posts) {
+      fetchPosts();
+    }
+    return () => {};
+  }, []);
   return (
     <div className="flex flex-col items-stretch bg-buyNFTBackground">
       <Head>

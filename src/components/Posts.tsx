@@ -4,6 +4,7 @@ import { type FC } from "react";
 import { type PostItemProps, type PostProps } from "../@types/post";
 import { cn } from "../lib/utils";
 import DOMPurify from "isomorphic-dompurify";
+import { usePosts } from "~/lib/zustand";
 
 const PostItem: FC<PostItemProps> = ({
   image,
@@ -51,7 +52,6 @@ const PostItem: FC<PostItemProps> = ({
 };
 
 const Posts: FC<PostProps> = ({
-  posts,
   title,
   titleCentered = false,
   titleColor,
@@ -60,9 +60,10 @@ const Posts: FC<PostProps> = ({
   className,
   contentPadding,
 }) => {
-  posts = posts.filter((post) => {
-    return post.postCategory === "beginners";
+  let posts = usePosts((state) => state.posts);
 
+  posts = posts?.filter((post) => {
+    return post.postCategory === "beginners";
   });
   return (
     <section

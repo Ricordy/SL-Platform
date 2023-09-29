@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useState, type FC, type ReactNode } from "react";
+import { useState, type FC, type ReactNode, useEffect } from "react";
 import { A11y, Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { cn } from "../lib/utils";
@@ -15,6 +15,7 @@ import { type Address } from "wagmi";
 import { useContractRead } from "wagmi";
 import { SLCoreABI } from "~/utils/abis";
 import { useBreakpoint } from "~/hooks/useBreakpoints";
+import { useInvestments } from "~/lib/zustand";
 // import "swiper/css/navigation";
 
 interface CarouselItemProps {
@@ -121,17 +122,33 @@ export const CarouselItem = ({
   );
 };
 
-interface CarouselProps {
-  id: string;
-  className?: string;
-  title?: ReactNode;
-  prevNavWhite?: boolean;
-  items?: InvestmentProps[];
-  seeMoreLabel?: string;
-  seeMoreLink?: string;
-  seeMoreMr?: string;
-  userAddress: Address;
-}
+type CarouselProps =
+  | {
+      id: string;
+      className?: string;
+      title?: ReactNode;
+      prevNavWhite?: boolean;
+      items?: InvestmentProps[];
+      isLevelDivided: false;
+      currentLevel?: string;
+      seeMoreLabel?: string;
+      seeMoreLink?: string;
+      seeMoreMr?: string;
+      userAddress: Address;
+    }
+  | {
+      id: string;
+      className?: string;
+      title?: ReactNode;
+      prevNavWhite?: boolean;
+      items?: InvestmentProps[];
+      isLevelDivided?: true;
+      currentLevel: string;
+      seeMoreLabel?: string;
+      seeMoreLink?: string;
+      seeMoreMr?: string;
+      userAddress: Address;
+    };
 
 const Carousel: FC<CarouselProps> = ({
   id,
@@ -143,6 +160,8 @@ const Carousel: FC<CarouselProps> = ({
   seeMoreMr,
   items,
   userAddress,
+  isLevelDivided,
+  currentLevel,
 }) => {
   const SlCoreContract = {
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
@@ -165,6 +184,16 @@ const Carousel: FC<CarouselProps> = ({
   const handleSlideChange = (swiper: any) => {
     setcurrentSlider(swiper.activeIndex);
   };
+
+  const zustand = useInvestments((state) => state.investments);
+
+  if (!items) {
+    items = zustand;
+  }
+
+  if (isLevelDivided) {
+    items = items?.filter((i) => i.level.basicLevel.title === currentLevel);
+  }
 
   return (
     <div className={className ?? ""}>
@@ -248,11 +277,11 @@ const Carousel: FC<CarouselProps> = ({
           </div>
         </section>
 
-        {items && items?.length > 2 && (
+        {items && items.length > 2 && (
           <div
             className={cn(
               `absolute right-0 z-20 -mr-[58px] flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent to-black pr-10 swiper-next-${id}  `,
-              currentSlider === items?.length % 4 ? "invisible" : "visible"
+              currentSlider === items.length % 4 ? "invisible" : "visible"
             )}
           >
             {

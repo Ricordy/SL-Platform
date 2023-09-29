@@ -26,39 +26,28 @@ export default async function handler(req: NextApiRequest, res: MyResponse) {
     }
   );
 
-  const { investments }: any = await hygraph.request(
+  const { posts }: any = await hygraph.request(
     gql`
-      query AllInvestments {
-        investments(orderBy: createdAt_DESC) {
+      query MyQuery {
+        posts {
           id
-          address
-          banner {
+          slug
+          link
+          basic {
+            title
+          }
+          shortDescription {
+            html
+          }
+          image {
             url
           }
-          level {
-            basicLevel {
-              title
-            }
-            profitRange
-          }
-          basicInvestment {
-            id
-            totalInvestment
-            investmentStatus
-            car {
-              basicInfo {
-                title
-                cover {
-                  id
-                  url
-                }
-              }
-            }
-          }
+          postCategory
+          locale
         }
       }
     `
   );
 
-  res.status(200).json({ investments: investments });
+  res.status(200).json({ posts: posts });
 }

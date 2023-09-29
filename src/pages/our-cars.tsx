@@ -7,6 +7,10 @@ import { Tab } from "@headlessui/react";
 import ProjectCarousel from "~/components/ProjectCarousel";
 import { investmentLevelsData } from "~/data/InvestmentStatuses";
 import { useAccount } from "wagmi";
+import { GetServerSideProps } from "next/types";
+import { InvestmentProps } from "~/@types/investment";
+import { useInvestments } from "~/lib/zustand";
+import { useEffect } from "react";
 
 const ourCars = (props) => {
   const { address: walletAddress } = useAccount();
@@ -110,14 +114,20 @@ const ourCars = (props) => {
                   <Carousel
                     id={investmentLevel}
                     prevNavWhite={true}
-                    items={props.investments.filter(
-                      (i) =>
-                        i.level.basicLevel.title ===
-                        investmentLevel.split("l")[0] +
-                          "l " +
-                          investmentLevel.split("l")[1]
-                    )}
+                    // items={zustand.filter(
+                    //   (i) =>
+                    //     i.level.basicLevel.title ===
+                    //     investmentLevel.split("l")[0] +
+                    //       "l " +
+                    //       investmentLevel.split("l")[1]
+                    // )}
                     userAddress={walletAddress!}
+                    isLevelDivided={true}
+                    currentLevel={
+                      investmentLevel.split("l")[0] +
+                      "l " +
+                      investmentLevel.split("l")[1]
+                    }
                   />
                 </Tab.Panel>
               );
@@ -128,8 +138,9 @@ const ourCars = (props) => {
           id="4"
           className="mb-12 px-6 pt-12 md:mb-0 md:px-0 md:pt-[132px]"
           title={<h2 className="text-2xl ">Our cars</h2>}
-          items={props.investments}
+          // items={props.investments}
           userAddress={walletAddress!}
+          isLevelDivided={false}
         />
         {/* <Carousel
           id="5"
@@ -169,7 +180,7 @@ const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
 });
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { investments } = await hygraph.request(
+  const { investments }: any = await hygraph.request(
     gql`
       query AllInvestments {
         investments(orderBy: createdAt_DESC) {

@@ -17,6 +17,7 @@ import { cn } from "~/lib/utils";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import DOMPurify from "isomorphic-dompurify";
+import { useInvestments } from "~/lib/zustand";
 
 interface ActiveInvestmentsProps {
   investments: InvestmentProps[];
@@ -122,7 +123,7 @@ const Home: NextPage = (props: any) => {
         <div className="relative z-20 -mt-[350px] min-h-[500px] w-full max-w-[1282px]  px-6 md:left-1/2 md:-ml-[570px] md:-mt-[350px] md:px-0">
           <Carousel
             id="1"
-            items={props.activeInvestments}
+            // items={props.activeInvestments}
             className="pb-12 md:pb-0"
             prevNavWhite={true}
             title={<h2 className="text-2xl text-white">Our cars</h2>}
@@ -130,6 +131,7 @@ const Home: NextPage = (props: any) => {
             seeMoreLink="/our-cars"
             seeMoreMr="md:mr-36"
             userAddress={walletAddress!}
+            isLevelDivided={false}
           />
           {/* Highlight Component */}
         </div>
@@ -163,7 +165,6 @@ const Home: NextPage = (props: any) => {
         </div>
         <div className="hidden w-full rounded-t-3xl bg-black pb-[132px] pt-[72px] md:flex">
           <Posts
-            posts={props.posts}
             title="Learn More"
             titleColor="text-white"
             buttonMoreLink="https://beta.somethinglegendary.com/learn"
