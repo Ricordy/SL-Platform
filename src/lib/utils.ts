@@ -51,3 +51,16 @@ export const getPuzzleCollectionIds = (level: number) => {
   }
   return Array.from({ length: 10 }, (_, k) => BigNumber.from(k + increment));
 };
+
+function reverseInvestments(investments: any) {
+  return investments.slice().reverse();
+}
+
+function orderInvestmentsByTotalInvestment(investments: any) {
+  return investments
+    .slice()
+    .sort(
+      (a, b) =>
+        b.basicInvestment.totalInvestment - a.basicInvestment.totalInvestment
+    );
+}

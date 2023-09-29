@@ -148,10 +148,7 @@ const Home: NextPage = (props: any) => {
             isConnected ? "md:mt-[132px]" : "mt-12 md:mt-0"
           )}
         >
-          <Investments
-            isConnected={isConnected}
-            userInvestments={props.investments}
-          />
+          <Investments isConnected={isConnected} />
         </div>
         {/* My Puzzle */}
         <div className="relative mx-auto w-full max-w-[1282px] md:left-1/2 md:-ml-[570px] ">
@@ -225,44 +222,6 @@ export async function getServerSideProps(ctx) {
             restorationPhases(where: { restorationStatus: InProgress }) {
               title
               restorationStatus
-            }
-          }
-        }
-      `
-    );
-
-  const { investments }: { investments: InvestmentProps[] } =
-    await hygraph.request(
-      gql`
-        query UserInvestments {
-          investments(
-            where: {
-              transactions_some: {
-                from: "${session?.user.id}"
-              }
-            }
-          ) {
-            id
-            address
-            level {
-              basicLevel {
-                title
-              }
-              profitRange
-            }
-            basicInvestment {
-              totalInvested
-              totalInvestment
-              investmentStatus
-              car {
-                id
-                basicInfo {
-                  cover {
-                    url
-                  }
-                  title
-                }
-              }
             }
           }
         }
@@ -343,7 +302,6 @@ export async function getServerSideProps(ctx) {
     props: {
       activeInvestments,
       highlightInvestment,
-      investments,
       slider,
       puzzlePieces,
       levels,

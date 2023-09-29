@@ -7,12 +7,17 @@ import { useEffect } from "react";
 export default function Layout({ children }: React.PropsWithChildren<{}>) {
   const allInvestments = useInvestments((state) => state.investments);
   const fetchInvestments = useInvestments((state) => state.fetch);
+  const userInvestments = useInvestments((state) => state.userInvestments);
+  const fetchUserInvestments = useInvestments(
+    (state) => state.fetchUserInvestments
+  );
   const posts = usePosts((state) => state.posts);
   const fetchPosts = usePosts((state) => state.fetch);
 
   useEffect(() => {
-    if (!allInvestments) {
+    if (!allInvestments || !userInvestments) {
       fetchInvestments();
+      fetchUserInvestments();
     }
     if (!posts) {
       fetchPosts();

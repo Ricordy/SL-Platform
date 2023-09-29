@@ -9,13 +9,14 @@ type HeroPops = {
 };
 
 interface SuggestionsProps {
-  investments: InvestmentProps[];
   className?: string;
 }
 
-const Suggestions = ({ investments, className }: SuggestionsProps) => {
+const Suggestions = ({ className }: SuggestionsProps) => {
   const allInvestments = useInvestments((state) => state.investments);
-  investments = getMissingInvestments(allInvestments, investments);
+  const userInvestments = useInvestments((state) => state.userInvestments);
+
+  const investments = getMissingInvestments(allInvestments, userInvestments);
   return (
     <div
       className={cn(

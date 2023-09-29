@@ -1,10 +1,10 @@
 import { create } from "zustand";
-import activeInvestments from "./hygrpah";
 import { GraphQLClient, gql } from "graphql-request";
 
 export const useInvestments = create((set) => {
   return {
     investments: undefined,
+    userInvestments: undefined,
     fetch: async () => {
       try {
         const response = await fetch("/api/investments", {
@@ -14,6 +14,24 @@ export const useInvestments = create((set) => {
         if (response.ok) {
           const res = await response.json();
           set({ investments: res.investments });
+        } else {
+          return null;
+        }
+      } catch (err) {
+        return null;
+      }
+    },
+    fetchUserInvestments: async () => {
+      try {
+        const response = await fetch("/api/userInvestments", {
+          method: "POST",
+        });
+
+        if (response.ok) {
+          const res = await response.json();
+          console.log("resposta: ", res);
+
+          set({ userInvestments: res.userInvestments });
         } else {
           return null;
         }

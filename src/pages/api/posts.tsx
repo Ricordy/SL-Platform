@@ -2,17 +2,11 @@ import path from "path";
 import { promises as fs } from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { GraphQLClient, gql } from "graphql-request";
+import { PostProps } from "~/@types/post";
 
 interface MyResponse extends NextApiResponse {
   body: {
-    investment: {
-      id: number;
-      title: string;
-      amount: number;
-      percentage: number;
-      status: string;
-      phase: string;
-    }[];
+    posts: PostProps;
   };
 }
 
