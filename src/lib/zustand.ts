@@ -65,3 +65,27 @@ export const usePosts = create((set) => {
     },
   };
 });
+
+export const useUserTransactions = create((set) => {
+  return {
+    userTransactions: undefined,
+    // addInvestments: (investments: any) =>
+    //   set((state: any) => ({ investments: investments })),
+    fetch: async () => {
+      try {
+        const response = await fetch("/api/userTransactions", {
+          method: "POST",
+        });
+
+        if (response.ok) {
+          const res = await response.json();
+          set({ userTransactions: res.userTransactions });
+        } else {
+          return null;
+        }
+      } catch (err) {
+        return null;
+      }
+    },
+  };
+});

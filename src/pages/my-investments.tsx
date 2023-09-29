@@ -29,7 +29,7 @@ import ProjectCarousel from "../components/ProjectCarousel";
 import { NumericFormat } from "react-number-format";
 import Suggestions from "~/components/Suggestions";
 import { getMissingInvestments } from "~/lib/utils";
-import { useInvestments } from "~/lib/zustand";
+import { useInvestments, useUserTransactions } from "~/lib/zustand";
 
 interface InvestmentBlockchainType {
   id: number;
@@ -174,7 +174,7 @@ export const TransactionItem = (props) => {
   );
 };
 
-const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
+const MyInvestments: NextPage = () => {
   const { data: sessionData } = useSession();
   const { isConnected } = useAccount();
   const entryNFTPrice = utils.parseUnits("100", 6);
@@ -318,9 +318,15 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
   //   return userTransactions;
   // };
 
-  // console.log("user transactions>>", props.userTransactions);
+  // console.log("user transactions>>", userTransactions);
+
+  const userTransactions = useUserTransactions(
+    (state) => state.userTransactions
+  );
+  console.log("user tx", userTransactions);
+
   const userInvestedContracts = [];
-  props.userTransactions?.map((transaction) => {
+  userTransactions?.map((transaction) => {
     if (userInvestedContracts[transaction.to]) {
       userInvestedContracts[transaction.to] += transaction.amountInvested;
     } else {
@@ -471,73 +477,6 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     } catch (error) {}
   };
 
-  useEffect(() => {
-    // console.log(getUserTransactions(address));
-    // const populateInvestment = async () => {
-    //   if (!userInvestments || !investmentData) return;
-    //   userInvestments.map((ui, idx) => {
-    //     if (ui) {
-    //       const inv = investmentData?.find((i) => i.address[31337] == ui[idx]);
-    //       if (inv) {
-    //         console.log(ui[idx]);
-    //         const uc: InvestmentType = {
-    //           id: inv.id,
-    //           title: inv.title,
-    //           address: ui[idx] as Address,
-    //           chassis: inv.chassis,
-    //           totalProduction: inv.totalProduction,
-    //           totalModelProduction: inv.totalModelProduction,
-    //           colorCombination: inv.colorCombination,
-    //         };
-    //         setUserContracts([...userContracts, uc]);
-    //       }
-    //     }
-    //   });
-    // };
-    // populateInvestment();
-    /*
-    const getFactory = async () => {
-      try {
-        let contractAddress: Address;
-        const contractsToAdd = [];
-        let userInvested: BigNumber;
-        for (let i = 0; i < contractCount.toNumber(); i++) {
-          contractAddress = await factoryContract
-            ?.connect(signerData)
-            .getContractDeployed(BigNumber.from(i));
-          console.log(contractAddress);
-
-          userInvested = await factoryContract
-            .connect(signerData)
-            .getAddressOnContract(contractAddress);
-          if (userInvested.gt(0)) {
-            console.log("adding", contractAddress);
-
-            contractsToAdd.push({
-              id: i + 1,
-              title: `title-${i}`,
-              address: contractAddress,
-              abi: InvestAbi,
-              phase: "none",
-              functionName: "status",
-              args: [i],
-            });
-          }
-
-          // categories["Level 1"].push();
-        }
-
-        setContractsToRead(contractsToAdd);
-        // console.log(contractsToRead);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getFactory();
-    */
-    //return () => console.log("Cleanup..");
-  }, []);
-
   function extractUniqueInvestments(queryResult) {
     // Use a map to store unique investments by their address
     const uniqueInvestments = new Map();
@@ -561,7 +500,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     return Array.from(uniqueInvestments.values());
   }
 
-  const userInv = extractUniqueInvestments(props.userTransactions);
+  const userInv = extractUniqueInvestments(userTransactions);
 
   function noDecimal(value) {
     return value / 10 ** 6;
@@ -736,14 +675,14 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
                 <div className="flex max-h-[282px] flex-1 flex-col gap-2 overflow-scroll rounded-md bg-myInvestmentsBackground px-4 py-8">
                   {userInvestedContracts && (
                     <TransactionItem
-                      items={props.userTransactions}
+                      items={userTransactions}
                       userInvestedContracts={userInvestedContracts}
                       numberOfTransactions={numberOfTransactions}
                     />
                   )}
 
-                  {props.userTransactions?.length > 4 &&
-                    numberOfTransactions < props.userTransactions.length && (
+                  {userTransactions?.length > 4 &&
+                    numberOfTransactions < userTransactions.length && (
                       <button
                         className="flex self-start"
                         onClick={incrementTransaction}
@@ -917,59 +856,3 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
 };
 
 export default MyInvestments;
-
-const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
-  headers: {
-    Authorization: process.env.HYGRAPH_BEARER as string,
-  },
-});
-
-export const getServerSideProps: GetServerSideProps<
-  MyInvestmentsProps
-> = async (ctx) => {
-  const session = await getSession(ctx);
-
-  const { transactions: userTransactions }: { transactions: TransactionProps } =
-    await hygraph.request(
-      gql`
-        query UserTransactions {
-          transactions(
-            where: { from: "${session?.user.id}" }
-            orderBy: publishedAt_DESC
-            first: 28
-          ) {
-            amountInvested
-            hash
-            to
-            date
-            investment {
-              address
-              level {
-                basicLevel {
-                  title
-                }
-              }
-              basicInvestment {
-                totalInvestment
-                investmentStatus
-                car {
-                  basicInfo {
-                    title
-                    cover {
-                      url
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      `
-    );
-
-  return {
-    props: {
-      userTransactions: session ? userTransactions : null,
-    },
-  };
-};
