@@ -303,14 +303,9 @@ export const badges = {
 type InvestmentDetailsProps = {
   investment: InvestmentProps;
   transactions: TransactionProps[];
-  userInvestments: InvestmentProps[];
 };
 
-const Investment = ({
-  investment,
-  transactions,
-  userInvestments,
-}: InvestmentDetailsProps) => {
+const Investment = ({ investment, transactions }: InvestmentDetailsProps) => {
   const { address: walletAddress } = useAccount();
   const { data: signerData } = useSigner();
   const { data: sessionData } = useSession();
@@ -1154,45 +1149,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     `
   );
 
-  const { investments: userInvestments }: { investments: InvestmentsProps } =
-    await hygraph.request(
-      gql`
-        query UserInvestments {
-          investments(
-            where: {
-              transactions_some: {
-                from: "${session?.user.id}"
-              }
-            }
-          ) {
-            id
-            address
-            level {
-              basicLevel {
-                title
-              }
-            }
-            basicInvestment {
-              id
-              totalInvestment
-              investmentStatus
-              car {
-                basicInfo {
-                  title
-                  cover {
-                    id
-                    url
-                  }
-                }
-              }
-            }
-          }
-        }
-      `
-    );
-
   return {
-    props: { investment, transactions, userInvestments },
+    props: { investment, transactions },
   };
 };
 export default Investment;
