@@ -6,7 +6,7 @@ const TestingGuides = (props: any) => {
   const { mintPaymentToken, closeModal } = props;
   const [activeIndex, setActiveIndex] = useState(0);
   return (
-    <div className="relative flex   w-4/5 flex-col items-center justify-items-center gap-[52px] font-sans">
+    <div className="relative flex w-full flex-col items-center justify-items-center gap-[52px] font-sans md:w-4/5">
       <TeestingPanels
         activeIndex={activeIndex}
         mintPaymentToken={mintPaymentToken}
@@ -15,7 +15,7 @@ const TestingGuides = (props: any) => {
       <div className="relative bottom-0 flex w-full items-center gap-10">
         {(activeIndex === 0 && (
           <button
-            className="absolute  rounded-md bg-black px-[3.95rem] py-1.5 text-center text-sm uppercase text-white "
+            className="absolute  rounded-md bg-black px-12 py-1.5 text-center text-sm uppercase text-white md:px-[3.95rem] "
             onClick={
               activeIndex === 0
                 ? closeModal
@@ -26,7 +26,7 @@ const TestingGuides = (props: any) => {
           </button>
         )) || (
           <button
-            className="relative z-10  rounded-md bg-black px-[3.1rem] py-1.5 text-center text-sm uppercase text-white "
+            className="relative z-10  rounded-md bg-black px-12 py-1.5 text-center text-sm uppercase text-white md:px-[3.1rem] "
             onClick={
               activeIndex === 0
                 ? closeModal
@@ -39,7 +39,7 @@ const TestingGuides = (props: any) => {
         {/** PAGINATION */}
 
         {activeIndex !== 0 && (
-          <div className=" absolute flex w-full items-center  justify-center gap-1 whitespace-nowrap">
+          <div className=" absolute hidden  w-full items-center justify-center  gap-1 whitespace-nowrap md:flex">
             {activeIndex > 3 && (
               <>
                 <div
@@ -94,14 +94,14 @@ const TestingGuides = (props: any) => {
 
         {(activeIndex < 7 && (
           <button
-            className="absolute right-0 rounded-md bg-black px-[3.95rem] py-1.5 text-center text-sm uppercase text-white transition-all duration-150 hover:bg-black/80 dark:hover:bg-black dark:hover:text-white"
+            className="absolute right-0 rounded-md bg-black px-12 py-1.5 text-center text-sm uppercase text-white transition-all duration-150 hover:bg-black/80 dark:hover:bg-black dark:hover:text-white md:px-[3.95rem]"
             onClick={() => setActiveIndex(activeIndex + 1)}
           >
             {activeIndex === 0 ? "Begin" : "Next"}
           </button>
         )) || (
           <a
-            className="absolute right-0 whitespace-nowrap rounded-md bg-black px-10 py-1.5 text-center text-sm uppercase text-white transition-all duration-150 hover:bg-black/80 dark:hover:bg-black dark:hover:text-white"
+            className="absolute right-0 whitespace-nowrap rounded-md bg-primaryGreen px-8 py-1.5 text-center text-sm uppercase text-white transition-all duration-150 hover:bg-black/80 dark:hover:bg-black dark:hover:text-white md:px-10"
             href="/our-cars"
           >
             Invest now
@@ -125,7 +125,7 @@ const TeestingPanels = (props: TestingPanelsProps) => {
   return (
     <>
       {activeIndex === 0 && (
-        <div className="flex w-full  flex-col items-center justify-items-center gap-[35px]">
+        <div className="flex w-full flex-col items-center justify-items-center gap-[35px]">
           <Image
             src={logo1 as string}
             alt="Something Legendary logo"
@@ -144,7 +144,7 @@ const TeestingPanels = (props: TestingPanelsProps) => {
       )}
       {activeIndex === 1 && (
         <div className="flex w-full flex-col  items-center justify-items-center gap-[52px]">
-          <h3 className="whitespace-nowrap text-center text-[27px] uppercase tracking-widest">
+          <h3 className="whitespace-nowrap text-center text-2xl uppercase tracking-widest md:text-3xl">
             Step 1 <br /> <p className="font-normal">Connect your wallet</p>
           </h3>
           <p className="text-justify ">
@@ -179,7 +179,7 @@ const TeestingPanels = (props: TestingPanelsProps) => {
       )}
       {activeIndex === 2 && (
         <div className="flex w-full  flex-col items-center justify-items-center  gap-[52px]">
-          <h3 className="whitespace-nowrap text-center text-[27px] uppercase tracking-widest">
+          <h3 className="whitespace-nowrap text-center text-2xl uppercase tracking-widest md:text-3xl">
             Step 2<br /> <p className="font-normal">Claim Testnet USDC</p>
           </h3>
           <p className="text-justify">
@@ -223,7 +223,7 @@ const TeestingPanels = (props: TestingPanelsProps) => {
       )}
       {activeIndex === 3 && (
         <div className="flex w-full  flex-col items-center justify-items-center  gap-[52px]">
-          <h3 className="text-center text-[27px] uppercase tracking-widest">
+          <h3 className="text-center text-2xl uppercase tracking-widest md:text-3xl">
             Step 3<br />
             <p className="font-normal">
               Purchase the <br /> Membership Card
@@ -249,7 +249,7 @@ const TeestingPanels = (props: TestingPanelsProps) => {
       )}
       {activeIndex === 4 && (
         <div className="flex w-full  flex-col items-center justify-items-center  gap-[52px]">
-          <h3 className="whitespace-nowrap text-center text-[27px] uppercase tracking-widest">
+          <h3 className="text-center text-2xl uppercase tracking-widest md:whitespace-nowrap md:text-3xl">
             Step 4<br />
             <p className="font-normal"> Invest 5000 Testnet USDC</p>
           </h3>
@@ -271,7 +271,7 @@ const TeestingPanels = (props: TestingPanelsProps) => {
       )}
       {activeIndex === 5 && (
         <div className="flex w-full  flex-col items-center justify-items-center  gap-[52px]">
-          <h3 className="whitespace-nowrap text-center text-[27px] uppercase tracking-widest">
+          <h3 className="text-center text-2xl uppercase tracking-widest md:whitespace-nowrap md:text-3xl">
             Step 5 <br />
             <p className="font-normal"> Claim a Level 1 Puzzle Piece</p>
           </h3>
@@ -291,7 +291,7 @@ const TeestingPanels = (props: TestingPanelsProps) => {
       )}
       {activeIndex === 6 && (
         <div className="flex w-full  flex-col items-center justify-items-center  gap-[52px]">
-          <h3 className=" text-center text-[27px] uppercase tracking-widest">
+          <h3 className=" text-center text-2xl uppercase tracking-widest md:text-3xl">
             Step 6 <br />
             <p className="font-normal">
               {" "}
@@ -315,7 +315,7 @@ const TeestingPanels = (props: TestingPanelsProps) => {
       )}
       {activeIndex === 7 && (
         <div className="flex w-full  flex-col items-center justify-items-center  gap-[52px]">
-          <h3 className=" text-center text-[27px] uppercase tracking-widest">
+          <h3 className=" text-center text-2xl uppercase tracking-widest md:text-3xl">
             Congratulations!
           </h3>
           <p className="text-justify">

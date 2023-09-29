@@ -59,7 +59,7 @@ const Modal = ({
             >
               <Dialog.Panel
                 className={cn(
-                  "w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-[52px] text-left align-middle shadow-xl transition-all",
+                  "mx-6 w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all md:mx-0 md:p-[52px]",
                   isBlur ? "blur-sm" : ""
                 )}
               >

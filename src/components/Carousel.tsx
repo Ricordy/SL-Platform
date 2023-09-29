@@ -188,7 +188,7 @@ const Carousel: FC<CarouselProps> = ({
         )}
       </div>
 
-      <div className="relative flex max-w-[1224px] items-center">
+      <div className="relative flex max-w-[1234px] items-center">
         {items && items?.length > 2 && (
           <div
             className={cn(
@@ -253,7 +253,7 @@ const Carousel: FC<CarouselProps> = ({
         {items && items?.length > 2 && (
           <div
             className={cn(
-              `absolute right-0 z-20 -mr-[58px] flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent to-black pr-10 swiper-next-${id}  `,
+              `absolute right-0 z-20 flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent  to-black px-3 md:-mr-[58px] swiper-next-${id}  `,
               currentSlider === items?.length % 4 ? "invisible" : "visible"
             )}
           >
