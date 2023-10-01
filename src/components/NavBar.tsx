@@ -31,7 +31,7 @@ import { useBreakpoint } from "~/hooks/useBreakpoints";
 import { BurguerMenu } from "./ui/icons/BurguerMenu";
 
 const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
-  const { address, isConnected, status } = useAccount();
+  const { address, isConnected, isDisconnected, status } = useAccount();
   const { connect } = useConnect({
     connector: new InjectedConnector(),
   });
@@ -276,7 +276,12 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
               </div>
             ) : null}
             {showConnection && (
-              <div className="flex justify-end gap-6">
+              <div
+                className={cn(
+                  "flex justify-end gap-6",
+                  isDisconnected || status === "connecting" ? "md:w-full" : ""
+                )}
+              >
                 {!isConnected && (
                   <button
                     className={cn(

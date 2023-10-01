@@ -188,7 +188,7 @@ const Carousel: FC<CarouselProps> = ({
         )}
       </div>
 
-      <div className="relative flex max-w-[1234px] items-center">
+      <div className="relative flex items-center">
         {items && items?.length > 2 && (
           <div
             className={cn(

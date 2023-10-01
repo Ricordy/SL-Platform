@@ -12,10 +12,10 @@ const TestingGuides = (props: any) => {
         mintPaymentToken={mintPaymentToken}
         setActiveIndex={setActiveIndex}
       />
-      <div className="relative bottom-0 flex w-full items-center gap-10">
+      <div className="relative bottom-0 flex w-full items-center justify-between gap-10">
         {(activeIndex === 0 && (
           <button
-            className="absolute  rounded-md bg-black px-12 py-1.5 text-center text-sm uppercase text-white md:px-[3.95rem] "
+            className="w-36 rounded-md border-2 border-black bg-white py-1 text-center text-sm uppercase text-black"
             onClick={
               activeIndex === 0
                 ? closeModal
@@ -26,7 +26,7 @@ const TestingGuides = (props: any) => {
           </button>
         )) || (
           <button
-            className="relative z-10  rounded-md bg-black px-12 py-1.5 text-center text-sm uppercase text-white md:px-[3.1rem] "
+            className="relative z-10 rounded-md bg-black px-8 py-1.5 text-center text-sm uppercase text-white md:px-[3.1rem] "
             onClick={
               activeIndex === 0
                 ? closeModal
@@ -39,7 +39,7 @@ const TestingGuides = (props: any) => {
         {/** PAGINATION */}
 
         {activeIndex !== 0 && (
-          <div className=" absolute hidden  w-full items-center justify-center  gap-1 whitespace-nowrap md:flex">
+          <div className=" hidden  items-center justify-center  gap-1 whitespace-nowrap md:flex">
             {activeIndex > 3 && (
               <>
                 <div
@@ -94,14 +94,14 @@ const TestingGuides = (props: any) => {
 
         {(activeIndex < 7 && (
           <button
-            className="absolute right-0 rounded-md bg-black px-12 py-1.5 text-center text-sm uppercase text-white transition-all duration-150 hover:bg-black/80 dark:hover:bg-black dark:hover:text-white md:px-[3.95rem]"
+            className="right-0 w-36 rounded-md bg-black py-1.5 text-center text-sm uppercase text-white transition-all duration-150 hover:bg-black/80 dark:hover:bg-black dark:hover:text-white"
             onClick={() => setActiveIndex(activeIndex + 1)}
           >
             {activeIndex === 0 ? "Begin" : "Next"}
           </button>
         )) || (
           <a
-            className="absolute right-0 whitespace-nowrap rounded-md bg-primaryGreen px-8 py-1.5 text-center text-sm uppercase text-white transition-all duration-150 hover:bg-black/80 dark:hover:bg-black dark:hover:text-white md:px-10"
+            className="right-0 w-36 whitespace-nowrap rounded-md bg-primaryGreen py-1.5 text-center text-sm uppercase text-white transition-all duration-150 hover:bg-primaryGreen/80"
             href="/our-cars"
           >
             Invest now
@@ -129,9 +129,9 @@ const TeestingPanels = (props: TestingPanelsProps) => {
           <Image
             src={logo1 as string}
             alt="Something Legendary logo"
-            className="max-h-40 w-full"
+            className="max-h-20 w-full md:max-h-40"
           />
-          <h3 className=" text-center text-[27px] uppercase tracking-widest ">
+          <h3 className="text-center text-2xl uppercase tracking-widest md:text-3xl ">
             Welcome Legendary Tester!
           </h3>
           <p className=" text-justify">
@@ -145,7 +145,12 @@ const TeestingPanels = (props: TestingPanelsProps) => {
       {activeIndex === 1 && (
         <div className="flex w-full flex-col  items-center justify-items-center gap-[52px]">
           <h3 className="whitespace-nowrap text-center text-2xl uppercase tracking-widest md:text-3xl">
-            Step 1 <br /> <p className="font-normal">Connect your wallet</p>
+            Step 1 <br />{" "}
+            <p className="font-normal">
+              Connect
+              <br className="block md:hidden" />
+              your wallet
+            </p>
           </h3>
           <p className="text-justify ">
             When you arrive at the{" "}
@@ -180,7 +185,11 @@ const TeestingPanels = (props: TestingPanelsProps) => {
       {activeIndex === 2 && (
         <div className="flex w-full  flex-col items-center justify-items-center  gap-[52px]">
           <h3 className="whitespace-nowrap text-center text-2xl uppercase tracking-widest md:text-3xl">
-            Step 2<br /> <p className="font-normal">Claim Testnet USDC</p>
+            Step 2<br />{" "}
+            <p className="font-normal">
+              Claim <br className="block md:hidden" />
+              Testnet USDC
+            </p>
           </h3>
           <p className="text-justify">
             To obtain your{" "}
