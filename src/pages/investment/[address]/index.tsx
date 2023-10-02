@@ -183,13 +183,23 @@ export const ProjectInfo = ({
 }) => {
   return (
     <div className="relative flex gap-[24px] ">
-      <div className={`relative flex flex-col gap-2 pr-4 md:flex-row `}>
+      <div
+        className={cn(
+          `relative flex flex-col gap-2 pr-4`,
+          isFlexCol ? "" : "md:flex-row"
+        )}
+      >
         <span>Status:</span>
         <span className="font-medium">{status}</span>
         <div className="absolute right-0 top-0 hidden h-full min-h-[1em] w-px self-stretch border-t-0 bg-gradient-to-tr from-transparent via-black to-transparent opacity-25 dark:opacity-100 lg:block"></div>
       </div>
 
-      <div className={`relative flex flex-col gap-2 pr-4 md:flex-row`}>
+      <div
+        className={cn(
+          `relative flex flex-col gap-2 pr-4`,
+          isFlexCol ? "" : "md:flex-row"
+        )}
+      >
         <span>Price:</span>
         <span className="now font-medium">
           <NumericFormat
@@ -204,7 +214,12 @@ export const ProjectInfo = ({
         </span>
         <div className="absolute right-0 top-0 hidden h-full min-h-[1em] w-px self-stretch border-t-0 bg-gradient-to-tr from-transparent via-black to-transparent opacity-25 dark:opacity-100 lg:block"></div>
       </div>
-      <div className={`relative flex flex-col gap-2 pr-4 md:flex-row `}>
+      <div
+        className={cn(
+          `relative flex flex-col gap-2 pr-4`,
+          isFlexCol ? "" : "md:flex-row"
+        )}
+      >
         <span>Progress:</span>
         <span className="font-medium">
           <NumericFormat
