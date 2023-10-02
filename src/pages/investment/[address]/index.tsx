@@ -40,6 +40,12 @@ import Suggestions from "~/components/Suggestions";
 import { TransactionProps } from "~/@types/transaction";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import { A11y, Navigation } from "swiper";
+import { useBreakpoint } from "~/hooks/useBreakpoints";
 
 dayjs.extend(localizedFormat);
 
@@ -295,9 +301,10 @@ const Investment = ({
   const { address: walletAddress } = useAccount();
   const { data: signerData } = useSigner();
   const { data: sessionData } = useSession();
+  const { isAboveMd, isBelowMd } = useBreakpoint("md");
+  const [tabIndex, setTabIndex] = useState(0);
 
   const [canWithdraw, setCanWithdraw] = useState(false);
-  // console.log(investment);
 
   const investContract = useContract({
     address: investment?.address,
@@ -408,8 +415,6 @@ const Investment = ({
     watch: false,
   });
 
-  // console.log("can withdraw?>>>>", contractStatus == CONTRACT_STATUS_WITHDRAW);
-
   const { config: withdrawCallConfig } = usePrepareContractWrite({
     address: investment.address,
     abi: investmentABI,
@@ -481,7 +486,7 @@ const Investment = ({
       100
     : 0;
 
-  const phases = investment.restorationPhases.map((phase) => ({
+  const phases = investment.restorationPhases?.map((phase) => ({
     status: phase.restorationStatus.toLocaleLowerCase(),
     title: phase.title,
     deadline: phase.deadline,
@@ -490,6 +495,11 @@ const Investment = ({
     gallery: phase.gallery,
     updates: phase.restorationUpdates,
   }));
+
+  // Fake data
+  // phases = phases.reduce(function (res, current, index, array) {
+  //   return res.concat([current, current]);
+  // }, []);
 
   const profitMinimumPercentage = BigNumber.from(
     investment.level.profitRange.split("-")[0]
@@ -587,7 +597,6 @@ const Investment = ({
                 />
                 General Information
               </h3>
-              {progress}
               <ProjectInfo
                 progress={progress}
                 status={investment.basicInvestment.investmentStatus}
@@ -688,53 +697,98 @@ const Investment = ({
             </h3>
           </section>
           <section>
-            <Tab.Group>
-              <Tab.List className="flex p-1">
-                {phases.map((phase) => (
-                  <Tab
-                    key={phase.title}
-                    className={({ selected }) =>
-                      cn(
-                        "flex w-full flex-col items-center justify-between gap-4 border-b-4 py-2.5  text-xl font-light  leading-5 text-primaryGreen",
-                        "  focus:outline-none focus:ring-2",
-                        selected
-                          ? "border-b-4 border-primaryGreen bg-white font-medium ring-transparent"
-                          : "text-tabInactive hover:border-b-4 hover:border-primaryGreen hover:bg-black/5 hover:text-primaryGreen"
-                      )
-                    }
-                  >
-                    <div
-                      className={cn(
-                        "flex gap-2 rounded-full px-2 py-1 text-xs",
-                        badges[phase.status].bg,
-                        badges[phase.status].text
-                      )}
-                    >
-                      <Image
-                        src={badges[phase.status].icon}
-                        width={12}
-                        height={12}
-                        alt={badges[phase.status].label}
-                      />
-                      {badges[phase.status].label}
-                    </div>
-                    {phase.title}
-                  </Tab>
-                ))}
+            <Tab.Group selectedIndex={tabIndex} onChange={setTabIndex}>
+              <Tab.List className="relative flex w-full md:p-1">
+                <div
+                  className={cn(
+                    `swiper-prev-phases absolute left-3 z-10 flex items-center justify-center`,
+                    isAboveMd ? "top-6" : "top-0"
+                  )}
+                >
+                  {
+                    <Image
+                      src={"/icons/pagination-previous-black.svg"}
+                      width={isAboveMd ? 38 : 28}
+                      height={isAboveMd ? 38 : 28}
+                      alt="Previous"
+                    />
+                  }
+                </div>
+                <Swiper
+                  className="w-full"
+                  pagination
+                  slidesPerView={isAboveMd ? 2 : "auto"}
+                  centeredSlides={isAboveMd ? false : true}
+                  init={false}
+                  modules={[Navigation, A11y]}
+                  navigation={{
+                    nextEl: `.swiper-next-phases`,
+                    prevEl: `.swiper-prev-phases`,
+                  }}
+                  onSlideChange={(s) => setTabIndex(s.activeIndex)}
+                >
+                  {phases.map((phase) => (
+                    <SwiperSlide key={phase.title} className="w-full">
+                      <Tab
+                        className={({ selected }) =>
+                          cn(
+                            "flex w-full flex-col items-center justify-between gap-4 border-b-4 py-2.5  text-xl font-light  leading-5 text-primaryGreen",
+                            "  focus:outline-none focus:ring-2",
+                            selected
+                              ? "border-b-4 border-primaryGreen bg-white font-medium ring-transparent"
+                              : "text-tabInactive hover:border-b-4 hover:border-primaryGreen hover:bg-black/5 hover:text-primaryGreen"
+                          )
+                        }
+                      >
+                        <div
+                          className={cn(
+                            "flex gap-2 rounded-full px-2 py-1 text-xs",
+                            badges[phase.status].bg,
+                            badges[phase.status].text
+                          )}
+                        >
+                          <Image
+                            src={badges[phase.status].icon}
+                            width={12}
+                            height={12}
+                            alt={badges[phase.status].label}
+                          />
+                          {badges[phase.status].label}
+                        </div>
+                        {phase.title}
+                      </Tab>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+                <div
+                  className={cn(
+                    `swiper-next-phases absolute right-3 z-10 flex items-center justify-center`,
+                    isAboveMd ? "top-6" : "top-0"
+                  )}
+                >
+                  {
+                    <Image
+                      src={"/icons/pagination-next-black.svg"}
+                      width={isAboveMd ? 38 : 28}
+                      height={isAboveMd ? 38 : 28}
+                      alt="Next"
+                    />
+                  }
+                </div>
               </Tab.List>
               {userTotalInvestment?.gt(0) && phases.length > 0 && (
-                <Tab.Panels className="mt-[52px]">
+                <Tab.Panels className="mt-6 md:mt-[52px]">
                   {phases.map((phase, idx) => (
                     <Tab.Panel
                       key={idx}
                       className={cn(
-                        " mx-4 bg-white",
+                        "bg-white md:mx-4",
                         "flex flex-col gap-4 ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2"
                       )}
                     >
                       <span
                         className={cn(
-                          "flex gap-1 self-start rounded-full px-2 py-1 text-xs",
+                          "hidden gap-1 self-start rounded-full px-2 py-1 text-xs md:flex",
                           badges[phase.status].bg,
                           badges[phase.status].text
                         )}
@@ -747,17 +801,17 @@ const Investment = ({
                         />
                         {badges[phase.status].label}
                       </span>
-                      <h3>{phase.title}</h3>
-                      <div className="grid grid-cols-2 gap-4">
+                      <h3 className="hidden md:block">{phase.title}</h3>
+                      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div className="flex flex-col gap-4">
-                          <div className="flex justify-around divide-x divide-primaryGrey pb-8 text-primaryGrey">
+                          <div className="flex flex-col justify-around divide-primaryGrey pb-8 text-primaryGrey md:flex-row md:divide-x">
                             <div className="flex flex-col">
                               <span>Deadline:</span>
                               <span className="text-black">
                                 {dayjs(phase.deadline).format("ll")}
                               </span>
                             </div>
-                            <div className="flex flex-col px-4">
+                            <div className="flex flex-col md:px-4">
                               <span>Cost Expectation:</span>
                               <span className="text-black">
                                 <NumericFormat
@@ -771,7 +825,7 @@ const Investment = ({
                                 />
                               </span>
                             </div>
-                            <div className="flex flex-col px-4">
+                            <div className="flex flex-col md:px-4">
                               <span>Current Cost:</span>
                               <span className="text-black">
                                 <NumericFormat
@@ -843,7 +897,7 @@ const Investment = ({
             </Tab.Group>
           </section>
           <section className="">
-            <h3 className="flex items-center gap-4 pb-[52px] pt-[132px]">
+            <h3 className="flex items-center gap-4 pb-[52px] pt-6 md:pt-[132px]">
               <Image
                 src="/icons/investments.svg"
                 width={39}
