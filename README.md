@@ -1,216 +1,183 @@
-# Create T3 App
+<div align="center">
 
-This is an app bootstrapped according to the [init.tips](https://init.tips) stack, also known as the T3-Stack.
+  <img src="public/logo-mini-white.svg" alt="logo" width="100" height="auto" />
+  <h1>Something Legendary</h1>
+  
+  <p>
+    Welcome to the Something Legendary Platform! 
+  </p>
+  
+</div>
 
-## Why are there `.js` files in here?
+<br />
 
-As per [T3-Axiom #3](https://github.com/t3-oss/create-t3-app/tree/next#3-typesafety-isnt-optional), we take typesafety as a first class citizen. Unfortunately, not all frameworks and plugins support TypeScript which means some of the configuration files have to be `.js` files.
+<!-- Table of Contents -->
 
-We try to emphasize that these files are javascript for a reason, by explicitly declaring its type (`cjs` or `mjs`) depending on what's supported by the library it is used by. Also, all the `js` files in this project are still typechecked using a `@ts-check` comment at the top.
+# :notebook_with_decorative_cover: Table of Contents
 
-## What's next? How do I make an app with this?
+- [About the Project](#star2-about-the-project)
+  - [Screenshots](#camera-screenshots)
+  - [Tech Stack](#space_invader-tech-stack)
+  - [Features](#dart-features)
+  - [Environment Variables](#key-environment-variables)
+- [Getting Started](#toolbox-getting-started)
+  - [Prerequisites](#bangbang-prerequisites)
+  - [Run Locally](#running-run-locally)
+- [Usage](#eyes-usage)
+- [Roadmap](#compass-roadmap)
+- [FAQ](#grey_question-faq)
+- [License](#warning-license)
+- [Contact](#handshake-contact)
 
-We try to keep this project as simple as possible, so you can start with the most basic configuration and then move on to more advanced configuration.
+<!-- About the Project -->
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## :star2: About the Project
 
-- [Next-Auth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [TailwindCSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io) (using @next version? [see v10 docs here](https://alpha.trpc.io))
+<!-- Screenshots -->
 
-Also checkout these awesome tutorials on `create-t3-app`.
+### :camera: Screenshots
 
-- [Build a Blog With the T3 Stack - tRPC, TypeScript, Next.js, Prisma & Zod](https://www.youtube.com/watch?v=syEWlxVFUrY)
-- [Build a Live Chat Application with the T3 Stack - TypeScript, Tailwind, tRPC](https://www.youtube.com/watch?v=dXRRY37MPuk)
-- [Build a full stack app with create-t3-app](https://www.nexxel.dev/blog/ct3a-guestbook)
-- [A first look at create-t3-app](https://dev.to/ajcwebdev/a-first-look-at-create-t3-app-1i8f)
+<div align="center"> 
+  <img width="680" height="400" src="public/screenshots/screenshot-home.webp" alt="screenshot" />
+</div>
 
-## How do I deploy this?
+<!-- TechStack -->
 
-### Vercel
+### :space_invader: Tech Stack
 
-We recommend deploying to [Vercel](https://vercel.com/?utm_source=t3-oss&utm_campaign=oss). It makes it super easy to deploy NextJs apps.
+<details>
+  <summary>Client</summary>
+  <ul>
+    <li><a href="https://www.typescriptlang.org/">Typescript</a></li>
+    <li><a href="https://nextjs.org/">Next.js</a></li>
+    <li><a href="https://reactjs.org/">React.js</a></li>
+    <li><a href="https://tailwindcss.com/">TailwindCSS</a></li>
+    <li><a href="https://headlessui.com/">HeadlessUI</a></li>
+    <li><a href="https://hardhat.org/">HardHat</a></li>
+    <li><a href="https://wagmi.sh/">WAGMI</a></li>
+    <li><a href="https://ethers.org/">ethers</a></li>
+    <li><a href="https://photoswipe.com/">PhotoSwipe</a></li>
+    <li><a href="https://swiperjs.com/">Swiper</a></li>
 
-- Push your code to a GitHub repository.
-- Go to [Vercel](https://vercel.com/?utm_source=t3-oss&utm_campaign=oss) and sign up with GitHub.
-- Create a Project and import the repository you pushed your code to.
-- Add your environment variables.
-- Click **Deploy**
-- Now whenever you push a change to your repository, Vercel will automatically redeploy your website!
+  </ul>
+</details>
 
-### Docker
+<details>
+  <summary>Server</summary>
+  <ul>
+    <li><a href="https://www.typescriptlang.org/">Typescript</a></li>   
+    <li><a href="https://www.hygraph.com/">Hygraph</a></li>
+    <li><a href="https://github.com/jasonkuhrt/graphql-request/">graphql-request</a></li>
 
-You can also dockerize this stack and deploy a container.
+  </ul>
+</details>
 
-Please note that Next.js requires a different process for buildtime (available in the frontend, prefixed by `NEXT_PUBLIC`) and runtime environment, server-side only, variables. In this demo we are using two variables, `NEXT_PUBLIC_FOO` and `BAR`. Pay attention to their positions in the `Dockerfile`, command-line arguments, and `docker-compose.yml`.
+<details>
+  <summary>Authentication</summary>
+  <ul>
+    <li><a href="https://github.com/nextauthjs/next-auth/">NextAuth.js</a></li>   
+    <li><a href="https://login.xyz/">SIWE</a></li>
+  </ul>
+</details>
 
-1. In your [next.config.mjs](./next.config.mjs), add the `standalone` output-option to your config:
+<!-- Features -->
 
-   ```diff
-     export default defineNextConfig({
-       reactStrictMode: true,
-       swcMinify: true,
-   +   output: "standalone",
-     });
-   ```
+### :dart: Features
 
-2. Remove the `env`-import from [next.config.mjs](./next.config.mjs):
+- Feature 1
+- Feature 2
+- Feature 3
 
-   ```diff
-   - import { env } from "./src/env/server.mjs";
-   ```
+<!-- Env Variables -->
 
-3. Create a `.dockerignore` file with the following contents:
-   <details>
-   <summary>.dockerignore</summary>
+### :key: Environment Variables
 
-   ```
-   .env
-   Dockerfile
-   .dockerignore
-   node_modules
-   npm-debug.log
-   README.md
-   .next
-   .git
-   ```
+To run this project, you will need to add the following environment variables to your .env file
 
-  </details>
+`NEXT_PUBLIC_ALCHEMY_API_KEY`
+`NEXT_PUBLIC_CHAIN_ID`
+`NEXT_PUBLIC_CHAIN_NAME`
+`NEXT_PUBLIC_FACTORY_ADDRESS`
+`NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS`
+`NEXT_PUBLIC_PUZZLE_ADDRESS`
+`NEXT_PUBLIC_SLLOGIC_ADDRESS`
 
-4. Create a `Dockerfile` with the following contents:
-   <details>
-   <summary>Dockerfile</summary>
+`ALCHEMY_URL_ID`
+`APP_DOMAIN`
+`ETHERSCAN_API_KEY`
+`HYGRAPH_CONTENT_API`
+`HYGRAPH_BEARER`
+`HYGRAPH_READ_ONLY_KEY`
+`NEXTAUTH_URL`
+`NEXTAUTH_SECRET`
+`PRIVATE_KEY`
 
-   ```Dockerfile
-   ########################
-   #         DEPS         #
-   ########################
+<!-- Getting Started -->
 
-   # Install dependencies only when needed
-   # TODO: re-evaluate if emulation is still necessary on arm64 after moving to node 18
-   FROM --platform=linux/amd64 node:16-alpine AS deps
-   # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-   RUN apk add --no-cache libc6-compat
-   WORKDIR /app
+## :toolbox: Getting Started
 
-   # Install dependencies based on the preferred package manager
-   COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
-   RUN \
-     if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-     elif [ -f package-lock.json ]; then npm ci; \
-     elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i; \
-     else echo "Lockfile not found." && exit 1; \
-     fi
+<!-- Prerequisites -->
 
-   ########################
-   #        BUILDER       #
-   ########################
+### :bangbang: Prerequisites
 
-   # Rebuild the source code only when needed
-   # TODO: re-evaluate if emulation is still necessary on arm64 after moving to node 18
-   FROM --platform=linux/amd64 node:16-alpine AS builder
+This project uses pnpm as package manager
 
-   ARG NEXT_PUBLIC_FOO
-   ARG BAR
+#### On Windows
 
-   WORKDIR /app
-   COPY --from=deps /app/node_modules ./node_modules
-   COPY . .
+##### Using PowerShell:
 
-   # Next.js collects completely anonymous telemetry data about general usage.
-   # Learn more here: https://nextjs.org/telemetry
-   # Uncomment the following line in case you want to disable telemetry during the build.
-   # ENV NEXT_TELEMETRY_DISABLED 1
+```bash
+iwr https://get.pnpm.io/install.ps1 -useb | iex
+```
 
-   RUN \
-     if [ -f yarn.lock ]; then yarn build; \
-     elif [ -f package-lock.json ]; then npm run build; \
-     elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm run build; \
-     else echo "Lockfile not found." && exit 1; \
-     fi
+#### On POSIX systems
 
-   ########################
-   #        RUNNER        #
-   ########################
+```bash
+curl -fsSL https://get.pnpm.io/install.sh | sh -
+```
 
-   # Production image, copy all the files and run next
-   # TODO: re-evaluate if emulation is still necessary after moving to node 18
-   FROM --platform=linux/amd64 node:16-alpine AS runner
-   # WORKDIR /usr/app
-   WORKDIR /app
+<!-- Run Locally -->
 
-   ENV NODE_ENV production
-   # Uncomment the following line in case you want to disable telemetry during runtime.
-   # ENV NEXT_TELEMETRY_DISABLED 1
+### :running: Run Locally
 
-   RUN addgroup --system --gid 1001 nodejs
-   RUN adduser --system --uid 1001 nextjs
+Clone the project
 
-   COPY --from=builder /app/next.config.mjs ./
-   COPY --from=builder /app/public ./public
-   COPY --from=builder /app/package.json ./package.json
+```bash
+  git clone https://github.com/Web360Labs/SomethingLegendary-Platform.git
+```
 
-   # Automatically leverage output traces to reduce image size
-   # https://nextjs.org/docs/advanced-features/output-file-tracing
-   COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-   COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+Go to the project directory
 
-   USER nextjs
+```bash
+  cd SomethingLegendary-Platform
+```
 
-   EXPOSE 3000
+Install dependencies
 
-   ENV PORT 3000
+```bash
+  pnpm i
+```
 
-   CMD ["node", "server.js"]
-   ```
+Start the server
 
-  </details>
+```bash
+  pnpm build && pnpm start
+```
 
-5. To build and run this image locally, run:
+Start the server (Dev mode)
 
-   ```bash
-   docker build -t ct3a -e NEXT_PUBLIC_FOO=foo .
-   docker run -p 3000:3000 -e BAR="bar" ct3a
-   ```
+```bash
+  pnpm dev
+```
 
-6. You can also use a PaaS such as [Railway's](https://railway.app) automated [Dockerfile deployments](https://docs.railway.app/deploy/dockerfiles) to deploy your app.
+<!-- License -->
 
-### docker-compose
+## :warning: License
 
-You can also use docker-compose to build and run the container.
+Distributed under the no License. See LICENSE.txt for more information.
 
-1. Follow steps 1-4 above
+<!-- Contact -->
 
-2. Create a `docker-compose.yml` file with the following:
+## :handshake: Contact
 
-   <details>
-   <summary>docker-compose.yml</summary>
-
-   ```yaml
-   version: "3.7"
-   services:
-     app:
-       platform: "linux/amd64"
-       build:
-         context: .
-         dockerfile: Dockerfile
-         args:
-           NEXT_PUBLIC_FOO: "foo"
-       working_dir: /app
-       ports:
-         - "3000:3000"
-       image: t3-app
-       environment:
-         - BAR=bar
-   ```
-
-   </details>
-
-3. Run this using `docker-compose up`.
-
-## Useful resources
-
-Here are some resources that we commonly refer to:
-
-- [Protecting routes with Next-Auth.js](https://next-auth.js.org/configuration/nextjs#unstable_getserversession)
+For more info, mail us at info@somethinglegendary.com
