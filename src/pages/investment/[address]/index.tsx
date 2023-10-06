@@ -885,7 +885,7 @@ const Investment = ({
                             </div>
                           </div>
                         </div>
-                        <div className="relative flex w-full">
+                        <div className="relative row-start-1 flex w-full md:row-start-auto">
                           <ResponsiveCarousel
                             showStatus={false}
                             showThumbs={false}
