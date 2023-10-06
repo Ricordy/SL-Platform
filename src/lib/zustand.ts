@@ -154,8 +154,6 @@ export const useBlockchainInfo = create((set) => {
     minToInvest: undefined,
     contractStatus: undefined,
     fetchDynamicInfo: async (contractAddress: string, userAddress: string) => {
-      console.log("calling");
-
       if (
         contractAddress !== undefined &&
         contractAddress !== null &&
@@ -184,7 +182,7 @@ export const useBlockchainInfo = create((set) => {
           const paymentTokenBalance = await paymentTokenContract.balanceOf(
             userAddress
           );
-          console.log("fetched: ", totalInvested, userTotalInvestment);
+
 
           set({
             totalSupply: totalInvested,

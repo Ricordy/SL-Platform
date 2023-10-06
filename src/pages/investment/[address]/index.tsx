@@ -1109,12 +1109,6 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
   );
 };
 
-const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
-  headers: {
-    Authorization: process.env.HYGRAPH_BEARER as string,
-  },
-});
-
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { address } = context.query;
 
