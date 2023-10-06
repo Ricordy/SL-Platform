@@ -4,7 +4,7 @@
   <h1>Something Legendary</h1>
   
   <p>
-    Welcome to the Something Legendary Platform! 
+    Something Legendary is an investment platform for the purchase, renovation and subsequent sale of classic cars, usingWeb 3.0 tools as a method of financial ease of use and as a gamification element.
   </p>
   
 </div>
@@ -18,7 +18,6 @@
 - [About the Project](#star2-about-the-project)
   - [Screenshots](#camera-screenshots)
   - [Tech Stack](#space_invader-tech-stack)
-  - [Features](#dart-features)
   - [Environment Variables](#key-environment-variables)
 - [Getting Started](#toolbox-getting-started)
   - [Prerequisites](#bangbang-prerequisites)
@@ -79,14 +78,6 @@
     <li><a href="https://login.xyz/">SIWE</a></li>
   </ul>
 </details>
-
-<!-- Features -->
-
-### :dart: Features
-
-- Feature 1
-- Feature 2
-- Feature 3
 
 <!-- Env Variables -->
 
