@@ -821,7 +821,6 @@ const MyInvestments: NextPage = () => {
               <div className="flex flex-col gap-4">
                 <span>Last transactions:</span>
                 <div className="flex max-h-[282px] flex-1 flex-col gap-2 overflow-scroll rounded-md bg-myInvestmentsBackground px-4 py-8">
-
                   {userInvestedContracts && (
                     <TransactionItem
                       items={userTransactions}
@@ -871,52 +870,8 @@ const MyInvestments: NextPage = () => {
           />
         )}
       </div>
-      {/* <div className="relative z-20 mx-auto rounded-t-[56px] bg-black pb-[128px] pt-[72px] text-white">
-        {
-          <h2 className="mb-[52px] ml-[210px] text-2xl font-medium uppercase">
-            Our Suggestions for you
-          </h2>
-        }
 
-        {/* <Carousel
-            id="4"
-            className="w-full pt-[132px]"
-            title={<h2 className="text-2xl">Our Suggestions for you</h2>}
-            items={getMissingInvestments(
-              props.allInvestments,
-              props.userInvestments
-            ).filter(
-              (investment) =>
-                investment.basicInvestment.investmentStatus == "Active"
-            )}
-          /> */}
-
-        {/* {getMissingInvestments(
-            props.allInvestments,
-            props.userInvestments
-          ).map((investment) => (
-            <CarouselItem
-              // title="my title"
-              // image="/projects/car-1.jpg"
-              // price="39595"
-              title={investment.basicInvestment.car?.basicInfo.title}
-              image={investment.basicInvestment.car?.basicInfo.cover.url}
-              price={investment.basicInvestment.totalInvestment.toString()}
-              address={investment.address}
-              level={investment.level.basicLevel.title}
-            />
-          ))} */}
-        <Suggestions />
-
-        {/* {carouselItems.slice(0, 3).map((item, idx) => (
-              <CarouselItem
-                key={idx}
-                title={item.title}
-                image={item.image}
-                price={item.price}
-              />
-            ))} */}
-      </div>
+      <Suggestions />
     </section>
   );
 };
