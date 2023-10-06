@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { GraphQLClient, gql } from "graphql-request";
-import { Address } from "wagmi";
+import { Address, useContractRead } from "wagmi";
+import { SLCoreABI, investmentABI, paymentTokenABI } from "~/utils/abis";
+import { ethers } from "ethers";
 
 export const useInvestments = create((set) => {
   return {
@@ -119,6 +121,7 @@ export const useContractInfo = create((set) => {
       }
     },
     fetchTransactions: async (address: string) => {
+      console.log("calling tx");
       try {
         const response = await fetch("/api/contractTransactions", {
           method: "POST",
@@ -133,6 +136,117 @@ export const useContractInfo = create((set) => {
         } else {
           return null;
         }
+      } catch (err) {
+        return null;
+      }
+    },
+  };
+});
+
+export const useBlockchainInfo = create((set) => {
+  return {
+    totalSupply: undefined,
+    userTotalInvestment: undefined,
+    maxToInvest: undefined,
+    paymentTokenBalance: undefined,
+    contractLevel: undefined,
+    userLevel: undefined,
+    minToInvest: undefined,
+    contractStatus: undefined,
+    fetchDynamicInfo: async (contractAddress: string, userAddress: string) => {
+      console.log("calling");
+
+      if (
+        contractAddress !== undefined &&
+        contractAddress !== null &&
+        contractAddress !== ""
+      ) {
+        try {
+          const provider = new ethers.providers.JsonRpcProvider(
+            `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
+          );
+          const investmentContract = new ethers.Contract(
+            contractAddress,
+            investmentABI,
+            provider
+          );
+
+          const paymentTokenContract = new ethers.Contract(
+            process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
+            paymentTokenABI,
+            provider
+          );
+
+          const totalInvested = await investmentContract.totalSupply();
+          const userTotalInvestment = await investmentContract.balanceOf(
+            userAddress
+          );
+          const paymentTokenBalance = await paymentTokenContract.balanceOf(
+            userAddress
+          );
+          console.log("fetched: ", totalInvested, userTotalInvestment);
+
+          set({
+            totalSupply: totalInvested,
+            userTotalInvestment: userTotalInvestment,
+            paymentTokenBalance: paymentTokenBalance,
+          });
+
+          return null;
+        } catch (err) {
+          console.log(err);
+
+          return null;
+        }
+      }
+    },
+    fetchStaticInfo: async (contractAddress: string, userAddress: string) => {
+      try {
+        const provider = new ethers.providers.JsonRpcProvider(
+          `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
+        );
+        const investmentContract = new ethers.Contract(
+          contractAddress,
+          investmentABI,
+          provider
+        );
+
+        const slCoreContract = new ethers.Contract(
+          process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
+          SLCoreABI,
+          provider
+        );
+
+        const maxToInvest = await investmentContract.getMaxToInvest(),
+          minToInvest = await investmentContract.MINIMUM_INVESTMENT(),
+          contractLevel = await investmentContract.CONTRACT_LEVEL(),
+          userLevel = await slCoreContract.whichLevelUserHas(userAddress);
+        set({
+          maxToInvest: maxToInvest.div(10 ** 6).toNumber(),
+          minToInvest: minToInvest.toNumber(),
+          contractLevel: contractLevel,
+          userLevel: userLevel,
+        });
+      } catch (err) {
+        return null;
+      }
+    },
+    fetchContractStatus: async (contractAddress: string) => {
+      try {
+        const provider = new ethers.providers.JsonRpcProvider(
+          `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
+        );
+        const investmentContract = new ethers.Contract(
+          contractAddress,
+          investmentABI,
+          provider
+        );
+
+        const contractStatus = await investmentContract.status();
+
+        set({
+          contractStatus: contractStatus,
+        });
       } catch (err) {
         return null;
       }

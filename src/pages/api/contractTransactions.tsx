@@ -37,8 +37,14 @@ export default async function handler(
       query InvestingHere {
         transactions(
           where: { to: "${body.contractAddress}" }
+          orderBy: publishedAt_DESC
+          last:100
         ) {
-          from
+            amountInvested
+            date
+            type
+            hash
+            from
         }
       }
     `

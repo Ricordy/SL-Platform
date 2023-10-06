@@ -39,7 +39,7 @@ import Suggestions from "~/components/Suggestions";
 import { TransactionProps } from "~/@types/transaction";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
-import { useContractInfo } from "~/lib/zustand";
+import { useBlockchainInfo, useContractInfo } from "~/lib/zustand";
 
 dayjs.extend(localizedFormat);
 
@@ -319,6 +319,25 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
   );
   const transactions = useContractInfo((state) => state.contractTransactions);
   const fetchTransactions = useContractInfo((state) => state.fetchTransactions);
+  const totalSupply = useBlockchainInfo((state) => state.totalSupply);
+  const userTotalInvestment = useBlockchainInfo(
+    (state) => state.userTotalInvestment
+  );
+  const paymentTokenBalance = useBlockchainInfo(
+    (state) => state.paymentTokenBalance
+  );
+  const maxToInvest = useBlockchainInfo((state) => state.maxToInvest);
+  const minToInvest = useBlockchainInfo((state) => state.minToInvest);
+  const contractLevel = useBlockchainInfo((state) => state.contractLevel);
+  const userLevel = useBlockchainInfo((state) => state.userLevel);
+  const contractStatus = useBlockchainInfo((state) => state.contractStatus);
+  const fetchDynamicBcInfo = useBlockchainInfo(
+    (state) => state.fetchDynamicInfo
+  );
+  const fetchContractStatus = useBlockchainInfo(
+    (state) => state.fetchContractStatus
+  );
+  const fetchStaticInfo = useBlockchainInfo((state) => state.fetchStaticInfo);
   const isMounted = useRef(false);
 
   const [canWithdraw, setCanWithdraw] = useState(false);
@@ -334,19 +353,24 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
     if (!info) {
       setAddress(investmentAddress);
     }
-
     if (!investment) {
       fetchInfoInv(investmentAddress);
     }
-
     if (!transactions) {
       fetchTransactions(investmentAddress);
     }
+    if (!totalSupply) {
+      fetchDynamicBcInfo(investmentAddress, walletAddress);
+    }
+    if (!maxToInvest) {
+      fetchStaticInfo(investmentAddress, walletAddress);
+    }
+    fetchContractStatus(investmentAddress);
     isMounted.current = true;
     return () => {
       isMounted.current = false;
     };
-  }, [info, investment]);
+  }, []);
 
   // const SLCoreContract = useContract({
   //   address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS,
@@ -365,34 +389,34 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
   //     .then((total) => total.toNumber());
   // };
 
-  const { data: totalSupply } = useContractRead({
-    address: investment?.address,
-    abi: investmentABI,
-    functionName: "totalSupply",
-    watch: false,
-    // select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
-    enabled: !!investment,
-  });
+  // const { data: totalSupply } = useContractRead({
+  //   address: investment?.address,
+  //   abi: investmentABI,
+  //   functionName: "totalSupply",
+  //   watch: false,
+  //   // select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
+  //   enabled: !!investment,
+  // });
 
-  const { data: contractLevel } = useContractRead({
-    address: investment?.address,
-    abi: investmentABI,
-    functionName: "CONTRACT_LEVEL",
-    watch: false,
-    // select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
-    enabled: !!investment,
-  });
-  const {
-    data: userLevel,
-    error,
-    isLoading,
-  } = useContractRead({
-    address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
-    abi: SLCoreABI,
-    functionName: "whichLevelUserHas",
-    args: [sessionData?.user.id as Address],
-    // watch: true,
-  });
+  // const { data: contractLevel } = useContractRead({
+  //   address: investment?.address,
+  //   abi: investmentABI,
+  //   functionName: "CONTRACT_LEVEL",
+  //   watch: false,
+  //   // select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
+  //   enabled: !!investment,
+  // });
+  // const {
+  //   data: userLevel,
+  //   error,
+  //   isLoading,
+  // } = useContractRead({
+  //   address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
+  //   abi: SLCoreABI,
+  //   functionName: "whichLevelUserHas",
+  //   args: [sessionData?.user.id as Address],
+  //   // watch: true,
+  // });
 
   // const { data: contractTotal1 } = useBalance({
   //   address: investment.address,
@@ -404,31 +428,31 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
   //   enabled: !!investment,
   // });
 
-  const { data: userTotalInvestment } = useContractRead({
-    address: investment?.address,
-    abi: investmentABI,
-    functionName: "balanceOf",
-    args: [walletAddress as Address],
-    watch: false,
-    enabled: !!investment,
-    // select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
-  });
+  // const { data: userTotalInvestment } = useContractRead({
+  //   address: investment?.address,
+  //   abi: investmentABI,
+  //   functionName: "balanceOf",
+  //   args: [walletAddress as Address],
+  //   watch: false,
+  //   enabled: !!investment,
+  //   // select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
+  // });
 
-  const { data: maxToInvest } = useContractRead({
-    address: investment?.address,
-    abi: investmentABI,
-    functionName: "getMaxToInvest",
-    watch: false,
-    enabled: !!investment,
-    select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
-  });
+  // const { data: maxToInvest } = useContractRead({
+  //   address: investment?.address,
+  //   abi: investmentABI,
+  //   functionName: "getMaxToInvest",
+  //   watch: false,
+  //   enabled: !!investment,
+  //   select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
+  // });
 
-  const { data: minToInvest } = useContractRead({
-    address: investment?.address,
-    abi: investmentABI,
-    functionName: "MINIMUM_INVESTMENT",
-    select: (data) => data.toNumber(), // Convert to number
-  });
+  // const { data: minToInvest } = useContractRead({
+  //   address: investment?.address,
+  //   abi: investmentABI,
+  //   functionName: "MINIMUM_INVESTMENT",
+  //   select: (data) => data.toNumber(), // Convert to number
+  // });
 
   // const { data: paymentTokenBalance } = useBalance({
   //   address: walletAddress,
@@ -436,20 +460,20 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
   //   // watch: false,
   // });
 
-  const { data: paymentTokenBalance } = useContractRead({
-    address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
-    abi: paymentTokenABI,
-    functionName: "balanceOf",
-    args: [walletAddress as Address],
-    watch: false,
-  });
+  // const { data: paymentTokenBalance } = useContractRead({
+  //   address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
+  //   abi: paymentTokenABI,
+  //   functionName: "balanceOf",
+  //   args: [walletAddress as Address],
+  //   watch: false,
+  // });
 
-  const { data: contractStatus } = useContractRead({
-    address: investment?.address,
-    abi: investmentABI,
-    functionName: "status",
-    watch: false,
-  });
+  // const { data: contractStatus } = useContractRead({
+  //   address: investment?.address,
+  //   abi: investmentABI,
+  //   functionName: "status",
+  //   watch: false,
+  // });
 
   // console.log("can withdraw?>>>>", contractStatus == CONTRACT_STATUS_WITHDRAW);
 
@@ -509,15 +533,6 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
       toast.error(err.message);
     }
   }
-
-  useEffect(() => {
-    // getContractTotal().then((data) => {
-    //   console.log("contractTotal", data?.toNumber());
-    // });
-    // return () => {
-    //   second
-    // }
-  }, []);
 
   // return <div className="text-center text-white">hello</div>;
 
@@ -587,6 +602,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
       </Head>
       <main className="flex min-h-screen w-full flex-col bg-white  px-3 md:mt-0 md:px-0">
         <NavBar bgWhite={true} />
+
         <div className="mx-auto flex h-full w-full max-w-screen-lg flex-col md:gap-12 ">
           <div className="sticky top-0 z-20 mx-auto flex w-full items-center justify-between bg-white py-4">
             <div className="flex flex-col">
@@ -1034,7 +1050,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
               <div className="flex max-h-[492px]   flex-col">
                 <h3>Transactions:</h3>
                 <div className=" mt-8 flex flex-col divide-y-[0.50px] divide-divideTransaction overflow-y-auto scroll-smooth rounded-md px-4">
-                  {investment.transactions.map((transaction) => (
+                  {transactions?.map((transaction) => (
                     <TransactionItem
                       key={transaction.hash}
                       value={transaction.amountInvested}

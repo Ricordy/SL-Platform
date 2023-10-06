@@ -87,13 +87,7 @@ export default async function handler(
               date
             }
           }
-          transactions(orderBy: publishedAt_DESC) {
-            amountInvested
-            date
-            type
-            hash
-            from
-          }
+
         }
       }
     `
