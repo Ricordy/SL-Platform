@@ -120,7 +120,7 @@ const Home: NextPage = (props: any) => {
             ))}
           </div>
         </div>
-        <div className="relative z-20 -mt-[350px] min-h-[500px] w-full max-w-[1282px]  px-6 md:left-1/2 md:-ml-[570px] md:-mt-[350px] md:px-0">
+        <div className="relative z-20 -mt-[350px] min-h-[500px] w-full max-w-[1224px]  px-6 md:left-1/2 md:-ml-[570px] md:-mt-[350px] md:px-0">
           <Carousel
             id="1"
             // items={props.activeInvestments}

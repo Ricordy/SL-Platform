@@ -13,7 +13,8 @@ import { FiExternalLink } from "react-icons/fi";
 import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
 import { NumericFormat } from "react-number-format";
-import { Carousel } from "react-responsive-carousel";
+import { Carousel as ResponsiveCarousel } from "react-responsive-carousel";
+import Carousel from "../../../components/Carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import {
   useAccount,
@@ -40,6 +41,13 @@ import { TransactionProps } from "~/@types/transaction";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
 import { useBlockchainInfo, useContractInfo } from "~/lib/zustand";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import { A11y, Navigation } from "swiper";
+import { useBreakpoint } from "~/hooks/useBreakpoints";
+
 
 dayjs.extend(localizedFormat);
 
@@ -105,22 +113,6 @@ dayjs.extend(localizedFormat);
 // }
 
 const InvestmentGallery = ({ images }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [photoIndex, setPhotoIndex] = useState(0);
-
-  const openLightbox = (index) => {
-    setIsOpen(true);
-    setPhotoIndex(index);
-  };
-
-  const closeLightbox = () => {
-    setIsOpen(false);
-  };
-
-  const moveNext = (index: number) => {
-    setPhotoIndex(index == 2 ? 0 : index + 1);
-  };
-
   return (
     <Gallery>
       <div className="gallery items-center justify-center">
@@ -200,7 +192,10 @@ export const ProjectInfo = ({
   return (
     <div className="relative flex gap-[24px] ">
       <div
-        className={`relative flex gap-2 pr-4 ${isFlexCol ? "flex-col" : ""} `}
+        className={cn(
+          `relative flex flex-col gap-2 pr-4`,
+          isFlexCol ? "" : "md:flex-row"
+        )}
       >
         <span>Status:</span>
         <span className="font-medium">{status}</span>
@@ -208,7 +203,10 @@ export const ProjectInfo = ({
       </div>
 
       <div
-        className={`relative flex gap-2 pr-4 ${isFlexCol ? "flex-col" : ""} `}
+        className={cn(
+          `relative flex flex-col gap-2 pr-4`,
+          isFlexCol ? "" : "md:flex-row"
+        )}
       >
         <span>Price:</span>
         <span className="now font-medium">
@@ -225,7 +223,10 @@ export const ProjectInfo = ({
         <div className="absolute right-0 top-0 hidden h-full min-h-[1em] w-px self-stretch border-t-0 bg-gradient-to-tr from-transparent via-black to-transparent opacity-25 dark:opacity-100 lg:block"></div>
       </div>
       <div
-        className={`relative flex gap-2 pr-4 ${isFlexCol ? "flex-col" : ""} `}
+        className={cn(
+          `relative flex flex-col gap-2 pr-4`,
+          isFlexCol ? "" : "md:flex-row"
+        )}
       >
         <span>Progress:</span>
         <span className="font-medium">
@@ -339,9 +340,10 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
   );
   const fetchStaticInfo = useBlockchainInfo((state) => state.fetchStaticInfo);
   const isMounted = useRef(false);
+  const { isAboveMd, isBelowMd } = useBreakpoint("md");
+  const [tabIndex, setTabIndex] = useState(0);
 
   const [canWithdraw, setCanWithdraw] = useState(false);
-  // console.log(investment);
 
   const investContract = useContract({
     address: investment?.address,
@@ -475,8 +477,6 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
   //   watch: false,
   // });
 
-  // console.log("can withdraw?>>>>", contractStatus == CONTRACT_STATUS_WITHDRAW);
-
   const { config: withdrawCallConfig } = usePrepareContractWrite({
     address: investment?.address,
     abi: investmentABI,
@@ -534,7 +534,6 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
     }
   }
 
-  // return <div className="text-center text-white">hello</div>;
 
   if (!investment) {
     if (isMounted.current) {
@@ -553,7 +552,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
       100
     : 0;
 
-  const phases = investment.restorationPhases.map((phase) => ({
+  const phases = investment.restorationPhases?.map((phase) => ({
     status: phase.restorationStatus.toLocaleLowerCase(),
     title: phase.title,
     deadline: phase.deadline,
@@ -562,6 +561,11 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
     gallery: phase.gallery,
     updates: phase.restorationUpdates,
   }));
+
+  // Fake data
+  // phases = phases.reduce(function (res, current, index, array) {
+  //   return res.concat([current, current]);
+  // }, []);
 
   const profitMinimumPercentage = BigNumber.from(
     investment.level.profitRange.split("-")[0]
@@ -600,18 +604,17 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
       <Head>
         <title>Something Legendary | Investment</title>
       </Head>
-      <main className="flex min-h-screen w-full flex-col bg-white  px-3 md:mt-0 md:px-0">
+      <main className="mx-auto flex  min-h-screen w-full flex-col bg-white md:mt-0 md:px-0">
         <NavBar bgWhite={true} />
-
-        <div className="mx-auto flex h-full w-full max-w-screen-lg flex-col md:gap-12 ">
-          <div className="sticky top-0 z-20 mx-auto flex w-full items-center justify-between bg-white py-4">
-            <div className="flex flex-col">
+        <div className="mx-auto flex h-full w-full max-w-screen-lg flex-col gap-6 px-6 md:gap-12 md:px-0 ">
+          <div className="sticky top-0 z-20 mx-auto flex w-full flex-col items-center justify-between bg-white py-4 md:flex-row">
+            <div className="flex flex-col gap-6">
               <div className="flex justify-center gap-2 align-middle ">
-                <h2 className=" text-4xl font-medium">
+                <h2 className="text-3xl font-medium md:text-4xl">
                   {investment.basicInvestment.car.basicInfo.title}
                 </h2>
                 {investment.level.basicLevel.title && (
-                  <div className="z-10 mt-2 h-fit w-fit rounded-lg border border-primaryGold bg-white px-2 py-1 text-xs text-primaryGold ">
+                  <div className="z-10 mt-2 h-fit w-fit whitespace-nowrap rounded-lg border border-primaryGold bg-white px-2 py-1 text-xs text-primaryGold ">
                     {investment.level.basicLevel.title}
                   </div>
                 )}
@@ -649,9 +652,9 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
               images={investment.basicInvestment.car.gallery}
             />
           )}
-          <div className="flex max-h-full items-start  justify-between gap-12">
-            <div className="flex max-h-full w-[55%] flex-col gap-[14px]  ">
-              <h3 className="flex items-center gap-6 pb-[52px] tracking-widest">
+          <div className="flex max-h-full flex-col items-start justify-between  gap-12 md:flex-row">
+            <div className="flex max-h-full flex-col gap-[14px] md:w-[55%]  ">
+              <h3 className="flex items-center gap-6 tracking-widest md:pb-[52px]">
                 <Image
                   src="/icons/keys.svg"
                   width={35}
@@ -660,7 +663,6 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                 />
                 General Information
               </h3>
-
               <ProjectInfo
                 progress={progress}
                 status={investment.basicInvestment.investmentStatus}
@@ -677,7 +679,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                 </p>
               </div>
             </div>
-            <div className="relative right-0 mr-0 flex w-2/5 flex-col gap-8">
+            <div className="relative right-0 mr-0 flex flex-col gap-8 md:w-2/5">
               {
                 <div className="flex flex-col gap-2 rounded-md border border-b border-tabInactive bg-[#F6F9F8] py-[15px]  text-center">
                   <h4 className="text-ogBlack">Total Invested until now</h4>
@@ -706,7 +708,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                   </h4>
                 </div>
               }
-              <div className="flex flex-col justify-start gap-5 rounded-md bg-[#F6F9F8] px-16 py-[32px] align-middle text-ogBlack">
+              <div className="flex flex-col justify-start gap-5 rounded-md bg-[#F6F9F8] px-6 py-[32px] align-middle text-ogBlack md:px-16">
                 <h3 className="text-black">Specifications</h3>
                 <div>
                   <span>Contract Address:</span>
@@ -761,53 +763,98 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
             </h3>
           </section>
           <section>
-            <Tab.Group>
-              <Tab.List className="flex p-1">
-                {phases.map((phase) => (
-                  <Tab
-                    key={phase.title}
-                    className={({ selected }) =>
-                      cn(
-                        "flex w-full flex-col items-center justify-between gap-4 border-b-4 py-2.5  text-xl font-light  leading-5 text-primaryGreen",
-                        "  focus:outline-none focus:ring-2",
-                        selected
-                          ? "border-b-4 border-primaryGreen bg-white font-medium ring-transparent"
-                          : "text-tabInactive hover:border-b-4 hover:border-primaryGreen hover:bg-black/5 hover:text-primaryGreen"
-                      )
-                    }
-                  >
-                    <div
-                      className={cn(
-                        "flex gap-2 rounded-full px-2 py-1 text-xs",
-                        badges[phase.status].bg,
-                        badges[phase.status].text
-                      )}
-                    >
-                      <Image
-                        src={badges[phase.status].icon}
-                        width={12}
-                        height={12}
-                        alt={badges[phase.status].label}
-                      />
-                      {badges[phase.status].label}
-                    </div>
-                    {phase.title}
-                  </Tab>
-                ))}
+            <Tab.Group selectedIndex={tabIndex} onChange={setTabIndex}>
+              <Tab.List className="relative flex w-full md:p-1">
+                <div
+                  className={cn(
+                    `swiper-prev-phases absolute left-3 z-10 flex items-center justify-center`,
+                    isAboveMd ? "top-6" : "top-0"
+                  )}
+                >
+                  {
+                    <Image
+                      src={"/icons/pagination-previous-black.svg"}
+                      width={isAboveMd ? 38 : 28}
+                      height={isAboveMd ? 38 : 28}
+                      alt="Previous"
+                    />
+                  }
+                </div>
+                <Swiper
+                  className="w-full"
+                  pagination
+                  slidesPerView={isAboveMd ? 2 : "auto"}
+                  centeredSlides={isAboveMd ? false : true}
+                  init={false}
+                  modules={[Navigation, A11y]}
+                  navigation={{
+                    nextEl: `.swiper-next-phases`,
+                    prevEl: `.swiper-prev-phases`,
+                  }}
+                  onSlideChange={(s) => setTabIndex(s.activeIndex)}
+                >
+                  {phases.map((phase) => (
+                    <SwiperSlide key={phase.title} className="w-full">
+                      <Tab
+                        className={({ selected }) =>
+                          cn(
+                            "flex w-full flex-col items-center justify-between gap-4 border-b-4 py-2.5  text-xl font-light  leading-5 text-primaryGreen",
+                            "  focus:outline-none focus:ring-2",
+                            selected
+                              ? "border-b-4 border-primaryGreen bg-white font-medium ring-transparent"
+                              : "text-tabInactive hover:border-b-4 hover:border-primaryGreen hover:bg-black/5 hover:text-primaryGreen"
+                          )
+                        }
+                      >
+                        <div
+                          className={cn(
+                            "flex gap-2 rounded-full px-2 py-1 text-xs",
+                            badges[phase.status].bg,
+                            badges[phase.status].text
+                          )}
+                        >
+                          <Image
+                            src={badges[phase.status].icon}
+                            width={12}
+                            height={12}
+                            alt={badges[phase.status].label}
+                          />
+                          {badges[phase.status].label}
+                        </div>
+                        {phase.title}
+                      </Tab>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+                <div
+                  className={cn(
+                    `swiper-next-phases absolute right-3 z-10 flex items-center justify-center`,
+                    isAboveMd ? "top-6" : "top-0"
+                  )}
+                >
+                  {
+                    <Image
+                      src={"/icons/pagination-next-black.svg"}
+                      width={isAboveMd ? 38 : 28}
+                      height={isAboveMd ? 38 : 28}
+                      alt="Next"
+                    />
+                  }
+                </div>
               </Tab.List>
               {userTotalInvestment?.gt(0) && phases.length > 0 && (
-                <Tab.Panels className="mt-[52px]">
+                <Tab.Panels className="mt-6 md:mt-[52px]">
                   {phases.map((phase, idx) => (
                     <Tab.Panel
                       key={idx}
                       className={cn(
-                        " mx-4 bg-white",
+                        "bg-white md:mx-4",
                         "flex flex-col gap-4 ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2"
                       )}
                     >
                       <span
                         className={cn(
-                          "flex gap-1 self-start rounded-full px-2 py-1 text-xs",
+                          "hidden gap-1 self-start rounded-full px-2 py-1 text-xs md:flex",
                           badges[phase.status].bg,
                           badges[phase.status].text
                         )}
@@ -820,17 +867,17 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                         />
                         {badges[phase.status].label}
                       </span>
-                      <h3>{phase.title}</h3>
-                      <div className="grid grid-cols-2 gap-4">
+                      <h3 className="hidden md:block">{phase.title}</h3>
+                      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div className="flex flex-col gap-4">
-                          <div className="flex justify-around divide-x divide-primaryGrey pb-8 text-primaryGrey">
+                          <div className="flex flex-col justify-around divide-primaryGrey pb-8 text-primaryGrey md:flex-row md:divide-x">
                             <div className="flex flex-col">
                               <span>Deadline:</span>
                               <span className="text-black">
                                 {dayjs(phase.deadline).format("ll")}
                               </span>
                             </div>
-                            <div className="flex flex-col px-4">
+                            <div className="flex flex-col md:px-4">
                               <span>Cost Expectation:</span>
                               <span className="text-black">
                                 <NumericFormat
@@ -844,7 +891,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                                 />
                               </span>
                             </div>
-                            <div className="flex flex-col px-4">
+                            <div className="flex flex-col md:px-4">
                               <span>Current Cost:</span>
                               <span className="text-black">
                                 <NumericFormat
@@ -889,8 +936,11 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                             </div>
                           </div>
                         </div>
-                        <div className="relative flex w-full">
-                          <Carousel showStatus={false} showThumbs={false}>
+                        <div className="relative row-start-1 flex w-full md:row-start-auto">
+                          <ResponsiveCarousel
+                            showStatus={false}
+                            showThumbs={false}
+                          >
                             {phase.gallery.map((image, idx) => (
                               <div key={idx} className="relative w-full">
                                 <Image
@@ -903,7 +953,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                                 />
                               </div>
                             ))}
-                          </Carousel>
+                          </ResponsiveCarousel>
                         </div>
                       </div>
                     </Tab.Panel>
@@ -913,7 +963,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
             </Tab.Group>
           </section>
           <section className="">
-            <h3 className="flex items-center gap-4 pb-[52px] pt-[132px]">
+            <h3 className="flex items-center gap-4 pb-[52px] pt-6 md:pt-[132px]">
               <Image
                 src="/icons/investments.svg"
                 width={39}
@@ -922,7 +972,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
               />{" "}
               Investments
             </h3>
-            <div className="grid grid-cols-2 gap-8 ">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 ">
               <div className="flex h-fit flex-col gap-4 bg-[#F6F9F8] p-10">
                 <div className="flex">Total Invested:</div>
                 <span className="pb-2 text-4xl font-semibold tracking-widest text-primaryGreen">
@@ -1075,17 +1125,17 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
               />{" "}
               Car details
             </h3>
-            <div className="mb-[132px] grid grid-cols-2 gap-8">
-              <div className="flex flex-col">
-                <h4 className="pb-8 text-2xl font-medium">
-                  {investment?.basicInvestment.car.basicInfo.title}
-                </h4>
+            <div className="mb-6 grid  grid-flow-dense grid-cols-1 gap-8 md:mb-[132px] md:grid-cols-2">
+              <h4 className="row-start-1 pb-8 text-2xl font-medium md:row-auto">
+                {investment?.basicInvestment.car.basicInfo.title}
+              </h4>
+              <div className=" row-start-3 flex flex-col md:row-auto md:row-start-2">
                 <div className=" max-h-[358px] overflow-scroll">
-                  {" "}
                   {investment?.basicInvestment.car.description}
                 </div>
               </div>
-              <div className="flex">
+
+              <div className="row-start-2 flex md:col-start-2 md:row-span-2 md:row-start-1">
                 <Image
                   src={investment.basicInvestment.car.chart.url}
                   width={592}
@@ -1097,7 +1147,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
           </section>
         </div>
         <section>
-          <div className="relative z-20 mx-auto flex rounded-t-[56px] bg-black pb-[128px] pt-[72px] text-white">
+          <div className="relative z-20 mx-auto flex rounded-t-[56px] bg-black pt-[72px] text-white md:pb-[128px]">
             <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[52px]">
               <h3 className="text-2xl uppercase">Our suggestion for you</h3>
               <Suggestions />

@@ -28,9 +28,11 @@ import { paymentTokenABI } from "~/utils/abis";
 import { BigNumber } from "ethers";
 import TestingGuides from "./testingModal/TestingGuides";
 import { useBreakpoint } from "~/hooks/useBreakpoints";
+import { BurguerMenu } from "./ui/icons/BurguerMenu";
+import { useRouter } from "next/router";
 
 const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
-  const { address, isConnected, isConnecting, isDisconnected } = useAccount();
+  const { address, isConnected, isDisconnected, status } = useAccount();
   const { connect } = useConnect({
     connector: new InjectedConnector(),
   });
@@ -41,6 +43,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
   const { data: sessionData } = useSession();
   const [loading, setLoading] = useState(false);
   const [TestingOpened, setTestingOpened] = useState(false);
+  const router = useRouter();
 
   // State
   const [showConnection, setShowConnection] = useState(false);
@@ -106,9 +109,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
     functionName: "mint",
     enabled: TestingOpened,
     args: [1000000 as any as BigNumber],
-    onError(err) {
-
-    },
+    onError(err) {},
     // onSuccess() {
     //   toast.success("Puzzle reivindicado com sucesso!");
     // },
@@ -123,8 +124,9 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
     <>
       <nav
         className={cn(
-          "relative z-20 mx-auto flex w-full items-center justify-between gap-6 px-6 py-6 md:max-w-screen-lg md:flex-col md:gap-12 lg:px-0",
-          navIsOpen ? (isAboveMd ? "" : "bg-black") : ""
+          "relative z-30 mx-auto flex w-full items-center justify-between gap-6 px-6 py-6 md:max-w-screen-lg md:flex-col md:gap-12 lg:px-0",
+
+          navIsOpen ? "bg-black" : ""
         )}
       >
         <div
@@ -135,7 +137,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
         >
           <Link href="/">
             <Image
-              src={bgWhite ? logoBlack : logoWhite}
+              src={bgWhite && !navIsOpen ? logoBlack : logoWhite}
               alt="Something Legendary logo"
             />
           </Link>
@@ -160,8 +162,8 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                 <Link
                   className={cn(
                     "text-center",
-                    bgWhite ? "text-black" : "text-white",
-                    isBelowMd ? "block w-full rounded-sm bg-white/10 py-2" : ""
+                    bgWhite && !navIsOpen ? "text-black" : "text-white",
+                    isBelowMd && "block w-full rounded-sm bg-white/10 py-2"
                   )}
                   href="/my-investments"
                 >
@@ -178,7 +180,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                 >
                   <Image
                     src={
-                      bgWhite
+                      bgWhite && !navIsOpen
                         ? "/icons/notification-grey.svg"
                         : "/icons/notification-white.svg"
                     }
@@ -191,7 +193,9 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
 
                 <button
                   className={cn(
-                    " hidden h-[30px] shrink-0 justify-center rounded-md align-middle font-medium uppercase md:mr-7 md:flex"
+                    "w-40 shrink-0 items-center justify-center gap-2.5 whitespace-nowrap rounded-md bg-white  px-5 py-1.5 align-middle text-sm font-medium uppercase leading-tight tracking-wide  text-black  md:flex",
+                    bgWhite && " bg-black text-white",
+                    isBelowMd && "block w-full bg-white/10 py-2 text-white"
                   )}
                   onClick={() =>
                     TestingOpened
@@ -199,32 +203,22 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                       : setTestingOpened(true)
                   }
                 >
-                  <div
-                    className={cn(
-                      "inline-flex h-[30px] items-center justify-center gap-2.5 rounded-md bg-white px-5 py-2.5",
-                      bgWhite ? " bg-black" : "bg-white"
-                    )}
-                  >
-                    <div
-                      className={cn(
-                        "whitespace-nowrap  text-sm font-medium uppercase leading-tight tracking-wide text-black",
-                        bgWhite ? " text-white" : "text-black"
-                      )}
-                    >
-                      For tester
-                    </div>
-                  </div>
+                  For tester
                 </button>
 
                 <div
                   className={cn(
                     "flex items-center justify-center gap-3 rounded-full border-2 bg-black bg-opacity-0 p-1 hover:bg-opacity-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75",
-                    bgWhite ? "border-primaryGrey" : "border-white"
+                    bgWhite && !navIsOpen
+                      ? "border-primaryGrey"
+                      : "border-white"
                   )}
                 >
                   <Image
                     src={
-                      bgWhite ? "/icons/avatar-grey.svg" : "/icons/avatar.svg"
+                      bgWhite && !navIsOpen
+                        ? "/icons/avatar-grey.svg"
+                        : "/icons/avatar.svg"
                     }
                     width={27}
                     height={27}
@@ -232,15 +226,17 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                   />
                   <span
                     className={cn(
-                      " text-xs",
-                      bgWhite ? "text-secondaryGrey" : "text-white"
+                      " pr-3 text-xs",
+                      bgWhite && !navIsOpen
+                        ? "text-secondaryGrey"
+                        : "text-white"
                     )}
                   >
                     {sessionData.user.id.slice(0, 10)}
                   </span>
                 </div>
               </div>
-            ) : showConnection ? (
+            ) : status === "connected" && showConnection ? (
               <div className="w-full">
                 {isConnected ? (
                   <Modal
@@ -262,7 +258,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                         By connecting your wallet and using Something Legendary,
                         you agree to our Terms of Service and Privacy Policy.
                       </p>
-                      <div className="flex gap-10">
+                      <div className="flex gap-3 md:gap-10">
                         <button
                           className="self-start rounded-md bg-black px-12 py-1.5 text-center text-sm uppercase text-white transition-all duration-150 hover:bg-black/80 dark:hover:bg-black dark:hover:text-white"
                           onClick={disconnect as () => void}
@@ -282,13 +278,18 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
               </div>
             ) : null}
             {showConnection && (
-              <div className="flex justify-end gap-6">
+              <div
+                className={cn(
+                  "flex justify-end gap-6",
+                  isDisconnected || status === "connecting" ? "md:w-full" : ""
+                )}
+              >
                 {!isConnected && (
                   <button
                     className={cn(
-                      " flex h-[30px] shrink-0 justify-center rounded-md align-middle font-medium uppercase",
-                      bgWhite ? "bg-white" : "",
-                      isConnected ? "w-full" : "w-[151px]"
+                      "flex w-40 shrink-0 items-center justify-center whitespace-nowrap rounded-md bg-white px-5 align-middle text-sm font-medium uppercase leading-tight tracking-wide text-black",
+                      bgWhite && "bg-black text-white",
+                      isBelowMd && "block bg-white/10 py-2 text-white"
                     )}
                     onClick={() =>
                       TestingOpened
@@ -296,36 +297,30 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                         : setTestingOpened(true)
                     }
                   >
-                    <div
-                      className={cn(
-                        "inline-flex h-[30px] w-full items-center justify-center gap-2.5 rounded-md bg-white px-5 py-2.5",
-                        bgWhite ? " bg-black " : "bg-white"
-                      )}
-                    >
-                      <div
-                        className={cn(
-                          "whitespace-nowrap  text-sm font-medium uppercase leading-tight tracking-wide text-black",
-                          bgWhite ? " text-white" : "text-black"
-                        )}
-                      >
-                        For tester
-                      </div>
-                    </div>
+                    For tester
                   </button>
                 )}
                 <button
                   className={cn(
-                    " flex w-full justify-end rounded-md font-medium  uppercase md:justify-start",
+                    " flex w-full items-center justify-end rounded-md font-medium  uppercase md:justify-start",
                     // bgWhite ? "bg-white" : "",
                     isConnected ? "w-full" : "w-[151px]"
                   )}
-                  onClick={() => (isConnected ? onClickSignOut() : connect())}
+                  onClick={() =>
+                    isConnected
+                      ? onClickSignOut()
+                      : isAboveMd
+                      ? connect()
+                      : isBelowMd && !window.ethereum?.isMetaMask
+                      ? router.push(`dapp://${window.location.host}`)
+                      : connect()
+                  }
                 >
                   {isConnected || loading ? (
                     <Image
                       className="h-[24.74px] w-10 "
                       src={
-                        bgWhite
+                        bgWhite && !navIsOpen
                           ? "/icons/logout-black.svg"
                           : "/icons/logout.svg"
                       }
@@ -336,18 +331,13 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                   ) : (
                     <div
                       className={cn(
-                        "inline-flex h-[30px] w-full items-center justify-center gap-2.5 rounded-md bg-white px-5 py-2.5",
-                        bgWhite ? " bg-black" : "bg-white"
+                        "flex  w-40 items-center justify-center gap-2.5 whitespace-nowrap rounded-md bg-white px-5 py-2.5 text-sm  font-medium uppercase leading-tight tracking-wide text-black md:py-2",
+                        bgWhite && "bg-black text-white",
+                        navIsOpen && "block bg-white/10 text-white"
+                        // isBelowMd && "block "
                       )}
                     >
-                      <div
-                        className={cn(
-                          "whitespace-nowrap  text-sm font-medium uppercase leading-tight tracking-wide text-black",
-                          bgWhite ? " text-white" : "text-black"
-                        )}
-                      >
-                        CONNECT WALLET
-                      </div>
+                      CONNECT WALLET
                     </div>
                   )}
                 </button>
@@ -372,13 +362,13 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
           {/** END HERE TESTING PORPUSES */}
 
           {/* <ConnectKitButton
-               customTheme={{
-                 "--ck-connectbutton-color": "rgba(0, 0, 0)",
-                 "--ck-connectbutton-background": "rgb(255,255,255)",
-                 "--ck-connectbutton-hover-background": "rgb(230,230,230)",
-                 "--ck-connectbutton-hover-color": "rgba(0,0,0,0.8)",
-               }}
-             /> */}
+            customTheme={{
+              "--ck-connectbutton-color": "rgba(0, 0, 0)",
+              "--ck-connectbutton-background": "rgb(255,255,255)",
+              "--ck-connectbutton-hover-background": "rgb(230,230,230)",
+              "--ck-connectbutton-hover-color": "rgba(0,0,0,0.8)",
+            }}
+          /> */}
         </div>
         <button
           className="flex w-full justify-end rounded-md border-none font-semibold  uppercase leading-none md:hidden"
@@ -386,7 +376,8 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
             setNavIsOpen((prev) => !prev);
           }}
         >
-          <Image className=" " src={burguer} alt="menu" />
+          <BurguerMenu className={bgWhite && !navIsOpen ? "fill-black" : ""} />
+          {/* <Image className=" " src={bgWhite ? burguer : burguer} alt="menu" /> */}
         </button>
       </nav>
       <nav className="fixed z-20 hidden w-full items-center justify-around  bg-white px-3 py-0 shadow-sm drop-shadow-md">
@@ -395,7 +386,11 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
             <div className="flex w-full items-center justify-between py-3 md:block md:py-2">
               <Link href="/">
                 <Image
-                  src={bgWhite ? (logoBlack as string) : (logoWhite as string)}
+                  src={
+                    bgWhite && !navIsOpen
+                      ? (logoBlack as string)
+                      : (logoWhite as string)
+                  }
                   alt="Something Legendary logo"
                 />
               </Link>
@@ -496,7 +491,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                     onClick={() => disconnect}
                     href="#connect"
                   >
-                    Disconnect Wallet2
+                    Disconnect Wallet
                   </Link>
                 </>
               )}

@@ -122,6 +122,7 @@ export const CarouselItem = ({
   );
 };
 
+
 type CarouselProps =
   | {
       id: string;
@@ -150,6 +151,7 @@ type CarouselProps =
       userAddress: Address;
     };
 
+
 const Carousel: FC<CarouselProps> = ({
   id,
   className,
@@ -162,6 +164,7 @@ const Carousel: FC<CarouselProps> = ({
   userAddress,
   isLevelDivided,
   currentLevel,
+  slidesPerView = 4,
 }) => {
   const SlCoreContract = {
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
@@ -215,7 +218,7 @@ const Carousel: FC<CarouselProps> = ({
         )}
       </div>
 
-      <div className="relative flex max-w-[1224px] items-center">
+      <div className="relative flex items-center">
         {items && items?.length > 2 && (
           <div
             className={cn(
@@ -249,7 +252,7 @@ const Carousel: FC<CarouselProps> = ({
               className="swiper w-full"
               spaceBetween={24}
               centeredSlides={isAboveMd ? false : true}
-              slidesPerView={isAboveMd ? 4 : "auto"}
+              slidesPerView={isAboveMd ? slidesPerView ?? 4 : "auto"}
               navigation={{
                 nextEl: `.swiper-next-${id}`,
                 prevEl: `.swiper-prev-${id}`,
@@ -262,7 +265,7 @@ const Carousel: FC<CarouselProps> = ({
               // loop={true}
             >
               {items?.map((item, index) => (
-                <SwiperSlide key={index}>
+                <SwiperSlide key={index} className="">
                   <CarouselItem
                     title={item.basicInvestment.car?.basicInfo.title}
                     image={item.basicInvestment.car?.basicInfo.cover.url}
@@ -280,8 +283,8 @@ const Carousel: FC<CarouselProps> = ({
         {items && items.length > 2 && (
           <div
             className={cn(
-              `absolute right-0 z-20 -mr-[58px] flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent to-black pr-10 swiper-next-${id}  `,
-              currentSlider === items.length % 4 ? "invisible" : "visible"
+              `absolute right-0 z-20 flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent  to-black px-3 md:-mr-[58px] swiper-next-${id}  `,
+              currentSlider === items?.length % 4 ? "invisible" : "visible"
             )}
           >
             {

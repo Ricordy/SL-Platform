@@ -26,9 +26,6 @@ const Suggestions = ({ className }: SuggestionsProps) => {
     >
       {investments.map((investment) => (
         <CarouselItem
-          // title="my title"
-          // image="/projects/car-1.jpg"
-          // price="39595"
           title={investment.basicInvestment.car?.basicInfo.title}
           image={investment.basicInvestment.car?.basicInfo.cover.url}
           price={investment.basicInvestment.totalInvestment.toString()}

@@ -58,19 +58,6 @@ const Puzzle: FC<PuzzleProps> = ({
     abi: SLLogicsABI,
   };
 
-  // const { isSuccess: userAllowedLevel, error: errorUserLevel } =
-  //   useContractRead({
-  //     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
-  //     abi: SLCoreABI,
-  //     functionName: "_userAllowedToBurnPuzzle",
-  //     args: [userAddress, 30],
-  //     // onSettled(data, error) {
-  //     //   if (!error) {
-  //     //     setUserCanClaimLevel(true);
-  //     //   }
-  //     // },
-  //   });
-
   let { data } = useContractReads({
     contracts: [
       {
@@ -108,12 +95,6 @@ const Puzzle: FC<PuzzleProps> = ({
         functionName: "whichLevelUserHas", // 6
         args: [userAddress],
       },
-      // {
-      //   ...SlLogicsContract,
-      //   functionName: "_userAllowedToClaimPiece",
-      //   chainId: Number(process.env.NEXT_PUBLIC_CHAIN_ID),
-      //   args: [userAddress, 1, 1, 0],
-      // },
     ],
     // watch: true,
     onError(error) {},
@@ -333,9 +314,8 @@ const Puzzle: FC<PuzzleProps> = ({
                                     <NumericFormat
                                       value={
                                         claimPieceProgressValue &&
-                                        ethers.utils.formatUnits(
-                                          claimPieceProgressValue.toNumber(),
-                                          6
+                                        noDecimals(
+                                          claimPieceProgressValue.toNumber()
                                         )
                                       }
                                       displayType="text"

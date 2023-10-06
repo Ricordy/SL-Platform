@@ -19,7 +19,7 @@ import {
   useSigner,
   useContract,
 } from "wagmi";
-import { type InvestmentProps } from "~/@types/investment";
+import { InvestmentPropsItem, type InvestmentProps } from "~/@types/investment";
 import { type TransactionProps } from "~/@types/transaction";
 import useCheckEntryNFT from "~/hooks/useCheckEntryNFT";
 import { FactoryABI, SLCoreABI, paymentTokenABI } from "~/utils/abis";
@@ -70,23 +70,20 @@ interface MyInvestmentsProps
     TransactionProps,
     InvestmentsProps {}
 
-export const TransactionItem = (props) => {
-  const { items, userInvestedContracts, numberOfTransactions } = props;
-
+export const TransactionItem = ({
+  items,
+  userInvestedContracts,
+  numberOfTransactions,
+}: {
+  items: TransactionProps;
+}) => {
   return (
     items &&
     items?.map((item, idx) => {
-      // const { amountInvested } = useGetAddressInvestmentinSingleCar({
-      //   contractAddress: addressContract,
-      //   walletAddress: address,
-      //   watch: true,
-      // });
-
       if (numberOfTransactions === undefined) {
         return (
           item.investment && (
             <section key={idx}>
-              ola
               {numberOfTransactions}
               <div className="flex items-center justify-between pb-2">
                 <Image
@@ -240,16 +237,6 @@ const MyInvestments: NextPage = () => {
     onError(error) {},
   });
 
-  // const { data: contractsTotalSupply }: { data: BigNumber } = useContractReads({
-  //   contracts: [
-  //     {
-  //       ...SlFactoryContract,
-  //       functionName: "getAddressTotal",
-  //       args: [address],
-  //     },
-  //   ],
-  // });
-
   const { hasEntryNFT, hasEntryNFTLoading } = useCheckEntryNFT({
     address: address as Address,
   });
@@ -332,8 +319,6 @@ const MyInvestments: NextPage = () => {
       userInvestedContracts[transaction.to] = transaction.amountInvested;
     }
   });
-  // console.log("userInvestedContracts", userInvestedContracts);
-  // setUserContracts(userInvestedContracts);
 
   // Approve spend payment token
   const {
@@ -508,17 +493,181 @@ const MyInvestments: NextPage = () => {
   // return <div>end</div>;
   if (hasEntryNFTLoading) return <div>Loading...</div>;
 
+  const fakeTransactions: TransactionProps = {
+    userTransactions: [
+      {
+        amountInvested: 100,
+        hash: "string",
+        to: "string",
+        date: "string",
+        investment: {
+          address: "string",
+          basicInvestment: {
+            totalInvestment: 100000,
+            car: {
+              basicInfo: {
+                cover: {
+                  url: "https://media.graphassets.com/80EHWXSMST2wLnr3tV68",
+                },
+                title: "THE NEW CAR",
+              },
+            },
+          },
+        },
+        totalInvested: 20,
+      },
+    ],
+  };
+  const fakeInvestments: InvestmentProps[] = [
+    {
+      address: "0x71f9e0C7d21Ff94Abd7Cf3620AD42743A701b588",
+      basicInvestment: {
+        totalInvestment: 1000,
+        investmentStatus: "active",
+        car: {
+          basicInfo: {
+            title: "the car",
+            cover: {
+              url: "https://media.graphassets.com/80EHWXSMST2wLnr3tV68",
+            },
+          },
+          subtitle: "the subtitle",
+          description: "The description",
+          shortDescription: "the short description",
+        },
+      },
+      level: {
+        basicLevel: {
+          title: "Level 1",
+        },
+        profitRange: "10-12",
+      },
+      transactions: [
+        {
+          date: "2023-11-09",
+          amountInvested: 200,
+          hash: "232j4lk234lk3sdfsfd",
+          from: "0x74D21EcF4F112c33037FB133ae6BeB7EBF5B01e3",
+          wallet: "0x39343443",
+          type: "deposit",
+        },
+      ],
+    },
+    {
+      address: "0x71f9e0C7d21Ff94Abd7Cf3620AD42743A701b588",
+      basicInvestment: {
+        totalInvestment: 1000,
+        investmentStatus: "active",
+        car: {
+          basicInfo: {
+            title: "the car",
+            cover: {
+              url: "https://media.graphassets.com/80EHWXSMST2wLnr3tV68",
+            },
+          },
+          subtitle: "the subtitle",
+          description: "The description",
+          shortDescription: "the short description",
+        },
+      },
+      level: {
+        basicLevel: {
+          title: "Level 1",
+        },
+        profitRange: "10-12",
+      },
+      transactions: [
+        {
+          date: "2023-11-09",
+          amountInvested: 200,
+          hash: "232j4lk234lk3sdfsfd",
+          from: "0x74D21EcF4F112c33037FB133ae6BeB7EBF5B01e3",
+          wallet: "0x39343443",
+          type: "deposit",
+        },
+      ],
+    },
+    {
+      address: "0x71f9e0C7d21Ff94Abd7Cf3620AD42743A701b588",
+      basicInvestment: {
+        totalInvestment: 1000,
+        investmentStatus: "active",
+        car: {
+          basicInfo: {
+            title: "the car",
+            cover: {
+              url: "https://media.graphassets.com/80EHWXSMST2wLnr3tV68",
+            },
+          },
+          subtitle: "the subtitle",
+          description: "The description",
+          shortDescription: "the short description",
+        },
+      },
+      level: {
+        basicLevel: {
+          title: "Level 1",
+        },
+        profitRange: "10-12",
+      },
+      transactions: [
+        {
+          date: "2023-11-09",
+          amountInvested: 200,
+          hash: "232j4lk234lk3sdfsfd",
+          from: "0x74D21EcF4F112c33037FB133ae6BeB7EBF5B01e3",
+          wallet: "0x39343443",
+          type: "deposit",
+        },
+      ],
+    },
+    {
+      address: "0x71f9e0C7d21Ff94Abd7Cf3620AD42743A701b588",
+      basicInvestment: {
+        totalInvestment: 1000,
+        investmentStatus: "active",
+        car: {
+          basicInfo: {
+            title: "the car",
+            cover: {
+              url: "https://media.graphassets.com/80EHWXSMST2wLnr3tV68",
+            },
+          },
+          subtitle: "the subtitle",
+          description: "The description",
+          shortDescription: "the short description",
+        },
+      },
+      level: {
+        basicLevel: {
+          title: "Level 1",
+        },
+        profitRange: "10-12",
+      },
+      transactions: [
+        {
+          date: "2023-11-09",
+          amountInvested: 200,
+          hash: "232j4lk234lk3sdfsfd",
+          from: "0x74D21EcF4F112c33037FB133ae6BeB7EBF5B01e3",
+          wallet: "0x39343443",
+          type: "deposit",
+        },
+      ],
+    },
+  ];
+
   if (!hasEntryNFTLoading && !hasEntryNFT)
     return (
       <div className="mx-auto flex  min-h-screen w-full flex-col">
         <NavBar />
 
-        <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[30px] pt-[52px]">
-          <div className="grid w-full grid-cols-2 items-start justify-center gap-4">
-            <div className="flex w-[434px] flex-col gap-8">
-              <div className="flex flex-col rounded-xl  bg-white px-10 py-[72px]">
+        <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[30px] px-6 md:px-0 md:pt-[52px]">
+          <div className="grid w-full grid-cols-1 items-start justify-center gap-4 md:grid-cols-2">
+            <div className="row-start-2 flex flex-col gap-8 md:row-start-auto md:w-[434px]">
+              <div className="flex flex-col rounded-xl  bg-white px-10 py-6 md:py-[72px]">
                 <div className="flex flex-col gap-[32px]">
-                  <h1 className="text-5xl font-semibold uppercase text-primaryGold">
+                  <h1 className="text-3xl font-semibold uppercase text-primaryGold md:text-5xl">
                     Buy your
                     <br />
                     <span className="font-medium text-black">
@@ -534,12 +683,6 @@ const MyInvestments: NextPage = () => {
                   </p>
                 </div>
               </div>
-              {/* <Link
-                href="/mint-entry-nft"
-                className="rounded-xl bg-primaryGold px-3 py-1.5 text-center font-medium uppercase text-white dark:bg-primaryGold dark:text-white"
-              >
-                Buy it for 100$
-              </Link> */}
               <button
                 className="rounded-xl bg-primaryGold px-3 py-1.5 text-center font-medium uppercase text-white dark:bg-primaryGold dark:text-white"
                 disabled={!isConnected}
@@ -548,16 +691,23 @@ const MyInvestments: NextPage = () => {
                 {isLoadingMintNFT ? "Minting..." : "Buy it for 100$"}
               </button>
             </div>
-            <div className="relative flex h-full w-full bg-[url('/bg/bg-buy-entry-nft.jpg')] bg-contain bg-center bg-no-repeat"></div>
+            <div className="relative row-start-1 flex h-full w-full items-center justify-center md:row-start-auto">
+              <Image
+                src="/bg/bg-buy-entry-nft.jpg"
+                width={250}
+                height={68}
+                alt="Previous"
+              />
+            </div>
           </div>
-          <div className="mt-[64px] flex justify-center gap-10 divide-x-2 pb-10">
+          <div className="flex flex-col justify-center gap-10 pb-10 md:mt-[64px] md:flex-row md:divide-x-2">
             <div className="flex flex-col ">
               <span className="text-primaryGold">Total of entries left:</span>
               <span className="text-4xl font-semibold text-white">
                 {data?.[4]?.toNumber()}
               </span>
             </div>
-            <div className="flex flex-col pl-[24px]">
+            <div className="flex flex-col md:pl-[24px]">
               <span className="text-primaryGold">
                 Amount of tickets already sold
               </span>
@@ -565,7 +715,7 @@ const MyInvestments: NextPage = () => {
                 {data?.[6]?.toNumber()}
               </span>
             </div>
-            <div className="flex flex-col pl-[24px]">
+            <div className="flex flex-col md:pl-[24px]">
               <span className="text-primaryGold">
                 Total invested in classics:
               </span>
@@ -591,21 +741,20 @@ const MyInvestments: NextPage = () => {
         <div className="absolute top-0 h-[1092px] w-full rounded-bl-[56px] bg-black"></div>
         <NavBar />
 
-        <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center">
+        <div className="z-20 mx-auto flex w-full max-w-screen-lg flex-col justify-center px-6 md:px-0">
           <div className="flex flex-col gap-4 pt-8">
             <h3 className="mb-8 text-3xl uppercase tracking-widest text-white">
               My Investments
-              {/* <div>Here{JSON.stringify(props, null, 2)}</div> */}
             </h3>
-            <h2 className="mb-12 text-5xl uppercase text-white">
+            <h2 className="mb-12 text-3xl uppercase text-white md:text-5xl">
               Welcome{" "}
               <span className="font-medium text-primaryGold">Home, Legend</span>
             </h2>
-            <div className="grid auto-rows-[1fr] grid-cols-2 gap-12 text-white">
+            <div className="grid auto-rows-[1fr] grid-cols-1 gap-12 text-white md:grid-cols-2">
               <div className="flex flex-col  gap-4">
                 <span>Overview:</span>
                 {data && (
-                  <div className="flex flex-1 flex-col gap-2 rounded-md bg-myInvestmentsBackground px-12 py-8 font-medium leading-6">
+                  <div className="flex flex-1 flex-col gap-2 rounded-md bg-myInvestmentsBackground px-6 py-8 font-medium leading-6 md:px-12">
                     <div className="flex flex-col border-b-2 border-gray-700 px-3 py-4">
                       <h5 className="text-base text-primaryGold">
                         Total Invested
@@ -672,6 +821,7 @@ const MyInvestments: NextPage = () => {
               <div className="flex flex-col gap-4">
                 <span>Last transactions:</span>
                 <div className="flex max-h-[282px] flex-1 flex-col gap-2 overflow-scroll rounded-md bg-myInvestmentsBackground px-4 py-8">
+
                   {userInvestedContracts && (
                     <TransactionItem
                       items={userTransactions}
@@ -679,7 +829,6 @@ const MyInvestments: NextPage = () => {
                       numberOfTransactions={numberOfTransactions}
                     />
                   )}
-
                   {userTransactions?.length > 4 &&
                     numberOfTransactions < userTransactions.length && (
                       <button
@@ -696,12 +845,13 @@ const MyInvestments: NextPage = () => {
         </div>
       </div>
 
-      <div className="relative left-1/2 z-20 mx-auto -ml-[570px] mt-[52px]  min-h-[500px] max-w-[1338px]">
+      <div className="relative z-20 mx-auto mt-[52px] min-h-[500px] max-w-[1224px]  px-6 md:left-1/2 md:-ml-[570px] md:px-0">
         {userInv && (
           <ProjectCarousel
             id="1"
+            className="pt-6 md:pt-0"
             prevNavWhite={true}
-            title={<h2 className="text-2xl text-white">Active</h2>}
+            title={<h2 className="text-2xl md:text-white">Active</h2>}
             items={userInvestments?.filter(
               (investment) =>
                 investment.basicInvestment.investmentStatus == "Active"
@@ -709,28 +859,11 @@ const MyInvestments: NextPage = () => {
           />
         )}
 
-        {/* {userInv && (
-          <ProjectCarousel
-            id="2"
-            className="pt-[132px]"
-            title={<h2 className="text-2xl">Upcoming</h2>}
-            items={userInv.filter(
-              (investment) =>
-                investment.basicInvestment.investmentStatus == "Upcoming"
-            )}
-          />
-        )} */}
-        {/* <Carousel
-          id="3"
-          className="pt-[132px]"
-          title={<h2 className="text-2xl">My favorites</h2>}
-          items={props.investments}
-        /> */}
         {userInv && (
           <ProjectCarousel
             id="4"
-            className="py-[132px]"
-            title={<h2 className="text-2xl">Finished</h2>}
+            className="py-12 md:py-[132px]"
+            title={<h2 className="text-2xl  md:text-white">Finished</h2>}
             items={userInvestments?.filter(
               (investment) =>
                 investment.basicInvestment.investmentStatus == "Finished"
@@ -738,7 +871,7 @@ const MyInvestments: NextPage = () => {
           />
         )}
       </div>
-      <div className="relative z-20 mx-auto rounded-t-[56px] bg-black pb-[128px] pt-[72px] text-white">
+      {/* <div className="relative z-20 mx-auto rounded-t-[56px] bg-black pb-[128px] pt-[72px] text-white">
         {
           <h2 className="mb-[52px] ml-[210px] text-2xl font-medium uppercase">
             Our Suggestions for you
@@ -785,72 +918,6 @@ const MyInvestments: NextPage = () => {
             ))} */}
       </div>
     </section>
-    // <div className="flex flex-col w-full px-6 lg:px-3 mt-16 md:mt-0">
-    //   <h2 className="text-2xl py-6">My Investments</h2>
-
-    //   <Tab.Group>
-    //     <Tab.List className="flex space-x-1 rounded-xl bg-gray-900/20 p-1">
-    //       {Object.keys(categories).map((category) => (
-    //         <Tab
-    //           key={category}
-    //           className={({ selected }) =>
-    //             classNames(
-    //               "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-gray-700",
-    //               "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-400 focus:outline-none focus:ring-2",
-    //               selected
-    //                 ? "bg-white shadow"
-    //                 : "text-gray-100 hover:bg-white/[0.12] hover:text-white"
-    //             )
-    //           }
-    //         >
-    //           {category}
-    //         </Tab>
-    //       ))}
-    //     </Tab.List>
-    //     <Tab.Panels className="mt-2">
-    //       {Object.values(categories).map((investments, idx) => (
-    //         <Tab.Panel
-    //           key={idx}
-    //           className={classNames(
-    //             "rounded-xl bg-white p-3",
-    //             "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-400 focus:outline-none focus:ring-2"
-    //           )}
-    //         >
-    //           {/* {userContracts && JSON.stringify(userContracts)} */}
-    //           <ul className="grid  sm:grid-cols-2 grid-cols-1 gap-2">
-    //             {Object.values(userContracts).map((investment) => (
-    //               <li
-    //                 key={investment.address}
-    //                 className="relative rounded-md p-3 border  flex  flex-col gap-3 justify-around hover:bg-gray-100"
-    //               >
-    //                 <h3 className="text-sm font-medium leading-5 pb-3">
-    //                   <Link href={`/investment/${investment.address}`}>
-    //                     {investment.title ?? "none"}
-    //                   </Link>
-    //                 </h3>
-
-    //                 {investment?.phase !== "Withdraw" ? (
-    //                   <div className="border p-2 text-xs rounded-md">
-    //                     {investment?.phase}
-    //                   </div>
-    //                 ) : (
-    //                   <button className="border p-2 text-xs rounded-md bg-slate-500 text-slate-100">
-    //                     Withdraw
-    //                   </button>
-    //                 )}
-    //                 <Link href={`/investment/${investment.address}/monitor`}>
-    //                   <a className="border p-2 text-xs rounded-md bg-slate-500 text-slate-100 text-center">
-    //                     Monitor Investment
-    //                   </a>
-    //                 </Link>
-    //               </li>
-    //             ))}
-    //           </ul>
-    //         </Tab.Panel>
-    //       ))}
-    //     </Tab.Panels>
-    //   </Tab.Group>
-    // </div>
   );
 };
 
