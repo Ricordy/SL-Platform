@@ -17,7 +17,7 @@ import { cn } from "~/lib/utils";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import DOMPurify from "isomorphic-dompurify";
-import { useInvestments } from "~/lib/zustand";
+
 
 interface ActiveInvestmentsProps {
   investments: InvestmentProps[];

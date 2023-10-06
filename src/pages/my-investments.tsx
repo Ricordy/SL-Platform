@@ -323,7 +323,6 @@ const MyInvestments: NextPage = () => {
   const userTransactions = useUserTransactions(
     (state) => state.userTransactions
   );
-  console.log("user tx", userTransactions);
 
   const userInvestedContracts = [];
   userTransactions?.map((transaction) => {

@@ -7,7 +7,7 @@ import { type GetServerSideProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { FiExternalLink } from "react-icons/fi";
 import Lightbox from "react-image-lightbox";
@@ -39,6 +39,7 @@ import Suggestions from "~/components/Suggestions";
 import { TransactionProps } from "~/@types/transaction";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
+import { useContractInfo } from "~/lib/zustand";
 
 dayjs.extend(localizedFormat);
 
@@ -301,14 +302,25 @@ export const badges = {
 };
 
 type InvestmentDetailsProps = {
-  investment: InvestmentProps;
+  investment?: InvestmentProps;
+  address: string;
   transactions: TransactionProps[];
 };
 
-const Investment = ({ investment, transactions }: InvestmentDetailsProps) => {
+const Investment = ({
+  address: investmentAddress,
+  transactions,
+}: InvestmentDetailsProps) => {
   const { address: walletAddress } = useAccount();
   const { data: signerData } = useSigner();
   const { data: sessionData } = useSession();
+  const info = useContractInfo((state) => state.contractAddress);
+  const setAddress = useContractInfo((state) => state.setAddress);
+  const investment = useContractInfo((state) => state.currentInvestmentInfo);
+  const fetchInfoInv = useContractInfo(
+    (state) => state.fetchCurrentInvestmentInfo
+  );
+  const isMounted = useRef(false);
 
   const [canWithdraw, setCanWithdraw] = useState(false);
   // console.log(investment);
@@ -318,6 +330,20 @@ const Investment = ({ investment, transactions }: InvestmentDetailsProps) => {
     abi: investmentABI,
     signerOrProvider: signerData,
   });
+
+  useEffect(() => {
+    if (!info) {
+      setAddress(investmentAddress);
+    }
+
+    if (!investment) {
+      fetchInfoInv(investmentAddress);
+    }
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, [info, investment]);
 
   // const SLCoreContract = useContract({
   //   address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS,
@@ -337,7 +363,7 @@ const Investment = ({ investment, transactions }: InvestmentDetailsProps) => {
   // };
 
   const { data: totalSupply } = useContractRead({
-    address: investment.address,
+    address: investment?.address,
     abi: investmentABI,
     functionName: "totalSupply",
     watch: false,
@@ -346,7 +372,7 @@ const Investment = ({ investment, transactions }: InvestmentDetailsProps) => {
   });
 
   const { data: contractLevel } = useContractRead({
-    address: investment.address,
+    address: investment?.address,
     abi: investmentABI,
     functionName: "CONTRACT_LEVEL",
     watch: false,
@@ -376,7 +402,7 @@ const Investment = ({ investment, transactions }: InvestmentDetailsProps) => {
   // });
 
   const { data: userTotalInvestment } = useContractRead({
-    address: investment.address,
+    address: investment?.address,
     abi: investmentABI,
     functionName: "balanceOf",
     args: [walletAddress as Address],
@@ -386,7 +412,7 @@ const Investment = ({ investment, transactions }: InvestmentDetailsProps) => {
   });
 
   const { data: maxToInvest } = useContractRead({
-    address: investment.address,
+    address: investment?.address,
     abi: investmentABI,
     functionName: "getMaxToInvest",
     watch: false,
@@ -395,7 +421,7 @@ const Investment = ({ investment, transactions }: InvestmentDetailsProps) => {
   });
 
   const { data: minToInvest } = useContractRead({
-    address: investment.address,
+    address: investment?.address,
     abi: investmentABI,
     functionName: "MINIMUM_INVESTMENT",
     select: (data) => data.toNumber(), // Convert to number
@@ -416,7 +442,7 @@ const Investment = ({ investment, transactions }: InvestmentDetailsProps) => {
   });
 
   const { data: contractStatus } = useContractRead({
-    address: investment.address,
+    address: investment?.address,
     abi: investmentABI,
     functionName: "status",
     watch: false,
@@ -425,7 +451,7 @@ const Investment = ({ investment, transactions }: InvestmentDetailsProps) => {
   // console.log("can withdraw?>>>>", contractStatus == CONTRACT_STATUS_WITHDRAW);
 
   const { config: withdrawCallConfig } = usePrepareContractWrite({
-    address: investment.address,
+    address: investment?.address,
     abi: investmentABI,
     functionName: "withdraw",
     enabled:
@@ -493,6 +519,9 @@ const Investment = ({ investment, transactions }: InvestmentDetailsProps) => {
   // return <div className="text-center text-white">hello</div>;
 
   if (!investment) {
+    if (isMounted.current) {
+      return <div></div>;
+    }
     return (
       <div className="flex min-h-screen items-center justify-center text-center text-white">
         Investment not found :(
@@ -612,7 +641,7 @@ const Investment = ({ investment, transactions }: InvestmentDetailsProps) => {
                 />
                 General Information
               </h3>
-              {progress}
+
               <ProjectInfo
                 progress={progress}
                 status={investment.basicInvestment.investmentStatus}
@@ -1070,72 +1099,6 @@ const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { address } = context.query;
   const session = await getSession(context);
-  const { investment }: { investment: InvestmentProps } = await hygraph.request(
-    gql`
-      query ContextInvestment{
-        investment(
-          where: { address: "${address}" }
-        ) {
-          basicInvestment {
-            totalInvestment
-            investmentStatus
-            car {
-              basicInfo {
-                title
-                cover {
-                  url
-                }
-              }
-              subtitle
-              shortDescription
-              description
-              chassis
-              totalProduction
-              totalModelProduction
-              colorCombination
-              gallery {
-                url
-              }
-              chart {
-                url
-              }
-            }
-          }
-          level {
-            profitRange
-            basicLevel {
-                title
-              }
-          }
-          address
-          salesEnd
-          salesStart
-          estimateClaiming
-          restorationPhases {
-            title
-            deadline
-            currentCost
-            costExpectation
-            restorationStatus
-            gallery {
-              url
-            }
-            restorationUpdates {
-              title
-              date
-            }
-          }
-          transactions(orderBy: publishedAt_DESC) {
-            amountInvested
-            date
-            type
-            hash
-            from
-          }
-        }
-      }
-    `
-  );
 
   const { transactions }: InvestmentProps = await hygraph.request(
     gql`
@@ -1150,7 +1113,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   );
 
   return {
-    props: { investment, transactions },
+    props: { address, transactions },
   };
 };
 export default Investment;
