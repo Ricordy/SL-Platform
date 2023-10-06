@@ -9,20 +9,18 @@ import { cn } from "../lib/utils";
 import ProjectCarousel from "./ProjectCarousel";
 import { Button } from "./ui/Button";
 import NoInvestments from "./NoInvestments";
+import { useInvestments } from "~/lib/zustand";
 
 interface InvestmentsProps {
   isConnected: boolean;
-  userInvestments;
 }
-export default function Investments({
-  isConnected,
-  userInvestments,
-}: InvestmentsProps) {
+export default function Investments({ isConnected }: InvestmentsProps) {
   const [investmentStatuses] = useState(investmentStatusesData);
   const { connect } = useConnect({
     connector: new InjectedConnector(),
   });
   const { disconnect } = useDisconnect();
+  const userInvestments = useInvestments((state) => state.userInvestments);
   return (
     <section
       id="investments"
@@ -74,7 +72,7 @@ export default function Investments({
                   )}
                 >
                   {investmentStatus == investmentStatusesData[0] &&
-                    userInvestments.filter(
+                    userInvestments?.filter(
                       (investment) =>
                         investment.basicInvestment.investmentStatus ==
                         investmentStatus
@@ -88,7 +86,7 @@ export default function Investments({
                     )}
                   <ProjectCarousel
                     id={investmentStatus}
-                    items={userInvestments.filter(
+                    items={userInvestments?.filter(
                       (investment) =>
                         investment.basicInvestment.investmentStatus ==
                         investmentStatus

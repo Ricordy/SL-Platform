@@ -18,6 +18,7 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import DOMPurify from "isomorphic-dompurify";
 
+
 interface ActiveInvestmentsProps {
   investments: InvestmentProps[];
 }
@@ -122,7 +123,7 @@ const Home: NextPage = (props: any) => {
         <div className="relative z-20 -mt-[350px] min-h-[500px] w-full max-w-[1224px]  px-6 md:left-1/2 md:-ml-[570px] md:-mt-[350px] md:px-0">
           <Carousel
             id="1"
-            items={props.activeInvestments}
+            // items={props.activeInvestments}
             className="pb-12 md:pb-0"
             prevNavWhite={true}
             title={<h2 className="text-2xl text-white">Our cars</h2>}
@@ -130,6 +131,7 @@ const Home: NextPage = (props: any) => {
             seeMoreLink="/our-cars"
             seeMoreMr="md:mr-36"
             userAddress={walletAddress!}
+            isLevelDivided={false}
           />
           {/* Highlight Component */}
         </div>
@@ -146,10 +148,7 @@ const Home: NextPage = (props: any) => {
             isConnected ? "md:mt-[132px]" : "mt-12 md:mt-0"
           )}
         >
-          <Investments
-            isConnected={isConnected}
-            userInvestments={props.investments}
-          />
+          <Investments isConnected={isConnected} />
         </div>
         {/* My Puzzle */}
         <div className="relative mx-auto w-full max-w-[1282px] md:left-1/2 md:-ml-[570px] ">
@@ -163,7 +162,6 @@ const Home: NextPage = (props: any) => {
         </div>
         <div className="hidden w-full rounded-t-3xl bg-black pb-[132px] pt-[72px] md:flex">
           <Posts
-            posts={props.posts}
             title="Learn More"
             titleColor="text-white"
             buttonMoreLink="https://beta.somethinglegendary.com/learn"
@@ -185,29 +183,6 @@ const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
 
 export async function getServerSideProps(ctx) {
   const session = await getSession(ctx);
-
-  const { posts } = await hygraph.request(
-    gql`
-      query MyQuery {
-        posts {
-          id
-          slug
-          link
-          basic {
-            title
-          }
-          shortDescription {
-            html
-          }
-          image {
-            url
-          }
-          postCategory
-          locale
-        }
-      }
-    `
-  );
 
   const { investments: activeInvestments }: ActiveInvestmentsProps =
     await hygraph.request(
@@ -247,44 +222,6 @@ export async function getServerSideProps(ctx) {
             restorationPhases(where: { restorationStatus: InProgress }) {
               title
               restorationStatus
-            }
-          }
-        }
-      `
-    );
-
-  const { investments }: { investments: InvestmentProps[] } =
-    await hygraph.request(
-      gql`
-        query UserInvestments {
-          investments(
-            where: {
-              transactions_some: {
-                from: "${session?.user.id}"
-              }
-            }
-          ) {
-            id
-            address
-            level {
-              basicLevel {
-                title
-              }
-              profitRange
-            }
-            basicInvestment {
-              totalInvested
-              totalInvestment
-              investmentStatus
-              car {
-                id
-                basicInfo {
-                  cover {
-                    url
-                  }
-                  title
-                }
-              }
             }
           }
         }
@@ -363,10 +300,8 @@ export async function getServerSideProps(ctx) {
 
   return {
     props: {
-      posts,
       activeInvestments,
       highlightInvestment,
-      investments,
       slider,
       puzzlePieces,
       levels,

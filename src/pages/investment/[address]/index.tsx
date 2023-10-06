@@ -7,7 +7,7 @@ import { type GetServerSideProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { FiExternalLink } from "react-icons/fi";
 import Lightbox from "react-image-lightbox";
@@ -40,12 +40,14 @@ import Suggestions from "~/components/Suggestions";
 import { TransactionProps } from "~/@types/transaction";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
+import { useBlockchainInfo, useContractInfo } from "~/lib/zustand";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { A11y, Navigation } from "swiper";
 import { useBreakpoint } from "~/hooks/useBreakpoints";
+
 
 dayjs.extend(localizedFormat);
 
@@ -301,21 +303,43 @@ export const badges = {
 };
 
 type InvestmentDetailsProps = {
-  investment: InvestmentProps;
-  transactions: TransactionProps[];
-  userInvestments: InvestmentProps[];
-  allInvestments: InvestmentProps[];
+  investment?: InvestmentProps;
+  address: string;
+  transaction?: TransactionProps[];
 };
 
-const Investment = ({
-  investment,
-  transactions,
-  userInvestments,
-  allInvestments,
-}: InvestmentDetailsProps) => {
+const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
   const { address: walletAddress } = useAccount();
   const { data: signerData } = useSigner();
   const { data: sessionData } = useSession();
+  const info = useContractInfo((state) => state.contractAddress);
+  const setAddress = useContractInfo((state) => state.setAddress);
+  const investment = useContractInfo((state) => state.currentInvestmentInfo);
+  const fetchInfoInv = useContractInfo(
+    (state) => state.fetchCurrentInvestmentInfo
+  );
+  const transactions = useContractInfo((state) => state.contractTransactions);
+  const fetchTransactions = useContractInfo((state) => state.fetchTransactions);
+  const totalSupply = useBlockchainInfo((state) => state.totalSupply);
+  const userTotalInvestment = useBlockchainInfo(
+    (state) => state.userTotalInvestment
+  );
+  const paymentTokenBalance = useBlockchainInfo(
+    (state) => state.paymentTokenBalance
+  );
+  const maxToInvest = useBlockchainInfo((state) => state.maxToInvest);
+  const minToInvest = useBlockchainInfo((state) => state.minToInvest);
+  const contractLevel = useBlockchainInfo((state) => state.contractLevel);
+  const userLevel = useBlockchainInfo((state) => state.userLevel);
+  const contractStatus = useBlockchainInfo((state) => state.contractStatus);
+  const fetchDynamicBcInfo = useBlockchainInfo(
+    (state) => state.fetchDynamicInfo
+  );
+  const fetchContractStatus = useBlockchainInfo(
+    (state) => state.fetchContractStatus
+  );
+  const fetchStaticInfo = useBlockchainInfo((state) => state.fetchStaticInfo);
+  const isMounted = useRef(false);
   const { isAboveMd, isBelowMd } = useBreakpoint("md");
   const [tabIndex, setTabIndex] = useState(0);
 
@@ -326,6 +350,29 @@ const Investment = ({
     abi: investmentABI,
     signerOrProvider: signerData,
   });
+
+  useEffect(() => {
+    if (!info) {
+      setAddress(investmentAddress);
+    }
+    if (!investment) {
+      fetchInfoInv(investmentAddress);
+    }
+    if (!transactions) {
+      fetchTransactions(investmentAddress);
+    }
+    if (!totalSupply) {
+      fetchDynamicBcInfo(investmentAddress, walletAddress);
+    }
+    if (!maxToInvest) {
+      fetchStaticInfo(investmentAddress, walletAddress);
+    }
+    fetchContractStatus(investmentAddress);
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   // const SLCoreContract = useContract({
   //   address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS,
@@ -344,34 +391,34 @@ const Investment = ({
   //     .then((total) => total.toNumber());
   // };
 
-  const { data: totalSupply } = useContractRead({
-    address: investment.address,
-    abi: investmentABI,
-    functionName: "totalSupply",
-    watch: false,
-    // select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
-    enabled: !!investment,
-  });
+  // const { data: totalSupply } = useContractRead({
+  //   address: investment?.address,
+  //   abi: investmentABI,
+  //   functionName: "totalSupply",
+  //   watch: false,
+  //   // select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
+  //   enabled: !!investment,
+  // });
 
-  const { data: contractLevel } = useContractRead({
-    address: investment.address,
-    abi: investmentABI,
-    functionName: "CONTRACT_LEVEL",
-    watch: false,
-    // select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
-    enabled: !!investment,
-  });
-  const {
-    data: userLevel,
-    error,
-    isLoading,
-  } = useContractRead({
-    address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
-    abi: SLCoreABI,
-    functionName: "whichLevelUserHas",
-    args: [sessionData?.user.id as Address],
-    // watch: true,
-  });
+  // const { data: contractLevel } = useContractRead({
+  //   address: investment?.address,
+  //   abi: investmentABI,
+  //   functionName: "CONTRACT_LEVEL",
+  //   watch: false,
+  //   // select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
+  //   enabled: !!investment,
+  // });
+  // const {
+  //   data: userLevel,
+  //   error,
+  //   isLoading,
+  // } = useContractRead({
+  //   address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
+  //   abi: SLCoreABI,
+  //   functionName: "whichLevelUserHas",
+  //   args: [sessionData?.user.id as Address],
+  //   // watch: true,
+  // });
 
   // const { data: contractTotal1 } = useBalance({
   //   address: investment.address,
@@ -383,31 +430,31 @@ const Investment = ({
   //   enabled: !!investment,
   // });
 
-  const { data: userTotalInvestment } = useContractRead({
-    address: investment.address,
-    abi: investmentABI,
-    functionName: "balanceOf",
-    args: [walletAddress as Address],
-    watch: false,
-    enabled: !!investment,
-    // select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
-  });
+  // const { data: userTotalInvestment } = useContractRead({
+  //   address: investment?.address,
+  //   abi: investmentABI,
+  //   functionName: "balanceOf",
+  //   args: [walletAddress as Address],
+  //   watch: false,
+  //   enabled: !!investment,
+  //   // select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
+  // });
 
-  const { data: maxToInvest } = useContractRead({
-    address: investment.address,
-    abi: investmentABI,
-    functionName: "getMaxToInvest",
-    watch: false,
-    enabled: !!investment,
-    select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
-  });
+  // const { data: maxToInvest } = useContractRead({
+  //   address: investment?.address,
+  //   abi: investmentABI,
+  //   functionName: "getMaxToInvest",
+  //   watch: false,
+  //   enabled: !!investment,
+  //   select: (data) => data.div(10 ** 6).toNumber(), // Convert BigInt
+  // });
 
-  const { data: minToInvest } = useContractRead({
-    address: investment.address,
-    abi: investmentABI,
-    functionName: "MINIMUM_INVESTMENT",
-    select: (data) => data.toNumber(), // Convert to number
-  });
+  // const { data: minToInvest } = useContractRead({
+  //   address: investment?.address,
+  //   abi: investmentABI,
+  //   functionName: "MINIMUM_INVESTMENT",
+  //   select: (data) => data.toNumber(), // Convert to number
+  // });
 
   // const { data: paymentTokenBalance } = useBalance({
   //   address: walletAddress,
@@ -415,23 +462,23 @@ const Investment = ({
   //   // watch: false,
   // });
 
-  const { data: paymentTokenBalance } = useContractRead({
-    address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
-    abi: paymentTokenABI,
-    functionName: "balanceOf",
-    args: [walletAddress as Address],
-    watch: false,
-  });
+  // const { data: paymentTokenBalance } = useContractRead({
+  //   address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
+  //   abi: paymentTokenABI,
+  //   functionName: "balanceOf",
+  //   args: [walletAddress as Address],
+  //   watch: false,
+  // });
 
-  const { data: contractStatus } = useContractRead({
-    address: investment.address,
-    abi: investmentABI,
-    functionName: "status",
-    watch: false,
-  });
+  // const { data: contractStatus } = useContractRead({
+  //   address: investment?.address,
+  //   abi: investmentABI,
+  //   functionName: "status",
+  //   watch: false,
+  // });
 
   const { config: withdrawCallConfig } = usePrepareContractWrite({
-    address: investment.address,
+    address: investment?.address,
     abi: investmentABI,
     functionName: "withdraw",
     enabled:
@@ -487,7 +534,11 @@ const Investment = ({
     }
   }
 
+
   if (!investment) {
+    if (isMounted.current) {
+      return <div></div>;
+    }
     return (
       <div className="flex min-h-screen items-center justify-center text-center text-white">
         Investment not found :(
@@ -540,7 +591,7 @@ const Investment = ({
 
   function countUniques(transactions: any) {
     const uniqueFromValues = new Set();
-    for (let i = 0; i < transactions.length; i++) {
+    for (let i = 0; i < transactions?.length; i++) {
       if (transactions[i].from !== null) {
         uniqueFromValues.add(transactions[i].from);
       }
@@ -1049,7 +1100,7 @@ const Investment = ({
               <div className="flex max-h-[492px]   flex-col">
                 <h3>Transactions:</h3>
                 <div className=" mt-8 flex flex-col divide-y-[0.50px] divide-divideTransaction overflow-y-auto scroll-smooth rounded-md px-4">
-                  {investment.transactions.map((transaction) => (
+                  {transactions?.map((transaction) => (
                     <TransactionItem
                       key={transaction.hash}
                       value={transaction.amountInvested}
@@ -1098,20 +1149,8 @@ const Investment = ({
         <section>
           <div className="relative z-20 mx-auto flex rounded-t-[56px] bg-black pt-[72px] text-white md:pb-[128px]">
             <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[52px]">
-              <Carousel
-                id="4"
-                className="mb-6 px-6 pt-6 md:mb-0 md:px-0 "
-                title={<h2 className="text-2xl ">Our suggestion for you</h2>}
-                items={getMissingInvestments(allInvestments, userInvestments)}
-                userAddress={walletAddress!}
-                slidesPerView={3}
-              />
-              {/* <Suggestions
-                investments={getMissingInvestments(
-                  allInvestments,
-                  userInvestments
-                )}
-              /> */}
+              <h3 className="text-2xl uppercase">Our suggestion for you</h3>
+              <Suggestions />
             </div>
           </div>
         </section>
@@ -1120,164 +1159,11 @@ const Investment = ({
   );
 };
 
-const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
-  headers: {
-    Authorization: process.env.HYGRAPH_BEARER as string,
-  },
-});
-
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { address } = context.query;
-  const session = await getSession(context);
-  const { investment }: { investment: InvestmentProps } = await hygraph.request(
-    gql`
-      query ContextInvestment{
-        investment(
-          where: { address: "${address}" }
-        ) {
-          basicInvestment {
-            totalInvestment
-            investmentStatus
-            car {
-              basicInfo {
-                title
-                cover {
-                  url
-                }
-              }
-              subtitle
-              shortDescription
-              description
-              chassis
-              totalProduction
-              totalModelProduction
-              colorCombination
-              gallery {
-                url
-              }
-              chart {
-                url
-              }
-            }
-          }
-          level {
-            profitRange
-            basicLevel {
-                title
-              }
-          }
-          address
-          salesEnd
-          salesStart
-          estimateClaiming
-          restorationPhases {
-            title
-            deadline
-            currentCost
-            costExpectation
-            restorationStatus
-            gallery {
-              url
-            }
-            restorationUpdates {
-              title
-              date
-            }
-          }
-          transactions(orderBy: publishedAt_DESC) {
-            amountInvested
-            date
-            type
-            hash
-            from
-          }
-        }
-      }
-    `
-  );
-
-  const { transactions }: InvestmentProps = await hygraph.request(
-    gql`
-      query InvestingHere {
-        transactions(
-          where: { to: "${address}" }
-        ) {
-          from
-        }
-      }
-    `
-  );
-
-  const { investments: userInvestments }: { investments: InvestmentsProps } =
-    await hygraph.request(
-      gql`
-        query UserInvestments {
-          investments(
-            where: {
-              transactions_some: {
-                from: "${session?.user.id}"
-              }
-            }
-          ) {
-            id
-            address
-            level {
-              basicLevel {
-                title
-              }
-            }
-            basicInvestment {
-              id
-              totalInvestment
-              investmentStatus
-              car {
-                basicInfo {
-                  title
-                  cover {
-                    id
-                    url
-                  }
-                }
-              }
-            }
-          }
-        }
-      `
-    );
-
-  const { investments: allInvestments }: { investments: InvestmentsProps } =
-    await hygraph.request(
-      gql`
-        query UserInvestments {
-          investments {
-            id
-            address
-            level {
-              basicLevel {
-                title
-              }
-            }
-            basicInvestment {
-              id
-              totalInvestment
-              investmentStatus
-              car {
-                basicInfo {
-                  title
-                  cover {
-                    id
-                    url
-                  }
-                }
-              }
-            }
-          }
-        }
-      `
-    );
 
   return {
-    props: { investment, transactions, userInvestments, allInvestments },
+    props: { address },
   };
 };
 export default Investment;

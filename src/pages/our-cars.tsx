@@ -7,38 +7,32 @@ import { Tab } from "@headlessui/react";
 import ProjectCarousel from "~/components/ProjectCarousel";
 import { investmentLevelsData } from "~/data/InvestmentStatuses";
 import { useAccount } from "wagmi";
+import { GetServerSideProps } from "next/types";
+import { InvestmentProps } from "~/@types/investment";
+import { useInvestments } from "~/lib/zustand";
+import { useEffect } from "react";
 
-const ourCars = (props) => {
+const ourCars = () => {
   const { address: walletAddress } = useAccount();
-  function reverseInvestments(investments) {
-    return investments.slice().reverse();
-  }
 
-  function orderInvestmentsByTotalInvestment(investments) {
-    return investments
-      .slice()
-      .sort(
-        (a, b) =>
-          b.basicInvestment.totalInvestment - a.basicInvestment.totalInvestment
-      );
-  }
+  const allInvestments = useInvestments((state: any) => state?.investments);
 
   const lastCarName =
-    props.investments[0].basicInvestment.car.basicInfo.title.split(" ")[0];
+    allInvestments?.[0].basicInvestment.car.basicInfo.title.split(" ")[0];
   const lastCarModel = () => {
     const titleWords =
-      props.investments[0].basicInvestment.car.basicInfo.title.split(" ");
-    if (titleWords.length > 2) {
+      allInvestments?.[0].basicInvestment.car.basicInfo.title.split(" ");
+    if (titleWords?.length > 2) {
       return titleWords.slice(1).join(" ");
     } else {
-      return titleWords[1];
+      return titleWords?.[1];
     }
   };
 
   return (
     <section className=" mx-auto w-full  bg-white">
       <div
-        style={{ backgroundImage: `url(${props.investments[0].banner.url})` }}
+        style={{ backgroundImage: `url(${allInvestments?.[0].banner.url})` }}
         className={
           "relative flex min-h-screen w-full flex-col bg-cover bg-right  bg-no-repeat md:h-[1000px] md:rounded-bl-[56px] md:bg-contain"
         }
@@ -67,7 +61,7 @@ const ourCars = (props) => {
               <span className="font-medium">real time</span>.
             </p>
             <Link
-              href={`/investment/${props.investments[0].address}`}
+              href={`/investment/${allInvestments?.[0].address}`}
               className="self-start rounded-md bg-white px-12 py-1.5 text-center text-sm font-medium uppercase text-black dark:hover:bg-white dark:hover:text-black"
             >
               Invest now
@@ -110,14 +104,20 @@ const ourCars = (props) => {
                   <Carousel
                     id={investmentLevel}
                     prevNavWhite={true}
-                    items={props.investments.filter(
-                      (i) =>
-                        i.level.basicLevel.title ===
-                        investmentLevel.split("l")[0] +
-                          "l " +
-                          investmentLevel.split("l")[1]
-                    )}
+                    // items={zustand.filter(
+                    //   (i) =>
+                    //     i.level.basicLevel.title ===
+                    //     investmentLevel.split("l")[0] +
+                    //       "l " +
+                    //       investmentLevel.split("l")[1]
+                    // )}
                     userAddress={walletAddress!}
+                    isLevelDivided={true}
+                    currentLevel={
+                      investmentLevel.split("l")[0] +
+                      "l " +
+                      investmentLevel.split("l")[1]
+                    }
                   />
                 </Tab.Panel>
               );
@@ -128,8 +128,8 @@ const ourCars = (props) => {
           id="4"
           className="mb-12 px-6 pt-12 md:mb-0 md:px-0 md:pt-[132px]"
           title={<h2 className="text-2xl ">Our cars</h2>}
-          items={props.investments}
           userAddress={walletAddress!}
+          isLevelDivided={false}
         />
         {/* <Carousel
           id="5"
@@ -161,51 +161,3 @@ const ourCars = (props) => {
 };
 
 export default ourCars;
-
-const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
-  headers: {
-    Authorization: process.env.HYGRAPH_BEARER as string,
-  },
-});
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { investments } = await hygraph.request(
-    gql`
-      query AllInvestments {
-        investments(orderBy: createdAt_DESC) {
-          id
-          address
-          banner {
-            url
-          }
-          level {
-            basicLevel {
-              title
-            }
-            profitRange
-          }
-          basicInvestment {
-            id
-            totalInvestment
-            investmentStatus
-            car {
-              basicInfo {
-                title
-                cover {
-                  id
-                  url
-                }
-              }
-            }
-          }
-        }
-      }
-    `
-  );
-
-  return {
-    props: {
-      investments: investments,
-    },
-  };
-};

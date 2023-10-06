@@ -10,6 +10,7 @@ import useDebounce from "../../hooks/useDebounce";
 import useModal from "../../hooks/useModal";
 import Modal from "../Modal";
 import { Button } from "../ui/Button";
+import { useBlockchainInfo, useContractInfo } from "~/lib/zustand";
 
 type investmentProps = {
   contractAddress: Address;
@@ -68,6 +69,9 @@ export const InvestmentModal = ({
     valueApprovalAndInvestment || 0,
     500
   );
+
+  const fetchTransactions = useContractInfo((state) => state.fetchTransactions);
+  const fetchDynamicInfo = useBlockchainInfo((state) => state.fetchDynamicInfo);
 
   /**
    * Write in the blockchain the approve function called by the user
@@ -212,6 +216,8 @@ export const InvestmentModal = ({
         // throw new Error(`Something went wrong submitting the form.`);
 
         toast.success("Saved to the DB");
+        fetchTransactions(contractAddress);
+        fetchDynamicInfo(contractAddress, userAddress);
       } catch (err) {
         // toast.error(err.message);
       }

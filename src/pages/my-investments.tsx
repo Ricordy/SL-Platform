@@ -29,6 +29,7 @@ import ProjectCarousel from "../components/ProjectCarousel";
 import { NumericFormat } from "react-number-format";
 import Suggestions from "~/components/Suggestions";
 import { getMissingInvestments } from "~/lib/utils";
+import { useInvestments, useUserTransactions } from "~/lib/zustand";
 
 interface InvestmentBlockchainType {
   id: number;
@@ -170,11 +171,11 @@ export const TransactionItem = ({
   );
 };
 
-const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
+const MyInvestments: NextPage = () => {
   const { data: sessionData } = useSession();
   const { isConnected } = useAccount();
   const entryNFTPrice = utils.parseUnits("100", 6);
-
+  const userInvestments = useInvestments((state) => state.userInvestments);
   const { address } = useAccount();
   const [numberOfTransactions, setNumberOfTransactions] = useState(4);
   const SlFactoryContract = {
@@ -255,9 +256,63 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
   const [userContracts, setUserContracts] = useState([]);
   const investContracts = [];
 
-  const userInvestedContracts = [];
+  // const { data: userInvestments } = useContractRead({
+  //   address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
+  //   abi: FactoryAbi,
+  //   functionName: "getInvestments",
+  //   overrides: { from: address },
+  //   // select: (data) => convertData(data),
+  //   // onSuccess(data) {
+  //   //   data.map((investment) =>
+  //   //     Object.assign(
+  //   //       investment,
+  //   //       investmentData.find(
+  //   //         (i) => i.address[3177] == investment.contractAddress
+  //   //       )
+  //   //     )
+  //   //   );
+  //   //   console.log(data);
+  //   // },
+  // });
 
-  props.userTransactions?.map((transaction) => {
+  // const getUserTransactions = async (address: Address) => {
+  //   const {
+  //     transactions: userTransactions,
+  //   }: { transactions: TransactionProps } = await hygraph.request(
+  //     gql`
+  //       query UserTransactions {
+  //         transactions(where: { transactionDetails: { from: "34343434" } }) {
+  //           amountInvested
+  //           date
+  //           investment {
+  //             address
+  //             basicInvestment {
+  //               totalInvestment
+  //               car {
+  //                 basicInfo {
+  //                   cover {
+  //                     url
+  //                   }
+  //                   title
+  //                 }
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }
+  //     `
+  //   );
+  //   return userTransactions;
+  // };
+
+  // console.log("user transactions>>", userTransactions);
+
+  const userTransactions = useUserTransactions(
+    (state) => state.userTransactions
+  );
+
+  const userInvestedContracts = [];
+  userTransactions?.map((transaction) => {
     if (userInvestedContracts[transaction.to]) {
       userInvestedContracts[transaction.to] += transaction.amountInvested;
     } else {
@@ -429,7 +484,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
     return Array.from(uniqueInvestments.values());
   }
 
-  const userInv = extractUniqueInvestments(props.userTransactions);
+  const userInv = extractUniqueInvestments(userTransactions);
 
   function noDecimal(value) {
     return value / 10 ** 6;
@@ -766,15 +821,15 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
               <div className="flex flex-col gap-4">
                 <span>Last transactions:</span>
                 <div className="flex max-h-[282px] flex-1 flex-col gap-2 overflow-scroll rounded-md bg-myInvestmentsBackground px-4 py-8">
-                  <TransactionItem
-                    items={props.userTransactions}
-                    // items={fakeTransactions.userTransactions}
-                    userInvestedContracts={userInvestedContracts}
-                    numberOfTransactions={numberOfTransactions}
-                  />
-
-                  {props.userTransactions?.length > 4 &&
-                    numberOfTransactions < props.userTransactions.length && (
+                  {userInvestedContracts && (
+                    <TransactionItem
+                      items={userTransactions}
+                      userInvestedContracts={userInvestedContracts}
+                      numberOfTransactions={numberOfTransactions}
+                    />
+                  )}
+                  {userTransactions?.length > 4 &&
+                    numberOfTransactions < userTransactions.length && (
                       <button
                         className="flex self-start"
                         onClick={incrementTransaction}
@@ -796,8 +851,7 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
             className="pt-6 md:pt-0"
             prevNavWhite={true}
             title={<h2 className="text-2xl md:text-white">Active</h2>}
-            // items={fakeInvestments}
-            items={props.userInvestments?.filter(
+            items={userInvestments?.filter(
               (investment) =>
                 investment.basicInvestment.investmentStatus == "Active"
             )}
@@ -808,157 +862,18 @@ const MyInvestments: NextPage = (props: MyInvestmentsProps) => {
           <ProjectCarousel
             id="4"
             className="py-12 md:py-[132px]"
-            title={<h2 className="text-2xl md:text-white">Finished</h2>}
-            // items={fakeInvestments}
-            items={props.userInvestments?.filter(
+            title={<h2 className="text-2xl  md:text-white">Finished</h2>}
+            items={userInvestments?.filter(
               (investment) =>
                 investment.basicInvestment.investmentStatus == "Finished"
             )}
           />
         )}
       </div>
-      {/* <div className="relative z-20 mx-auto rounded-t-[56px] bg-black pb-[128px] pt-[72px] text-white">
-        {
-          <h2 className="mb-[52px] ml-[210px] text-2xl font-medium uppercase">
-            Our Suggestions for you
-          </h2>
-        }
 
-        <Suggestions
-          investments={getMissingInvestments(
-            props.allInvestments,
-            props.userInvestments
-          )}
-        />
-      </div> */}
+      <Suggestions />
     </section>
   );
 };
 
 export default MyInvestments;
-
-const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
-  headers: {
-    Authorization: process.env.HYGRAPH_BEARER as string,
-  },
-});
-
-export const getServerSideProps: GetServerSideProps<
-  MyInvestmentsProps
-> = async (ctx) => {
-  const session = await getSession(ctx);
-
-  const { investments: userInvestments }: { investments: InvestmentsProps } =
-    await hygraph.request(
-      gql`
-        query UserInvestments {
-          investments(
-            where: {
-              transactions_some: {
-                from: "${session?.user.id}"
-              }
-            }
-          ) {
-            id
-            address
-            level {
-              basicLevel {
-                title
-              }
-            }
-            basicInvestment {
-              id
-              totalInvestment
-              investmentStatus
-              car {
-                basicInfo {
-                  title
-                  cover {
-                    id
-                    url
-                  }
-                }
-              }
-            }
-          }
-        }
-      `
-    );
-
-  const { investments: allInvestments }: { investments: InvestmentsProps } =
-    await hygraph.request(
-      gql`
-        query UserInvestments {
-          investments {
-            id
-            address
-            level {
-              basicLevel {
-                title
-              }
-            }
-            basicInvestment {
-              id
-              totalInvestment
-              investmentStatus
-              car {
-                basicInfo {
-                  title
-                  cover {
-                    id
-                    url
-                  }
-                }
-              }
-            }
-          }
-        }
-      `
-    );
-
-  const { transactions: userTransactions }: { transactions: TransactionProps } =
-    await hygraph.request(
-      gql`
-        query UserTransactions {
-          transactions(
-            where: { from: "${session?.user.id}" }
-            orderBy: publishedAt_DESC
-            first: 28
-          ) {
-            amountInvested
-            hash
-            to
-            date
-            investment {
-              address
-              level {
-                basicLevel {
-                  title
-                }
-              }
-              basicInvestment {
-                totalInvestment
-                investmentStatus
-                car {
-                  basicInfo {
-                    title
-                    cover {
-                      url
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      `
-    );
-
-  return {
-    props: {
-      userInvestments: session ? userInvestments : null,
-      userTransactions: session ? userTransactions : null,
-      allInvestments: session ? allInvestments : null,
-    },
-  };
-};
