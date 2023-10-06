@@ -119,9 +119,14 @@ export const InvestmentModal = ({
   //   signerOrProvider: signerData,
   // });
 
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
-    setApprovalandInvestment(event.target.value);
+    setApprovalandInvestment(parseInt(event.target.value.replace(/[^\d]/, "")));
+  };
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "." || e.key === ",") {
+      e.preventDefault();
+    }
   };
 
   async function handleClick(
@@ -206,11 +211,8 @@ export const InvestmentModal = ({
           toast.error(JSON.stringify("Error on fecthing API", response.text));
         // throw new Error(`Something went wrong submitting the form.`);
 
-
         toast.success("Saved to the DB");
       } catch (err) {
-
-
         // toast.error(err.message);
       }
 
@@ -285,6 +287,7 @@ export const InvestmentModal = ({
             <input
               className="w-full rounded-md p-2 pl-8 text-3xl font-medium text-tabInactive placeholder:text-tabInactive/60"
               onChange={handleChange}
+              onKeyDown={handleKeyDown}
               type="number"
               name=""
               id=""
@@ -298,13 +301,13 @@ export const InvestmentModal = ({
                 onClick={() => setApprovalandInvestment(100)}
                 className="inline-block whitespace-nowrap rounded-full bg-puzzleProfitNotice px-[0.65em]  pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-medium leading-none text-tabInactive"
               >
-                $ 100.00
+                $ 100
               </button>
               <button
                 onClick={() => setApprovalandInvestment(500)}
                 className="inline-block whitespace-nowrap rounded-full bg-puzzleProfitNotice px-[0.65em]  pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-medium leading-none text-tabInactive"
               >
-                $ 500.00
+                $ 500
               </button>
               <button
                 onClick={() => setApprovalandInvestment(maxToInvest)}
