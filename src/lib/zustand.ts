@@ -107,7 +107,6 @@ export const useContractInfo = create((set) => {
             contractAddress: address,
           }),
         });
-        console.log("response: ", response);
 
         if (response.ok) {
           const res = await response.json();
@@ -121,17 +120,16 @@ export const useContractInfo = create((set) => {
     },
     fetchTransactions: async (address: string) => {
       try {
-        const response = await fetch("/api/investmentInfoFromAddress", {
+        const response = await fetch("/api/contractTransactions", {
           method: "POST",
           body: JSON.stringify({
             contractAddress: address,
           }),
         });
-        console.log("response: ", response);
 
         if (response.ok) {
           const res = await response.json();
-          set({ currentInvestmentInfo: res.currentInvestment });
+          set({ contractTransactions: res.currentTransactions });
         } else {
           return null;
         }

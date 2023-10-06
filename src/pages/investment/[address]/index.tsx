@@ -304,13 +304,10 @@ export const badges = {
 type InvestmentDetailsProps = {
   investment?: InvestmentProps;
   address: string;
-  transactions: TransactionProps[];
+  transaction?: TransactionProps[];
 };
 
-const Investment = ({
-  address: investmentAddress,
-  transactions,
-}: InvestmentDetailsProps) => {
+const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
   const { address: walletAddress } = useAccount();
   const { data: signerData } = useSigner();
   const { data: sessionData } = useSession();
@@ -320,6 +317,8 @@ const Investment = ({
   const fetchInfoInv = useContractInfo(
     (state) => state.fetchCurrentInvestmentInfo
   );
+  const transactions = useContractInfo((state) => state.contractTransactions);
+  const fetchTransactions = useContractInfo((state) => state.fetchTransactions);
   const isMounted = useRef(false);
 
   const [canWithdraw, setCanWithdraw] = useState(false);
@@ -338,6 +337,10 @@ const Investment = ({
 
     if (!investment) {
       fetchInfoInv(investmentAddress);
+    }
+
+    if (!transactions) {
+      fetchTransactions(investmentAddress);
     }
     isMounted.current = true;
     return () => {
@@ -569,7 +572,7 @@ const Investment = ({
 
   function countUniques(transactions: any) {
     const uniqueFromValues = new Set();
-    for (let i = 0; i < transactions.length; i++) {
+    for (let i = 0; i < transactions?.length; i++) {
       if (transactions[i].from !== null) {
         uniqueFromValues.add(transactions[i].from);
       }
@@ -1098,22 +1101,9 @@ const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { address } = context.query;
-  const session = await getSession(context);
-
-  const { transactions }: InvestmentProps = await hygraph.request(
-    gql`
-      query InvestingHere {
-        transactions(
-          where: { to: "${address}" }
-        ) {
-          from
-        }
-      }
-    `
-  );
 
   return {
-    props: { address, transactions },
+    props: { address },
   };
 };
 export default Investment;
