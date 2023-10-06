@@ -29,6 +29,7 @@ import { BigNumber } from "ethers";
 import TestingGuides from "./testingModal/TestingGuides";
 import { useBreakpoint } from "~/hooks/useBreakpoints";
 import { BurguerMenu } from "./ui/icons/BurguerMenu";
+import { useRouter } from "next/router";
 
 const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
   const { address, isConnected, isDisconnected, status } = useAccount();
@@ -42,6 +43,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
   const { data: sessionData } = useSession();
   const [loading, setLoading] = useState(false);
   const [TestingOpened, setTestingOpened] = useState(false);
+  const router = useRouter();
 
   // State
   const [showConnection, setShowConnection] = useState(false);
@@ -304,7 +306,15 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                     // bgWhite ? "bg-white" : "",
                     isConnected ? "w-full" : "w-[151px]"
                   )}
-                  onClick={() => (isConnected ? onClickSignOut() : connect())}
+                  onClick={() =>
+                    isConnected
+                      ? onClickSignOut()
+                      : isAboveMd
+                      ? connect()
+                      : isBelowMd && !window.ethereum?.isMetaMask
+                      ? router.push(`dapp://${window.location.host}`)
+                      : connect()
+                  }
                 >
                   {isConnected || loading ? (
                     <Image
@@ -352,13 +362,13 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
           {/** END HERE TESTING PORPUSES */}
 
           {/* <ConnectKitButton
-               customTheme={{
-                 "--ck-connectbutton-color": "rgba(0, 0, 0)",
-                 "--ck-connectbutton-background": "rgb(255,255,255)",
-                 "--ck-connectbutton-hover-background": "rgb(230,230,230)",
-                 "--ck-connectbutton-hover-color": "rgba(0,0,0,0.8)",
-               }}
-             /> */}
+            customTheme={{
+              "--ck-connectbutton-color": "rgba(0, 0, 0)",
+              "--ck-connectbutton-background": "rgb(255,255,255)",
+              "--ck-connectbutton-hover-background": "rgb(230,230,230)",
+              "--ck-connectbutton-hover-color": "rgba(0,0,0,0.8)",
+            }}
+          /> */}
         </div>
         <button
           className="flex w-full justify-end rounded-md border-none font-semibold  uppercase leading-none md:hidden"
@@ -481,7 +491,7 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                     onClick={() => disconnect}
                     href="#connect"
                   >
-                    Disconnect Wallet2
+                    Disconnect Wallet
                   </Link>
                 </>
               )}
