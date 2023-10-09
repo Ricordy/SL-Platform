@@ -26,7 +26,9 @@ const Home: NextPage = (props: any) => {
   const { isConnected, isDisconnected, address: walletAddress } = useAccount();
 
   // Carousel
-  const sliderInvestments = useInvestments((state) => state.sliderInvestments);
+  const sliderInvestments = useInvestments(
+    (state: any) => state.sliderInvestments
+  );
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -43,7 +45,7 @@ const Home: NextPage = (props: any) => {
     <>
       <section className="mx-auto w-full bg-white">
         <div className="relative flex min-h-[968px] w-full flex-col rounded-bl-[50px] bg-opacity-80 bg-cover bg-center bg-no-repeat">
-          {sliderInvestments?.map((image, index) => (
+          {sliderInvestments?.map((image: any, index: number) => (
             <div
               key={index}
               className={`absolute left-0 min-h-[968px] w-full rounded-bl-[156px] bg-black bg-opacity-80 bg-cover transition-opacity duration-1000 ${
@@ -94,7 +96,7 @@ const Home: NextPage = (props: any) => {
             </div>
           </div>
           <div className="absolute left-16 top-[512px] z-40 -translate-x-1/2 transform space-x-2 md:left-[235px]">
-            {sliderInvestments?.map((_, index) => (
+            {sliderInvestments?.map((_: any, index: number) => (
               <button
                 key={index}
                 className={`h-2.5 w-2.5 rounded-full ${
@@ -150,48 +152,3 @@ const Home: NextPage = (props: any) => {
 };
 
 export default Home;
-
-const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
-  headers: {
-    Authorization: process.env.HYGRAPH_BEARER as string,
-  },
-});
-
-export async function getServerSideProps(ctx) {
-  const session = await getSession(ctx);
-
-  const { slider }: any = await hygraph.request(
-    gql`
-      query SliderHome {
-        slider(where: { title: "Home" }) {
-          id
-          title
-          investments {
-            banner {
-              url
-            }
-            address
-            basicInvestment {
-              car {
-                basicInfo {
-                  cover {
-                    url
-                  }
-                  title
-                }
-                sliderTitle
-                sliderDescription
-              }
-            }
-          }
-        }
-      }
-    `
-  );
-
-  return {
-    props: {
-      slider,
-    },
-  };
-}
