@@ -122,35 +122,20 @@ export const CarouselItem = ({
   );
 };
 
-
-type CarouselProps =
-  | {
-      id: string;
-      className?: string;
-      title?: ReactNode;
-      prevNavWhite?: boolean;
-      items?: InvestmentProps[];
-      isLevelDivided: false;
-      currentLevel?: string;
-      seeMoreLabel?: string;
-      seeMoreLink?: string;
-      seeMoreMr?: string;
-      userAddress: Address;
-    }
-  | {
-      id: string;
-      className?: string;
-      title?: ReactNode;
-      prevNavWhite?: boolean;
-      items?: InvestmentProps[];
-      isLevelDivided?: true;
-      currentLevel: string;
-      seeMoreLabel?: string;
-      seeMoreLink?: string;
-      seeMoreMr?: string;
-      userAddress: Address;
-    };
-
+type CarouselProps = {
+  id: string;
+  className?: string;
+  title?: ReactNode;
+  prevNavWhite?: boolean;
+  items?: InvestmentProps[];
+  isLevelDivided: false;
+  currentLevel?: string;
+  seeMoreLabel?: string;
+  seeMoreLink?: string;
+  seeMoreMr?: string;
+  userAddress: Address;
+  slidesPerView?: number;
+};
 
 const Carousel: FC<CarouselProps> = ({
   id,
@@ -222,8 +207,7 @@ const Carousel: FC<CarouselProps> = ({
         {items && items?.length > 2 && (
           <div
             className={cn(
-              `absolute  left-0 z-20 flex items-center justify-center swiper-prev-${id}`,
-              currentSlider !== 0 ? "visible" : "invisible"
+              `absolute left-0 z-20 flex h-full items-center justify-center swiper-prev-${id}`
             )}
           >
             {
@@ -240,6 +224,22 @@ const Carousel: FC<CarouselProps> = ({
             }
           </div>
         )}
+        {items && items.length > 2 && (
+          <div
+            className={cn(
+              `absolute right-0 z-20 flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent  to-black px-3 md:-mr-[58px] swiper-next-${id}  `
+            )}
+          >
+            {
+              <Image
+                src="/icons/pagination-next.svg"
+                width={38}
+                height={38}
+                alt="Next"
+              />
+            }
+          </div>
+        )}
         <section
           className={cn(
             " relative z-10  flex w-full flex-col items-center md:ml-[58px]"
@@ -252,7 +252,7 @@ const Carousel: FC<CarouselProps> = ({
               className="swiper w-full"
               spaceBetween={24}
               centeredSlides={isAboveMd ? false : true}
-              slidesPerView={isAboveMd ? slidesPerView ?? 4 : "auto"}
+              slidesPerView={isAboveMd ? slidesPerView : "auto"}
               navigation={{
                 nextEl: `.swiper-next-${id}`,
                 prevEl: `.swiper-prev-${id}`,
@@ -279,24 +279,6 @@ const Carousel: FC<CarouselProps> = ({
             </Swiper>
           </div>
         </section>
-
-        {items && items.length > 2 && (
-          <div
-            className={cn(
-              `absolute right-0 z-20 flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent  to-black px-3 md:-mr-[58px] swiper-next-${id}  `,
-              currentSlider === items?.length % 4 ? "invisible" : "visible"
-            )}
-          >
-            {
-              <Image
-                src="/icons/pagination-next.svg"
-                width={38}
-                height={38}
-                alt="Next"
-              />
-            }
-          </div>
-        )}
       </div>
     </div>
   );
