@@ -662,7 +662,7 @@ const MyInvestments: NextPage = () => {
       <div className="mx-auto flex  min-h-screen w-full flex-col">
         <NavBar />
 
-        <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[30px] px-6 md:px-0 md:pt-[52px]">
+        <div className="mx-auto flex w-full flex-col gap-[30px] px-6 md:px-0 md:pt-[52px]">
           <div className="grid w-full grid-cols-1 items-start justify-center gap-4 md:grid-cols-2">
             <div className="row-start-2 flex flex-col gap-8 md:row-start-auto md:w-[434px]">
               <div className="flex flex-col rounded-xl  bg-white px-10 py-6 md:py-[72px]">
@@ -844,7 +844,7 @@ const MyInvestments: NextPage = () => {
         </div>
       </div>
 
-      <div className="relative z-20 mx-auto mt-[52px] min-h-[500px] max-w-[1224px]  px-6 md:left-1/2 md:-ml-[570px] md:px-0">
+      <div className="relative left-auto z-20 mx-auto mt-[52px] w-full  md:left-1/2 md:-ml-[570px] md:min-h-[532px] md:max-w-[1220px]">
         {userInv && (
           <ProjectCarousel
             id="1"
@@ -862,7 +862,7 @@ const MyInvestments: NextPage = () => {
           <ProjectCarousel
             id="4"
             className="py-12 md:py-[132px]"
-            title={<h2 className="text-2xl  md:text-white">Finished</h2>}
+            title={<h2 className="text-2xl">Finished</h2>}
             items={userInvestments?.filter(
               (investment) =>
                 investment.basicInvestment.investmentStatus == "Finished"

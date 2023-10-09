@@ -18,7 +18,6 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import DOMPurify from "isomorphic-dompurify";
 
-
 interface ActiveInvestmentsProps {
   investments: InvestmentProps[];
 }
@@ -144,7 +143,7 @@ const Home: NextPage = (props: any) => {
         )}
         <div
           className={cn(
-            "relative left-auto z-20 mx-auto w-full md:left-1/2  md:-ml-[570px] md:min-h-[532px] md:max-w-[1282px]",
+            "relative left-auto z-20 mx-auto w-full md:left-1/2  md:-ml-[570px] md:min-h-[532px] md:max-w-[1220px]",
             isConnected ? "md:mt-[132px]" : "mt-12 md:mt-0"
           )}
         >
