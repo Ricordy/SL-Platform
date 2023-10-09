@@ -17,7 +17,7 @@ import { cn } from "~/lib/utils";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import DOMPurify from "isomorphic-dompurify";
-
+import { useInvestments } from "~/lib/zustand";
 
 interface ActiveInvestmentsProps {
   investments: InvestmentProps[];
@@ -25,41 +25,25 @@ interface ActiveInvestmentsProps {
 const Home: NextPage = (props: any) => {
   const { isConnected, isDisconnected, address: walletAddress } = useAccount();
 
-  // const { data: contractTotal } = useContractRead({
-  //   address: process.env.NEXT_PUBLIC_PAYMENT_TOKEN_ADDRESS as Address,
-  //   abi: CoinTestAbi,
-  //   functionName: "balanceOf",
-  //   args: [
-  //     highlightContractAddress?.address[
-  //       process.env.NEXT_PUBLIC_CHAIN_ID as Address
-  //     ],
-  //   ],
-  //   watch: true,
-  // });
-
-  const { data: totalInvested } = useContractRead({
-    address: props.highlightInvestment?.address,
-    abi: investmentABI,
-    functionName: "totalSupply",
-  });
-
   // Carousel
-  const images = props.slider.investments;
+  const sliderInvestments = useInvestments((state) => state.sliderInvestments);
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveIndex((prevIndex) => (prevIndex + 1) % images.length);
+      setActiveIndex(
+        (prevIndex) => (prevIndex + 1) % sliderInvestments?.length
+      );
     }, 10000);
 
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, [sliderInvestments?.length]);
 
   return (
     <>
       <section className="mx-auto w-full bg-white">
         <div className="relative flex min-h-[968px] w-full flex-col rounded-bl-[50px] bg-opacity-80 bg-cover bg-center bg-no-repeat">
-          {images.map((image, index) => (
+          {sliderInvestments?.map((image, index) => (
             <div
               key={index}
               className={`absolute left-0 min-h-[968px] w-full rounded-bl-[156px] bg-black bg-opacity-80 bg-cover transition-opacity duration-1000 ${
@@ -87,7 +71,8 @@ const Home: NextPage = (props: any) => {
                 className="text-3xl uppercase tracking-widest text-white md:text-5xl"
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(
-                    images.at(activeIndex).basicInvestment.car?.sliderTitle
+                    sliderInvestments?.at(activeIndex).basicInvestment.car
+                      ?.sliderTitle
                   ),
                 }}
               />
@@ -95,13 +80,13 @@ const Home: NextPage = (props: any) => {
                 className="text-white"
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(
-                    images.at(activeIndex).basicInvestment.car
+                    sliderInvestments?.at(activeIndex).basicInvestment.car
                       ?.sliderDescription
                   ),
                 }}
               />
               <Link
-                href={`/investment/${images[activeIndex].address}`}
+                href={`/investment/${sliderInvestments?.[activeIndex].address}`}
                 className="self-start rounded-md bg-white px-12 py-1.5 text-center text-sm uppercase text-black dark:hover:bg-white dark:hover:text-black"
               >
                 See More
@@ -109,7 +94,7 @@ const Home: NextPage = (props: any) => {
             </div>
           </div>
           <div className="absolute left-16 top-[512px] z-40 -translate-x-1/2 transform space-x-2 md:left-[235px]">
-            {images.map((_, index) => (
+            {sliderInvestments?.map((_, index) => (
               <button
                 key={index}
                 className={`h-2.5 w-2.5 rounded-full ${
@@ -123,7 +108,6 @@ const Home: NextPage = (props: any) => {
         <div className="relative z-20 -mt-[350px] min-h-[500px] w-full max-w-[1224px]  px-6 md:left-1/2 md:-ml-[570px] md:-mt-[350px] md:px-0">
           <Carousel
             id="1"
-            // items={props.activeInvestments}
             className="pb-12 md:pb-0"
             prevNavWhite={true}
             title={<h2 className="text-2xl text-white">Our cars</h2>}
@@ -135,13 +119,7 @@ const Home: NextPage = (props: any) => {
           />
           {/* Highlight Component */}
         </div>
-        {!isConnected && (
-          <Highlight
-            className="mx-auto max-w-screen-lg"
-            investment={props.highlightInvestment}
-            totalInvested={totalInvested?.toNumber() / 10 ** 6}
-          />
-        )}
+        {!isConnected && <Highlight className="mx-auto max-w-screen-lg" />}
         <div
           className={cn(
             "relative left-auto z-20 mx-auto w-full md:left-1/2  md:-ml-[570px] md:min-h-[532px] md:max-w-[1282px]",
@@ -156,8 +134,6 @@ const Home: NextPage = (props: any) => {
             isConnected={isConnected}
             className="relative flex w-full  max-w-[1338px] flex-col pt-12 md:pt-[132px]"
             userAddress={walletAddress as Address}
-            puzzlePieces={props.puzzlePieces}
-            dbLevels={props.levels}
           />
         </div>
         <div className="hidden w-full rounded-t-3xl bg-black pb-[132px] pt-[72px] md:flex">
@@ -183,50 +159,6 @@ const hygraph = new GraphQLClient(process.env.HYGRAPH_READ_ONLY_KEY as string, {
 
 export async function getServerSideProps(ctx) {
   const session = await getSession(ctx);
-
-  const { investments: activeInvestments }: ActiveInvestmentsProps =
-    await hygraph.request(
-      gql`
-        query ActiveInvestments {
-          investments(
-            orderBy: createdAt_DESC
-            where: { basicInvestment: { investmentStatus: Active } }
-          ) {
-            id
-            address
-            highlight
-            level {
-              basicLevel {
-                title
-              }
-            }
-            basicInvestment {
-              id
-              totalInvested
-              totalInvestment
-              investmentStatus
-              car {
-                basicInfo {
-                  title
-                  cover {
-                    id
-                    url
-                  }
-                }
-                description
-                gallery {
-                  url
-                }
-              }
-            }
-            restorationPhases(where: { restorationStatus: InProgress }) {
-              title
-              restorationStatus
-            }
-          }
-        }
-      `
-    );
 
   const { slider }: any = await hygraph.request(
     gql`
@@ -257,54 +189,9 @@ export async function getServerSideProps(ctx) {
     `
   );
 
-  const { puzzlePieces } = await hygraph.request(
-    gql`
-      query {
-        puzzlePieces(first: 30, orderBy: tokenid_ASC) {
-          tokenid
-          title
-          image {
-            url
-          }
-          imageCollected {
-            url
-          }
-        }
-      }
-    `
-  );
-
-  const { levels } = await hygraph.request(
-    gql`
-      query {
-        levels {
-          basicLevel {
-            title
-          }
-          description
-          profitRange
-          bg {
-            url
-          }
-          nft {
-            url
-          }
-        }
-      }
-    `
-  );
-
-  const highlightInvestment = activeInvestments.find(
-    (investment) => investment.highlight === true
-  );
-
   return {
     props: {
-      activeInvestments,
-      highlightInvestment,
       slider,
-      puzzlePieces,
-      levels,
     },
   };
 }

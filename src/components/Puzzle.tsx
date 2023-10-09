@@ -23,18 +23,15 @@ import { Button } from "./ui/Button";
 import "swiper/css";
 import "swiper/css/pagination";
 import { useBreakpoint } from "~/hooks/useBreakpoints";
+import { useGameContent } from "~/lib/zustand";
 
 function noDecimals(value: number) {
   return value / 10 ** 6;
 }
 
-const Puzzle: FC<PuzzleProps> = ({
-  className,
-  isConnected,
-  userAddress,
-  puzzlePieces,
-  dbLevels,
-}) => {
+const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
+  const puzzlePieces = useGameContent((state) => state.pieces);
+  const dbLevels = useGameContent((state) => state.levels);
   const [userCanClaimPiece, setUserCanClaimPiece] = useState(false);
   const [userCanClaimLevel, setUserCanClaimLevel] = useState(false);
   const [currentLevel, setCurrentLevel] = useState(1);
@@ -169,7 +166,7 @@ const Puzzle: FC<PuzzleProps> = ({
   // console.log("dataUserAllowed", dataUserAllowed);
   // console.log("userPieces>>>", data[currentLevel - 1]);
 
-  const levels = dbLevels.map((dbLevel, idx) => ({
+  const levels = dbLevels?.map((dbLevel, idx) => ({
     title: dbLevel.basicLevel.title,
     locked: data?.[6]?.lt(idx + 1),
     profitRange: dbLevel.profitRange,
@@ -239,7 +236,7 @@ const Puzzle: FC<PuzzleProps> = ({
                   setCurrentLevel(activeIndex + 1);
                 }}
               >
-                {dbLevels.map((level, idx) => (
+                {dbLevels?.map((level, idx) => (
                   <SwiperSlide
                     key={level.basicLevel.title}
                     className={cn(

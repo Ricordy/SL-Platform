@@ -8,6 +8,7 @@ export const useInvestments = create((set) => {
   return {
     investments: undefined,
     userInvestments: undefined,
+    sliderInvestments: undefined,
     fetch: async () => {
       try {
         const response = await fetch("/api/investments", {
@@ -40,6 +41,22 @@ export const useInvestments = create((set) => {
         return null;
       }
     },
+    fetchSlider: async () => {
+      try {
+        const response = await fetch("/api/slider", {
+          method: "POST",
+        });
+
+        if (response.ok) {
+          const res = await response.json();
+          set({ sliderInvestments: res.sliderInvestments });
+        } else {
+          return null;
+        }
+      } catch (err) {
+        return null;
+      }
+    },
   };
 });
 
@@ -57,6 +74,45 @@ export const usePosts = create((set) => {
         if (response.ok) {
           const res = await response.json();
           set({ posts: res.posts });
+        } else {
+          return null;
+        }
+      } catch (err) {
+        return null;
+      }
+    },
+  };
+});
+
+export const useGameContent = create((set) => {
+  return {
+    levels: undefined,
+    pieces: undefined,
+    fetchLevels: async () => {
+      try {
+        const response = await fetch("/api/levels", {
+          method: "POST",
+        });
+
+        if (response.ok) {
+          const res = await response.json();
+          set({ levels: res.levels });
+        } else {
+          return null;
+        }
+      } catch (err) {
+        return null;
+      }
+    },
+    fetchPieces: async () => {
+      try {
+        const response = await fetch("/api/pieces", {
+          method: "POST",
+        });
+
+        if (response.ok) {
+          const res = await response.json();
+          set({ pieces: res.pieces });
         } else {
           return null;
         }
@@ -182,7 +238,6 @@ export const useBlockchainInfo = create((set) => {
           const paymentTokenBalance = await paymentTokenContract.balanceOf(
             userAddress
           );
-
 
           set({
             totalSupply: totalInvested,

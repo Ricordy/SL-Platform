@@ -29,9 +29,10 @@ export default async function handler(req: NextApiRequest, res: MyResponse) {
   const { investments }: any = await hygraph.request(
     gql`
       query AllInvestments {
-        investments(orderBy: createdAt_DESC) {
+        investments(orderBy: createdAt_DESC, last: 100) {
           id
           address
+          highlight
           banner {
             url
           }
@@ -53,7 +54,15 @@ export default async function handler(req: NextApiRequest, res: MyResponse) {
                   url
                 }
               }
+              description
+              gallery {
+                url
+              }
             }
+          }
+          restorationPhases(where: { restorationStatus: InProgress }) {
+            title
+            restorationStatus
           }
         }
       }

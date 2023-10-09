@@ -48,7 +48,6 @@ import "swiper/css/navigation";
 import { A11y, Navigation } from "swiper";
 import { useBreakpoint } from "~/hooks/useBreakpoints";
 
-
 dayjs.extend(localizedFormat);
 
 // interface InvestmentProps {
@@ -211,7 +210,7 @@ export const ProjectInfo = ({
         <span>Price:</span>
         <span className="now font-medium">
           <NumericFormat
-            value={totalInvestment.toString()}
+            value={totalInvestment?.toString()}
             displayType="text"
             fixedDecimalScale={true}
             decimalSeparator=","
@@ -374,8 +373,6 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
     };
   }, []);
 
-
-
   const { config: withdrawCallConfig } = usePrepareContractWrite({
     address: investment?.address,
     abi: investmentABI,
@@ -432,7 +429,6 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
       toast.error(err.message);
     }
   }
-
 
   if (!investment) {
     if (isMounted.current) {

@@ -5,13 +5,24 @@ import type { HighlightProps } from "~/@types/HighlightInvestment";
 import { cn } from "~/lib/utils";
 import { ProjectInfo, badges } from "~/pages/investment/[address]";
 import { Button } from "../ui/Button";
+import { useInvestments } from "~/lib/zustand";
+import { useContractRead } from "wagmi";
+import { investmentABI } from "~/utils/abis";
 
-const Highlight = ({
-  investment,
-  totalInvested,
-  className,
-}: HighlightProps) => {
-  const currentPhase = investment.restorationPhases?.at(0);
+const Highlight = ({ className }: HighlightProps) => {
+  const investments = useInvestments((state: any) => state.investments);
+  const investment = investments?.find(
+    (investment: any) => investment.highlight === true
+  );
+  const currentPhase = investment?.restorationPhases?.at(0);
+  console.log(investments, investment);
+
+  const { data: totalInvested } = useContractRead({
+    address: investment?.address,
+    abi: investmentABI,
+    functionName: "totalSupply",
+  });
+
   return (
     <div
       className={cn(
@@ -23,7 +34,7 @@ const Highlight = ({
       <div className="flex flex-col gap-6 md:flex-row">
         <div className="relative flex  min-w-[50%]">
           <Carousel showStatus={false} showThumbs={false}>
-            {investment.basicInvestment.car.gallery.map((image, idx) => (
+            {investment?.basicInvestment.car.gallery.map((image, idx) => (
               <div key={idx} className="relative max-h-[405px] w-full">
                 <Image
                   src={image.url}
@@ -38,20 +49,20 @@ const Highlight = ({
         </div>
         <div className="flex flex-col gap-[32px] md:max-w-[50%]">
           <h2 className="text-3xl font-medium text-primaryGreen">
-            {investment.basicInvestment.car.basicInfo.title}
+            {investment?.basicInvestment.car.basicInfo.title}
           </h2>
           <ProjectInfo
-            status={investment.basicInvestment.investmentStatus}
-            totalInvestment={investment.basicInvestment.totalInvestment}
+            status={investment?.basicInvestment.investmentStatus}
+            totalInvestment={investment?.basicInvestment.totalInvestment}
             progress={
               (Number(totalInvested) /
-                Number(investment.basicInvestment.totalInvestment)) *
+                Number(investment?.basicInvestment.totalInvestment)) *
               100
             }
             isFlexCol
           />
           <p className=" max-h-24 overflow-scroll">
-            {investment.basicInvestment.car.description}
+            {investment?.basicInvestment.car.description}
           </p>
           {currentPhase && (
             <div className="flex flex-col gap-4 sm:flex-row">
@@ -98,7 +109,7 @@ const Highlight = ({
             </div>
           )}
 
-          <Link href={`/investment/${investment.address}`}>
+          <Link href={`/investment/${investment?.address}`}>
             <Button variant="outline" className="self-start">
               Know more
             </Button>
