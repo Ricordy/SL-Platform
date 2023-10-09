@@ -122,7 +122,7 @@ const Home: NextPage = (props: any) => {
         <div className="relative z-20 -mt-[350px] min-h-[500px] w-full max-w-[1224px]  px-6 md:left-1/2 md:-ml-[570px] md:-mt-[350px] md:px-0">
           <Carousel
             id="1"
-            // items={props.activeInvestments}
+            items={props.activeInvestments}
             className="pb-12 md:pb-0"
             prevNavWhite={true}
             title={<h2 className="text-2xl text-white">Our cars</h2>}
