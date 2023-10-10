@@ -15,7 +15,7 @@ interface LevelProps {
   userPieces: BigNumber[];
   profitRange: string;
   nextProfitRange?: string;
-  claimLevel: (() => void) | undefined;
+  claimLevel: ((e: any) => void) | undefined;
 }
 const Level = ({
   level,

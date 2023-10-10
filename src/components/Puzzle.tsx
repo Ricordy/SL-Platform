@@ -34,7 +34,7 @@ function noDecimals(value: number) {
 const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
   const puzzlePieces = useGameContent((state) => state.pieces);
   const dbLevels = useGameContent((state) => state.levels);
-  const [userCanClaimPiece, setUserCanClaimPiece] = useState(false);
+  const [isLoadingClaimPiece, setIsLoadingClaimPiece] = useState(false);
   const [userCanClaimLevel, setUserCanClaimLevel] = useState(false);
   const [currentLevel, setCurrentLevel] = useState(1);
   const userLevel = useBlockchainInfo((state) => state.userLevel);
@@ -106,9 +106,8 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
 
   const actionClaimPiece = async (e: any) => {
     e.preventDefault();
-
+    setIsLoadingClaimPiece(true);
     if (userAllowedToClaimPiece && currentLevel === userLevel?.toNumber()) {
-      console.log("dentro");
       try {
         const results = await SLCoreContract?.claimPiece();
         const abc = await results?.wait();
@@ -116,13 +115,13 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
 
       fetchPuzzleInfo(userAddress, userLevel);
     }
+    setIsLoadingClaimPiece(false);
   };
 
   const actionClaimLevel = async (e: any) => {
     e.preventDefault();
 
     if (userAllowedToClaimPiece && currentLevel === userLevel?.toNumber()) {
-      console.log("dentro");
       try {
         const results = await SLCoreContract?.claimLevel();
         const abc = await results?.wait();
