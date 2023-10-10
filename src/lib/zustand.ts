@@ -9,6 +9,7 @@ import {
   paymentTokenABI,
 } from "~/utils/abis";
 import { BigNumber, ethers } from "ethers";
+import { getPuzzleCollectionIds } from "./utils";
 
 export const useInvestments = create((set) => {
   return {
@@ -183,7 +184,6 @@ export const useContractInfo = create((set) => {
       }
     },
     fetchTransactions: async (address: string) => {
-
       try {
         const response = await fetch("/api/contractTransactions", {
           method: "POST",
@@ -220,7 +220,7 @@ export const useBlockchainInfo = create((set) => {
     userTotalInvestedPerLevel: undefined,
     userUniquePiecesPerLevel: undefined,
     userAllowedToClaimPiece: undefined,
-
+    userPuzzlePiecesCurrentLevel: undefined,
     fetchDynamicInfo: async (contractAddress: string, userAddress: string) => {
       if (
         contractAddress !== undefined &&
@@ -368,6 +368,11 @@ export const useBlockchainInfo = create((set) => {
           );
         puzzlePieces.push(puzzlePieceslvl3);
 
+        const userPuzzlePiecesForLevel = await slCoreContract.balanceOfBatch(
+          Array(10).fill(userAddress),
+          getPuzzleCollectionIds(userLevel)
+        );
+
         const userTotalInvestment1 =
           await factoryContract.getAddressTotalInLevel(userAddress, 1);
 
@@ -385,10 +390,10 @@ export const useBlockchainInfo = create((set) => {
             userTotalInvestment3.toNumber()
         );
 
-
         set({
           userTotalInvestedPerLevel: totalInvestment,
           userUniquePiecesPerLevel: puzzlePieces,
+          userPuzzlePiecesCurrentLevel: userPuzzlePiecesForLevel,
         });
       } catch (err) {
         return null;

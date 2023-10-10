@@ -10,6 +10,8 @@ import {
   useContractWrite,
   usePrepareContractWrite,
   type Address,
+  useContract,
+  useSigner,
 } from "wagmi";
 import { type PuzzleProps } from "~/@types/Puzzle";
 import { FactoryABI, SLCoreABI, SLLogicsABI } from "~/utils/abis";
@@ -50,15 +52,17 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
     (state: any) => state.fetchPuzzleInfo
   );
 
-
   const handleSlideChange = (swiper: { activeIndex: number }) => {
     setCurrentLevel(swiper.activeIndex + 1);
   };
 
-  const SlLogicsContract = {
-    address: process.env.NEXT_PUBLIC_SLLOGIC_ADDRESS as Address,
-    abi: SLLogicsABI,
-  };
+  const { data: signerData } = useSigner();
+
+  const SLCoreContract = useContract({
+    address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
+    abi: SLCoreABI,
+    signerOrProvider: signerData,
+  });
 
   const {
     userPuzzlePieces,
@@ -72,59 +76,61 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
     // watch: true,
   });
 
-  // const { data: dataUserAllowed, error: errorUserAllowed } = useContractRead({
-  //   ...SlLogicsContract,
-  //   functionName: "userAllowedToClaimPiece",
-  //   args: [
-  //     userAddress,
-  //     BigNumber.from(currentLevel),
-  //     userLevel as BigNumber,
-  //     userUniquePiecesPerLevel?.[currentLevel - 1] as BigNumber,
-  //   ],
-  //   enabled: currentLevel === userLevel?.toNumber(),
-  //   onSettled(data, error) {
-  //     if (!error) {
-  //       // data[6] == currentLevel
+  // const { config: configClaimPiece } = usePrepareContractWrite({
+  //   address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
+  //   abi: SLCoreABI,
+  //   functionName: "claimPiece",
+  //   enabled: userAllowedToClaimPiece && currentLevel === userLevel?.toNumber(),
+  //   onError(err) {},
+  //   onSuccess() {
+  //     console.log("success");
 
-  //       setUserCanClaimPiece(true);
-  //     } else {
-  //       setUserCanClaimPiece(false);
-  //     }
+  //     fetchPuzzleInfo(userAddress, userLevel);
   //   },
   // });
 
-  const { config: configClaimPiece } = usePrepareContractWrite({
-    address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
-    abi: SLCoreABI,
-    functionName: "claimPiece",
-    enabled: userAllowedToClaimPiece && currentLevel === userLevel?.toNumber(),
-    onError(err) {},
-    // onSuccess() {
-    //   toast.success("Puzzle reivindicado com sucesso!");
-    // },
-  });
+  // const { write: claimPiece, isLoading: isLoadingClaimPiece } =
+  //   useContractWrite(configClaimPiece);
 
-  const { write: claimPiece, isLoading: isLoadingClaimPiece } =
-    useContractWrite(configClaimPiece);
+  // const { config: configClaimLevel } = usePrepareContractWrite({
+  //   address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
+  //   abi: SLCoreABI,
+  //   functionName: "claimLevel",
+  //   enabled:
+  //     Number(userUniquePiecesPerLevel?.[currentLevel - 1]) > 9 &&
+  //     userLevel?.toNumber() == currentLevel,
+  // });
 
-  const { config: configClaimLevel } = usePrepareContractWrite({
-    address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
-    abi: SLCoreABI,
-    functionName: "claimLevel",
-    enabled:
-      Number(userUniquePiecesPerLevel?.[currentLevel - 1]) > 9 &&
-      userLevel?.toNumber() == currentLevel,
-  });
+  // const { write: claimLevel, isLoading: isLoadingClaimLevel } =
+  //   useContractWrite(configClaimLevel);
 
-  const { write: claimLevel, isLoading: isLoadingClaimLevel } =
-    useContractWrite(configClaimLevel);
-  // console.log("invested>>>", BigNumber.from(data[3]).toNumber());
-  // console.log("userHas>>>", data[6]?.toNumber());
-  // console.log("userCanClaimPiece>>", userCanClaimPiece);
-  // console.log("configClaimLevel>>", configClaimLevel);
+  const actionClaimPiece = async (e: any) => {
+    e.preventDefault();
 
-  // console.log("dataUserAllowed", dataUserAllowed);
-  // console.log("userPieces>>>", data[currentLevel - 1]);
+    if (userAllowedToClaimPiece && currentLevel === userLevel?.toNumber()) {
+      console.log("dentro");
+      try {
+        const results = await SLCoreContract?.claimPiece();
+        const abc = await results?.wait();
+      } catch (error) {}
+
+      fetchPuzzleInfo(userAddress, userLevel);
+    }
+  };
+
+  const actionClaimLevel = async (e: any) => {
+    e.preventDefault();
+
+    if (userAllowedToClaimPiece && currentLevel === userLevel?.toNumber()) {
+      console.log("dentro");
+      try {
+        const results = await SLCoreContract?.claimLevel();
+        const abc = await results?.wait();
+      } catch (error) {}
+
+      fetchPuzzleInfo(userAddress, userLevel);
+    }
+  };
 
   const levels = dbLevels?.map((dbLevel, idx) => ({
     title: dbLevel.basicLevel.title,
@@ -223,7 +229,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                         dbLevels?.at(idx + 1)?.profitRange as string
                       }
                       userPieces={userPieces as BigNumber[]}
-                      claimLevel={claimLevel}
+                      claimLevel={actionClaimLevel}
                     />
                     <div className="mt-16 flex flex-col">
                       <div className="grid max-w-6xl grid-cols-1 gap-6 pb-36 md:grid-cols-4">
@@ -305,10 +311,10 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                                 </span>
                               </div>
                               <Button
-                                onClick={claimPiece}
+                                onClick={actionClaimPiece}
                                 className="whitespace-nowrap border-emerald-700 px-12 text-emerald-700"
                                 variant="outline"
-                                disabled={!userCanClaimPiece}
+                                disabled={!userAllowedToClaimPiece}
                               >
                                 {isLoadingClaimPiece
                                   ? "Loading..."
@@ -446,7 +452,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                                   </h3>
                                   <Button
                                     variant={"outline"}
-                                    onClick={claimLevel}
+                                    onClick={actionClaimLevel}
                                     disabled={
                                       (userPieces && userPieces.length < 10) ||
                                       (userLevel?.toNumber() as number) >

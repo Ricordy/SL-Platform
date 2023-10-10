@@ -26,17 +26,20 @@ const useGetUserPuzzlePieces = ({
   const userUniquePiecesPerLevel = useBlockchainInfo(
     (state) => state.userUniquePiecesPerLevel
   );
-  const {
-    data: userPuzzlePieces,
-    error,
-    isLoading,
-  } = useContractRead({
-    address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
-    abi: SLCoreABI,
-    functionName: "balanceOfBatch",
-    args: [Array(10).fill(userAddress), getPuzzleCollectionIds(level)],
-    watch,
-  });
+  const userPuzzlePieces = useBlockchainInfo(
+    (state) => state.userPuzzlePiecesCurrentLevel
+  );
+  // const {
+  //   data: userPuzzlePieces,
+  //   error,
+  //   isLoading,
+  // } = useContractRead({
+  //   address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
+  //   abi: SLCoreABI,
+  //   functionName: "balanceOfBatch",
+  //   args: [Array(10).fill(userAddress), getPuzzleCollectionIds(level)],
+  //   watch,
+  // });
 
   const [userPieces, setUserPieces] = useState<BigNumber[]>([]);
   const [userTotalPieces, setUserTotalPieces] = useState(0);
@@ -49,7 +52,7 @@ const useGetUserPuzzlePieces = ({
     if (!userPuzzlePieces) return;
 
     setUserPieces(userPuzzlePieces.filter((piece) => piece.gt(0)));
-  }, [userPuzzlePieces]);
+  }, [userPuzzlePieces, userUniquePiecesPerLevel]);
 
   useEffect(() => {
     const sum = userPieces.reduce(
@@ -61,7 +64,7 @@ const useGetUserPuzzlePieces = ({
 
   useEffect(() => {
     const claimPieceProgressValue = totalInvested?.sub(
-      userUniquePiecesPerLevel[level] *
+      userUniquePiecesPerLevel[level - 1] *
         ((claimPieceThreshold[level - 1] || 5000) * 10 ** 6)
     );
 
@@ -80,8 +83,6 @@ const useGetUserPuzzlePieces = ({
     userTotalPieces,
     claimPieceProgress,
     claimPieceProgressValue,
-    error,
-    isLoading,
   };
 };
 
