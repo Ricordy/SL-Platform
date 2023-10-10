@@ -77,6 +77,7 @@ export const InvestmentModal = ({
 
   const fetchTransactions = useContractInfo((state) => state.fetchTransactions);
   const fetchDynamicInfo = useBlockchainInfo((state) => state.fetchDynamicInfo);
+  const fetchPuzzleInfo = useBlockchainInfo((state) => state.fetchPuzzleInfo);
   const fetchUserTransactions = useUserTransactions((state) => state.fetch);
   const fetchUserInvestments = useInvestments(
     (state) => state.fetchUserInvestments
@@ -229,6 +230,7 @@ export const InvestmentModal = ({
         fetchDynamicInfo(contractAddress, userAddress);
         fetchUserTransactions();
         fetchUserInvestments();
+        fetchPuzzleInfo(userAddress, userLevel);
       } catch (err) {
         // toast.error(err.message);
       }

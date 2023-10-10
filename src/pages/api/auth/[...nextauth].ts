@@ -2,6 +2,7 @@
 // ========================================================
 import type { NextApiRequest, NextApiResponse } from "next";
 import NextAuth, { type NextAuthOptions } from "next-auth";
+import { useInvestments } from "~/lib/zustand";
 import { authOptions } from "~/server/auth";
 
 // Auth
@@ -16,6 +17,7 @@ const Auth = (req: NextApiRequest, res: NextApiResponse) => {
         // Removes from the authOptions.providers array
         authOpts.providers.pop();
     }
+
 
     return NextAuth(req, res, authOpts) as typeof NextAuth;
 };

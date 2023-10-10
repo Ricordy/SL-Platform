@@ -2,12 +2,14 @@ import { Toaster } from "react-hot-toast";
 import Head from "next/head";
 import AlertMessage from "./ui/AlertMessage";
 import {
+  useBlockchainInfo,
   useGameContent,
   useInvestments,
   usePosts,
   useUserTransactions,
 } from "~/lib/zustand";
 import { useEffect } from "react";
+import { useAccount } from "wagmi";
 
 export default function Layout({ children }: React.PropsWithChildren<{}>) {
   const allInvestments = useInvestments((state) => state.investments);
@@ -29,6 +31,19 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
   const dbLevels = useGameContent((state) => state.levels);
   const fetchLevels = useGameContent((state) => state.fetchLevels);
   const fetchPieces = useGameContent((state) => state.fetchPieces);
+  const userLevel = useBlockchainInfo((state: any) => state.userLevel);
+  const fetchStaticInfo = useBlockchainInfo(
+    (state: any) => state.fetchStaticInfo
+  );
+  const fetchPuzzleInfo = useBlockchainInfo(
+    (state: any) => state.fetchPuzzleInfo
+  );
+
+  const userTotalInvestedPerLevel = useBlockchainInfo(
+    (state: any) => state.userTotalInvestedPerLevel
+  );
+
+  const { address } = useAccount();
 
   useEffect(() => {
     if (!allInvestments || !userInvestments) {
@@ -38,6 +53,13 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
     if (!posts) {
       fetchPosts();
     }
+    if (address && !userLevel) {
+      fetchStaticInfo(address);
+    }
+
+    // if (address && userLevel) {
+    //   fetchPuzzleInfo(address, userLevel);
+    // }
 
     if (!userTransactions) {
       fetchUserTransactions();
@@ -52,9 +74,13 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
       fetchSliderInvestments();
     }
 
+    if (!userTotalInvestedPerLevel && address) {
+      fetchPuzzleInfo(address, userLevel);
+    }
+
     //change to my-investments since it is the only page that needs thisdata
     return () => {};
-  }, []);
+  }, [userLevel]);
   return (
     <div className="flex flex-col items-stretch bg-buyNFTBackground">
       <Head>

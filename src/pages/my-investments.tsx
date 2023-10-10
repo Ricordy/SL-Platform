@@ -29,7 +29,11 @@ import ProjectCarousel from "../components/ProjectCarousel";
 import { NumericFormat } from "react-number-format";
 import Suggestions from "~/components/Suggestions";
 import { getMissingInvestments } from "~/lib/utils";
-import { useInvestments, useUserTransactions } from "~/lib/zustand";
+import {
+  useBlockchainInfo,
+  useInvestments,
+  useUserTransactions,
+} from "~/lib/zustand";
 
 interface InvestmentBlockchainType {
   id: number;
@@ -191,6 +195,11 @@ const MyInvestments: NextPage = () => {
   const incrementTransaction = () => {
     setNumberOfTransactions(numberOfTransactions + 4);
   };
+
+  const userTotalInvestedPerLevel = useBlockchainInfo(
+    (state) => state.userTotalInvestedPerLevel
+  );
+
 
   const { data }: { data: BigNumber } = useContractReads({
     contracts: [
@@ -761,7 +770,7 @@ const MyInvestments: NextPage = () => {
                       </h5>
                       <span className="text-4xl font-semibold tracking-widest">
                         <NumericFormat
-                          value={data?.[0].div(10 ** 6).toNumber()}
+                          value={userTotalInvestedPerLevel?.[3] / 10 ** 6}
                           displayType="text"
                           decimalSeparator=","
                           thousandSeparator="."
@@ -776,7 +785,9 @@ const MyInvestments: NextPage = () => {
                       </h5>
                       <span className="text-2xl font-medium tracking-widest">
                         <NumericFormat
-                          value={data?.[1].div(10 ** 6).toNumber()}
+                          value={userTotalInvestedPerLevel?.[0]
+                            .div(10 ** 6)
+                            .toNumber()}
                           displayType="text"
                           decimalSeparator=","
                           thousandSeparator="."
@@ -791,7 +802,9 @@ const MyInvestments: NextPage = () => {
                       </h5>
                       <span className="text-2xl font-medium tracking-widest">
                         <NumericFormat
-                          value={data?.[2].div(10 ** 6).toNumber()}
+                          value={userTotalInvestedPerLevel?.[1]
+                            .div(10 ** 6)
+                            .toNumber()}
                           displayType="text"
                           decimalSeparator=","
                           thousandSeparator="."
@@ -806,7 +819,9 @@ const MyInvestments: NextPage = () => {
                       </h5>
                       <span className="text-2xl font-medium tracking-widest">
                         <NumericFormat
-                          value={data?.[3].div(10 ** 6).toNumber()}
+                          value={userTotalInvestedPerLevel?.[2]
+                            .div(10 ** 6)
+                            .toNumber()}
                           displayType="text"
                           decimalSeparator=","
                           thousandSeparator="."

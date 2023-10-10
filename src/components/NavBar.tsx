@@ -30,6 +30,7 @@ import TestingGuides from "./testingModal/TestingGuides";
 import { useBreakpoint } from "~/hooks/useBreakpoints";
 import { BurguerMenu } from "./ui/icons/BurguerMenu";
 import { useRouter } from "next/router";
+import { useBlockchainInfo, useInvestments } from "~/lib/zustand";
 
 const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
   const { address, isConnected, isDisconnected, status } = useAccount();
@@ -48,6 +49,18 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
   // State
   const [showConnection, setShowConnection] = useState(false);
   const [navIsOpen, setNavIsOpen] = useState(false);
+
+  const fetchUserInvestments = useInvestments(
+    (state: any) => state.fetchUserInvestments
+  );
+  const fetchStaticInfo = useBlockchainInfo(
+    (state: any) => state.fetchStaticInfo
+  );
+  const userLevel = useBlockchainInfo((state: any) => state.userLevel);
+
+  const fetchPuzzleInfo = useBlockchainInfo(
+    (state: any) => state.fetchPuzzleInfo
+  );
 
   // Functions
   /**
@@ -73,6 +86,10 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
         redirect: false,
         signature,
       });
+
+      fetchUserInvestments();
+      fetchStaticInfo(address);
+      fetchPuzzleInfo(address, userLevel);
     } catch (error) {
       window.alert(error);
     }

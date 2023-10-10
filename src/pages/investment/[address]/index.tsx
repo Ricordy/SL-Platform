@@ -364,7 +364,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
       fetchDynamicBcInfo(investmentAddress, walletAddress);
     }
     if (!maxToInvest) {
-      fetchStaticInfo(investmentAddress, walletAddress);
+      fetchStaticInfo( walletAddress, investmentAddress);
     }
     fetchContractStatus(investmentAddress);
     isMounted.current = true;
@@ -372,6 +372,8 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
       isMounted.current = false;
     };
   }, []);
+
+
 
   const { config: withdrawCallConfig } = usePrepareContractWrite({
     address: investment?.address,

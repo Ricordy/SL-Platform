@@ -23,7 +23,7 @@ import { Button } from "./ui/Button";
 import "swiper/css";
 import "swiper/css/pagination";
 import { useBreakpoint } from "~/hooks/useBreakpoints";
-import { useGameContent } from "~/lib/zustand";
+import { useBlockchainInfo, useGameContent } from "~/lib/zustand";
 
 function noDecimals(value: number) {
   return value / 10 ** 6;
@@ -35,69 +35,30 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
   const [userCanClaimPiece, setUserCanClaimPiece] = useState(false);
   const [userCanClaimLevel, setUserCanClaimLevel] = useState(false);
   const [currentLevel, setCurrentLevel] = useState(1);
+  const userLevel = useBlockchainInfo((state) => state.userLevel);
+  const userTotalInvestedPerLevel = useBlockchainInfo(
+    (state) => state.userTotalInvestedPerLevel
+  );
+  const userUniquePiecesPerLevel = useBlockchainInfo(
+    (state) => state.userUniquePiecesPerLevel
+  );
+
+  const userAllowedToClaimPiece = useBlockchainInfo(
+    (state) => state.userAllowedToClaimPiece
+  );
+  const fetchPuzzleInfo = useBlockchainInfo(
+    (state: any) => state.fetchPuzzleInfo
+  );
+
 
   const handleSlideChange = (swiper: { activeIndex: number }) => {
     setCurrentLevel(swiper.activeIndex + 1);
-  };
-
-  const SlCoreContract = {
-    address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
-    abi: SLCoreABI,
-  };
-
-  const SlFactoryContract = {
-    address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
-    abi: FactoryABI,
   };
 
   const SlLogicsContract = {
     address: process.env.NEXT_PUBLIC_SLLOGIC_ADDRESS as Address,
     abi: SLLogicsABI,
   };
-
-  let { data } = useContractReads({
-    contracts: [
-      {
-        ...SlCoreContract,
-        functionName: "getUserPuzzlePiecesForUserCurrentLevel", // 0
-        args: [userAddress, BigNumber.from(1)],
-      },
-      {
-        ...SlCoreContract,
-        functionName: "getUserPuzzlePiecesForUserCurrentLevel", // 1
-        args: [userAddress, BigNumber.from(2)],
-      },
-      {
-        ...SlCoreContract,
-        functionName: "getUserPuzzlePiecesForUserCurrentLevel", // 2
-        args: [userAddress, BigNumber.from(3)],
-      },
-      {
-        ...SlFactoryContract,
-        functionName: "getAddressTotalInLevel", // 3
-        args: [userAddress, BigNumber.from(1)],
-      },
-      {
-        ...SlFactoryContract,
-        functionName: "getAddressTotalInLevel", // 4
-        args: [userAddress, BigNumber.from(2)],
-      },
-      {
-        ...SlFactoryContract,
-        functionName: "getAddressTotalInLevel", // 5
-        args: [userAddress, BigNumber.from(3)],
-      },
-      {
-        ...SlCoreContract,
-        functionName: "whichLevelUserHas", // 6
-        args: [userAddress],
-      },
-    ],
-    // watch: true,
-    onError(error) {},
-  });
-
-  data = data ?? [];
 
   const {
     userPuzzlePieces,
@@ -107,37 +68,36 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
   } = useGetUserPuzzlePieces({
     userAddress,
     level: currentLevel,
-    totalInvested: data?.[2 + currentLevel] as BigNumber,
+    totalInvested: userTotalInvestedPerLevel?.[currentLevel - 1] as BigNumber,
     // watch: true,
   });
 
-  const { data: dataUserAllowed, error: errorUserAllowed } = useContractRead({
-    ...SlLogicsContract,
-    functionName: "userAllowedToClaimPiece",
-    args: [
-      userAddress,
-      BigNumber.from(currentLevel),
-      data?.[6] as BigNumber,
-      data?.[currentLevel - 1] as BigNumber,
-    ],
-    // watch: true,
-    enabled: data && currentLevel === data?.[6]?.toNumber(),
-    onSettled(data, error) {
-      if (!error) {
-        // data[6] == currentLevel
+  // const { data: dataUserAllowed, error: errorUserAllowed } = useContractRead({
+  //   ...SlLogicsContract,
+  //   functionName: "userAllowedToClaimPiece",
+  //   args: [
+  //     userAddress,
+  //     BigNumber.from(currentLevel),
+  //     userLevel as BigNumber,
+  //     userUniquePiecesPerLevel?.[currentLevel - 1] as BigNumber,
+  //   ],
+  //   enabled: currentLevel === userLevel?.toNumber(),
+  //   onSettled(data, error) {
+  //     if (!error) {
+  //       // data[6] == currentLevel
 
-        setUserCanClaimPiece(true);
-      } else {
-        setUserCanClaimPiece(false);
-      }
-    },
-  });
+  //       setUserCanClaimPiece(true);
+  //     } else {
+  //       setUserCanClaimPiece(false);
+  //     }
+  //   },
+  // });
 
   const { config: configClaimPiece } = usePrepareContractWrite({
     address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
     abi: SLCoreABI,
     functionName: "claimPiece",
-    enabled: userCanClaimPiece,
+    enabled: userAllowedToClaimPiece && currentLevel === userLevel?.toNumber(),
     onError(err) {},
     // onSuccess() {
     //   toast.success("Puzzle reivindicado com sucesso!");
@@ -152,8 +112,8 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
     abi: SLCoreABI,
     functionName: "claimLevel",
     enabled:
-      Number(data?.[currentLevel - 1]) > 9 &&
-      data?.[6]?.toNumber() == currentLevel,
+      Number(userUniquePiecesPerLevel?.[currentLevel - 1]) > 9 &&
+      userLevel?.toNumber() == currentLevel,
   });
 
   const { write: claimLevel, isLoading: isLoadingClaimLevel } =
@@ -168,17 +128,26 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
 
   const levels = dbLevels?.map((dbLevel, idx) => ({
     title: dbLevel.basicLevel.title,
-    locked: data?.[6]?.lt(idx + 1),
+    locked: userLevel?.lt(idx + 1),
     profitRange: dbLevel.profitRange,
     description: dbLevel.description,
     progress: userPieces && ((userPieces.length / 10) * 100).toFixed(0),
-    invested: noDecimals(Number(data?.[3 + idx])),
+    invested: noDecimals(Number(userTotalInvestedPerLevel?.[idx])),
     collected: userPieces && userPieces.length.toString(),
     nft: dbLevel.nft?.url,
   }));
 
   const [profitNotification, setProfitNotification] = useState(true);
   const { isAboveMd, isBelowMd } = useBreakpoint("md");
+
+  // useEffect(() => {
+  //   if (!userAllowedToClaimPiece || !userTotalInvestedPerLevel) {
+  //     console.log("fetched");
+
+  //     fetchPuzzleInfo(userAddress, userLevel);
+  //   }
+  //   return () => {};
+  // }, []);
 
   return (
     <section
@@ -246,7 +215,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                   >
                     <Level
                       level={idx + 1}
-                      userLevel={data?.[6]?.toNumber() as number}
+                      userLevel={userLevel?.toNumber() as number}
                       bg={level.bg.url}
                       description={level.description}
                       profitRange={level.profitRange}
@@ -258,7 +227,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                     />
                     <div className="mt-16 flex flex-col">
                       <div className="grid max-w-6xl grid-cols-1 gap-6 pb-36 md:grid-cols-4">
-                        {data?.[6]?.gt(currentLevel) ? (
+                        {userLevel?.gt(currentLevel) ? (
                           <div className="h-90 relative col-span-2 flex flex-col items-center justify-between rounded-md bg-neutral-100">
                             <div
                               className="absolute left-0 top-0 h-full w-full  rounded-md border-2 border-white"
@@ -411,7 +380,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                         )}
 
                         {puzzlePieces
-                          .slice((currentLevel - 1) * 10, currentLevel * 10)
+                          ?.slice((currentLevel - 1) * 10, currentLevel * 10)
                           .map((puzzle, idx) => (
                             <div
                               key={puzzle.tokenid}
@@ -426,7 +395,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                                 }
                                 isConnected={isConnected}
                                 image={
-                                  data?.[6]?.gt(currentLevel) ||
+                                  userLevel?.gt(currentLevel) ||
                                   ((userPuzzlePieces &&
                                     userPuzzlePieces.at(idx)?.toNumber()) ||
                                     0) > 0
@@ -436,7 +405,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                               />
                             </div>
                           ))}
-                        {currentLevel < 4 && !data?.[6]?.gt(currentLevel) && (
+                        {currentLevel < 4 && !userLevel?.gt(currentLevel) && (
                           <div className="h-90 relative flex flex-col items-center justify-center rounded-md border-2 border-[#C3A279] align-middle">
                             {(userPieces && userPieces.length < 9 && (
                               <div className="flex flex-col items-center justify-center align-middle ">
@@ -480,12 +449,12 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                                     onClick={claimLevel}
                                     disabled={
                                       (userPieces && userPieces.length < 10) ||
-                                      (data?.[6]?.toNumber() as number) >
+                                      (userLevel?.toNumber() as number) >
                                         idx + 2
                                     }
                                     className={cn(
                                       "mt-[32px] border-primaryGold bg-primaryGold font-sans text-[14px] font-medium text-white hover:bg-primaryGold",
-                                      (data?.[6]?.toNumber() as number) >
+                                      (userLevel?.toNumber() as number) >
                                         idx + 2
                                         ? "bg-primaryGold text-white"
                                         : ""

@@ -2,6 +2,7 @@ import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 import { useContractRead, type Address } from "wagmi";
 import { getPuzzleCollectionIds } from "~/lib/utils";
+import { useBlockchainInfo } from "~/lib/zustand";
 import { SLCoreABI } from "~/utils/abis";
 
 interface HookProps {
@@ -22,7 +23,9 @@ const useGetUserPuzzlePieces = ({
     };
   }
   const claimPieceThreshold = [5000, 10000, 15000];
-
+  const userUniquePiecesPerLevel = useBlockchainInfo(
+    (state) => state.userUniquePiecesPerLevel
+  );
   const {
     data: userPuzzlePieces,
     error,
@@ -58,7 +61,8 @@ const useGetUserPuzzlePieces = ({
 
   useEffect(() => {
     const claimPieceProgressValue = totalInvested?.sub(
-      userTotalPieces * ((claimPieceThreshold[level - 1] || 5000) * 10 ** 6)
+      userUniquePiecesPerLevel[level] *
+        ((claimPieceThreshold[level - 1] || 5000) * 10 ** 6)
     );
 
     const claimPieceProgress = claimPieceProgressValue
@@ -68,7 +72,7 @@ const useGetUserPuzzlePieces = ({
 
     setClaimPieceProgress(claimPieceProgress);
     setClaimPieceProgressValue(claimPieceProgressValue);
-  }, [userTotalPieces, level]);
+  }, [userUniquePiecesPerLevel, level]);
 
   return {
     userPieces,
