@@ -122,20 +122,35 @@ export const CarouselItem = ({
   );
 };
 
-type CarouselProps = {
-  id: string;
-  className?: string;
-  title?: ReactNode;
-  prevNavWhite?: boolean;
-  items?: InvestmentProps[];
-  isLevelDivided: false;
-  currentLevel?: string;
-  seeMoreLabel?: string;
-  seeMoreLink?: string;
-  seeMoreMr?: string;
-  userAddress: Address;
-  slidesPerView?: number;
-};
+type CarouselProps =
+  | {
+      id: string;
+      className?: string;
+      title?: ReactNode;
+      prevNavWhite?: boolean;
+      items?: InvestmentProps[];
+      isLevelDivided: false;
+      currentLevel?: string;
+      seeMoreLabel?: string;
+      seeMoreLink?: string;
+      seeMoreMr?: string;
+      userAddress: Address;
+      slidesPerView?: number;
+    }
+  | {
+      id: string;
+      className?: string;
+      title?: ReactNode;
+      prevNavWhite?: boolean;
+      items?: InvestmentProps[];
+      isLevelDivided: true;
+      currentLevel: string;
+      seeMoreLabel?: string;
+      seeMoreLink?: string;
+      seeMoreMr?: string;
+      userAddress: Address;
+      slidesPerView?: number;
+    };
 
 const Carousel: FC<CarouselProps> = ({
   id,
@@ -203,83 +218,82 @@ const Carousel: FC<CarouselProps> = ({
         )}
       </div>
 
-      <div className="relative flex items-center">
-        {items && items?.length > 2 && (
-          <div
-            className={cn(
-              `absolute left-0 z-20 flex h-full items-center justify-center swiper-prev-${id}`
-            )}
-          >
-            {
-              <Image
-                src={
-                  prevNavWhite
-                    ? "/icons/pagination-previous.svg"
-                    : "/icons/pagination-previous-black.svg"
-                }
-                width={38}
-                height={38}
-                alt="Previous"
-              />
-            }
-          </div>
-        )}
-        {items && items.length > 2 && (
-          <div
-            className={cn(
-              `absolute right-0 z-20 flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent  to-black px-3 md:-mr-[58px] swiper-next-${id}  `
-            )}
-          >
-            {
-              <Image
-                src="/icons/pagination-next.svg"
-                width={38}
-                height={38}
-                alt="Next"
-              />
-            }
-          </div>
-        )}
-        <section
-          className={cn(
-            " relative z-10  flex w-full flex-col items-center md:ml-[58px]"
-          )}
-        >
-          <div className="swiper-wrapper relative z-10 flex w-1/2 ">
-            {/* {JSON.stringify(items)} */}
-            <Swiper
-              modules={[Navigation, A11y]}
-              className="swiper w-full"
-              spaceBetween={24}
-              centeredSlides={isAboveMd ? false : true}
-              slidesPerView={isAboveMd ? slidesPerView : "auto"}
-              navigation={{
-                nextEl: `.swiper-next-${id}`,
-                prevEl: `.swiper-prev-${id}`,
-              }}
-              updateOnWindowResize
-              observer
-              observeParents
-              onSlideChange={handleSlideChange}
-              // initialSlide={0}
-              // loop={true}
+      {items && (
+        <div className="relative flex w-full items-center">
+          {items.length > 2 && (
+            <div
+              className={cn(
+                `absolute left-0 z-20 flex h-full items-center justify-center swiper-prev-${id}`
+              )}
             >
-              {items?.map((item, index) => (
-                <SwiperSlide key={index} className="">
-                  <CarouselItem
-                    title={item.basicInvestment.car?.basicInfo.title}
-                    image={item.basicInvestment.car?.basicInfo.cover.url}
-                    price={item.basicInvestment.totalInvestment.toString()}
-                    address={item.address}
-                    level={item.level.basicLevel.title}
-                    userLevel={Number(userLevel)}
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-        </section>
-      </div>
+              {
+                <Image
+                  src={
+                    prevNavWhite
+                      ? "/icons/pagination-previous.svg"
+                      : "/icons/pagination-previous-black.svg"
+                  }
+                  width={38}
+                  height={38}
+                  alt="Previous"
+                />
+              }
+            </div>
+          )}
+          {items.length > 2 && (
+            <div
+              className={cn(
+                `absolute right-0 z-20 flex h-full items-center rounded-r-md bg-gradient-to-r from-transparent  to-black px-3 md:-mr-[58px] swiper-next-${id}  `
+              )}
+            >
+              {
+                <Image
+                  src="/icons/pagination-next.svg"
+                  width={38}
+                  height={38}
+                  alt="Next"
+                />
+              }
+            </div>
+          )}
+          <section
+            className={cn(
+              " relative z-10  flex w-full flex-col items-center md:ml-[58px]"
+            )}
+          >
+            <div className="swiper-wrapper relative z-10 flex w-1/2 ">
+              <Swiper
+                modules={[Navigation, A11y]}
+                className="swiper w-full"
+                spaceBetween={24}
+                centeredSlides={isAboveMd ? false : true}
+                slidesPerView={isAboveMd ? slidesPerView : "auto"}
+                navigation={{
+                  nextEl: `.swiper-next-${id}`,
+                  prevEl: `.swiper-prev-${id}`,
+                }}
+                updateOnWindowResize
+                observer
+                observeParents
+                onSlideChange={handleSlideChange}
+              >
+                {items.map((item, index) => (
+                  <SwiperSlide key={index} className="">
+                    <CarouselItem
+                      title={item.basicInvestment.car?.basicInfo.title}
+                      image={item.basicInvestment.car?.basicInfo.cover.url}
+                      price={item.basicInvestment.totalInvestment.toString()}
+                      address={item.address}
+                      level={item.level.basicLevel.title}
+                      userLevel={Number(userLevel)}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+          </section>
+        </div>
+      )}
     </div>
   );
 };

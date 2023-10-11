@@ -93,7 +93,7 @@ export const TransactionItem = ({
                   height={53}
                   alt="Car"
                 />
-                <span className=" w-28 truncate">
+                <span className=" hidden w-28 truncate md:flex">
                   {item.investment.basicInvestment.car.basicInfo.title}
                 </span>
                 <span className=" text-primaryGold">
@@ -136,7 +136,7 @@ export const TransactionItem = ({
                   height={53}
                   alt="Car"
                 />
-                <span className=" w-28 truncate">
+                <span className=" hidden w-28 truncate md:flex">
                   {item.investment.basicInvestment.car.basicInfo.title}
                 </span>
                 <span className=" text-primaryGold">
@@ -754,7 +754,7 @@ const MyInvestments: NextPage = () => {
               <div className="flex flex-col  gap-4">
                 <span>Overview:</span>
                 {data && (
-                  <div className="flex flex-1 flex-col gap-2 rounded-md bg-myInvestmentsBackground px-6 py-8 font-medium leading-6 md:px-12">
+                  <div className="flex flex-1 flex-col gap-2 rounded-md bg-myInvestmentsBackground px-6 py-4 font-medium leading-6 md:px-12 md:py-8">
                     <div className="flex flex-col border-b-2 border-gray-700 px-3 py-4">
                       <h5 className="text-base text-primaryGold">
                         Total Invested
@@ -770,7 +770,7 @@ const MyInvestments: NextPage = () => {
                         />
                       </span>
                     </div>
-                    <div className="flex items-center justify-between px-3">
+                    <div className="flex flex-col items-start justify-between px-3 md:flex-row md:items-center">
                       <h5 className="text-base text-primaryGold">
                         Total Invested (Level 1)
                       </h5>
@@ -785,7 +785,7 @@ const MyInvestments: NextPage = () => {
                         />
                       </span>
                     </div>
-                    <div className="flex items-center justify-between px-3">
+                    <div className="flex flex-col items-start justify-between px-3 md:flex-row md:items-center">
                       <h5 className="text-base text-primaryGold">
                         Total Invested (Level 2)
                       </h5>
@@ -800,7 +800,7 @@ const MyInvestments: NextPage = () => {
                         />
                       </span>
                     </div>
-                    <div className="flex items-center justify-between px-3">
+                    <div className="flex flex-col items-start justify-between px-3 md:flex-row md:items-center">
                       <h5 className="text-base text-primaryGold">
                         Total Invested (Level 3)
                       </h5>
@@ -844,7 +844,7 @@ const MyInvestments: NextPage = () => {
         </div>
       </div>
 
-      <div className="relative left-auto z-20 mx-auto mt-[52px] w-full  md:left-1/2 md:-ml-[570px] md:min-h-[532px] md:max-w-[1220px]">
+      <div className="relative left-auto z-20 mx-auto w-full px-6  md:left-1/2 md:-ml-[570px] md:mt-[52px] md:min-h-[532px] md:max-w-[1220px] md:px-0">
         {userInv && (
           <ProjectCarousel
             id="1"
