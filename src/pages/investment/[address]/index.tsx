@@ -373,8 +373,6 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
     };
   }, []);
 
-
-
   const { config: withdrawCallConfig } = usePrepareContractWrite({
     address: investment?.address,
     abi: investmentABI,
@@ -1043,14 +1041,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
             </div>
           </section>
         </div>
-        <section>
-          <div className="relative z-20 mx-auto flex rounded-t-[56px] bg-black pt-[72px] text-white md:pb-[128px]">
-            <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-[52px]">
-              <h3 className="text-2xl uppercase">Our suggestion for you</h3>
-              <Suggestions />
-            </div>
-          </div>
-        </section>
+        <Suggestions />
       </main>
     </>
   );
