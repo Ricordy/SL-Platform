@@ -220,7 +220,7 @@ export const useBlockchainInfo = create((set) => {
     userTotalInvestedPerLevel: undefined,
     userUniquePiecesPerLevel: undefined,
     userAllowedToClaimPiece: undefined,
-    userPuzzlePiecesCurrentLevel: undefined,
+    userPuzzlePieces: undefined,
     fetchDynamicInfo: async (contractAddress: string, userAddress: string) => {
       if (
         contractAddress !== undefined &&
@@ -368,11 +368,6 @@ export const useBlockchainInfo = create((set) => {
           );
         puzzlePieces.push(puzzlePieceslvl3);
 
-        const userPuzzlePiecesForLevel = await slCoreContract.balanceOfBatch(
-          Array(10).fill(userAddress),
-          getPuzzleCollectionIds(userLevel)
-        );
-
         const userTotalInvestment1 =
           await factoryContract.getAddressTotalInLevel(userAddress, 1);
 
@@ -390,10 +385,17 @@ export const useBlockchainInfo = create((set) => {
             userTotalInvestment3.toNumber()
         );
 
+        const userPuzzlePiecesForLevel = await slCoreContract.balanceOfBatch(
+          Array(30).fill(userAddress),
+          Array.from({ length: 30 }, (_, k) => BigNumber.from(k))
+        );
+
+        
+
         set({
           userTotalInvestedPerLevel: totalInvestment,
           userUniquePiecesPerLevel: puzzlePieces,
-          userPuzzlePiecesCurrentLevel: userPuzzlePiecesForLevel,
+          userPuzzlePieces: userPuzzlePiecesForLevel,
         });
       } catch (err) {
         return null;
