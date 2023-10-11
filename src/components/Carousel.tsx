@@ -72,7 +72,7 @@ export const CarouselItem = ({
         <a
           href={`/investment/${address}`}
           className={cn(
-            "absolute inset-0 rounded-md",
+            "absolute inset-0 rounded-md ring-primaryGold",
             "z-20 focus:z-10 focus:outline-none focus:ring-2"
           )}
         />

@@ -69,7 +69,7 @@ const ourCars = () => {
           </div>
         </div>
       </div>
-      <div className="relative z-20 w-full max-w-[1290px] md:left-1/2 md:-ml-[570px] md:-mt-[350px] md:min-h-[500px]">
+      <div className="relative z-20 w-full max-w-[1220px] md:left-1/2 md:-ml-[570px] md:-mt-[350px] md:min-h-[500px]">
         <Tab.Group>
           <Tab.List className="flex w-fit border-b border-b-gray-900/20 md:ml-[58px]">
             {investmentLevelsData.map((investmentLevel) => (
@@ -77,7 +77,7 @@ const ourCars = () => {
                 key={investmentLevel}
                 className={({ selected }) =>
                   cn(
-                    "flex min-w-fit justify-center gap-3 px-6 pb-4  text-2xl font-normal  leading-5 text-tabInactive",
+                    "flex min-w-fit justify-center gap-3 px-6 py-2  text-2xl font-normal  leading-5 text-tabInactive",
                     "focus:outline-none",
                     selected
                       ? "border-b-4 border-primaryGold  font-semibold text-primaryGold"
@@ -126,7 +126,7 @@ const ourCars = () => {
         </Tab.Group>
         <Carousel
           id="4"
-          className="mb-12 px-6 pt-12 md:mb-0 md:px-0 md:pt-[132px]"
+          className="mb-12 px-6 pt-12 md:px-0 md:pt-[132px]"
           title={<h2 className="text-2xl ">Our cars</h2>}
           userAddress={walletAddress!}
           isLevelDivided={false}
