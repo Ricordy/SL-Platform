@@ -254,7 +254,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                             </div>
                           </div>
                         ) : (
-                          (userPieces && userPieces.length < 9 && (
+                          (userPieces && userPieces.length < 10 && (
                             // </div>
                             <div className="h-90 relative flex flex-col items-center justify-between gap-6 rounded-md bg-neutral-100">
                               <h2 className="pt-6 text-center text-[24px] font-semibold uppercase leading-normal tracking-wider text-black">
@@ -412,7 +412,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                           ))}
                         {currentLevel < 4 && !userLevel?.gt(currentLevel) && (
                           <div className="h-90 relative flex flex-col items-center justify-center rounded-md border-2 border-[#C3A279] align-middle">
-                            {(userPieces && userPieces.length < 9 && (
+                            {(userPieces && userPieces.length < 10 && (
                               <div className="flex flex-col items-center justify-center align-middle ">
                                 <Image
                                   src="/nfts/next_level.svg"
