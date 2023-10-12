@@ -210,7 +210,7 @@ export const ProjectInfo = ({
         <span>Price:</span>
         <span className="now font-medium">
           <NumericFormat
-            value={totalInvestment.toString()}
+            value={totalInvestment?.toString()}
             displayType="text"
             fixedDecimalScale={true}
             decimalSeparator=","
@@ -364,7 +364,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
       fetchDynamicBcInfo(investmentAddress, walletAddress);
     }
     if (!maxToInvest) {
-      fetchStaticInfo(investmentAddress, walletAddress);
+      fetchStaticInfo( walletAddress, investmentAddress);
     }
     fetchContractStatus(investmentAddress);
     isMounted.current = true;

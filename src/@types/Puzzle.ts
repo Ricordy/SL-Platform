@@ -4,7 +4,7 @@ export interface PuzzleProps {
   className?: string;
   isConnected: boolean;
   userAddress: Address;
-  puzzlePieces: {
+  puzzlePieces?: {
     tokenid: number;
     title: string;
     image: {
@@ -14,7 +14,7 @@ export interface PuzzleProps {
       url: string;
     };
   }[];
-  dbLevels: {
+  dbLevels?: {
     basicLevel: {
       title: string;
     };

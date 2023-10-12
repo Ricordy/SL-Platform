@@ -15,7 +15,7 @@ interface LevelProps {
   userPieces: BigNumber[];
   profitRange: string;
   nextProfitRange?: string;
-  claimLevel: (() => void) | undefined;
+  claimLevel: ((e: any) => void) | undefined;
 }
 const Level = ({
   level,
@@ -28,7 +28,7 @@ const Level = ({
   claimLevel,
 }: LevelProps) => {
   const collectedNFTs =
-    userLevel && userLevel > level ? 10 : userPieces.length || 0;
+    userLevel && userLevel > level ? 10 : userPieces?.length || 0;
   const percentage = collectedNFTs * 10;
 
   return (
@@ -155,7 +155,7 @@ const Level = ({
                 <div></div>
                 <span
                   className={`absolute top-48 ${
-                    userLevel > level || userPieces.length > 0
+                    userLevel > level || userPieces?.length > 0
                       ? "text-primaryGold"
                       : ""
                   }`}
@@ -163,7 +163,7 @@ const Level = ({
                   <span>{collectedNFTs}</span>{" "}
                   <span
                     className={
-                      userLevel > level || userPieces.length > 0
+                      userLevel > level || userPieces?.length > 0
                         ? ""
                         : "text-white"
                     }

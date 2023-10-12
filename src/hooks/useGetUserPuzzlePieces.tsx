@@ -2,6 +2,7 @@ import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 import { useContractRead, type Address } from "wagmi";
 import { getPuzzleCollectionIds } from "~/lib/utils";
+import { useBlockchainInfo } from "~/lib/zustand";
 import { SLCoreABI } from "~/utils/abis";
 
 interface HookProps {
@@ -22,18 +23,12 @@ const useGetUserPuzzlePieces = ({
     };
   }
   const claimPieceThreshold = [5000, 10000, 15000];
+  const userUniquePiecesPerLevel = useBlockchainInfo(
+    (state) => state.userUniquePiecesPerLevel
+  );
+  let userPuzzlePieces = useBlockchainInfo((state) => state.userPuzzlePieces);
 
-  const {
-    data: userPuzzlePieces,
-    error,
-    isLoading,
-  } = useContractRead({
-    address: process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
-    abi: SLCoreABI,
-    functionName: "balanceOfBatch",
-    args: [Array(10).fill(userAddress), getPuzzleCollectionIds(level)],
-    watch,
-  });
+
 
   const [userPieces, setUserPieces] = useState<BigNumber[]>([]);
   const [userTotalPieces, setUserTotalPieces] = useState(0);
@@ -42,23 +37,27 @@ const useGetUserPuzzlePieces = ({
   );
   const [claimPieceProgressValue, setClaimPieceProgressValue] =
     useState<BigNumber>(BigNumber.from(0));
-  useEffect(() => {
-    if (!userPuzzlePieces) return;
 
-    setUserPieces(userPuzzlePieces.filter((piece) => piece.gt(0)));
-  }, [userPuzzlePieces]);
+  userPuzzlePieces = useBlockchainInfo(
+    (state) => state.userPuzzlePieces
+  )?.slice((level - 1) * 10, level * 10);
+  useEffect(() => {
+
+    setUserPieces(userPuzzlePieces?.filter((piece) => piece.gt(0)));
+  }, [userUniquePiecesPerLevel, level]);
 
   useEffect(() => {
-    const sum = userPieces.reduce(
+    const sum = userPieces?.reduce(
       (x, y) => BigNumber.from(x).add(y),
       BigNumber.from(0)
     );
-    setUserTotalPieces(sum.toNumber());
+    setUserTotalPieces(sum?.toNumber());
   }, [userPieces]);
 
   useEffect(() => {
     const claimPieceProgressValue = totalInvested?.sub(
-      userTotalPieces * ((claimPieceThreshold[level - 1] || 5000) * 10 ** 6)
+      userUniquePiecesPerLevel[level - 1] *
+        ((claimPieceThreshold[level - 1] || 5000) * 10 ** 6)
     );
 
     const claimPieceProgress = claimPieceProgressValue
@@ -68,7 +67,7 @@ const useGetUserPuzzlePieces = ({
 
     setClaimPieceProgress(claimPieceProgress);
     setClaimPieceProgressValue(claimPieceProgressValue);
-  }, [userTotalPieces, level]);
+  }, [userUniquePiecesPerLevel, level]);
 
   return {
     userPieces,
@@ -76,8 +75,6 @@ const useGetUserPuzzlePieces = ({
     userTotalPieces,
     claimPieceProgress,
     claimPieceProgressValue,
-    error,
-    isLoading,
   };
 };
 

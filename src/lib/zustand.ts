@@ -1,13 +1,21 @@
 import { create } from "zustand";
 import { GraphQLClient, gql } from "graphql-request";
 import { Address, useContractRead } from "wagmi";
-import { SLCoreABI, investmentABI, paymentTokenABI } from "~/utils/abis";
-import { ethers } from "ethers";
+import {
+  FactoryABI,
+  SLCoreABI,
+  SLLogicsABI,
+  investmentABI,
+  paymentTokenABI,
+} from "~/utils/abis";
+import { BigNumber, ethers } from "ethers";
+import { getPuzzleCollectionIds } from "./utils";
 
 export const useInvestments = create((set) => {
   return {
     investments: undefined,
     userInvestments: undefined,
+    sliderInvestments: undefined,
     fetch: async () => {
       try {
         const response = await fetch("/api/investments", {
@@ -40,6 +48,22 @@ export const useInvestments = create((set) => {
         return null;
       }
     },
+    fetchSlider: async () => {
+      try {
+        const response = await fetch("/api/slider", {
+          method: "POST",
+        });
+
+        if (response.ok) {
+          const res = await response.json();
+          set({ sliderInvestments: res.sliderInvestments });
+        } else {
+          return null;
+        }
+      } catch (err) {
+        return null;
+      }
+    },
   };
 });
 
@@ -57,6 +81,45 @@ export const usePosts = create((set) => {
         if (response.ok) {
           const res = await response.json();
           set({ posts: res.posts });
+        } else {
+          return null;
+        }
+      } catch (err) {
+        return null;
+      }
+    },
+  };
+});
+
+export const useGameContent = create((set) => {
+  return {
+    levels: undefined,
+    pieces: undefined,
+    fetchLevels: async () => {
+      try {
+        const response = await fetch("/api/levels", {
+          method: "POST",
+        });
+
+        if (response.ok) {
+          const res = await response.json();
+          set({ levels: res.levels });
+        } else {
+          return null;
+        }
+      } catch (err) {
+        return null;
+      }
+    },
+    fetchPieces: async () => {
+      try {
+        const response = await fetch("/api/pieces", {
+          method: "POST",
+        });
+
+        if (response.ok) {
+          const res = await response.json();
+          set({ pieces: res.pieces });
         } else {
           return null;
         }
@@ -121,7 +184,6 @@ export const useContractInfo = create((set) => {
       }
     },
     fetchTransactions: async (address: string) => {
-      console.log("calling tx");
       try {
         const response = await fetch("/api/contractTransactions", {
           method: "POST",
@@ -145,6 +207,7 @@ export const useContractInfo = create((set) => {
 
 export const useBlockchainInfo = create((set) => {
   return {
+    //Investment detail info
     totalSupply: undefined,
     userTotalInvestment: undefined,
     maxToInvest: undefined,
@@ -153,6 +216,11 @@ export const useBlockchainInfo = create((set) => {
     userLevel: undefined,
     minToInvest: undefined,
     contractStatus: undefined,
+    //Levels and pieces info
+    userTotalInvestedPerLevel: undefined,
+    userUniquePiecesPerLevel: undefined,
+    userAllowedToClaimPiece: undefined,
+    userPuzzlePieces: undefined,
     fetchDynamicInfo: async (contractAddress: string, userAddress: string) => {
       if (
         contractAddress !== undefined &&
@@ -183,7 +251,6 @@ export const useBlockchainInfo = create((set) => {
             userAddress
           );
 
-
           set({
             totalSupply: totalInvested,
             userTotalInvestment: userTotalInvestment,
@@ -198,15 +265,10 @@ export const useBlockchainInfo = create((set) => {
         }
       }
     },
-    fetchStaticInfo: async (contractAddress: string, userAddress: string) => {
+    fetchStaticInfo: async (userAddress: string, contractAddress?: string) => {
       try {
         const provider = new ethers.providers.JsonRpcProvider(
           `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
-        );
-        const investmentContract = new ethers.Contract(
-          contractAddress,
-          investmentABI,
-          provider
         );
 
         const slCoreContract = new ethers.Contract(
@@ -215,14 +277,27 @@ export const useBlockchainInfo = create((set) => {
           provider
         );
 
-        const maxToInvest = await investmentContract.getMaxToInvest(),
-          minToInvest = await investmentContract.MINIMUM_INVESTMENT(),
-          contractLevel = await investmentContract.CONTRACT_LEVEL(),
-          userLevel = await slCoreContract.whichLevelUserHas(userAddress);
+        if (contractAddress) {
+          const investmentContract = new ethers.Contract(
+            contractAddress,
+            investmentABI,
+            provider
+          );
+          const maxToInvest = await investmentContract.getMaxToInvest(),
+            minToInvest = await investmentContract.MINIMUM_INVESTMENT(),
+            contractLevel = await investmentContract.CONTRACT_LEVEL(),
+            userLevel = await slCoreContract.whichLevelUserHas(userAddress);
+
+          set({
+            maxToInvest: maxToInvest.div(10 ** 6).toNumber(),
+            minToInvest: minToInvest.toNumber(),
+            contractLevel: contractLevel,
+            userLevel: userLevel,
+          });
+        }
+
+        const userLevel = await slCoreContract.whichLevelUserHas(userAddress);
         set({
-          maxToInvest: maxToInvest.div(10 ** 6).toNumber(),
-          minToInvest: minToInvest.toNumber(),
-          contractLevel: contractLevel,
           userLevel: userLevel,
         });
       } catch (err) {
@@ -247,6 +322,100 @@ export const useBlockchainInfo = create((set) => {
         });
       } catch (err) {
         return null;
+      }
+    },
+    fetchPuzzleInfo: async (userAddress: string, userLevel: number) => {
+      const provider = new ethers.providers.JsonRpcProvider(
+        `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
+      );
+      let puzzlePieces = [];
+      let totalInvestment = [];
+      const slCoreContract = new ethers.Contract(
+        process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
+        SLCoreABI,
+        provider
+      );
+
+      const factoryContract = new ethers.Contract(
+        process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
+        FactoryABI,
+        provider
+      );
+
+      const logicsContract = new ethers.Contract(
+        process.env.NEXT_PUBLIC_SLLOGIC_ADDRESS as Address,
+        SLLogicsABI,
+        provider
+      );
+
+      try {
+        const puzzlePieceslvl1 =
+          await slCoreContract.getUserPuzzlePiecesForUserCurrentLevel(
+            userAddress,
+            1
+          );
+        puzzlePieces.push(puzzlePieceslvl1);
+        const puzzlePieceslvl2 =
+          await slCoreContract.getUserPuzzlePiecesForUserCurrentLevel(
+            userAddress,
+            2
+          );
+        puzzlePieces.push(puzzlePieceslvl2);
+        const puzzlePieceslvl3 =
+          await slCoreContract.getUserPuzzlePiecesForUserCurrentLevel(
+            userAddress,
+            3
+          );
+        puzzlePieces.push(puzzlePieceslvl3);
+
+        const userTotalInvestment1 =
+          await factoryContract.getAddressTotalInLevel(userAddress, 1);
+
+        totalInvestment.push(userTotalInvestment1);
+
+        const userTotalInvestment2 =
+          await factoryContract.getAddressTotalInLevel(userAddress, 2);
+        totalInvestment.push(userTotalInvestment2);
+        const userTotalInvestment3 =
+          await factoryContract.getAddressTotalInLevel(userAddress, 3);
+        totalInvestment.push(userTotalInvestment3);
+        totalInvestment.push(
+          userTotalInvestment1.toNumber() +
+            userTotalInvestment2.toNumber() +
+            userTotalInvestment3.toNumber()
+        );
+
+        const userPuzzlePiecesForLevel = await slCoreContract.balanceOfBatch(
+          Array(30).fill(userAddress),
+          Array.from({ length: 30 }, (_, k) => BigNumber.from(k))
+        );
+
+        
+
+        set({
+          userTotalInvestedPerLevel: totalInvestment,
+          userUniquePiecesPerLevel: puzzlePieces,
+          userPuzzlePieces: userPuzzlePiecesForLevel,
+        });
+      } catch (err) {
+        return null;
+      }
+      try {
+        const userAllowedToClaimPiece =
+          await logicsContract.userAllowedToClaimPiece(
+            userAddress,
+            userLevel,
+            userLevel,
+            puzzlePieces[userLevel - 1]
+          );
+
+        set({
+          userAllowedToClaimPiece: true,
+        });
+      } catch (err) {
+        set({
+          userAllowedToClaimPiece: false,
+        });
       }
     },
   };
