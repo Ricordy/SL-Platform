@@ -161,6 +161,8 @@ export const InvestmentModal = ({
       return;
     }
 
+    let toastId;
+
     try {
       const investmentAmountWithDecimals = ethers.utils.parseUnits(
         valueApprovalAndInvestment.toString(),
@@ -172,34 +174,43 @@ export const InvestmentModal = ({
           ?.connect(signerData)
           .approve(contractAddress, investmentAmountWithDecimals));
 
-      await toast.promise(results.wait(), {
-        loading: "Approving...",
-        success: "Approved",
-        error: "Error approving",
-      });
+      await toast.promise(
+        results.wait(),
+        {
+          loading: "Approving...",
+          success: "Approved",
+          error: "Error approving",
+        },
+        {
+          success: {
+            style: {
+              border: "1px solid #000000",
+              padding: "16px",
+              color: "#000000",
+              backgroundColor: "#128a00",
+            },
+          },
+        }
+      );
 
       //setIsApproving(false);
       // setisInvesting(true);
+      toastId = toast.loading(
+        "Making Investment: We're processing your investment. Hold on for a moment..."
+      );
       const results2 =
         investContract &&
         (await investContract
           .connect(signerData)
           .invest(BigNumber.from(valueApprovalAndInvestment)));
 
-      await toast.promise(
-        results2.wait(),
-        {
-          loading: "Investing...",
-          success: "Invested!",
-          error: "Error investing",
-        },
-        {
-          success: {
-            duration: 5000,
-            icon: "🔥",
-          },
-        }
-      );
+      results2.wait();
+
+      // await toast.promise(results2.wait(), {
+      //   loading: "Investing...",
+      //   success: undi,
+      //   error: "Error investing",
+      // });
 
       // Save to hygraph
 
@@ -225,18 +236,30 @@ export const InvestmentModal = ({
           toast.error(JSON.stringify("Error on fecthing API", response.text));
         // throw new Error(`Something went wrong submitting the form.`);
 
-        toast.success("Saved to the DB");
         fetchTransactions(contractAddress);
         fetchDynamicInfo(contractAddress, userAddress);
         fetchUserTransactions();
         fetchUserInvestments();
         fetchPuzzleInfo(userAddress, userLevel);
+        toast.dismiss(toastId);
+        toast.success(
+          "Investment Made: You've successfully invested in the chosen classic car. Your contribution is making restoration dreams come true!"
+          // {
+          //   style: {
+          //     border: "1px solid #000000",
+          //     padding: "16px",
+          //     color: "#000000",
+          //     backgroundColor: "#128a00",
+          //   },
+          // }
+        );
       } catch (err) {
         // toast.error(err.message);
       }
 
       toggleModalInvest();
     } catch (error) {
+      toast.dismiss(toastId);
       if (
         typeof error.reason === "string" &&
         error.reason.indexOf("InvestmentExceedMax") > -1
