@@ -200,7 +200,6 @@ const MyInvestments: NextPage = () => {
     (state) => state.userTotalInvestedPerLevel
   );
 
-
   const { data }: { data: BigNumber } = useContractReads({
     contracts: [
       {
@@ -410,7 +409,9 @@ const MyInvestments: NextPage = () => {
         userPaymentTokenBalance &&
         userPaymentTokenBalance.value < entryNFTPrice
       ) {
-        toast.error("You don't have enough balance!");
+        toast.error(
+          "Insufficient Funds: Uh-oh! It seems your wallet lacks the funds needed for the Membership Card. Top up your balance and try again"
+        );
         return;
       }
       const result = await mintEntryNFTRefetch();
@@ -419,7 +420,9 @@ const MyInvestments: NextPage = () => {
           result.error.stack.indexOf("ERC20: transfer amount exceeds balance") >
           -1
         ) {
-          return toast.error("You don't have enough balance");
+          return toast.error(
+            "Insufficient Funds: Uh-oh! It seems your wallet lacks the funds needed for the Membership Card. Top up your balance and try again"
+          );
         }
         if (
           result.error.stack.indexOf("SLCore: User have an entry token") > -1
@@ -452,9 +455,12 @@ const MyInvestments: NextPage = () => {
           await toast.promise(
             results2.wait(),
             {
-              loading: "Minting entry...",
-              success: "Minted!",
-              error: "Error while minting",
+              loading:
+                " Purchasing Membership Card: Purchasing your Membership Card. Sit tight!",
+              success:
+                "Membership Card Acquired: You are now a proud holder of the Something Legendary Membership Card. Welcome to the community!",
+              error:
+                "Network Issue: We're experiencing network issues at the moment. Please try again later or check your internet connection.",
             },
             {
               success: {
@@ -467,7 +473,11 @@ const MyInvestments: NextPage = () => {
       } else {
         mintNFT?.();
       }
-    } catch (error) {}
+    } catch (error) {
+      toast.error(
+        "Network Issue: We're experiencing network issues at the moment. Please try again later or check your internet connection."
+      );
+    }
   };
 
   function extractUniqueInvestments(queryResult) {
