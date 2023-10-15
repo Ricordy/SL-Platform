@@ -26,6 +26,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { useBreakpoint } from "~/hooks/useBreakpoints";
 import { useBlockchainInfo, useGameContent } from "~/lib/zustand";
+import toast from "react-hot-toast";
 
 function noDecimals(value: number) {
   return value / 10 ** 6;
@@ -106,14 +107,27 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
 
   const actionClaimPiece = async (e: any) => {
     e.preventDefault();
+    const toastId = toast.loading(
+      "Claiming Puzzle Piece: We're fetching your puzzle piece. It'll be yours shortly."
+    );
     setIsLoadingClaimPiece(true);
     if (userAllowedToClaimPiece && currentLevel === userLevel?.toNumber()) {
       try {
         const results = await SLCoreContract?.claimPiece();
-        const abc = await results?.wait();
-      } catch (error) {}
+        await results?.wait();
+      } catch (error) {
+        toast.dismiss(toastId);
+        toast.error(
+          "Puzzle Piece Unavailable - Your invested value does not meet the required threshold to access this puzzle piece."
+        );
+        setIsLoadingClaimPiece(false);
+      }
 
       fetchPuzzleInfo(userAddress, userLevel);
+      toast.dismiss(toastId);
+      toast.success(
+        "Puzzle Piece Claimed: Well done! You've claimed a puzzle piece. Collect 10 unique pieces to unlock your LEVEL NFT."
+      );
     }
     setIsLoadingClaimPiece(false);
   };

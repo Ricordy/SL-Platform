@@ -174,24 +174,11 @@ export const InvestmentModal = ({
           ?.connect(signerData)
           .approve(contractAddress, investmentAmountWithDecimals));
 
-      await toast.promise(
-        results.wait(),
-        {
-          loading: "Approving...",
-          success: "Approved",
-          error: "Error approving",
-        },
-        {
-          success: {
-            style: {
-              border: "1px solid #000000",
-              padding: "16px",
-              color: "#000000",
-              backgroundColor: "#128a00",
-            },
-          },
-        }
-      );
+      await toast.promise(results.wait(), {
+        loading: "Approving...",
+        success: "Approved",
+        error: "Error approving",
+      });
 
       //setIsApproving(false);
       // setisInvesting(true);
@@ -238,20 +225,12 @@ export const InvestmentModal = ({
 
         fetchTransactions(contractAddress);
         fetchDynamicInfo(contractAddress, userAddress);
+        fetchPuzzleInfo(userAddress, userLevel);
         fetchUserTransactions();
         fetchUserInvestments();
-        fetchPuzzleInfo(userAddress, userLevel);
         toast.dismiss(toastId);
         toast.success(
           "Investment Made: You've successfully invested in the chosen classic car. Your contribution is making restoration dreams come true!"
-          // {
-          //   style: {
-          //     border: "1px solid #000000",
-          //     padding: "16px",
-          //     color: "#000000",
-          //     backgroundColor: "#128a00",
-          //   },
-          // }
         );
       } catch (err) {
         // toast.error(err.message);

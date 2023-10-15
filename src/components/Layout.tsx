@@ -97,19 +97,23 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
         toastOptions={{
           success: {
             style: {
-              backgroundColor: "#32db65",
+              backgroundColor: "#b0ffd4",
+              border: "1px solid #25fa85",
               color: "black",
             },
           },
           error: {
             style: {
-              backgroundColor: "#db323b",
+              backgroundColor: "#ffb0b5",
+              border: "1px solid #f7606b",
               color: "black",
             },
           },
           loading: {
             style: {
-              backgroundColor: "#32d0db",
+              backgroundColor: "#c3dffa",
+              border: "1px solid #60aef7",
+
               color: "black",
             },
           },
