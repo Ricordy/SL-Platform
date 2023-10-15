@@ -134,14 +134,26 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
 
   const actionClaimLevel = async (e: any) => {
     e.preventDefault();
+    const toastId = toast.loading(
+      "Unlocking LEVEL NFT: Your LEVEL NFT is on its way. Just a moment longer."
+    );
 
     if (userAllowedToClaimPiece && currentLevel === userLevel?.toNumber()) {
       try {
         const results = await SLCoreContract?.claimLevel();
-        const abc = await results?.wait();
-      } catch (error) {}
+        await results?.wait();
+      } catch (error) {
+        toast.dismiss(toastId);
+        toast.error(
+          "PInsufficient Puzzle Pieces: Oops! You need to collect 10 distinct puzzle pieces to unlock a LEVEL NFT. Keep investing to complete your set."
+        );
+      }
 
       fetchPuzzleInfo(userAddress, userLevel);
+      toast.dismiss(toastId);
+      toast.success(
+        "LEVEL NFT Unlocked: Congratulations! You've collected 10 unique puzzle pieces and unlocked your LEVEL NFT. Enjoy enhanced benefits!"
+      );
     }
   };
 
