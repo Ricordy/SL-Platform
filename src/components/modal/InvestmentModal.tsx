@@ -198,7 +198,7 @@ export const InvestmentModal = ({
           .connect(signerData)
           .invest(BigNumber.from(valueApprovalAndInvestment)));
 
-      results2.wait();
+      await results2.wait();
 
       // await toast.promise(results2.wait(), {
       //   loading: "Investing...",
