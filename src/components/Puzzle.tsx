@@ -124,7 +124,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
         toast.dismiss(toastId);
         toast.error(
           <div className=" py-2 ">
-            <div className=" mb-1 text-lg">Puzzle Piece Unavailable:</div>
+            <div className=" mb-1 text-lg">Puzzle Piece Unavailable</div>
             <div className=" text-medium font-light">
               Your invested value does not meet the required threshold to access
               this puzzle piece.
@@ -138,7 +138,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
       toast.dismiss(toastId);
       toast.success(
         <div className=" py-2 ">
-          <div className=" mb-1 text-lg">Puzzle Piece Claimed:</div>
+          <div className=" mb-1 text-lg">Puzzle Piece Claimed</div>
           <div className=" text-medium font-light">
             Well done! You've claimed a puzzle piece. Collect 10 unique pieces
             to unlock your LEVEL NFT.
@@ -153,7 +153,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
     e.preventDefault();
     const toastId = toast.loading(
       <div className=" py-2 ">
-        <div className=" mb-1 text-lg">Unlocking LEVEL NFT:</div>
+        <div className=" mb-1 text-lg">Unlocking LEVEL NFT</div>
         <div className=" text-medium font-light">
           Your LEVEL NFT is on its way. Just a moment longer.
         </div>
@@ -168,7 +168,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
         toast.dismiss(toastId);
         toast.error(
           <div className=" py-2 ">
-            <div className=" mb-1 text-lg">Insufficient Puzzle Pieces:</div>
+            <div className=" mb-1 text-lg">Insufficient Puzzle Pieces</div>
             <div className=" text-medium font-light">
               Oops! You need to collect 10 distinct puzzle pieces to unlock a
               LEVEL NFT. Keep investing to complete your set.
@@ -181,7 +181,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
       toast.dismiss(toastId);
       toast.success(
         <div className=" py-2 ">
-          <div className=" mb-1 text-lg">LEVEL NFT Unlocked:</div>
+          <div className=" mb-1 text-lg">LEVEL NFT Unlocked</div>
           <div className=" text-medium font-light">
             Congratulations! You've collected 10 unique puzzle pieces and
             unlocked your LEVEL NFT. Enjoy enhanced benefits!

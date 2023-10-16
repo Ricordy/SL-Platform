@@ -411,7 +411,7 @@ const MyInvestments: NextPage = () => {
       ) {
         toast.error(
           <div className=" py-2 ">
-            <div className=" mb-1 text-lg">Insufficient Funds: </div>
+            <div className=" mb-1 text-lg">Insufficient Funds </div>
             <div className=" text-medium font-light">
               Uh-oh! It seems your wallet lacks the funds needed for the
               Membership Card. Top up your balance and try again
@@ -428,7 +428,7 @@ const MyInvestments: NextPage = () => {
         ) {
           return toast.error(
             <div className=" py-2 ">
-              <div className=" mb-1 text-lg">Insufficient Funds: </div>
+              <div className=" mb-1 text-lg">Insufficient Funds </div>
               <div className=" text-medium font-light">
                 Uh-oh! It seems your wallet lacks the funds needed for the
                 Membership Card. Top up your balance and try again
@@ -441,7 +441,7 @@ const MyInvestments: NextPage = () => {
         ) {
           return toast.error(
             <div className=" py-2 ">
-              <div className=" mb-1 text-lg">Already a member: </div>
+              <div className=" mb-1 text-lg">Already a member </div>
               <div className=" text-medium font-light">
                 You already minted the NFT!
               </div>
