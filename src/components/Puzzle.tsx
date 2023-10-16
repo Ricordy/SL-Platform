@@ -27,6 +27,18 @@ import "swiper/css/pagination";
 import { useBreakpoint } from "~/hooks/useBreakpoints";
 import { useBlockchainInfo, useGameContent } from "~/lib/zustand";
 import toast from "react-hot-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogOverlay,
+  AlertDialogPortal,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@radix-ui/react-alert-dialog";
+import MyAlertButton from "./MyAlertButton";
 
 function noDecimals(value: number) {
   return value / 10 ** 6;
@@ -369,7 +381,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                                   />
                                 </span>
                               </div>
-                              <Button
+                              {/* <Button
                                 onClick={actionClaimPiece}
                                 className="whitespace-nowrap border-emerald-700 px-12 text-emerald-700"
                                 variant="outline"
@@ -378,7 +390,18 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                                 {isLoadingClaimPiece
                                   ? "Loading..."
                                   : `Claim Piece`}
-                              </Button>
+                              </Button> */}
+                              <MyAlertButton
+                                triggerButtonLabel={
+                                  isLoadingClaimPiece
+                                    ? "Loading..."
+                                    : `Claim Piece`
+                                }
+                                confirmAction={actionClaimPiece}
+                                triggerButtonClassname="whitespace-nowrap border-emerald-700 px-12 text-emerald-700"
+                                variant="outline"
+                                isTriggerDisabled={!userAllowedToClaimPiece}
+                              />
 
                               <div className="bottom-0 left-0 flex h-3 w-full self-end rounded-b-md bg-progressBackground">
                                 <div
