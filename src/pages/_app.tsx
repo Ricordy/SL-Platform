@@ -14,6 +14,9 @@ import "../styles/globals.css";
 
 const alchemyApiKey = process.env.ALCHEMY_API_KEY as string;
 const infuraApiKey = process.env.INFURA_API_KEY as string;
+const jsonRpcUrl =
+  process.env.NEXT_PUBLIC_JSONRPC_URL ??
+  "https://eth-goerli.g.alchemy.com/v2/zEaTIrJiR65rZT3KOR7w9ObTjHhr_TFb";
 
 const { chains, provider } = configureChains(
   [
@@ -26,7 +29,7 @@ const { chains, provider } = configureChains(
     // infuraProvider({ apiKey: infuraApiKey }),
     jsonRpcProvider({
       rpc: (chain) => ({
-        http: "https://eth-goerli.g.alchemy.com/v2/zEaTIrJiR65rZT3KOR7w9ObTjHhr_TFb",
+        http: jsonRpcUrl,
       }),
     }),
   ]
