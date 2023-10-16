@@ -6,6 +6,7 @@ import { Button } from "../ui/Button";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { useBreakpoint } from "~/hooks/useBreakpoints";
+import MyAlertButton from "../MyAlertButton";
 
 interface LevelProps {
   level: number;
@@ -15,7 +16,7 @@ interface LevelProps {
   userPieces: BigNumber[];
   profitRange: string;
   nextProfitRange?: string;
-  claimLevel: ((e: any) => void) | undefined;
+  claimLevel: (e: any) => void;
 }
 const Level = ({
   level,
@@ -184,17 +185,18 @@ const Level = ({
           )}
         </div>
         {level < 4 && (
-          <Button
-            variant={"outline"}
-            onClick={claimLevel}
-            disabled={collectedNFTs < 10 || userLevel > level}
-            className={cn(
+          <MyAlertButton
+            triggerButtonLabel={
+              level > 2 ? "Claim Final NFT" : `Claim Level ${level + 1}`
+            }
+            confirmAction={claimLevel}
+            triggerButtonClassname={cn(
               " mt-[16px] border-primaryGold bg-primaryGold font-sans text-[14px] font-medium text-white hover:bg-primaryGold",
               userLevel > level ? "bg-primaryGold text-white" : ""
             )}
-          >
-            {level > 2 ? "Claim Final NFT" : `Claim Level ${level + 1}`}
-          </Button>
+            variant="outline"
+            isTriggerDisabled={collectedNFTs < 10 || userLevel > level}
+          />
         )}
       </div>
     </div>

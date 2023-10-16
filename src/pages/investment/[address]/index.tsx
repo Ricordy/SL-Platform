@@ -47,6 +47,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { A11y, Navigation } from "swiper";
 import { useBreakpoint } from "~/hooks/useBreakpoints";
+import MyAlertButton from "~/components/MyAlertButton";
 
 dayjs.extend(localizedFormat);
 
@@ -364,7 +365,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
       fetchDynamicBcInfo(investmentAddress, walletAddress);
     }
     if (!maxToInvest) {
-      fetchStaticInfo( walletAddress, investmentAddress);
+      fetchStaticInfo(walletAddress, investmentAddress);
     }
     fetchContractStatus(investmentAddress);
     isMounted.current = true;
@@ -423,7 +424,6 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
       if (!response.ok)
         toast.error(JSON.stringify("Error on fecthing API", response.text));
       // throw new Error(`Something went wrong submitting the form.`);
-
     } catch (err) {
       toast.error(err.message);
     }
@@ -982,13 +982,48 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                     minToInvest={Number(minToInvest)}
                     paymentTokenBalance={Number(paymentTokenBalance?.formatted)}
                   /> */}
-                  <Button
+                  {/* <Button
                     disabled={!canWithdraw}
                     variant="outline"
                     onClick={onClickWithdraw}
                   >
                     Withdraw
-                  </Button>
+                  </Button> */}
+
+                  <InvestmentModal
+                    userAddress={walletAddress as Address}
+                    className="flex flex-col justify-between align-middle"
+                    title={investment?.basicInvestment.car.basicInfo.title}
+                    chassis={investment?.basicInvestment.car.chassis}
+                    contractAddress={investment?.address}
+                    totalProduction={
+                      investment?.basicInvestment.car.totalProduction
+                    }
+                    totalModelProduction={
+                      investment?.basicInvestment.car.totalModelProduction
+                    }
+                    colorCombination={
+                      investment?.basicInvestment.car.colorCombination
+                    }
+                    totalInvestment={Number(totalSupply) / 10 ** 6}
+                    maxToInvest={
+                      Number(maxToInvest) -
+                      userTotalInvestment?.div(10 ** 6).toNumber()
+                    }
+                    minToInvest={Number(minToInvest)}
+                    paymentTokenBalance={Number(
+                      paymentTokenBalance?.div(10 ** 6)
+                    )}
+                    contractLevel={contractLevel as any as number}
+                    userLevel={userLevel as any as number}
+                  />
+                  <MyAlertButton
+                    triggerButtonLabel={"Withdraw"}
+                    confirmAction={onClickWithdraw}
+                    triggerButtonClassname={cn()}
+                    variant="outline"
+                    isTriggerDisabled={!canWithdraw}
+                  />
                 </div>
               </div>
               <div className="flex max-h-[492px]   flex-col">

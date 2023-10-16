@@ -16,6 +16,8 @@ import {
   useInvestments,
   useUserTransactions,
 } from "~/lib/zustand";
+import { cn } from "~/lib/utils";
+import MyAlertButton from "../MyAlertButton";
 
 type investmentProps = {
   contractAddress: Address;
@@ -196,7 +198,7 @@ export const InvestmentModal = ({
           .connect(signerData)
           .invest(BigNumber.from(valueApprovalAndInvestment)));
 
-      results2.wait();
+      await results2.wait();
 
       // await toast.promise(results2.wait(), {
       //   loading: "Investing...",
@@ -400,14 +402,15 @@ export const InvestmentModal = ({
               </div>
             </div>
           </div>
-
-          <Button
-            disabled={Number(inputRef?.current?.value) < 100}
-            className="inline-flex justify-center rounded-md border border-transparent bg-primaryGreen px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:bg-slate-400"
-            onClick={(e) => handleClick(e)}
-          >
-            Invest now
-          </Button>
+          <MyAlertButton
+            triggerButtonLabel={"Invest now"}
+            confirmAction={(e) => handleClick(e)}
+            triggerButtonClassname={cn(
+              "inline-flex justify-center rounded-md border border-transparent bg-primaryGreen px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2 disabled:bg-slate-400"
+            )}
+            variant="default"
+            isTriggerDisabled={Number(inputRef?.current?.value) < 100}
+          />
         </div>
       </Modal>
     );
