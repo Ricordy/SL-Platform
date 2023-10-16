@@ -183,9 +183,9 @@ export const InvestmentModal = ({
       //setIsApproving(false);
       // setisInvesting(true);
       toastId = toast.loading(
-        <div>
-          <div className=" text-xl">Making Investment:</div>
-          <div className=" text-medium">
+        <div className=" py-2 ">
+          <div className=" mb-1 text-lg">Making Investment:</div>
+          <div className=" text-medium font-light">
             We're processing your investment. Hold on for a moment...
           </div>
         </div>
@@ -235,9 +235,9 @@ export const InvestmentModal = ({
         fetchUserInvestments();
         toast.dismiss(toastId);
         toast.success(
-          <div>
-            <div className=" text-xl">Investment Made:</div>
-            <div className=" text-medium">
+          <div className=" py-2 ">
+            <div className=" mb-1 text-lg">Investment Made:</div>
+            <div className=" text-medium font-light">
               You've successfully invested in the chosen classic car. Your
               contribution is making restoration dreams come true!
             </div>

@@ -331,11 +331,11 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                       ? connect()
                       : isAboveMd && !window.ethereum?.isMetaMask
                       ? toast.error(
-                          <div>
-                            <div className=" text-xl">
-                              Wallet Connection Failed:
+                          <div className=" py-2 ">
+                            <div className=" mb-1 text-lg">
+                              Wallet Connection Failed
                             </div>
-                            <div className=" text-medium">
+                            <div className=" text-medium  font-light">
                               Oops! We couldn't connect your wallet. Please
                               ensure you have the wallet extension installed and
                               try again

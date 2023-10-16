@@ -410,9 +410,9 @@ const MyInvestments: NextPage = () => {
         userPaymentTokenBalance.value < entryNFTPrice
       ) {
         toast.error(
-          <div>
-            <div className=" text-xl">Insufficient Funds: </div>
-            <div className=" text-medium">
+          <div className=" py-2 ">
+            <div className=" mb-1 text-lg">Insufficient Funds: </div>
+            <div className=" text-medium font-light">
               Uh-oh! It seems your wallet lacks the funds needed for the
               Membership Card. Top up your balance and try again
             </div>
@@ -427,9 +427,9 @@ const MyInvestments: NextPage = () => {
           -1
         ) {
           return toast.error(
-            <div>
-              <div className=" text-xl">Insufficient Funds: </div>
-              <div className=" text-medium">
+            <div className=" py-2 ">
+              <div className=" mb-1 text-lg">Insufficient Funds: </div>
+              <div className=" text-medium font-light">
                 Uh-oh! It seems your wallet lacks the funds needed for the
                 Membership Card. Top up your balance and try again
               </div>
@@ -440,9 +440,11 @@ const MyInvestments: NextPage = () => {
           result.error.stack.indexOf("SLCore: User have an entry token") > -1
         ) {
           return toast.error(
-            <div>
-              <div className=" text-xl">Already a member: </div>
-              <div className=" text-medium">You already minted the NFT!</div>
+            <div className=" py-2 ">
+              <div className=" mb-1 text-lg">Already a member: </div>
+              <div className=" text-medium font-light">
+                You already minted the NFT!
+              </div>
             </div>
           );
         }
@@ -473,26 +475,28 @@ const MyInvestments: NextPage = () => {
             results2.wait(),
             {
               loading: (
-                <div>
-                  <div className=" text-xl">Purchasing Membership Card: </div>
-                  <div className=" text-medium">
+                <div className=" py-2 ">
+                  <div className=" mb-1 text-lg">
+                    Purchasing Membership Card
+                  </div>
+                  <div className=" text-medium font-light">
                     Purchasing your Membership Card. Sit tight!
                   </div>
                 </div>
               ),
               success: (
-                <div>
-                  <div className=" text-xl">Membership Card Acquired: </div>
-                  <div className=" text-medium">
+                <div className=" py-2 ">
+                  <div className=" mb-1 text-lg">Membership Card Acquired </div>
+                  <div className=" text-medium font-light">
                     You are now a proud holder of the Something Legendary
                     Membership Card. Welcome to the community!
                   </div>
                 </div>
               ),
               error: (
-                <div>
-                  <div className=" text-xl">Network Issue: </div>
-                  <div className=" text-medium">
+                <div className=" py-2 ">
+                  <div className=" mb-1 text-lg">Network Issue </div>
+                  <div className=" text-medium font-light">
                     We're experiencing network issues at the moment. Please try
                     again later or check your internet connection.
                   </div>

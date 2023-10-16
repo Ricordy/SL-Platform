@@ -108,9 +108,9 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
   const actionClaimPiece = async (e: any) => {
     e.preventDefault();
     const toastId = toast.loading(
-      <div>
-        <div className=" text-xl">Claiming Puzzle Piece:</div>
-        <div className=" text-medium">
+      <div className=" py-2 ">
+        <div className=" mb-1 text-lg">Claiming Puzzle Piece:</div>
+        <div className=" text-medium font-light">
           We're fetching your puzzle piece. It'll be yours shortly.
         </div>
       </div>
@@ -123,9 +123,9 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
       } catch (error) {
         toast.dismiss(toastId);
         toast.error(
-          <div>
-            <div className=" text-xl">Puzzle Piece Unavailable:</div>
-            <div className=" text-medium">
+          <div className=" py-2 ">
+            <div className=" mb-1 text-lg">Puzzle Piece Unavailable:</div>
+            <div className=" text-medium font-light">
               Your invested value does not meet the required threshold to access
               this puzzle piece.
             </div>
@@ -137,9 +137,9 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
       fetchPuzzleInfo(userAddress, userLevel);
       toast.dismiss(toastId);
       toast.success(
-        <div>
-          <div className=" text-xl">Puzzle Piece Claimed:</div>
-          <div className=" text-medium">
+        <div className=" py-2 ">
+          <div className=" mb-1 text-lg">Puzzle Piece Claimed:</div>
+          <div className=" text-medium font-light">
             Well done! You've claimed a puzzle piece. Collect 10 unique pieces
             to unlock your LEVEL NFT.
           </div>
@@ -152,9 +152,9 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
   const actionClaimLevel = async (e: any) => {
     e.preventDefault();
     const toastId = toast.loading(
-      <div>
-        <div className=" text-xl">Unlocking LEVEL NFT:</div>
-        <div className=" text-medium">
+      <div className=" py-2 ">
+        <div className=" mb-1 text-lg">Unlocking LEVEL NFT:</div>
+        <div className=" text-medium font-light">
           Your LEVEL NFT is on its way. Just a moment longer.
         </div>
       </div>
@@ -167,9 +167,9 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
       } catch (error) {
         toast.dismiss(toastId);
         toast.error(
-          <div>
-            <div className=" text-xl">Insufficient Puzzle Pieces:</div>
-            <div className=" text-medium">
+          <div className=" py-2 ">
+            <div className=" mb-1 text-lg">Insufficient Puzzle Pieces:</div>
+            <div className=" text-medium font-light">
               Oops! You need to collect 10 distinct puzzle pieces to unlock a
               LEVEL NFT. Keep investing to complete your set.
             </div>
@@ -180,9 +180,9 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
       fetchPuzzleInfo(userAddress, userLevel);
       toast.dismiss(toastId);
       toast.success(
-        <div>
-          <div className=" text-xl">LEVEL NFT Unlocked:</div>
-          <div className=" text-medium">
+        <div className=" py-2 ">
+          <div className=" mb-1 text-lg">LEVEL NFT Unlocked:</div>
+          <div className=" text-medium font-light">
             Congratulations! You've collected 10 unique puzzle pieces and
             unlocked your LEVEL NFT. Enjoy enhanced benefits!
           </div>
