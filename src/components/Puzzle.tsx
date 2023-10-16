@@ -236,7 +236,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
             {currentLevel !== 1 && (
               <Image
                 src={
-                  isAboveMd || levels.at(currentLevel - 1)?.locked
+                  isAboveMd || levels?.at(currentLevel - 1)?.locked
                     ? "/icons/pagination-previous-black.svg"
                     : "/icons/pagination-previous.svg"
                 }
@@ -549,7 +549,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
           >
             <Image
               src={
-                isAboveMd || levels.at(currentLevel - 1)?.locked
+                isAboveMd || levels?.at(currentLevel - 1)?.locked
                   ? "/icons/pagination-next-black.svg"
                   : "/icons/pagination-next.svg"
               }
