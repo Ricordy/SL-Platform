@@ -331,7 +331,16 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                       ? connect()
                       : isAboveMd && !window.ethereum?.isMetaMask
                       ? toast.error(
-                          "Wallet Connection Failed: Oops! We couldn't connect your wallet. Please ensure you have the wallet extension installed and try again"
+                          <div>
+                            <div className=" text-xl">
+                              Wallet Connection Failed:
+                            </div>
+                            <div className=" text-medium">
+                              Oops! We couldn't connect your wallet. Please
+                              ensure you have the wallet extension installed and
+                              try again
+                            </div>
+                          </div>
                         )
                       : isBelowMd && !window.ethereum?.isMetaMask
                       ? router.push(`dapp://${window.location.host}`)

@@ -108,7 +108,12 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
   const actionClaimPiece = async (e: any) => {
     e.preventDefault();
     const toastId = toast.loading(
-      "Claiming Puzzle Piece: We're fetching your puzzle piece. It'll be yours shortly."
+      <div>
+        <div className=" text-xl">Claiming Puzzle Piece:</div>
+        <div className=" text-medium">
+          We're fetching your puzzle piece. It'll be yours shortly.
+        </div>
+      </div>
     );
     setIsLoadingClaimPiece(true);
     if (userAllowedToClaimPiece && currentLevel === userLevel?.toNumber()) {
@@ -118,7 +123,13 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
       } catch (error) {
         toast.dismiss(toastId);
         toast.error(
-          "Puzzle Piece Unavailable - Your invested value does not meet the required threshold to access this puzzle piece."
+          <div>
+            <div className=" text-xl">Puzzle Piece Unavailable:</div>
+            <div className=" text-medium">
+              Your invested value does not meet the required threshold to access
+              this puzzle piece.
+            </div>
+          </div>
         );
         setIsLoadingClaimPiece(false);
       }
@@ -126,7 +137,13 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
       fetchPuzzleInfo(userAddress, userLevel);
       toast.dismiss(toastId);
       toast.success(
-        "Puzzle Piece Claimed: Well done! You've claimed a puzzle piece. Collect 10 unique pieces to unlock your LEVEL NFT."
+        <div>
+          <div className=" text-xl">Puzzle Piece Claimed:</div>
+          <div className=" text-medium">
+            Well done! You've claimed a puzzle piece. Collect 10 unique pieces
+            to unlock your LEVEL NFT.
+          </div>
+        </div>
       );
     }
     setIsLoadingClaimPiece(false);
@@ -135,7 +152,12 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
   const actionClaimLevel = async (e: any) => {
     e.preventDefault();
     const toastId = toast.loading(
-      "Unlocking LEVEL NFT: Your LEVEL NFT is on its way. Just a moment longer."
+      <div>
+        <div className=" text-xl">Unlocking LEVEL NFT:</div>
+        <div className=" text-medium">
+          Your LEVEL NFT is on its way. Just a moment longer.
+        </div>
+      </div>
     );
 
     if (userAllowedToClaimPiece && currentLevel === userLevel?.toNumber()) {
@@ -145,14 +167,26 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
       } catch (error) {
         toast.dismiss(toastId);
         toast.error(
-          "PInsufficient Puzzle Pieces: Oops! You need to collect 10 distinct puzzle pieces to unlock a LEVEL NFT. Keep investing to complete your set."
+          <div>
+            <div className=" text-xl">Insufficient Puzzle Pieces:</div>
+            <div className=" text-medium">
+              Oops! You need to collect 10 distinct puzzle pieces to unlock a
+              LEVEL NFT. Keep investing to complete your set.
+            </div>
+          </div>
         );
       }
 
       fetchPuzzleInfo(userAddress, userLevel);
       toast.dismiss(toastId);
       toast.success(
-        "LEVEL NFT Unlocked: Congratulations! You've collected 10 unique puzzle pieces and unlocked your LEVEL NFT. Enjoy enhanced benefits!"
+        <div>
+          <div className=" text-xl">LEVEL NFT Unlocked:</div>
+          <div className=" text-medium">
+            Congratulations! You've collected 10 unique puzzle pieces and
+            unlocked your LEVEL NFT. Enjoy enhanced benefits!
+          </div>
+        </div>
       );
     }
   };

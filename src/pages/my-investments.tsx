@@ -375,7 +375,7 @@ const MyInvestments: NextPage = () => {
       hash: dataMintNFT?.hash,
       onSuccess: () => {
         // setUserMinted(true);
-        toast.success("Minted NFT!");
+        // toast.success("Minted NFT!");
       },
     });
 
@@ -410,7 +410,13 @@ const MyInvestments: NextPage = () => {
         userPaymentTokenBalance.value < entryNFTPrice
       ) {
         toast.error(
-          "Insufficient Funds: Uh-oh! It seems your wallet lacks the funds needed for the Membership Card. Top up your balance and try again"
+          <div>
+            <div className=" text-xl">Insufficient Funds: </div>
+            <div className=" text-medium">
+              Uh-oh! It seems your wallet lacks the funds needed for the
+              Membership Card. Top up your balance and try again
+            </div>
+          </div>
         );
         return;
       }
@@ -421,13 +427,24 @@ const MyInvestments: NextPage = () => {
           -1
         ) {
           return toast.error(
-            "Insufficient Funds: Uh-oh! It seems your wallet lacks the funds needed for the Membership Card. Top up your balance and try again"
+            <div>
+              <div className=" text-xl">Insufficient Funds: </div>
+              <div className=" text-medium">
+                Uh-oh! It seems your wallet lacks the funds needed for the
+                Membership Card. Top up your balance and try again
+              </div>
+            </div>
           );
         }
         if (
           result.error.stack.indexOf("SLCore: User have an entry token") > -1
         ) {
-          return toast.error("You already minted the NFT!");
+          return toast.error(
+            <div>
+              <div className=" text-xl">Already a member: </div>
+              <div className=" text-medium">You already minted the NFT!</div>
+            </div>
+          );
         }
         if (result.error.stack.indexOf("ERC20: insufficient allowance") > -1) {
           //await refecthPrepareApprove();
@@ -455,12 +472,32 @@ const MyInvestments: NextPage = () => {
           await toast.promise(
             results2.wait(),
             {
-              loading:
-                " Purchasing Membership Card: Purchasing your Membership Card. Sit tight!",
-              success:
-                "Membership Card Acquired: You are now a proud holder of the Something Legendary Membership Card. Welcome to the community!",
-              error:
-                "Network Issue: We're experiencing network issues at the moment. Please try again later or check your internet connection.",
+              loading: (
+                <div>
+                  <div className=" text-xl">Purchasing Membership Card: </div>
+                  <div className=" text-medium">
+                    Purchasing your Membership Card. Sit tight!
+                  </div>
+                </div>
+              ),
+              success: (
+                <div>
+                  <div className=" text-xl">Membership Card Acquired: </div>
+                  <div className=" text-medium">
+                    You are now a proud holder of the Something Legendary
+                    Membership Card. Welcome to the community!
+                  </div>
+                </div>
+              ),
+              error: (
+                <div>
+                  <div className=" text-xl">Network Issue: </div>
+                  <div className=" text-medium">
+                    We're experiencing network issues at the moment. Please try
+                    again later or check your internet connection.
+                  </div>
+                </div>
+              ),
             },
             {
               success: {

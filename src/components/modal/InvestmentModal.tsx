@@ -183,7 +183,12 @@ export const InvestmentModal = ({
       //setIsApproving(false);
       // setisInvesting(true);
       toastId = toast.loading(
-        "Making Investment: We're processing your investment. Hold on for a moment..."
+        <div>
+          <div className=" text-xl">Making Investment:</div>
+          <div className=" text-medium">
+            We're processing your investment. Hold on for a moment...
+          </div>
+        </div>
       );
       const results2 =
         investContract &&
@@ -230,7 +235,13 @@ export const InvestmentModal = ({
         fetchUserInvestments();
         toast.dismiss(toastId);
         toast.success(
-          "Investment Made: You've successfully invested in the chosen classic car. Your contribution is making restoration dreams come true!"
+          <div>
+            <div className=" text-xl">Investment Made:</div>
+            <div className=" text-medium">
+              You've successfully invested in the chosen classic car. Your
+              contribution is making restoration dreams come true!
+            </div>
+          </div>
         );
       } catch (err) {
         // toast.error(err.message);
