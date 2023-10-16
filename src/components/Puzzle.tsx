@@ -26,6 +26,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { useBreakpoint } from "~/hooks/useBreakpoints";
 import { useBlockchainInfo, useGameContent } from "~/lib/zustand";
+import toast from "react-hot-toast";
 
 function noDecimals(value: number) {
   return value / 10 ** 6;
@@ -106,28 +107,87 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
 
   const actionClaimPiece = async (e: any) => {
     e.preventDefault();
+    const toastId = toast.loading(
+      <div className=" py-2 ">
+        <div className=" mb-1 text-lg">Claiming Puzzle Piece:</div>
+        <div className=" text-medium font-light">
+          We're fetching your puzzle piece. It'll be yours shortly.
+        </div>
+      </div>
+    );
     setIsLoadingClaimPiece(true);
     if (userAllowedToClaimPiece && currentLevel === userLevel?.toNumber()) {
       try {
         const results = await SLCoreContract?.claimPiece();
-        const abc = await results?.wait();
-      } catch (error) {}
+        await results?.wait();
+      } catch (error) {
+        toast.dismiss(toastId);
+        toast.error(
+          <div className=" py-2 ">
+            <div className=" mb-1 text-lg">Puzzle Piece Unavailable</div>
+            <div className=" text-medium font-light">
+              Your invested value does not meet the required threshold to access
+              this puzzle piece.
+            </div>
+          </div>
+        );
+        setIsLoadingClaimPiece(false);
+      }
 
       fetchPuzzleInfo(userAddress, userLevel);
+      toast.dismiss(toastId);
+      toast.success(
+        <div className=" py-2 ">
+          <div className=" mb-1 text-lg">Puzzle Piece Claimed</div>
+          <div className=" text-medium font-light">
+            Well done! You've claimed a puzzle piece. Collect 10 unique pieces
+            to unlock your LEVEL NFT.
+          </div>
+        </div>
+      );
     }
     setIsLoadingClaimPiece(false);
   };
 
   const actionClaimLevel = async (e: any) => {
     e.preventDefault();
+    const toastId = toast.loading(
+      <div className=" py-2 ">
+        <div className=" mb-1 text-lg">Unlocking LEVEL NFT</div>
+        <div className=" text-medium font-light">
+          Your LEVEL NFT is on its way. Just a moment longer.
+        </div>
+      </div>
+    );
 
     if (userAllowedToClaimPiece && currentLevel === userLevel?.toNumber()) {
       try {
         const results = await SLCoreContract?.claimLevel();
-        const abc = await results?.wait();
-      } catch (error) {}
+        await results?.wait();
+      } catch (error) {
+        toast.dismiss(toastId);
+        toast.error(
+          <div className=" py-2 ">
+            <div className=" mb-1 text-lg">Insufficient Puzzle Pieces</div>
+            <div className=" text-medium font-light">
+              Oops! You need to collect 10 distinct puzzle pieces to unlock a
+              LEVEL NFT. Keep investing to complete your set.
+            </div>
+          </div>
+        );
+      }
 
       fetchPuzzleInfo(userAddress, userLevel);
+      toast.dismiss(toastId);
+      toast.success(
+        <div className=" py-2 ">
+          <div className=" mb-1 text-lg">LEVEL NFT Unlocked</div>
+          <div className=" text-medium font-light">
+            Congratulations! You've collected 10 unique puzzle pieces and
+            unlocked your LEVEL NFT. Enjoy enhanced benefits!
+          </div>
+        </div>
+      );
     }
   };
 

@@ -200,7 +200,6 @@ const MyInvestments: NextPage = () => {
     (state) => state.userTotalInvestedPerLevel
   );
 
-
   const { data }: { data: BigNumber } = useContractReads({
     contracts: [
       {
@@ -376,7 +375,7 @@ const MyInvestments: NextPage = () => {
       hash: dataMintNFT?.hash,
       onSuccess: () => {
         // setUserMinted(true);
-        toast.success("Minted NFT!");
+        // toast.success("Minted NFT!");
       },
     });
 
@@ -410,7 +409,15 @@ const MyInvestments: NextPage = () => {
         userPaymentTokenBalance &&
         userPaymentTokenBalance.value < entryNFTPrice
       ) {
-        toast.error("You don't have enough balance!");
+        toast.error(
+          <div className=" py-2 ">
+            <div className=" mb-1 text-lg">Insufficient Funds </div>
+            <div className=" text-medium font-light">
+              Uh-oh! It seems your wallet lacks the funds needed for the
+              Membership Card. Top up your balance and try again
+            </div>
+          </div>
+        );
         return;
       }
       const result = await mintEntryNFTRefetch();
@@ -419,12 +426,27 @@ const MyInvestments: NextPage = () => {
           result.error.stack.indexOf("ERC20: transfer amount exceeds balance") >
           -1
         ) {
-          return toast.error("You don't have enough balance");
+          return toast.error(
+            <div className=" py-2 ">
+              <div className=" mb-1 text-lg">Insufficient Funds </div>
+              <div className=" text-medium font-light">
+                Uh-oh! It seems your wallet lacks the funds needed for the
+                Membership Card. Top up your balance and try again
+              </div>
+            </div>
+          );
         }
         if (
           result.error.stack.indexOf("SLCore: User have an entry token") > -1
         ) {
-          return toast.error("You already minted the NFT!");
+          return toast.error(
+            <div className=" py-2 ">
+              <div className=" mb-1 text-lg">Already a member </div>
+              <div className=" text-medium font-light">
+                You already minted the NFT!
+              </div>
+            </div>
+          );
         }
         if (result.error.stack.indexOf("ERC20: insufficient allowance") > -1) {
           //await refecthPrepareApprove();
@@ -452,9 +474,34 @@ const MyInvestments: NextPage = () => {
           await toast.promise(
             results2.wait(),
             {
-              loading: "Minting entry...",
-              success: "Minted!",
-              error: "Error while minting",
+              loading: (
+                <div className=" py-2 ">
+                  <div className=" mb-1 text-lg">
+                    Purchasing Membership Card
+                  </div>
+                  <div className=" text-medium font-light">
+                    Purchasing your Membership Card. Sit tight!
+                  </div>
+                </div>
+              ),
+              success: (
+                <div className=" py-2 ">
+                  <div className=" mb-1 text-lg">Membership Card Acquired </div>
+                  <div className=" text-medium font-light">
+                    You are now a proud holder of the Something Legendary
+                    Membership Card. Welcome to the community!
+                  </div>
+                </div>
+              ),
+              error: (
+                <div className=" py-2 ">
+                  <div className=" mb-1 text-lg">Network Issue </div>
+                  <div className=" text-medium font-light">
+                    We're experiencing network issues at the moment. Please try
+                    again later or check your internet connection.
+                  </div>
+                </div>
+              ),
             },
             {
               success: {
@@ -467,7 +514,11 @@ const MyInvestments: NextPage = () => {
       } else {
         mintNFT?.();
       }
-    } catch (error) {}
+    } catch (error) {
+      toast.error(
+        "Network Issue: We're experiencing network issues at the moment. Please try again later or check your internet connection."
+      );
+    }
   };
 
   function extractUniqueInvestments(queryResult) {

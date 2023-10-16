@@ -91,7 +91,34 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Toaster position="top-center" reverseOrder={false} />
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          success: {
+            style: {
+              backgroundColor: "#e6f7ec",
+              border: "1px solid #25fa85",
+              color: "black",
+            },
+          },
+          error: {
+            style: {
+              backgroundColor: "#f7e7e6",
+              border: "1px solid #f7606b",
+              color: "black",
+            },
+          },
+          loading: {
+            style: {
+              backgroundColor: "#e6f4f7",
+              border: "1px solid #60aef7",
+
+              color: "black",
+            },
+          },
+        }}
+      />
       <main className="mx-auto flex w-full max-w-[1440px] shrink-0 grow flex-col">
         <AlertMessage message="For the best experience, we recommend using our app on desktop." />
         {children}

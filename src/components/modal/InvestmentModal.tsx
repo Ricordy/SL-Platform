@@ -161,6 +161,8 @@ export const InvestmentModal = ({
       return;
     }
 
+    let toastId;
+
     try {
       const investmentAmountWithDecimals = ethers.utils.parseUnits(
         valueApprovalAndInvestment.toString(),
@@ -180,26 +182,27 @@ export const InvestmentModal = ({
 
       //setIsApproving(false);
       // setisInvesting(true);
+      toastId = toast.loading(
+        <div className=" py-2 ">
+          <div className=" mb-1 text-lg">Making Investment</div>
+          <div className=" text-medium font-light">
+            We're processing your investment. Hold on for a moment...
+          </div>
+        </div>
+      );
       const results2 =
         investContract &&
         (await investContract
           .connect(signerData)
           .invest(BigNumber.from(valueApprovalAndInvestment)));
 
-      await toast.promise(
-        results2.wait(),
-        {
-          loading: "Investing...",
-          success: "Invested!",
-          error: "Error investing",
-        },
-        {
-          success: {
-            duration: 5000,
-            icon: "🔥",
-          },
-        }
-      );
+      results2.wait();
+
+      // await toast.promise(results2.wait(), {
+      //   loading: "Investing...",
+      //   success: undi,
+      //   error: "Error investing",
+      // });
 
       // Save to hygraph
 
@@ -225,18 +228,28 @@ export const InvestmentModal = ({
           toast.error(JSON.stringify("Error on fecthing API", response.text));
         // throw new Error(`Something went wrong submitting the form.`);
 
-        toast.success("Saved to the DB");
         fetchTransactions(contractAddress);
         fetchDynamicInfo(contractAddress, userAddress);
+        fetchPuzzleInfo(userAddress, userLevel);
         fetchUserTransactions();
         fetchUserInvestments();
-        fetchPuzzleInfo(userAddress, userLevel);
+        toast.dismiss(toastId);
+        toast.success(
+          <div className=" py-2 ">
+            <div className=" mb-1 text-lg">Investment Made</div>
+            <div className=" text-medium font-light">
+              You've successfully invested in the chosen classic car. Your
+              contribution is making restoration dreams come true!
+            </div>
+          </div>
+        );
       } catch (err) {
         // toast.error(err.message);
       }
 
       toggleModalInvest();
     } catch (error) {
+      toast.dismiss(toastId);
       if (
         typeof error.reason === "string" &&
         error.reason.indexOf("InvestmentExceedMax") > -1

@@ -424,7 +424,6 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
         toast.error(JSON.stringify("Error on fecthing API", response.text));
       // throw new Error(`Something went wrong submitting the form.`);
 
-      toast.success("Saved to the DB");
     } catch (err) {
       toast.error(err.message);
     }

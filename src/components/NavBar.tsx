@@ -31,6 +31,7 @@ import { useBreakpoint } from "~/hooks/useBreakpoints";
 import { BurguerMenu } from "./ui/icons/BurguerMenu";
 import { useRouter } from "next/router";
 import { useBlockchainInfo, useInvestments } from "~/lib/zustand";
+import toast from "react-hot-toast";
 
 const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
   const { address, isConnected, isDisconnected, status } = useAccount();
@@ -326,8 +327,21 @@ const NavBar = ({ bgWhite = false }: { bgWhite?: boolean }) => {
                   onClick={() =>
                     isConnected
                       ? onClickSignOut()
-                      : isAboveMd
+                      : isAboveMd && window.ethereum?.isMetaMask
                       ? connect()
+                      : isAboveMd && !window.ethereum?.isMetaMask
+                      ? toast.error(
+                          <div className=" py-2 ">
+                            <div className=" mb-1 text-lg">
+                              Wallet Connection Failed
+                            </div>
+                            <div className=" text-medium  font-light">
+                              Oops! We couldn't connect your wallet. Please
+                              ensure you have the wallet extension installed and
+                              try again
+                            </div>
+                          </div>
+                        )
                       : isBelowMd && !window.ethereum?.isMetaMask
                       ? router.push(`dapp://${window.location.host}`)
                       : connect()
