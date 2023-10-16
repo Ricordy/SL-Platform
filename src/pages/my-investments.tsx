@@ -28,12 +28,13 @@ import NavBar from "../components/NavBar";
 import ProjectCarousel from "../components/ProjectCarousel";
 import { NumericFormat } from "react-number-format";
 import Suggestions from "~/components/Suggestions";
-import { getMissingInvestments } from "~/lib/utils";
+import { cn, getMissingInvestments } from "~/lib/utils";
 import {
   useBlockchainInfo,
   useInvestments,
   useUserTransactions,
 } from "~/lib/zustand";
+import MyAlertButton from "~/components/MyAlertButton";
 
 interface InvestmentBlockchainType {
   id: number;
@@ -743,13 +744,24 @@ const MyInvestments: NextPage = () => {
                   </p>
                 </div>
               </div>
-              <button
+              {/* <button
                 className="rounded-xl bg-primaryGold px-3 py-1.5 text-center font-medium uppercase text-white dark:bg-primaryGold dark:text-white"
                 disabled={!isConnected}
                 onClick={myMint as () => void}
               >
                 {isLoadingMintNFT ? "Minting..." : "Buy it for 100$"}
-              </button>
+              </button> */}
+              <MyAlertButton
+                triggerButtonLabel={
+                  isLoadingMintNFT ? "Minting..." : "Buy it for 100$"
+                }
+                confirmAction={myMint}
+                triggerButtonClassname={cn(
+                  "rounded-xl bg-primaryGold px-3 py-1.5 text-center font-medium uppercase text-white dark:bg-primaryGold dark:text-white"
+                )}
+                variant="default"
+                isTriggerDisabled={!isConnected}
+              />
             </div>
             <div className="relative row-start-1 flex h-full w-full items-center justify-center md:row-start-auto">
               <Image
