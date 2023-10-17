@@ -11,6 +11,7 @@ import {
 } from "@radix-ui/react-alert-dialog";
 import { cn } from "~/lib/utils";
 import { Button } from "./ui/Button";
+import { useState } from "react";
 
 type MyAlertProps = {
   triggerButtonLabel: string;
@@ -43,9 +44,16 @@ const MyAlertButton = (props: MyAlertProps) => {
     isTriggerDisabled,
     variant,
   } = props;
+
+  const [open, setOpen] = useState(false);
+
+  const action = (e: any) => {
+    confirmAction(e);
+    setOpen(false);
+  };
   return (
     <>
-      <AlertDialog>
+      <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogTrigger asChild>
           <Button
             className={cn("", triggerButtonClassname)}
@@ -88,13 +96,13 @@ const MyAlertButton = (props: MyAlertProps) => {
                   {cancelLabel ? cancelLabel : "Cancel"}
                 </button>
               </AlertDialogCancel>
-              <AlertDialogAction asChild>
+              <AlertDialogAction>
                 <Button
                   className={cn(
                     " border-primaryGreen text-primaryGreen",
                     confirmLabelClassname
                   )}
-                  onClick={confirmAction}
+                  onClick={action}
                   variant={"outline"}
                 >
                   {confirmLabel ? confirmLabel : "Confirm"}
