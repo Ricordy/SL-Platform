@@ -761,6 +761,8 @@ const MyInvestments: NextPage = () => {
                 )}
                 variant="default"
                 isTriggerDisabled={!isConnected}
+                alertDescription="Are you sure you want to mint this entry? This action cannot be undone."
+                confirmLabel="Mint Entry"
               />
             </div>
             <div className="relative row-start-1 flex h-full w-full items-center justify-center md:row-start-auto">

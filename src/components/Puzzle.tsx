@@ -401,6 +401,8 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                                 triggerButtonClassname="whitespace-nowrap border-emerald-700 px-12 text-emerald-700"
                                 variant="outline"
                                 isTriggerDisabled={!userAllowedToClaimPiece}
+                                alertDescription="Are you sure you want to claim this puzzle piece? This action cannot be undone."
+                                confirmLabel="Claim Piece"
                               />
 
                               <div className="bottom-0 left-0 flex h-3 w-full self-end rounded-b-md bg-progressBackground">
