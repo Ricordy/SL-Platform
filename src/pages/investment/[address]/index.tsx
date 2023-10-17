@@ -856,6 +856,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
               )}
             </Tab.Group>
           </section>
+
           <section className="">
             <h3 className="flex items-center gap-4 pb-[52px] pt-6 md:pt-[132px]">
               <Image
@@ -866,104 +867,106 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
               />{" "}
               Investments
             </h3>
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 ">
-              <div className="flex h-fit flex-col gap-4 bg-[#F6F9F8] p-10">
-                <div className="flex">Total Invested:</div>
-                <span className="pb-2 text-4xl font-semibold tracking-widest text-primaryGreen">
-                  <NumericFormat
-                    value={
-                      userTotalInvestment
-                        ? (Number(userTotalInvestment) / 10 ** 6).toString()
-                        : 0
-                    }
-                    displayType="text"
-                    fixedDecimalScale={true}
-                    decimalSeparator=","
-                    thousandSeparator="."
-                    decimalScale={0}
-                    prefix="$ "
-                  />
-                </span>
-                <div className="flex">Return expected:</div>
-                <div className="flex gap-6 pb-2">
-                  <div className="flex flex-col">
-                    <div className="flex">Minimum:</div>
-                    <div className="flex items-center gap-3 text-2xl font-medium">
-                      <NumericFormat
-                        value={
-                          userTotalInvestment && profitMinimumValue
-                            ? (
-                                userTotalInvestment.div(10 ** 6).toNumber() +
-                                profitMinimumValue
-                              ).toString()
-                            : 0
-                        }
-                        displayType="text"
-                        fixedDecimalScale={true}
-                        decimalSeparator=","
-                        thousandSeparator="."
-                        decimalScale={0}
-                        prefix="$ "
-                      />
-                      <span className="text-sm text-primaryGreen">
-                        ({profitMinimumPercentage.toNumber()}%)
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex flex-col">
-                    <div className="flex">Maximum:</div>
-                    <div className="flex items-center gap-3 text-2xl font-medium">
-                      <NumericFormat
-                        value={
-                          userTotalInvestment && profitMaximumValue
-                            ? (
-                                userTotalInvestment.div(10 ** 6).toNumber() +
-                                profitMaximumValue
-                              ).toString()
-                            : 0
-                        }
-                        displayType="text"
-                        fixedDecimalScale={true}
-                        decimalSeparator=","
-                        thousandSeparator="."
-                        decimalScale={0}
-                        prefix="$ "
-                      />
-                      <span className="text-sm text-primaryGreen">
-                        ({profitMaximumPercentage.toNumber()}%)
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-col pb-[52px]">
-                  <div className="flex text-secondaryGrey">Sales end:</div>
-                  <div className="flex gap-6">
-                    <div className="flex flex-col text-2xl font-medium ">
-                      <span className="">
-                        {dayjs(investment.salesEnd).format("ll")}
-                      </span>
-                      <span>
-                        {dayjs(investment.salesEnd).format("hh:mm a Z")}
-                      </span>
-                    </div>
-                    <div className="flex flex-col justify-between text-primaryGrey">
-                      <div className="flex gap-3">
-                        <div className="flex ">Sales Began:</div>
-                        <span className="font-medium">
-                          {dayjs(investment.salesStart).format("ll")}
+            {(userTotalInvestment && userTotalInvestment > 0 && (
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-2 ">
+                {/** Already invested */}
+                <div className="flex h-fit flex-col gap-4 bg-[#F6F9F8] p-10">
+                  <div className="flex">Total Invested:</div>
+                  <span className="pb-2 text-4xl font-semibold tracking-widest text-primaryGreen">
+                    <NumericFormat
+                      value={
+                        userTotalInvestment
+                          ? (Number(userTotalInvestment) / 10 ** 6).toString()
+                          : 0
+                      }
+                      displayType="text"
+                      fixedDecimalScale={true}
+                      decimalSeparator=","
+                      thousandSeparator="."
+                      decimalScale={0}
+                      prefix="$ "
+                    />
+                  </span>
+                  <div className="flex">Return expected:</div>
+                  <div className="flex gap-6 pb-2">
+                    <div className="flex flex-col">
+                      <div className="flex">Minimum:</div>
+                      <div className="flex items-center gap-3 text-2xl font-medium">
+                        <NumericFormat
+                          value={
+                            userTotalInvestment && profitMinimumValue
+                              ? (
+                                  userTotalInvestment.div(10 ** 6).toNumber() +
+                                  profitMinimumValue
+                                ).toString()
+                              : 0
+                          }
+                          displayType="text"
+                          fixedDecimalScale={true}
+                          decimalSeparator=","
+                          thousandSeparator="."
+                          decimalScale={0}
+                          prefix="$ "
+                        />
+                        <span className="text-sm text-primaryGreen">
+                          ({profitMinimumPercentage.toNumber()}%)
                         </span>
                       </div>
-                      <div className="flex gap-3">
-                        <div className="flex">Estimate Claiming:</div>
-                        <span className="font-medium">
-                          {dayjs(investment.estimateClaiming).format("ll")}
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="flex">Maximum:</div>
+                      <div className="flex items-center gap-3 text-2xl font-medium">
+                        <NumericFormat
+                          value={
+                            userTotalInvestment && profitMaximumValue
+                              ? (
+                                  userTotalInvestment.div(10 ** 6).toNumber() +
+                                  profitMaximumValue
+                                ).toString()
+                              : 0
+                          }
+                          displayType="text"
+                          fixedDecimalScale={true}
+                          decimalSeparator=","
+                          thousandSeparator="."
+                          decimalScale={0}
+                          prefix="$ "
+                        />
+                        <span className="text-sm text-primaryGreen">
+                          ({profitMaximumPercentage.toNumber()}%)
                         </span>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className="flex justify-center gap-8">
-                  {/* <InvestmentModal
+                  <div className="flex flex-col pb-[52px]">
+                    <div className="flex text-secondaryGrey">Sales end:</div>
+                    <div className="flex gap-6">
+                      <div className="flex flex-col text-2xl font-medium ">
+                        <span className="">
+                          {dayjs(investment.salesEnd).format("ll")}
+                        </span>
+                        <span>
+                          {dayjs(investment.salesEnd).format("hh:mm a Z")}
+                        </span>
+                      </div>
+                      <div className="flex flex-col justify-between text-primaryGrey">
+                        <div className="flex gap-3">
+                          <div className="flex ">Sales Began:</div>
+                          <span className="font-medium">
+                            {dayjs(investment.salesStart).format("ll")}
+                          </span>
+                        </div>
+                        <div className="flex gap-3">
+                          <div className="flex">Estimate Claiming:</div>
+                          <span className="font-medium">
+                            {dayjs(investment.estimateClaiming).format("ll")}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-center gap-8">
+                    {/* <InvestmentModal
                     className="flex flex-col justify-between align-middle"
                     title={investment?.basicInvestment.car.basicInfo.title}
                     chassis={investment?.basicInvestment.car.chassis}
@@ -982,7 +985,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                     minToInvest={Number(minToInvest)}
                     paymentTokenBalance={Number(paymentTokenBalance?.formatted)}
                   /> */}
-                  {/* <Button
+                    {/* <Button
                     disabled={!canWithdraw}
                     variant="outline"
                     onClick={onClickWithdraw}
@@ -990,60 +993,182 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                     Withdraw
                   </Button> */}
 
-                  <InvestmentModal
-                    userAddress={walletAddress as Address}
-                    className="flex flex-col justify-between align-middle"
-                    title={investment?.basicInvestment.car.basicInfo.title}
-                    chassis={investment?.basicInvestment.car.chassis}
-                    contractAddress={investment?.address}
-                    totalProduction={
-                      investment?.basicInvestment.car.totalProduction
-                    }
-                    totalModelProduction={
-                      investment?.basicInvestment.car.totalModelProduction
-                    }
-                    colorCombination={
-                      investment?.basicInvestment.car.colorCombination
-                    }
-                    totalInvestment={Number(totalSupply) / 10 ** 6}
-                    maxToInvest={
-                      Number(maxToInvest) -
-                      userTotalInvestment?.div(10 ** 6).toNumber()
-                    }
-                    minToInvest={Number(minToInvest)}
-                    paymentTokenBalance={Number(
-                      paymentTokenBalance?.div(10 ** 6)
-                    )}
-                    contractLevel={contractLevel as any as number}
-                    userLevel={userLevel as any as number}
-                  />
-                  <MyAlertButton
-                    triggerButtonLabel={"Withdraw"}
-                    confirmAction={onClickWithdraw}
-                    triggerButtonClassname={cn()}
-                    variant="outline"
-                    isTriggerDisabled={!canWithdraw}
-                  />
-                </div>
-              </div>
-              <div className="flex max-h-[492px]   flex-col">
-                <h3>Transactions:</h3>
-                <div className=" mt-8 flex flex-col divide-y-[0.50px] divide-divideTransaction overflow-y-auto scroll-smooth rounded-md px-4">
-                  {transactions?.map((transaction) => (
-                    <TransactionItem
-                      key={transaction.hash}
-                      value={transaction.amountInvested}
-                      date={transaction.date}
-                      type={transaction.type}
-                      hash={transaction.hash}
-                      wallet={walletAddress}
-                      from={transaction.from}
+                    <InvestmentModal
+                      userAddress={walletAddress as Address}
+                      className="flex flex-col justify-between align-middle"
+                      title={investment?.basicInvestment.car.basicInfo.title}
+                      chassis={investment?.basicInvestment.car.chassis}
+                      contractAddress={investment?.address}
+                      totalProduction={
+                        investment?.basicInvestment.car.totalProduction
+                      }
+                      totalModelProduction={
+                        investment?.basicInvestment.car.totalModelProduction
+                      }
+                      colorCombination={
+                        investment?.basicInvestment.car.colorCombination
+                      }
+                      totalInvestment={Number(totalSupply) / 10 ** 6}
+                      maxToInvest={
+                        Number(maxToInvest) -
+                        userTotalInvestment?.div(10 ** 6).toNumber()
+                      }
+                      minToInvest={Number(minToInvest)}
+                      paymentTokenBalance={Number(
+                        paymentTokenBalance?.div(10 ** 6)
+                      )}
+                      contractLevel={contractLevel as any as number}
+                      userLevel={userLevel as any as number}
                     />
-                  ))}
+                    <MyAlertButton
+                      triggerButtonLabel={"Withdraw"}
+                      confirmAction={onClickWithdraw}
+                      triggerButtonClassname={cn()}
+                      variant="outline"
+                      isTriggerDisabled={!canWithdraw}
+                    />
+                  </div>
+                </div>
+                <div className="flex max-h-[492px]   flex-col">
+                  <h3>Transactions:</h3>
+                  <div className=" mt-8 flex flex-col divide-y-[0.50px] divide-divideTransaction overflow-y-auto scroll-smooth rounded-md px-4">
+                    {transactions?.map((transaction) => (
+                      <TransactionItem
+                        key={transaction.hash}
+                        value={transaction.amountInvested}
+                        date={transaction.date}
+                        type={transaction.type}
+                        hash={transaction.hash}
+                        wallet={walletAddress}
+                        from={transaction.from}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
+            )) || (
+              <div className=" ">
+                {/** Didnt invest yet */}
+                <div className="flex h-fit w-full  justify-between divide-x-2 bg-[#F6F9F8] p-[52px] ">
+                  <div className=" flex w-full flex-col items-center justify-between">
+                    <div className="flex">Total Invested until now:</div>
+                    <span className=" text-4xl font-semibold tracking-widest text-primaryGreen">
+                      <NumericFormat
+                        value={
+                          totalSupply && totalSupply.div(10 ** 6).toString()
+                        }
+                        displayType="text"
+                        fixedDecimalScale={true}
+                        decimalSeparator=","
+                        thousandSeparator="."
+                        decimalScale={0}
+                        prefix="$ "
+                      />
+                    </span>
+                    <h4 className="flex  gap-3  text-primaryGrey">
+                      Investing here: {countUniques(transactions)}
+                      <Image
+                        src="/icons/mini-avatar.svg"
+                        alt="Avatar"
+                        width={12}
+                        height={12}
+                      />{" "}
+                      <span className="text-primaryGold "></span>
+                    </h4>
+                  </div>
+                  <div className=" flex   w-full flex-col items-center gap-4 ">
+                    <div>
+                      <div className=" self-">Return expected:</div>
+                      <div className="flex gap-6 pb-2">
+                        <div className="flex flex-col">
+                          <div className="flex">Minimum:</div>
+                          <div className="flex items-center gap-3 text-2xl font-medium">
+                            <span className=" text-primaryGreen">
+                              {profitMinimumPercentage.toNumber()}%
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex flex-col">
+                          <div className="flex">Maximum:</div>
+                          <div className="flex items-center gap-3 text-2xl font-medium">
+                            <span className=" text-primaryGreen">
+                              {profitMaximumPercentage.toNumber()}%
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex w-full min-w-fit items-center gap-4 pl-10 ">
+                    <div className="">
+                      <div className=" text-secondaryGrey">Sales end:</div>
+                      <div className="flex gap-6">
+                        <div className="flex flex-col text-2xl font-medium ">
+                          <span className="">
+                            {dayjs(investment.salesEnd).format("ll")}
+                          </span>
+                          <span>
+                            {dayjs(investment.salesEnd).format("hh:mm ")}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col justify-between gap-3 text-primaryGrey">
+                      <div className="flex flex-col gap-1">
+                        <div className="flex ">Sales Began:</div>
+                        <span className="font-medium">
+                          {dayjs(investment.salesStart).format("ll")}
+                        </span>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <div className="">Estimate Claiming:</div>
+                        <span className="font-medium">
+                          {dayjs(investment.estimateClaiming).format("ll")}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  {/* <div className="flex justify-center gap-8">
+                    <InvestmentModal
+                      userAddress={walletAddress as Address}
+                      className="flex flex-col justify-between align-middle"
+                      title={investment?.basicInvestment.car.basicInfo.title}
+                      chassis={investment?.basicInvestment.car.chassis}
+                      contractAddress={investment?.address}
+                      totalProduction={
+                        investment?.basicInvestment.car.totalProduction
+                      }
+                      totalModelProduction={
+                        investment?.basicInvestment.car.totalModelProduction
+                      }
+                      colorCombination={
+                        investment?.basicInvestment.car.colorCombination
+                      }
+                      totalInvestment={Number(totalSupply) / 10 ** 6}
+                      maxToInvest={
+                        Number(maxToInvest) -
+                        userTotalInvestment?.div(10 ** 6).toNumber()
+                      }
+                      minToInvest={Number(minToInvest)}
+                      paymentTokenBalance={Number(
+                        paymentTokenBalance?.div(10 ** 6)
+                      )}
+                      contractLevel={contractLevel as any as number}
+                      userLevel={userLevel as any as number}
+                    />
+                    <MyAlertButton
+                      triggerButtonLabel={"Withdraw"}
+                      confirmAction={onClickWithdraw}
+                      triggerButtonClassname={cn()}
+                      variant="outline"
+                      isTriggerDisabled={!canWithdraw}
+                    />
+                  </div> */}
+                </div>
+              </div>
+            )}
           </section>
+
           <section>
             <h3 className="flex items-center gap-4 pb-[52px] pt-[132px]">
               <Image
