@@ -36,12 +36,14 @@ const PostItem: FC<PostItemProps> = ({
       ></div> */}
       <Link
         href={link ? link : `/learn/${slug}`}
+        target="_blank"
         className="self-start border-b-2 border-b-primaryGreen py-1 text-center text-xs uppercase text-primaryGreen"
       >
         Know more
       </Link>
       <a
         href={link ? link : `/learn/${slug}`}
+        target="_blank"
         className={cn(
           "absolute inset-0 rounded-md",
           "ring-blue-400 focus:z-10 focus:outline-none focus:ring-2"
