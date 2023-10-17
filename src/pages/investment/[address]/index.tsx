@@ -1023,6 +1023,8 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                     triggerButtonClassname={cn()}
                     variant="outline"
                     isTriggerDisabled={!canWithdraw}
+                    alertDescription="Are you sure you want to withdraw your investment? This action cannot be undone."
+                    confirmLabel="Withdraw"
                   />
                 </div>
               </div>

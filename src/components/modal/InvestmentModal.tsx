@@ -410,6 +410,8 @@ export const InvestmentModal = ({
             )}
             variant="default"
             isTriggerDisabled={Number(inputRef?.current?.value) < 100}
+            alertDescription="Are you sure you want to invest in this car? This action cannot be undone."
+            confirmLabel="Invest"
           />
         </div>
       </Modal>

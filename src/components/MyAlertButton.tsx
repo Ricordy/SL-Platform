@@ -11,6 +11,7 @@ import {
 } from "@radix-ui/react-alert-dialog";
 import { cn } from "~/lib/utils";
 import { Button } from "./ui/Button";
+import { useState } from "react";
 
 type MyAlertProps = {
   triggerButtonLabel: string;
@@ -43,9 +44,16 @@ const MyAlertButton = (props: MyAlertProps) => {
     isTriggerDisabled,
     variant,
   } = props;
+
+  const [open, setOpen] = useState(false);
+
+  const action = (e: any) => {
+    confirmAction(e);
+    setOpen(false);
+  };
   return (
     <>
-      <AlertDialog>
+      <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogTrigger asChild>
           <Button
             className={cn("", triggerButtonClassname)}
@@ -57,37 +65,48 @@ const MyAlertButton = (props: MyAlertProps) => {
         </AlertDialogTrigger>
         <AlertDialogPortal>
           <AlertDialogOverlay className=" fixed inset-0 z-50 bg-black/40" />
-          <AlertDialogContent className="AlertDialogContent b-6 fixed left-1/2 top-1/2 z-50 w-[30vw] -translate-x-1/2 -translate-y-1/2 bg-white p-2">
+          <AlertDialogContent className="AlertDialogContent b-6 fixed left-1/2 top-1/2 z-50 w-[30vw] -translate-x-1/2 -translate-y-1/2  bg-white p-2">
             <AlertDialogTitle
               className={cn("AlertDialogTitle", alertTitleClassname)}
             >
-              {alertTitle ? alertTitle : " Are you absolutely sure?"}
+              <h2 className=" text-2xl">
+                {alertTitle ? alertTitle : " Are you absolutely sure?"}
+              </h2>
             </AlertDialogTitle>
             <AlertDialogDescription
               className={cn(
-                "AlertDialogDescription",
+                "AlertDialogDescription mt-3 text-xl",
                 alertDescriptionClassname
               )}
             >
               {alertDescription
                 ? alertDescription
-                : " This action cannot be undone. This will permanently delete your account and remove your data from our servers."}
+                : " This action cannot be undone. This will permanently be saved in the blockchain."}
             </AlertDialogDescription>
             <div
               style={{ display: "flex", gap: 25, justifyContent: "flex-end" }}
             >
               <AlertDialogCancel asChild>
-                <button className={cn(" ", cancelLabelClassname)}>
+                <button
+                  className={cn(
+                    "   bg-white  px-4 text-red-700",
+                    cancelLabelClassname
+                  )}
+                >
                   {cancelLabel ? cancelLabel : "Cancel"}
                 </button>
               </AlertDialogCancel>
-              <AlertDialogAction asChild>
-                <button
-                  className={cn(" ", confirmLabelClassname)}
-                  onClick={confirmAction}
+              <AlertDialogAction>
+                <Button
+                  className={cn(
+                    " border-primaryGreen text-primaryGreen",
+                    confirmLabelClassname
+                  )}
+                  onClick={action}
+                  variant={"outline"}
                 >
                   {confirmLabel ? confirmLabel : "Confirm"}
-                </button>
+                </Button>
               </AlertDialogAction>
             </div>
           </AlertDialogContent>
