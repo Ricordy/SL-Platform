@@ -15,7 +15,6 @@ const Highlight = ({ className }: HighlightProps) => {
     (investment: any) => investment.highlight === true
   );
   const currentPhase = investment?.restorationPhases?.at(0);
-  console.log(investments, investment);
 
   const { data: totalInvested } = useContractRead({
     address: investment?.address,
@@ -55,7 +54,7 @@ const Highlight = ({ className }: HighlightProps) => {
             status={investment?.basicInvestment.investmentStatus}
             totalInvestment={investment?.basicInvestment.totalInvestment}
             progress={
-              (Number(totalInvested) /
+              (Number(totalInvested?.div(10 ** 6)) /
                 Number(investment?.basicInvestment.totalInvestment)) *
               100
             }
