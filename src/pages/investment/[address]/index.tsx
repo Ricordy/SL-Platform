@@ -992,7 +992,6 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                   >
                     Withdraw
                   </Button> */}
-
                     <InvestmentModal
                       userAddress={walletAddress as Address}
                       className="flex flex-col justify-between align-middle"
