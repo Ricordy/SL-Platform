@@ -725,7 +725,7 @@ const MyInvestments: NextPage = () => {
 
         <div className="mx-auto flex w-full flex-col gap-[30px] px-6 md:px-0 md:pt-[52px]">
           <div className="grid w-full grid-cols-1 items-start justify-center gap-4 md:grid-cols-2">
-            <div className="row-start-2 flex flex-col gap-8 md:row-start-auto md:w-[434px]">
+            <div className="row-start-2 flex flex-col gap-8 md:row-start-auto md:ml-40 md:w-[434px]">
               <div className="flex flex-col rounded-xl  bg-white px-10 py-6 md:py-[72px]">
                 <div className="flex flex-col gap-[32px]">
                   <h1 className="text-3xl font-semibold uppercase text-primaryGold md:text-5xl">
