@@ -1,9 +1,11 @@
-import { useConnect, useDisconnect } from "wagmi";
-import { Button } from "./ui/Button";
-import { InjectedConnector } from "wagmi/connectors/injected";
-import Image from "next/image";
-import { cn } from "~/lib/utils";
 import Link from "next/link";
+import { useConnect, useDisconnect } from "wagmi";
+import { InjectedConnector } from "wagmi/connectors/injected";
+import { useBreakpoint } from "~/hooks/useBreakpoints";
+import { cn } from "~/lib/utils";
+import { Button } from "./ui/Button";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/router";
 
 type NoInvestmentProps = {
   isConnected: boolean;
@@ -23,6 +25,14 @@ const NoInvestments: React.FC<NoInvestmentProps> = ({
   const { connect } = useConnect({
     connector: new InjectedConnector(),
   });
+  const { isAboveMd, isBelowMd } = useBreakpoint("md");
+  const { disconnect } = useDisconnect();
+  const router = useRouter();
+
+  const onClickSignOut = async () => {
+    disconnect();
+    await signOut();
+  };
 
   return (
     <div className="grid grid-flow-row auto-rows-auto grid-cols-1 justify-center gap-4 overflow-x-hidden  md:ml-[58px] md:grid-cols-3 md:pb-[132px] ">
@@ -31,15 +41,36 @@ const NoInvestments: React.FC<NoInvestmentProps> = ({
           Start your investments
         </h4>
         <p className="mb-8 text-ogBlack opacity-70">
-          If you haven't started investing yet, what are you waiting for? Your
-          dream is just a click away!
+          If you haven&apos;t started investing yet, what are you waiting for?
+          Your dream is just a click away!
         </p>
 
         {!url && (
           <Button
             variant={"outline"}
             className=" border-primaryGreen text-primaryGreen"
-            onClick={() => connect()}
+            onClick={() =>
+              isConnected
+                ? onClickSignOut()
+                : isAboveMd && window.ethereum?.isMetaMask
+                ? connect()
+                : isAboveMd && !window.ethereum?.isMetaMask
+                ? toast.error(
+                    <div className=" py-2 ">
+                      <div className=" mb-1 text-lg">
+                        Wallet Connection Failed
+                      </div>
+                      <div className=" text-medium  font-light">
+                        Oops! We couldn&apos;t connect your wallet. Please
+                        ensure you have the wallet extension installed and try
+                        again
+                      </div>
+                    </div>
+                  )
+                : isBelowMd && !window.ethereum?.isMetaMask
+                ? router.push(`dapp://${window.location.host}`)
+                : connect()
+            }
           >
             {buttonLabel}
           </Button>
