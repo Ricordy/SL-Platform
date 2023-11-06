@@ -1,35 +1,13 @@
 import { type Address } from "viem";
 
-// export interface InvestmentProps {
-//   address: string;
-//   highlight: boolean;
-//   basicInvestment: {
-//     totalInvestment: number;
-//     investmentStatus: string;
-//     car: {
-//       basicInfo: {
-//         title: string;
-//         cover: {
-//           url: string;
-//         };
-//       };
-//       gallery?: {
-//         url: string;
-//       }[];
-//     };
-//   };
-// }
-
 export interface InvestmentProps {
   basicInvestment: {
     totalInvestment: number;
     investmentStatus: string;
     car: {
-      basicInfo: {
-        title: string;
-        cover: {
-          url: string;
-        };
+      title: string;
+      cover: {
+        url: string;
       };
       subtitle: string;
       shortDescription: string;
@@ -87,11 +65,9 @@ export interface InvestmentPropsItem {
       totalInvestment: number;
       investmentStatus: string;
       car: {
-        basicInfo: {
-          title: string;
-          cover: {
-            url: string;
-          };
+        title: string;
+        cover: {
+          url: string;
         };
         subtitle: string;
         shortDescription: string;

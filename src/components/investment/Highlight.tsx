@@ -40,7 +40,7 @@ const Highlight = ({ className }: HighlightProps) => {
                   width={528}
                   height={396}
                   className="rounded-md"
-                  alt={investment.basicInvestment.car.basicInfo.title}
+                  alt={investment.basicInvestment.car.title}
                 />
               </div>
             ))}
@@ -48,7 +48,7 @@ const Highlight = ({ className }: HighlightProps) => {
         </div>
         <div className="flex flex-col gap-[32px] md:max-w-[50%]">
           <h2 className="text-3xl font-medium text-primaryGreen">
-            {investment?.basicInvestment.car.basicInfo.title}
+            {investment?.basicInvestment.car.title}
           </h2>
           <ProjectInfo
             status={investment?.basicInvestment.investmentStatus}

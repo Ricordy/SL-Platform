@@ -33,12 +33,10 @@ export default async function handler(req: NextApiRequest, res: MyResponse) {
             address
             basicInvestment {
               car {
-                basicInfo {
-                  cover {
-                    url
-                  }
-                  title
+                cover {
+                  url
                 }
+                title
                 sliderTitle
                 sliderDescription
               }

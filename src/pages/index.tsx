@@ -53,7 +53,7 @@ const Home: NextPage = (props: any) => {
               }`}
               style={{
                 backgroundImage: `url(${
-                  image.basicInvestment.car?.basicInfo.cover
+                  image.basicInvestment.car?.cover?
                     .url /** image.banner.url its the right one but has decievieng images by now */
                 })`,
               }}

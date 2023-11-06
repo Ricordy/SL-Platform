@@ -56,19 +56,16 @@ export default async function handler(
               investmentStatus
               car {
                 id
-                basicInfo {
-                  cover {
-                    url
-                  }
-                  title
+                cover {
+                  url
                 }
+                title
               }
             }
           }
         }
       `
     );
-
 
   res.status(200).json({ userInvestments: investments });
 }

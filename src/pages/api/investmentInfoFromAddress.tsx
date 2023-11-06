@@ -42,11 +42,9 @@ export default async function handler(
             totalInvestment
             investmentStatus
             car {
-              basicInfo {
-                title
-                cover {
-                  url
-                }
+              title
+              cover {
+                url
               }
               subtitle
               shortDescription

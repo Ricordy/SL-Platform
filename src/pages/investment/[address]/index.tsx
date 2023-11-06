@@ -51,67 +51,6 @@ import MyAlertButton from "~/components/MyAlertButton";
 
 dayjs.extend(localizedFormat);
 
-// interface InvestmentProps {
-//   investment: {
-//     basicInvestment: {
-//       totalInvestment: number;
-//       investmentStatus: string;
-//       car: {
-//         basicInfo: {
-//           title: string;
-//           cover: {
-//             url: string;
-//           };
-//         };
-//         subtitle: string;
-//         shortDescription: string;
-//         description: string;
-//         chassis: string;
-//         totalProduction: number;
-//         totalModelProduction: number;
-//         colorCombination: string;
-//         gallery: {
-//           url: string;
-//         }[];
-//         chart: {
-//           url: string;
-//         };
-//       };
-//     };
-//     address: Address;
-//     salesEnd: string;
-//     salesStart: string;
-//     estimateClaiming: string;
-//     level: {
-//       profitRange: string;
-//     };
-//     restorationPhases: {
-//       title: string;
-//       deadline: string;
-//       currentCost: number;
-//       costExpectation: number;
-//       restorationStatus: string;
-//       gallery: {
-//         url: string;
-//       }[];
-//       restorationUpdates: {
-//         title: string;
-//         date: string;
-//       }[];
-//     }[];
-//     transactions: {
-//       amountInvested: number;
-//       date: string;
-//       type: string;
-//       hash: string;
-//       from: string;
-//     }[];
-//   };
-//   transactions: {
-//     from: Address;
-//   };
-// }
-
 const InvestmentGallery = ({ images }) => {
   return (
     <Gallery>
@@ -505,7 +444,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
             <div className="flex flex-col gap-6">
               <div className="flex justify-center gap-2 align-middle ">
                 <h2 className="text-3xl font-medium md:text-4xl">
-                  {investment.basicInvestment.car.basicInfo.title}
+                  {investment.basicInvestment.car.title}
                 </h2>
                 {investment.level.basicLevel.title && (
                   <div className="z-10 mt-2 h-fit w-fit whitespace-nowrap rounded-lg border border-primaryGold bg-white px-2 py-1 text-xs text-primaryGold ">
@@ -520,7 +459,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
             <InvestmentModal
               userAddress={walletAddress as Address}
               className="flex flex-col justify-between align-middle"
-              title={investment?.basicInvestment.car.basicInfo.title}
+              title={investment?.basicInvestment.car.title}
               chassis={investment?.basicInvestment.car.chassis}
               contractAddress={investment?.address}
               totalProduction={investment?.basicInvestment.car.totalProduction}
@@ -966,36 +905,10 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                     </div>
                   </div>
                   <div className="flex justify-center gap-8">
-                    {/* <InvestmentModal
-                    className="flex flex-col justify-between align-middle"
-                    title={investment?.basicInvestment.car.basicInfo.title}
-                    chassis={investment?.basicInvestment.car.chassis}
-                    contractAddress={investment?.address}
-                    totalProduction={
-                      investment?.basicInvestment.car.totalProduction
-                    }
-                    totalModelProduction={
-                      investment?.basicInvestment.car.totalModelProduction
-                    }
-                    colorCombination={
-                      investment?.basicInvestment.car.colorCombination
-                    }
-                    totalInvestment={Number(totalSupply) / 10 ** 6}
-                    maxToInvest={Number(maxToInvest) / 10 ** 6}
-                    minToInvest={Number(minToInvest)}
-                    paymentTokenBalance={Number(paymentTokenBalance?.formatted)}
-                  /> */}
-                    {/* <Button
-                    disabled={!canWithdraw}
-                    variant="outline"
-                    onClick={onClickWithdraw}
-                  >
-                    Withdraw
-                  </Button> */}
                     <InvestmentModal
                       userAddress={walletAddress as Address}
                       className="flex flex-col justify-between align-middle"
-                      title={investment?.basicInvestment.car.basicInfo.title}
+                      title={investment?.basicInvestment.car.title}
                       chassis={investment?.basicInvestment.car.chassis}
                       contractAddress={investment?.address}
                       totalProduction={
@@ -1128,42 +1041,6 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                       </div>
                     </div>
                   </div>
-                  {/* <div className="flex justify-center gap-8">
-                    <InvestmentModal
-                      userAddress={walletAddress as Address}
-                      className="flex flex-col justify-between align-middle"
-                      title={investment?.basicInvestment.car.basicInfo.title}
-                      chassis={investment?.basicInvestment.car.chassis}
-                      contractAddress={investment?.address}
-                      totalProduction={
-                        investment?.basicInvestment.car.totalProduction
-                      }
-                      totalModelProduction={
-                        investment?.basicInvestment.car.totalModelProduction
-                      }
-                      colorCombination={
-                        investment?.basicInvestment.car.colorCombination
-                      }
-                      totalInvestment={Number(totalSupply) / 10 ** 6}
-                      maxToInvest={
-                        Number(maxToInvest) -
-                        userTotalInvestment?.div(10 ** 6).toNumber()
-                      }
-                      minToInvest={Number(minToInvest)}
-                      paymentTokenBalance={Number(
-                        paymentTokenBalance?.div(10 ** 6)
-                      )}
-                      contractLevel={contractLevel as any as number}
-                      userLevel={userLevel as any as number}
-                    />
-                    <MyAlertButton
-                      triggerButtonLabel={"Withdraw"}
-                      confirmAction={onClickWithdraw}
-                      triggerButtonClassname={cn()}
-                      variant="outline"
-                      isTriggerDisabled={!canWithdraw}
-                    />
-                  </div> */}
                 </div>
               </div>
             )}
@@ -1181,7 +1058,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
             </h3>
             <div className="mb-6 grid  grid-flow-dense grid-cols-1 gap-8 md:mb-[132px] md:grid-cols-2">
               <h4 className="row-start-1 pb-8 text-2xl font-medium md:row-auto">
-                {investment?.basicInvestment.car.basicInfo.title}
+                {investment?.basicInvestment.car.title}
               </h4>
               <div className=" row-start-3 flex flex-col md:row-auto md:row-start-2">
                 <div className=" max-h-[358px] overflow-scroll">

@@ -9,12 +9,10 @@ export interface TransactionProps {
       basicInvestment: {
         totalInvestment: number;
         car: {
-          basicInfo: {
-            cover: {
-              url: string;
-            };
-            title: string;
+          cover: {
+            url: string;
           };
+          title: string;
         };
       };
     };

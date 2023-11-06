@@ -93,13 +93,13 @@ export const TransactionItem = ({
               <div className="flex items-center justify-between pb-2">
                 <Image
                   className="rounded-md"
-                  src={item.investment.basicInvestment.car.basicInfo.cover.url}
+                  src={item.investment.basicInvestment.car.cover.url}
                   width={64}
                   height={53}
                   alt="Car"
                 />
                 <span className=" hidden w-28 truncate md:flex">
-                  {item.investment.basicInvestment.car.basicInfo.title}
+                  {item.investment.basicInvestment.car.title}
                 </span>
                 <span className=" text-primaryGold">
                   <NumericFormat
@@ -136,13 +136,13 @@ export const TransactionItem = ({
               <div className="flex items-center justify-between pb-2">
                 <Image
                   className="rounded-md"
-                  src={item.investment.basicInvestment.car.basicInfo.cover.url}
+                  src={item.investment.basicInvestment.car.cover.url}
                   width={64}
                   height={53}
                   alt="Car"
                 />
                 <span className=" hidden w-28 truncate md:flex">
-                  {item.investment.basicInvestment.car.basicInfo.title}
+                  {item.investment.basicInvestment.car.title}
                 </span>
                 <span className=" text-primaryGold">
                   <NumericFormat
@@ -264,57 +264,6 @@ const MyInvestments: NextPage = () => {
 
   const [userContracts, setUserContracts] = useState([]);
   const investContracts = [];
-
-  // const { data: userInvestments } = useContractRead({
-  //   address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS as Address,
-  //   abi: FactoryAbi,
-  //   functionName: "getInvestments",
-  //   overrides: { from: address },
-  //   // select: (data) => convertData(data),
-  //   // onSuccess(data) {
-  //   //   data.map((investment) =>
-  //   //     Object.assign(
-  //   //       investment,
-  //   //       investmentData.find(
-  //   //         (i) => i.address[3177] == investment.contractAddress
-  //   //       )
-  //   //     )
-  //   //   );
-  //   //   console.log(data);
-  //   // },
-  // });
-
-  // const getUserTransactions = async (address: Address) => {
-  //   const {
-  //     transactions: userTransactions,
-  //   }: { transactions: TransactionProps } = await hygraph.request(
-  //     gql`
-  //       query UserTransactions {
-  //         transactions(where: { transactionDetails: { from: "34343434" } }) {
-  //           amountInvested
-  //           date
-  //           investment {
-  //             address
-  //             basicInvestment {
-  //               totalInvestment
-  //               car {
-  //                 basicInfo {
-  //                   cover {
-  //                     url
-  //                   }
-  //                   title
-  //                 }
-  //               }
-  //             }
-  //           }
-  //         }
-  //       }
-  //     `
-  //   );
-  //   return userTransactions;
-  // };
-
-  // console.log("user transactions>>", userTransactions);
 
   const userTransactions = useUserTransactions(
     (state) => state.userTransactions
@@ -553,170 +502,6 @@ const MyInvestments: NextPage = () => {
 
   // return <div>end</div>;
   if (hasEntryNFTLoading) return <div>Loading...</div>;
-
-  const fakeTransactions: TransactionProps = {
-    userTransactions: [
-      {
-        amountInvested: 100,
-        hash: "string",
-        to: "string",
-        date: "string",
-        investment: {
-          address: "string",
-          basicInvestment: {
-            totalInvestment: 100000,
-            car: {
-              basicInfo: {
-                cover: {
-                  url: "https://media.graphassets.com/80EHWXSMST2wLnr3tV68",
-                },
-                title: "THE NEW CAR",
-              },
-            },
-          },
-        },
-        totalInvested: 20,
-      },
-    ],
-  };
-  const fakeInvestments: InvestmentProps[] = [
-    {
-      address: "0x71f9e0C7d21Ff94Abd7Cf3620AD42743A701b588",
-      basicInvestment: {
-        totalInvestment: 1000,
-        investmentStatus: "active",
-        car: {
-          basicInfo: {
-            title: "the car",
-            cover: {
-              url: "https://media.graphassets.com/80EHWXSMST2wLnr3tV68",
-            },
-          },
-          subtitle: "the subtitle",
-          description: "The description",
-          shortDescription: "the short description",
-        },
-      },
-      level: {
-        basicLevel: {
-          title: "Level 1",
-        },
-        profitRange: "10-12",
-      },
-      transactions: [
-        {
-          date: "2023-11-09",
-          amountInvested: 200,
-          hash: "232j4lk234lk3sdfsfd",
-          from: "0x74D21EcF4F112c33037FB133ae6BeB7EBF5B01e3",
-          wallet: "0x39343443",
-          type: "deposit",
-        },
-      ],
-    },
-    {
-      address: "0x71f9e0C7d21Ff94Abd7Cf3620AD42743A701b588",
-      basicInvestment: {
-        totalInvestment: 1000,
-        investmentStatus: "active",
-        car: {
-          basicInfo: {
-            title: "the car",
-            cover: {
-              url: "https://media.graphassets.com/80EHWXSMST2wLnr3tV68",
-            },
-          },
-          subtitle: "the subtitle",
-          description: "The description",
-          shortDescription: "the short description",
-        },
-      },
-      level: {
-        basicLevel: {
-          title: "Level 1",
-        },
-        profitRange: "10-12",
-      },
-      transactions: [
-        {
-          date: "2023-11-09",
-          amountInvested: 200,
-          hash: "232j4lk234lk3sdfsfd",
-          from: "0x74D21EcF4F112c33037FB133ae6BeB7EBF5B01e3",
-          wallet: "0x39343443",
-          type: "deposit",
-        },
-      ],
-    },
-    {
-      address: "0x71f9e0C7d21Ff94Abd7Cf3620AD42743A701b588",
-      basicInvestment: {
-        totalInvestment: 1000,
-        investmentStatus: "active",
-        car: {
-          basicInfo: {
-            title: "the car",
-            cover: {
-              url: "https://media.graphassets.com/80EHWXSMST2wLnr3tV68",
-            },
-          },
-          subtitle: "the subtitle",
-          description: "The description",
-          shortDescription: "the short description",
-        },
-      },
-      level: {
-        basicLevel: {
-          title: "Level 1",
-        },
-        profitRange: "10-12",
-      },
-      transactions: [
-        {
-          date: "2023-11-09",
-          amountInvested: 200,
-          hash: "232j4lk234lk3sdfsfd",
-          from: "0x74D21EcF4F112c33037FB133ae6BeB7EBF5B01e3",
-          wallet: "0x39343443",
-          type: "deposit",
-        },
-      ],
-    },
-    {
-      address: "0x71f9e0C7d21Ff94Abd7Cf3620AD42743A701b588",
-      basicInvestment: {
-        totalInvestment: 1000,
-        investmentStatus: "active",
-        car: {
-          basicInfo: {
-            title: "the car",
-            cover: {
-              url: "https://media.graphassets.com/80EHWXSMST2wLnr3tV68",
-            },
-          },
-          subtitle: "the subtitle",
-          description: "The description",
-          shortDescription: "the short description",
-        },
-      },
-      level: {
-        basicLevel: {
-          title: "Level 1",
-        },
-        profitRange: "10-12",
-      },
-      transactions: [
-        {
-          date: "2023-11-09",
-          amountInvested: 200,
-          hash: "232j4lk234lk3sdfsfd",
-          from: "0x74D21EcF4F112c33037FB133ae6BeB7EBF5B01e3",
-          wallet: "0x39343443",
-          type: "deposit",
-        },
-      ],
-    },
-  ];
 
   if (!hasEntryNFTLoading && !hasEntryNFT)
     return (

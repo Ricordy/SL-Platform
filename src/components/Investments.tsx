@@ -116,12 +116,10 @@ function clearQueryForRender(query) {
         investmentStatus: item.basicInvestment.investmentStatus,
         car: {
           id: item.basicInvestment.car.id,
-          basicInfo: {
-            cover: {
-              url: item.basicInvestment.car.basicInfo.cover.url,
-            },
-            title: item.basicInvestment.car.basicInfo.title,
+          cover: {
+            url: item.basicInvestment.car.cover.url,
           },
+          title: item.basicInvestment.car.title,
         },
       },
     });

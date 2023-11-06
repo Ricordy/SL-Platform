@@ -47,12 +47,10 @@ export default async function handler(req: NextApiRequest, res: MyResponse) {
             totalInvestment
             investmentStatus
             car {
-              basicInfo {
-                title
-                cover {
-                  id
-                  url
-                }
+              title
+              cover {
+                id
+                url
               }
               description
               gallery {
