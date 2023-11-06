@@ -177,9 +177,9 @@ export const InvestmentModal = ({
           .approve(contractAddress, investmentAmountWithDecimals));
 
       await toast.promise(results.wait(), {
-        loading: "Approving...",
-        success: "Approved",
-        error: "Error approving",
+        loading: "Transaction approval in progress...",
+        success: "Transaction successfully approved",
+        error: "Insufficient funds to complete the transaction.",
       });
 
       //setIsApproving(false);
