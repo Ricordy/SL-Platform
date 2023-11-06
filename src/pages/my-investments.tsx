@@ -763,6 +763,7 @@ const MyInvestments: NextPage = () => {
                 isTriggerDisabled={!isConnected}
                 alertDescription="Are you sure you want to mint this entry? This action cannot be undone."
                 confirmLabel="Mint Entry"
+                alertTitle="Mint Membership Card?"
               />
             </div>
             <div className="relative row-start-1 flex h-full w-full items-center justify-center md:row-start-auto">

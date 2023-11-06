@@ -198,6 +198,7 @@ const Level = ({
             isTriggerDisabled={collectedNFTs < 10 || userLevel > level}
             alertDescription="Are you sure you want to claim this level? This action cannot be undone."
             confirmLabel="Claim Level"
+            alertTitle="Claim Level NFT?"
           />
         )}
       </div>
