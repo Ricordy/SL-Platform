@@ -1,27 +1,25 @@
 import { type Address } from "viem";
 
 export interface InvestmentProps {
-  basicInvestment: {
-    totalInvestment: number;
-    investmentStatus: string;
-    car: {
-      title: string;
-      cover: {
-        url: string;
-      };
-      subtitle: string;
-      shortDescription: string;
-      description: string;
-      chassis: string;
-      totalProduction: number;
-      totalModelProduction: number;
-      colorCombination: string;
-      gallery: {
-        url: string;
-      }[];
-      chart: {
-        url: string;
-      };
+  totalInvestment: number;
+  investmentStatus: string;
+  car: {
+    title: string;
+    cover: {
+      url: string;
+    };
+    subtitle: string;
+    shortDescription: string;
+    description: string;
+    chassis: string;
+    totalProduction: number;
+    totalModelProduction: number;
+    colorCombination: string;
+    gallery: {
+      url: string;
+    }[];
+    chart: {
+      url: string;
     };
   };
   address: Address;
@@ -59,27 +57,25 @@ export interface InvestmentProps {
 
 export interface InvestmentPropsItem {
   investment: {
-    basicInvestment: {
-      totalInvestment: number;
-      investmentStatus: string;
-      car: {
-        title: string;
-        cover: {
-          url: string;
-        };
-        subtitle: string;
-        shortDescription: string;
-        description: string;
-        chassis: string;
-        totalProduction: number;
-        totalModelProduction: number;
-        colorCombination: string;
-        gallery: {
-          url: string;
-        }[];
-        chart: {
-          url: string;
-        };
+    totalInvestment: number;
+    investmentStatus: string;
+    car: {
+      title: string;
+      cover: {
+        url: string;
+      };
+      subtitle: string;
+      shortDescription: string;
+      description: string;
+      chassis: string;
+      totalProduction: number;
+      totalModelProduction: number;
+      colorCombination: string;
+      gallery: {
+        url: string;
+      }[];
+      chart: {
+        url: string;
       };
     };
     address: Address;

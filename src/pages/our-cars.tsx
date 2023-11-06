@@ -17,10 +17,9 @@ const ourCars = () => {
 
   const allInvestments = useInvestments((state: any) => state?.investments);
 
-  const lastCarName =
-    allInvestments?.[0].basicInvestment.car.title.split(" ")[0];
+  const lastCarName = allInvestments?.[0].car.title.split(" ")[0];
   const lastCarModel = () => {
-    const titleWords = allInvestments?.[0].basicInvestment.car.title.split(" ");
+    const titleWords = allInvestments?.[0].car.title.split(" ");
     if (titleWords?.length > 2) {
       return titleWords.slice(1).join(" ");
     } else {

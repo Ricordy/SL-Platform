@@ -93,13 +93,13 @@ export const TransactionItem = ({
               <div className="flex items-center justify-between pb-2">
                 <Image
                   className="rounded-md"
-                  src={item.investment.basicInvestment.car.cover.url}
+                  src={item.investment.car.cover.url}
                   width={64}
                   height={53}
                   alt="Car"
                 />
                 <span className=" hidden w-28 truncate md:flex">
-                  {item.investment.basicInvestment.car.title}
+                  {item.investment.car.title}
                 </span>
                 <span className=" text-primaryGold">
                   <NumericFormat
@@ -136,13 +136,13 @@ export const TransactionItem = ({
               <div className="flex items-center justify-between pb-2">
                 <Image
                   className="rounded-md"
-                  src={item.investment.basicInvestment.car.cover.url}
+                  src={item.investment.car.cover.url}
                   width={64}
                   height={53}
                   alt="Car"
                 />
                 <span className=" hidden w-28 truncate md:flex">
-                  {item.investment.basicInvestment.car.title}
+                  {item.investment.car.title}
                 </span>
                 <span className=" text-primaryGold">
                   <NumericFormat
@@ -718,8 +718,7 @@ const MyInvestments: NextPage = () => {
             prevNavWhite={true}
             title={<h2 className="text-2xl md:text-white">Active</h2>}
             items={userInvestments?.filter(
-              (investment) =>
-                investment.basicInvestment.investmentStatus == "Active"
+              (investment) => investment.investmentStatus == "Active"
             )}
           />
         )}
@@ -730,8 +729,7 @@ const MyInvestments: NextPage = () => {
             className="py-12 md:py-[132px]"
             title={<h2 className="text-2xl">Finished</h2>}
             items={userInvestments?.filter(
-              (investment) =>
-                investment.basicInvestment.investmentStatus == "Finished"
+              (investment) => investment.investmentStatus == "Finished"
             )}
           />
         )}

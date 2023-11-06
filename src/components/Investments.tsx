@@ -74,8 +74,7 @@ export default function Investments({ isConnected }: InvestmentsProps) {
                   {investmentStatus == investmentStatusesData[0] &&
                     userInvestments?.filter(
                       (investment) =>
-                        investment.basicInvestment.investmentStatus ==
-                        investmentStatus
+                        investment.investmentStatus == investmentStatus
                     ).length == 0 && (
                       <NoInvestments
                         active={false}
@@ -88,8 +87,7 @@ export default function Investments({ isConnected }: InvestmentsProps) {
                     id={investmentStatus}
                     items={userInvestments?.filter(
                       (investment) =>
-                        investment.basicInvestment.investmentStatus ==
-                        investmentStatus
+                        investment.investmentStatus == investmentStatus
                     )}
                   />
                 </Tab.Panel>
@@ -110,17 +108,15 @@ function clearQueryForRender(query) {
     newQuery.push({
       id: item.id,
       address: item.address,
-      basicInvestment: {
-        totalInvested: item.basicInvestment.totalInvested,
-        totalInvestment: item.basicInvestment.totalInvestment,
-        investmentStatus: item.basicInvestment.investmentStatus,
-        car: {
-          id: item.basicInvestment.car.id,
-          cover: {
-            url: item.basicInvestment.car.cover.url,
-          },
-          title: item.basicInvestment.car.title,
+      totalInvested: item.totalInvested,
+      totalInvestment: item.totalInvestment,
+      investmentStatus: item.investmentStatus,
+      car: {
+        id: item.car.id,
+        cover: {
+          url: item.car.cover.url,
         },
+        title: item.car.title,
       },
     });
   });

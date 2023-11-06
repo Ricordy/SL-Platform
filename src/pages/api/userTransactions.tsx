@@ -50,14 +50,12 @@ export default async function handler(
               level {
                 title
               }
-              basicInvestment {
-                totalInvestment
-                investmentStatus
-                car {
-                  title
-                  cover {
-                    url
-                  }
+              totalInvestment
+              investmentStatus
+              car {
+                title
+                cover {
+                  url
                 }
               }
             }

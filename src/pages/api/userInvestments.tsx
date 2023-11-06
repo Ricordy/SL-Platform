@@ -48,17 +48,15 @@ export default async function handler(
               title
               profitRange
             }
-            basicInvestment {
-              totalInvested
-              totalInvestment
-              investmentStatus
-              car {
-                id
-                cover {
-                  url
-                }
-                title
+            totalInvested
+            totalInvestment
+            investmentStatus
+            car {
+              id
+              cover {
+                url
               }
+              title
             }
           }
         }

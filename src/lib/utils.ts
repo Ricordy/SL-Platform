@@ -30,8 +30,5 @@ function reverseInvestments(investments: any) {
 function orderInvestmentsByTotalInvestment(investments: any) {
   return investments
     .slice()
-    .sort(
-      (a, b) =>
-        b.basicInvestment.totalInvestment - a.basicInvestment.totalInvestment
-    );
+    .sort((a, b) => b.totalInvestment - a.totalInvestment);
 }

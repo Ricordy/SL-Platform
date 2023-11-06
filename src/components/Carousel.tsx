@@ -279,9 +279,9 @@ const Carousel: FC<CarouselProps> = ({
                 {items.map((item, index) => (
                   <SwiperSlide key={index} className="">
                     <CarouselItem
-                      title={item.basicInvestment.car?.title}
-                      image={item.basicInvestment.car?.cover?.url}
-                      price={item.basicInvestment.totalInvestment.toString()}
+                      title={item.car?.title}
+                      image={item.car?.cover?.url}
+                      price={item.totalInvestment.toString()}
                       address={item.address}
                       level={item.level.title}
                       userLevel={Number(userLevel)}

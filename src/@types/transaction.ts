@@ -6,14 +6,12 @@ export interface TransactionProps {
     date: string;
     investment: {
       address: string;
-      basicInvestment: {
-        totalInvestment: number;
-        car: {
-          cover: {
-            url: string;
-          };
-          title: string;
+      totalInvestment: number;
+      car: {
+        cover: {
+          url: string;
         };
+        title: string;
       };
     };
     totalInvested?: number;

@@ -33,14 +33,14 @@ const Highlight = ({ className }: HighlightProps) => {
       <div className="flex flex-col gap-6 md:flex-row">
         <div className="relative flex  min-w-[50%]">
           <Carousel showStatus={false} showThumbs={false}>
-            {investment?.basicInvestment.car.gallery.map((image, idx) => (
+            {investment?.car.gallery.map((image, idx) => (
               <div key={idx} className="relative max-h-[405px] w-full">
                 <Image
                   src={image.url}
                   width={528}
                   height={396}
                   className="rounded-md"
-                  alt={investment.basicInvestment.car.title}
+                  alt={investment.car.title}
                 />
               </div>
             ))}
@@ -48,20 +48,20 @@ const Highlight = ({ className }: HighlightProps) => {
         </div>
         <div className="flex flex-col gap-[32px] md:max-w-[50%]">
           <h2 className="text-3xl font-medium text-primaryGreen">
-            {investment?.basicInvestment.car.title}
+            {investment?.car.title}
           </h2>
           <ProjectInfo
-            status={investment?.basicInvestment.investmentStatus}
-            totalInvestment={investment?.basicInvestment.totalInvestment}
+            status={investment?.investmentStatus}
+            totalInvestment={investment?.totalInvestment}
             progress={
               (Number(totalInvested?.div(10 ** 6)) /
-                Number(investment?.basicInvestment.totalInvestment)) *
+                Number(investment?.totalInvestment)) *
               100
             }
             isFlexCol
           />
           <p className=" max-h-24 overflow-scroll">
-            {investment?.basicInvestment.car.description}
+            {investment?.car.description}
           </p>
           {currentPhase && (
             <div className="flex flex-col gap-4 sm:flex-row">

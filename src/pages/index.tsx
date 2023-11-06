@@ -53,8 +53,8 @@ const Home: NextPage = (props: any) => {
               }`}
               style={{
                 backgroundImage: `url(${
-                  image.basicInvestment.car?.cover?
-                    .url /** image.banner.url its the right one but has decievieng images by now */
+                  image.car?.cover
+                    ?.url /** image.banner.url its the right one but has decievieng images by now */
                 })`,
               }}
             />
@@ -73,8 +73,7 @@ const Home: NextPage = (props: any) => {
                 className="text-3xl uppercase tracking-widest text-white md:text-5xl"
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(
-                    sliderInvestments?.at(activeIndex).basicInvestment.car
-                      ?.sliderTitle
+                    sliderInvestments?.at(activeIndex).car?.sliderTitle
                   ),
                 }}
               />
@@ -82,8 +81,7 @@ const Home: NextPage = (props: any) => {
                 className="text-white"
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(
-                    sliderInvestments?.at(activeIndex).basicInvestment.car
-                      ?.sliderDescription
+                    sliderInvestments?.at(activeIndex).car?.sliderDescription
                   ),
                 }}
               />
