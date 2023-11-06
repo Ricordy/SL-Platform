@@ -87,7 +87,9 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
         <title>Something Legendary</title>
         <meta
           name="description"
-          content="Somenthing Legendary: It is in the solitude that legends are born."
+          content="Where classic cars and the new world meet 🤝
+ 
+Become part of history ⭐"
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
