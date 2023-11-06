@@ -63,9 +63,7 @@ export default async function handler(
           }
           level {
             profitRange
-            basicLevel {
-                title
-              }
+            title
           }
           address
           salesEnd

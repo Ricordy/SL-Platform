@@ -446,9 +446,9 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                 <h2 className="text-3xl font-medium md:text-4xl">
                   {investment.basicInvestment.car.title}
                 </h2>
-                {investment.level.basicLevel.title && (
+                {investment.level.title && (
                   <div className="z-10 mt-2 h-fit w-fit whitespace-nowrap rounded-lg border border-primaryGold bg-white px-2 py-1 text-xs text-primaryGold ">
-                    {investment.level.basicLevel.title}
+                    {investment.level.title}
                   </div>
                 )}
               </div>

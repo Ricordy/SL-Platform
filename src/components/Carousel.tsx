@@ -194,7 +194,7 @@ const Carousel: FC<CarouselProps> = ({
   }
 
   if (isLevelDivided) {
-    items = items?.filter((i) => i.level.basicLevel.title === currentLevel);
+    items = items?.filter((i) => i.level.title === currentLevel);
   }
 
   return (
@@ -283,7 +283,7 @@ const Carousel: FC<CarouselProps> = ({
                       image={item.basicInvestment.car?.cover?.url}
                       price={item.basicInvestment.totalInvestment.toString()}
                       address={item.address}
-                      level={item.level.basicLevel.title}
+                      level={item.level.title}
                       userLevel={Number(userLevel)}
                     />
                   </SwiperSlide>

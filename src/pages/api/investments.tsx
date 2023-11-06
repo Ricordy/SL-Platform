@@ -37,9 +37,7 @@ export default async function handler(req: NextApiRequest, res: MyResponse) {
             url
           }
           level {
-            basicLevel {
-              title
-            }
+            title
             profitRange
           }
           basicInvestment {

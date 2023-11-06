@@ -103,13 +103,6 @@ const ourCars = () => {
                   <Carousel
                     id={investmentLevel}
                     prevNavWhite={true}
-                    // items={zustand.filter(
-                    //   (i) =>
-                    //     i.level.basicLevel.title ===
-                    //     investmentLevel.split("l")[0] +
-                    //       "l " +
-                    //       investmentLevel.split("l")[1]
-                    // )}
                     userAddress={walletAddress!}
                     isLevelDivided={true}
                     currentLevel={
@@ -130,30 +123,6 @@ const ourCars = () => {
           userAddress={walletAddress!}
           isLevelDivided={false}
         />
-        {/* <Carousel
-          id="5"
-          className="pt-[132px]"
-          title={<h2 className="text-2xl">Level 1</h2>}
-          items={props.investments.filter(
-            (i) => i.level.basicLevel.title === "Level 1"
-          )}
-        />
-        <Carousel
-          id="6"
-          className="pt-[132px]"
-          title={<h2 className="text-2xl">Level 2</h2>}
-          items={props.investments.filter(
-            (i) => i.level.basicLevel.title === "Level 2"
-          )}
-        />
-        <Carousel
-          id="7"
-          className="pt-[132px]"
-          title={<h2 className="text-2xl">Level 3</h2>}
-          items={props.investments.filter(
-            (i) => i.level.basicLevel.title === "Level 3"
-          )}
-        /> */}
       </div>
     </section>
   );

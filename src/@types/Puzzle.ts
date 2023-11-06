@@ -15,9 +15,7 @@ export interface PuzzleProps {
     };
   }[];
   dbLevels?: {
-    basicLevel: {
-      title: string;
-    };
+    title: string;
     bg: {
       url: string;
     };

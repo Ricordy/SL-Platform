@@ -48,9 +48,7 @@ export default async function handler(
             investment {
               address
               level {
-                basicLevel {
-                  title
-                }
+                title
               }
               basicInvestment {
                 totalInvestment

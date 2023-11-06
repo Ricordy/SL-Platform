@@ -45,9 +45,7 @@ export default async function handler(
             id
             address
             level {
-              basicLevel {
-                title
-              }
+              title
               profitRange
             }
             basicInvestment {

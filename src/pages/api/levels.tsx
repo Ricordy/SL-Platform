@@ -24,9 +24,7 @@ export default async function handler(req: NextApiRequest, res: MyResponse) {
     gql`
       query {
         levels {
-          basicLevel {
-            title
-          }
+          title
           description
           profitRange
           bg {

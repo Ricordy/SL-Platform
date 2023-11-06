@@ -206,7 +206,7 @@ const ProjectCarousel: FC<CarouselProps> = ({
                       status={
                         item.basicInvestment.investmentStatus ?? "Not woking"
                       }
-                      level={item.level.basicLevel.title}
+                      level={item.level.title}
                     />
                   </SwiperSlide>
                 ))}
