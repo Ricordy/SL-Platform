@@ -398,7 +398,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                                     : `Claim Piece`
                                 }
                                 confirmAction={actionClaimPiece}
-                                triggerButtonClassname="whitespace-nowrap border-emerald-700 px-12 text-emerald-700"
+                                triggerButtonClassname="whitespace-nowrap border-emerald-700 px-12 text-emerald-700 hover:bg-emerald-700 hover:text-white"
                                 variant="outline"
                                 isTriggerDisabled={!userAllowedToClaimPiece}
                                 alertDescription="Are you sure you want to claim this puzzle piece? This action cannot be undone."
