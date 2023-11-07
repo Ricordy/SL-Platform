@@ -1,5 +1,3 @@
-import path from "path";
-import { promises as fs } from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { GraphQLClient, gql } from "graphql-request";
 import { PostProps } from "~/@types/post";
@@ -27,9 +25,7 @@ export default async function handler(req: NextApiRequest, res: MyResponse) {
           id
           slug
           link
-          basic {
-            title
-          }
+          title
           shortDescription {
             html
           }

@@ -8,32 +8,22 @@ import { usePosts } from "~/lib/zustand";
 
 const PostItem: FC<PostItemProps> = ({
   image,
-  basic,
+  title,
   titleColor,
   children,
   slug,
   link,
 }) => {
-  const purifiedChildren = () => ({
-    __html: DOMPurify.sanitize(children as string),
-  });
-
   return (
     <div className="relative flex flex-col gap-6">
       <Image
         className="rounded-md"
         src={image.url}
-        alt="{basic.title}"
+        alt={title}
         width={328}
         height={264}
       />
-      <h3 className={cn("text-2xl", titleColor ?? "text-black")}>
-        {basic.title}
-      </h3>
-      {/* <div
-        className="text-white"
-        dangerouslySetInnerHTML={purifiedChildren()}
-      ></div> */}
+      <h3 className={cn("text-2xl", titleColor ?? "text-black")}>{title}</h3>
       <Link
         href={link ? link : `/learn/${slug}`}
         target="_blank"
@@ -103,7 +93,7 @@ const Posts: FC<PostProps> = ({
                 <PostItem
                   key={post.slug}
                   shortDescription={post.shortDescription}
-                  basic={post.basic}
+                  title={post.title}
                   titleColor="text-white"
                   image={post.image}
                   slug={post.slug}
