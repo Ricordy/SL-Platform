@@ -200,13 +200,11 @@ const ProjectCarousel: FC<CarouselProps> = ({
                   <SwiperSlide key={index}>
                     <CarouselItem
                       address={item.address}
-                      title={item.basicInvestment.car.basicInfo.title ?? ""}
-                      image={item.basicInvestment.car.basicInfo.cover.url ?? ""}
-                      price={item.basicInvestment.totalInvestment}
-                      status={
-                        item.basicInvestment.investmentStatus ?? "Not woking"
-                      }
-                      level={item.level.basicLevel.title}
+                      title={item.car.title ?? ""}
+                      image={item.car.cover.url ?? ""}
+                      price={item.totalInvestment}
+                      status={item.investmentStatus ?? "Not woking"}
+                      level={item.level.title}
                     />
                   </SwiperSlide>
                 ))}

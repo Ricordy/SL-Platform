@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useState, type FC, type ReactNode, useEffect } from "react";
+import { useState, type FC, type ReactNode } from "react";
 import { A11y, Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { cn } from "../lib/utils";
@@ -16,7 +16,6 @@ import { useContractRead } from "wagmi";
 import { SLCoreABI } from "~/utils/abis";
 import { useBreakpoint } from "~/hooks/useBreakpoints";
 import { useInvestments } from "~/lib/zustand";
-// import "swiper/css/navigation";
 
 interface CarouselItemProps {
   title: string;
@@ -195,7 +194,7 @@ const Carousel: FC<CarouselProps> = ({
   }
 
   if (isLevelDivided) {
-    items = items?.filter((i) => i.level.basicLevel.title === currentLevel);
+    items = items?.filter((i) => i.level.title === currentLevel);
   }
 
   return (
@@ -280,11 +279,11 @@ const Carousel: FC<CarouselProps> = ({
                 {items.map((item, index) => (
                   <SwiperSlide key={index} className="">
                     <CarouselItem
-                      title={item.basicInvestment.car?.basicInfo.title}
-                      image={item.basicInvestment.car?.basicInfo.cover.url}
-                      price={item.basicInvestment.totalInvestment.toString()}
+                      title={item.car?.title}
+                      image={item.car?.cover?.url}
+                      price={item.totalInvestment.toString()}
                       address={item.address}
-                      level={item.level.basicLevel.title}
+                      level={item.level.title}
                       userLevel={Number(userLevel)}
                     />
                   </SwiperSlide>

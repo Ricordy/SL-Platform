@@ -51,67 +51,6 @@ import MyAlertButton from "~/components/MyAlertButton";
 
 dayjs.extend(localizedFormat);
 
-// interface InvestmentProps {
-//   investment: {
-//     basicInvestment: {
-//       totalInvestment: number;
-//       investmentStatus: string;
-//       car: {
-//         basicInfo: {
-//           title: string;
-//           cover: {
-//             url: string;
-//           };
-//         };
-//         subtitle: string;
-//         shortDescription: string;
-//         description: string;
-//         chassis: string;
-//         totalProduction: number;
-//         totalModelProduction: number;
-//         colorCombination: string;
-//         gallery: {
-//           url: string;
-//         }[];
-//         chart: {
-//           url: string;
-//         };
-//       };
-//     };
-//     address: Address;
-//     salesEnd: string;
-//     salesStart: string;
-//     estimateClaiming: string;
-//     level: {
-//       profitRange: string;
-//     };
-//     restorationPhases: {
-//       title: string;
-//       deadline: string;
-//       currentCost: number;
-//       costExpectation: number;
-//       restorationStatus: string;
-//       gallery: {
-//         url: string;
-//       }[];
-//       restorationUpdates: {
-//         title: string;
-//         date: string;
-//       }[];
-//     }[];
-//     transactions: {
-//       amountInvested: number;
-//       date: string;
-//       type: string;
-//       hash: string;
-//       from: string;
-//     }[];
-//   };
-//   transactions: {
-//     from: Address;
-//   };
-// }
-
 const InvestmentGallery = ({ images }) => {
   return (
     <Gallery>
@@ -441,9 +380,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
   }
 
   const progress = totalSupply
-    ? (totalSupply?.div(10 ** 6).toNumber() /
-        investment.basicInvestment.totalInvestment) *
-      100
+    ? (totalSupply?.div(10 ** 6).toNumber() / investment.totalInvestment) * 100
     : 0;
 
   const phases = investment.restorationPhases?.map((phase) => ({
@@ -505,31 +442,27 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
             <div className="flex flex-col gap-6">
               <div className="flex justify-center gap-2 align-middle ">
                 <h2 className="text-3xl font-medium md:text-4xl">
-                  {investment.basicInvestment.car.basicInfo.title}
+                  {investment.car.title}
                 </h2>
-                {investment.level.basicLevel.title && (
+                {investment.level.title && (
                   <div className="z-10 mt-2 h-fit w-fit whitespace-nowrap rounded-lg border border-primaryGold bg-white px-2 py-1 text-xs text-primaryGold ">
-                    {investment.level.basicLevel.title}
+                    {investment.level.title}
                   </div>
                 )}
               </div>
 
-              <p>{investment.basicInvestment.car.subtitle}</p>
+              <p>{investment.car.subtitle}</p>
             </div>
 
             <InvestmentModal
               userAddress={walletAddress as Address}
               className="flex flex-col justify-between align-middle"
-              title={investment?.basicInvestment.car.basicInfo.title}
-              chassis={investment?.basicInvestment.car.chassis}
+              title={investment?.car.title}
+              chassis={investment?.car.chassis}
               contractAddress={investment?.address}
-              totalProduction={investment?.basicInvestment.car.totalProduction}
-              totalModelProduction={
-                investment?.basicInvestment.car.totalModelProduction
-              }
-              colorCombination={
-                investment?.basicInvestment.car.colorCombination
-              }
+              totalProduction={investment?.car.totalProduction}
+              totalModelProduction={investment?.car.totalModelProduction}
+              colorCombination={investment?.car.colorCombination}
               totalInvestment={Number(totalSupply) / 10 ** 6}
               maxToInvest={
                 Number(maxToInvest) -
@@ -541,10 +474,8 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
               userLevel={userLevel as any as number}
             />
           </div>
-          {investment.basicInvestment.car.gallery.length > 0 && (
-            <InvestmentGallery
-              images={investment.basicInvestment.car.gallery}
-            />
+          {investment.car.gallery.length > 0 && (
+            <InvestmentGallery images={investment.car.gallery} />
           )}
           <div className="flex max-h-full flex-col items-start justify-between  gap-12 md:flex-row">
             <div className="flex max-h-full flex-col gap-[14px] md:w-[55%]  ">
@@ -559,8 +490,8 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
               </h3>
               <ProjectInfo
                 progress={progress}
-                status={investment.basicInvestment.investmentStatus}
-                totalInvestment={investment.basicInvestment.totalInvestment}
+                status={investment.investmentStatus}
+                totalInvestment={investment.totalInvestment}
               />
               <ProgressBar
                 color="bg-progressActiveBackground"
@@ -569,7 +500,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
               <div className=" h-full max-h-[436px] overflow-scroll">
                 <h3 className="pb-5 pt-[52px]">Description</h3>
                 <p className="font-normal text-ogBlack">
-                  {investment.basicInvestment.car.shortDescription}
+                  {investment.car.shortDescription}
                 </p>
               </div>
             </div>
@@ -618,7 +549,7 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                 <div className="flex flex-col ">
                   <span>Chassis NR:</span>
                   <span className="pb-2 font-normal text-black">
-                    {investment?.basicInvestment.car.chassis}
+                    {investment?.car.chassis}
                   </span>
                 </div>
 
@@ -626,20 +557,20 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                   <div className="mr-3 flex flex-col ">
                     <span>Total Production</span>
                     <span className="text-black">
-                      {investment?.basicInvestment.car.totalProduction}
+                      {investment?.car.totalProduction}
                     </span>
                   </div>
                   <div className="flex flex-col">
                     <span>Total Model Prouction</span>
                     <span className="text-black">
-                      {investment?.basicInvestment.car.totalModelProduction}
+                      {investment?.car.totalModelProduction}
                     </span>
                   </div>
                 </div>
                 <div className=" flex flex-col">
                   <span>Color Combination:</span>
                   <span className="pb-8 font-normal text-black">
-                    {investment?.basicInvestment.car.colorCombination}
+                    {investment?.car.colorCombination}
                   </span>
                 </div>
               </div>
@@ -966,47 +897,17 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                     </div>
                   </div>
                   <div className="flex justify-center gap-8">
-                    {/* <InvestmentModal
-                    className="flex flex-col justify-between align-middle"
-                    title={investment?.basicInvestment.car.basicInfo.title}
-                    chassis={investment?.basicInvestment.car.chassis}
-                    contractAddress={investment?.address}
-                    totalProduction={
-                      investment?.basicInvestment.car.totalProduction
-                    }
-                    totalModelProduction={
-                      investment?.basicInvestment.car.totalModelProduction
-                    }
-                    colorCombination={
-                      investment?.basicInvestment.car.colorCombination
-                    }
-                    totalInvestment={Number(totalSupply) / 10 ** 6}
-                    maxToInvest={Number(maxToInvest) / 10 ** 6}
-                    minToInvest={Number(minToInvest)}
-                    paymentTokenBalance={Number(paymentTokenBalance?.formatted)}
-                  /> */}
-                    {/* <Button
-                    disabled={!canWithdraw}
-                    variant="outline"
-                    onClick={onClickWithdraw}
-                  >
-                    Withdraw
-                  </Button> */}
                     <InvestmentModal
                       userAddress={walletAddress as Address}
                       className="flex flex-col justify-between align-middle"
-                      title={investment?.basicInvestment.car.basicInfo.title}
-                      chassis={investment?.basicInvestment.car.chassis}
+                      title={investment?.car.title}
+                      chassis={investment?.car.chassis}
                       contractAddress={investment?.address}
-                      totalProduction={
-                        investment?.basicInvestment.car.totalProduction
-                      }
+                      totalProduction={investment?.car.totalProduction}
                       totalModelProduction={
-                        investment?.basicInvestment.car.totalModelProduction
+                        investment?.car.totalModelProduction
                       }
-                      colorCombination={
-                        investment?.basicInvestment.car.colorCombination
-                      }
+                      colorCombination={investment?.car.colorCombination}
                       totalInvestment={Number(totalSupply) / 10 ** 6}
                       maxToInvest={
                         Number(maxToInvest) -
@@ -1128,42 +1029,6 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
                       </div>
                     </div>
                   </div>
-                  {/* <div className="flex justify-center gap-8">
-                    <InvestmentModal
-                      userAddress={walletAddress as Address}
-                      className="flex flex-col justify-between align-middle"
-                      title={investment?.basicInvestment.car.basicInfo.title}
-                      chassis={investment?.basicInvestment.car.chassis}
-                      contractAddress={investment?.address}
-                      totalProduction={
-                        investment?.basicInvestment.car.totalProduction
-                      }
-                      totalModelProduction={
-                        investment?.basicInvestment.car.totalModelProduction
-                      }
-                      colorCombination={
-                        investment?.basicInvestment.car.colorCombination
-                      }
-                      totalInvestment={Number(totalSupply) / 10 ** 6}
-                      maxToInvest={
-                        Number(maxToInvest) -
-                        userTotalInvestment?.div(10 ** 6).toNumber()
-                      }
-                      minToInvest={Number(minToInvest)}
-                      paymentTokenBalance={Number(
-                        paymentTokenBalance?.div(10 ** 6)
-                      )}
-                      contractLevel={contractLevel as any as number}
-                      userLevel={userLevel as any as number}
-                    />
-                    <MyAlertButton
-                      triggerButtonLabel={"Withdraw"}
-                      confirmAction={onClickWithdraw}
-                      triggerButtonClassname={cn()}
-                      variant="outline"
-                      isTriggerDisabled={!canWithdraw}
-                    />
-                  </div> */}
                 </div>
               </div>
             )}
@@ -1181,17 +1046,17 @@ const Investment = ({ address: investmentAddress }: InvestmentDetailsProps) => {
             </h3>
             <div className="mb-6 grid  grid-flow-dense grid-cols-1 gap-8 md:mb-[132px] md:grid-cols-2">
               <h4 className="row-start-1 pb-8 text-2xl font-medium md:row-auto">
-                {investment?.basicInvestment.car.basicInfo.title}
+                {investment?.car.title}
               </h4>
               <div className=" row-start-3 flex flex-col md:row-auto md:row-start-2">
                 <div className=" max-h-[358px] overflow-scroll">
-                  {investment?.basicInvestment.car.description}
+                  {investment?.car.description}
                 </div>
               </div>
 
               <div className="row-start-2 flex md:col-start-2 md:row-span-2 md:row-start-1">
                 <Image
-                  src={investment.basicInvestment.car.chart.url}
+                  src={investment.car.chart.url}
                   width={592}
                   height={498}
                   alt="Graph"

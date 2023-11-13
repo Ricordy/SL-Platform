@@ -38,36 +38,30 @@ export default async function handler(
         investment(
           where: { address: "${body.contractAddress}" }
         ) {
-          basicInvestment {
-            totalInvestment
-            investmentStatus
-            car {
-              basicInfo {
-                title
-                cover {
-                  url
-                }
-              }
-              subtitle
-              shortDescription
-              description
-              chassis
-              totalProduction
-              totalModelProduction
-              colorCombination
-              gallery {
-                url
-              }
-              chart {
-                url
-              }
+          totalInvestment
+          investmentStatus
+          car {
+            title
+            cover {
+              url
+            }
+            subtitle
+            shortDescription
+            description
+            chassis
+            totalProduction
+            totalModelProduction
+            colorCombination
+            gallery {
+              url
+            }
+            chart {
+              url
             }
           }
           level {
             profitRange
-            basicLevel {
-                title
-              }
+            title
           }
           address
           salesEnd

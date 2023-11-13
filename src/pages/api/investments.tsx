@@ -37,27 +37,20 @@ export default async function handler(req: NextApiRequest, res: MyResponse) {
             url
           }
           level {
-            basicLevel {
-              title
-            }
+            title
             profitRange
           }
-          basicInvestment {
-            id
-            totalInvestment
-            investmentStatus
-            car {
-              basicInfo {
-                title
-                cover {
-                  id
-                  url
-                }
-              }
-              description
-              gallery {
-                url
-              }
+          totalInvestment
+          investmentStatus
+          car {
+            title
+            cover {
+              id
+              url
+            }
+            description
+            gallery {
+              url
             }
           }
           restorationPhases(where: { restorationStatus: InProgress }) {

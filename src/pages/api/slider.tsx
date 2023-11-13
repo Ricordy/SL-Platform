@@ -31,17 +31,13 @@ export default async function handler(req: NextApiRequest, res: MyResponse) {
               url
             }
             address
-            basicInvestment {
-              car {
-                basicInfo {
-                  cover {
-                    url
-                  }
-                  title
-                }
-                sliderTitle
-                sliderDescription
+            car {
+              cover {
+                url
               }
+              title
+              sliderTitle
+              sliderDescription
             }
           }
         }

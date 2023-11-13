@@ -45,30 +45,23 @@ export default async function handler(
             id
             address
             level {
-              basicLevel {
-                title
-              }
+              title
               profitRange
             }
-            basicInvestment {
-              totalInvested
-              totalInvestment
-              investmentStatus
-              car {
-                id
-                basicInfo {
-                  cover {
-                    url
-                  }
-                  title
-                }
+            totalInvested
+            totalInvestment
+            investmentStatus
+            car {
+              id
+              cover {
+                url
               }
+              title
             }
           }
         }
       `
     );
-
 
   res.status(200).json({ userInvestments: investments });
 }

@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 export type PostProps = {
   posts?: PostItemProps[];
@@ -11,8 +11,8 @@ export type PostProps = {
   contentPadding?: boolean;
 };
 export type PostItemProps = {
+  title: string;
   image: { url: string };
-  basic: { title: string };
   shortDescription: { html: string };
   description?: { html: string };
   titleColor?: string;

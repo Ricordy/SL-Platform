@@ -204,7 +204,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
   };
 
   const levels = dbLevels?.map((dbLevel, idx) => ({
-    title: dbLevel.basicLevel.title,
+    title: dbLevel.title,
     locked: userLevel?.lt(idx + 1),
     profitRange: dbLevel.profitRange,
     description: dbLevel.description,
@@ -284,7 +284,7 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
               >
                 {dbLevels?.map((level, idx) => (
                   <SwiperSlide
-                    key={level.basicLevel.title}
+                    key={level.title}
                     className={cn(
                       "flex items-center justify-center  ",
                       currentLevel - 1 !== idx ? "blur-md" : ""
