@@ -309,7 +309,12 @@ export const investmentABI = [
       },
       {
         internalType: "address",
-        name: "_paymentTokenAddress",
+        name: "_paymentTokenAddress0",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_paymentTokenAddress1",
         type: "address",
       },
       {
@@ -324,22 +329,6 @@ export const investmentABI = [
   {
     inputs: [],
     name: "CannotWithdrawTwice",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "expected",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "input",
-        type: "uint256",
-      },
-    ],
-    name: "IncorrectRefillValue",
     type: "error",
   },
   {
@@ -388,22 +377,27 @@ export const investmentABI = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "paymentToken",
+        type: "address",
+      },
+      {
         internalType: "uint256",
-        name: "input",
+        name: "firstCoinId",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "min",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "max",
+        name: "secondCoinId",
         type: "uint256",
       },
     ],
-    name: "InvalidLevel",
+    name: "InvalidPaymentId",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "NotAccessable",
     type: "error",
   },
   {
@@ -517,6 +511,12 @@ export const investmentABI = [
         name: "time",
         type: "uint256",
       },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "paymentToken",
+        type: "address",
+      },
     ],
     name: "ContractRefilled",
     type: "event",
@@ -586,6 +586,12 @@ export const investmentABI = [
         name: "time",
         type: "uint256",
       },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "paymentToken",
+        type: "address",
+      },
     ],
     name: "UserInvest",
     type: "event",
@@ -636,6 +642,32 @@ export const investmentABI = [
         internalType: "uint256",
         name: "",
         type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "PAYMENT_TOKEN_ADDRESS_0",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "PAYMENT_TOKEN_ADDRESS_1",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
       },
     ],
     stateMutability: "view",
@@ -770,7 +802,7 @@ export const investmentABI = [
         type: "uint8",
       },
     ],
-    stateMutability: "view",
+    stateMutability: "pure",
     type: "function",
   },
   {
@@ -841,6 +873,11 @@ export const investmentABI = [
         name: "_amount",
         type: "uint256",
       },
+      {
+        internalType: "address",
+        name: "_paymentToken",
+        type: "address",
+      },
     ],
     name: "invest",
     outputs: [],
@@ -861,13 +898,19 @@ export const investmentABI = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "paymentTokenAddress",
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "paymentTokensBalances",
     outputs: [
       {
-        internalType: "address",
+        internalType: "uint256",
         name: "",
-        type: "address",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -875,11 +918,6 @@ export const investmentABI = [
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
       {
         internalType: "uint256",
         name: "_profitRate",
@@ -932,11 +970,16 @@ export const investmentABI = [
   },
   {
     inputs: [],
-    name: "totalContractBalanceStable",
+    name: "totalContractBalanceForEachPaymentToken",
     outputs: [
       {
         internalType: "uint256",
-        name: "totalBalance",
+        name: "paymentToken0Balance",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "paymentToken1Balance",
         type: "uint256",
       },
     ],
@@ -960,12 +1003,12 @@ export const investmentABI = [
     inputs: [
       {
         internalType: "address",
-        name: "to",
+        name: "",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "",
         type: "uint256",
       },
     ],
@@ -977,24 +1020,24 @@ export const investmentABI = [
         type: "bool",
       },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "pure",
     type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
-        name: "from",
+        name: "",
         type: "address",
       },
       {
         internalType: "address",
-        name: "to",
+        name: "",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "",
         type: "uint256",
       },
     ],
@@ -1006,7 +1049,31 @@ export const investmentABI = [
         type: "bool",
       },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "pure",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "userToPaymentTokenBalances",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -1138,6 +1205,11 @@ export const SLCoreABI = [
       },
     ],
     name: "InvalidNumber",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "InvalidTokenID",
     type: "error",
   },
   {
@@ -1320,6 +1392,25 @@ export const SLCoreABI = [
     inputs: [
       {
         internalType: "uint256",
+        name: "_level",
+        type: "uint256",
+      },
+    ],
+    name: "_getLevelTokenIds",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
         name: "level",
         type: "uint256",
       },
@@ -1332,7 +1423,7 @@ export const SLCoreABI = [
         type: "uint256[]",
       },
     ],
-    stateMutability: "view",
+    stateMutability: "pure",
     type: "function",
   },
   {
@@ -1415,6 +1506,35 @@ export const SLCoreABI = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "number",
+        type: "uint256",
+      },
+      {
+        internalType: "uint32",
+        name: "position",
+        type: "uint32",
+      },
+      {
+        internalType: "uint256",
+        name: "newNumber",
+        type: "uint256",
+      },
+    ],
+    name: "changetXPositionInFactor5",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "_final",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "pure",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "claimLevel",
     outputs: [],
@@ -1451,25 +1571,6 @@ export const SLCoreABI = [
     inputs: [
       {
         internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-    ],
-    name: "exists",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
         name: "_cap",
         type: "uint256",
       },
@@ -1487,19 +1588,6 @@ export const SLCoreABI = [
     name: "generateNewEntryBatch",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getAllSoldEntryNfts",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "totalSold",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -1542,6 +1630,30 @@ export const SLCoreABI = [
   {
     inputs: [
       {
+        internalType: "uint32",
+        name: "number",
+        type: "uint32",
+      },
+      {
+        internalType: "uint32",
+        name: "position",
+        type: "uint32",
+      },
+    ],
+    name: "incrementXPositionInFactor3",
+    outputs: [
+      {
+        internalType: "uint32",
+        name: "_final",
+        type: "uint32",
+      },
+    ],
+    stateMutability: "pure",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "account",
         type: "address",
@@ -1566,19 +1678,6 @@ export const SLCoreABI = [
   {
     inputs: [],
     name: "mintEntry",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "level",
-        type: "uint256",
-      },
-    ],
-    name: "mintTest",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -1720,25 +1819,6 @@ export const SLCoreABI = [
         type: "uint256",
       },
     ],
-    name: "totalSupply",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-    ],
     name: "unmountEntryID",
     outputs: [
       {
@@ -1752,7 +1832,7 @@ export const SLCoreABI = [
         type: "uint256",
       },
     ],
-    stateMutability: "view",
+    stateMutability: "pure",
     type: "function",
   },
   {
@@ -2043,7 +2123,7 @@ export const SLLogicsABI = [
         type: "uint256",
       },
     ],
-    name: "batches_uri",
+    name: "batchesUri",
     outputs: [
       {
         internalType: "string",
@@ -2052,6 +2132,35 @@ export const SLLogicsABI = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "number",
+        type: "uint256",
+      },
+      {
+        internalType: "uint32",
+        name: "position",
+        type: "uint32",
+      },
+      {
+        internalType: "uint256",
+        name: "newNumber",
+        type: "uint256",
+      },
+    ],
+    name: "changetXPositionInFactor5",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "_final",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "pure",
     type: "function",
   },
   {
@@ -2087,8 +2196,32 @@ export const SLLogicsABI = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "uint32",
+        name: "number",
+        type: "uint32",
+      },
+      {
+        internalType: "uint32",
+        name: "position",
+        type: "uint32",
+      },
+    ],
+    name: "incrementXPositionInFactor3",
+    outputs: [
+      {
+        internalType: "uint32",
+        name: "_final",
+        type: "uint32",
+      },
+    ],
+    stateMutability: "pure",
+    type: "function",
+  },
+  {
     inputs: [],
-    name: "min_claim_amount_and_entry_price",
+    name: "minClaimAmountAndEntryPrice",
     outputs: [
       {
         internalType: "uint256",
@@ -2164,7 +2297,7 @@ export const SLLogicsABI = [
         type: "uint256",
       },
     ],
-    stateMutability: "view",
+    stateMutability: "pure",
     type: "function",
   },
   {
@@ -2295,7 +2428,7 @@ export const FactoryABI = [
       {
         indexed: true,
         internalType: "uint256",
-        name: "ContractID",
+        name: "contractId",
         type: "uint256",
       },
       {
@@ -2336,7 +2469,12 @@ export const FactoryABI = [
       },
       {
         internalType: "address",
-        name: "_paymentTokenAddress",
+        name: "_paymentTokenAddress0",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_paymentTokenAddress1",
         type: "address",
       },
       {
@@ -2456,19 +2594,6 @@ export const FactoryABI = [
         internalType: "address",
         name: "contractAddress",
         type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getTotalInvestedInPlatform",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "platformTotal",
-        type: "uint256",
       },
     ],
     stateMutability: "view",
