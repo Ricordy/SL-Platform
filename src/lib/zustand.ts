@@ -11,6 +11,10 @@ import {
 import { BigNumber, ethers } from "ethers";
 import { getPuzzleCollectionIds } from "./utils";
 
+const provider = new ethers.providers.JsonRpcProvider(
+  process.env.NEXT_PUBLIC_JSONRPC_URL
+);
+
 export const useInvestments = create((set) => {
   return {
     investments: undefined,
@@ -228,9 +232,6 @@ export const useBlockchainInfo = create((set) => {
         contractAddress !== ""
       ) {
         try {
-          const provider = new ethers.providers.JsonRpcProvider(
-            `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
-          );
           const investmentContract = new ethers.Contract(
             contractAddress,
             investmentABI,
@@ -267,10 +268,6 @@ export const useBlockchainInfo = create((set) => {
     },
     fetchStaticInfo: async (userAddress: string, contractAddress?: string) => {
       try {
-        const provider = new ethers.providers.JsonRpcProvider(
-          `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
-        );
-
         const slCoreContract = new ethers.Contract(
           process.env.NEXT_PUBLIC_PUZZLE_ADDRESS as Address,
           SLCoreABI,
@@ -306,9 +303,6 @@ export const useBlockchainInfo = create((set) => {
     },
     fetchContractStatus: async (contractAddress: string) => {
       try {
-        const provider = new ethers.providers.JsonRpcProvider(
-          `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
-        );
         const investmentContract = new ethers.Contract(
           contractAddress,
           investmentABI,
@@ -325,9 +319,6 @@ export const useBlockchainInfo = create((set) => {
       }
     },
     fetchPuzzleInfo: async (userAddress: string, userLevel: number) => {
-      const provider = new ethers.providers.JsonRpcProvider(
-        `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
-      );
       let puzzlePieces = [];
       let totalInvestment = [];
       const slCoreContract = new ethers.Contract(
@@ -389,8 +380,6 @@ export const useBlockchainInfo = create((set) => {
           Array(30).fill(userAddress),
           Array.from({ length: 30 }, (_, k) => BigNumber.from(k))
         );
-
-        
 
         set({
           userTotalInvestedPerLevel: totalInvestment,

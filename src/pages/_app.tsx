@@ -4,7 +4,7 @@ import type { AppProps } from "next/app";
 import type { AppType } from "next/dist/shared/lib/utils";
 import { useEffect, useState } from "react";
 import { WagmiConfig, configureChains, createClient } from "wagmi";
-import { goerli } from "wagmi/chains";
+import { goerli, polygonMumbai } from "wagmi/chains";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { api } from "~/utils/api";
@@ -21,6 +21,7 @@ const jsonRpcUrl =
 const { chains, provider } = configureChains(
   [
     goerli,
+    polygonMumbai,
     // hardhat
   ],
   [

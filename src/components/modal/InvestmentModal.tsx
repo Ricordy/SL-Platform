@@ -167,21 +167,27 @@ export const InvestmentModal = ({
 
     try {
       const investmentAmountWithDecimals = ethers.utils.parseUnits(
-        valueApprovalAndInvestment.toString(),
+        valueApprovalAndInvestment?.toString(),
         6
       );
-      const results =
-        paymentTokenContract &&
-        (await paymentTokenContract
-          ?.connect(signerData)
-          .approve(contractAddress, investmentAmountWithDecimals));
+      const approved = await paymentTokenContract?.allowance(
+        (await signerData?.getAddress()) as Address,
+        contractAddress
+      );
 
-      await toast.promise(results.wait(), {
-        loading: "Transaction approval in progress...",
-        success: "Transaction successfully approved",
-        error: "Insufficient funds to complete the transaction.",
-      });
+      if (!approved?.gte(investmentAmountWithDecimals)) {
+        const results =
+          paymentTokenContract &&
+          (await paymentTokenContract
+            ?.connect(signerData)
+            .approve(contractAddress, investmentAmountWithDecimals));
 
+        await toast.promise(results.wait(), {
+          loading: "Transaction approval in progress...",
+          success: "Transaction successfully approved",
+          error: "Insufficient funds to complete the transaction.",
+        });
+      }
       //setIsApproving(false);
       // setisInvesting(true);
       toastId = toast.loading(
@@ -196,15 +202,12 @@ export const InvestmentModal = ({
         investContract &&
         (await investContract
           .connect(signerData)
-          .invest(BigNumber.from(valueApprovalAndInvestment)));
+          .invest(
+            BigNumber.from(valueApprovalAndInvestment),
+            BigNumber.from(0)
+          ));
 
       await results2.wait();
-
-      // await toast.promise(results2.wait(), {
-      //   loading: "Investing...",
-      //   success: undi,
-      //   error: "Error investing",
-      // });
 
       // Save to hygraph
 
@@ -227,8 +230,7 @@ export const InvestmentModal = ({
         });
 
         if (!response.ok)
-          toast.error(JSON.stringify("Error on fecthing API", response.text));
-        // throw new Error(`Something went wrong submitting the form.`);
+          toast.error(JSON.stringify("Error on fecthing API", response.body));
 
         fetchTransactions(contractAddress);
         fetchDynamicInfo(contractAddress, userAddress);
@@ -243,7 +245,8 @@ export const InvestmentModal = ({
               You've successfully invested in the chosen classic car. Your
               contribution is making restoration dreams come true!
             </div>
-          </div>
+          </div>,
+          { duration: 10000 }
         );
       } catch (err) {
         // toast.error(err.message);
@@ -264,6 +267,7 @@ export const InvestmentModal = ({
         toast.error("You cannot invest on this phase!");
       } else if (error.code && error.code == -32603) {
         toast.error("Nonce to high for Metamask");
+        toast.error(error.stack);
       } else {
         // toast.error(error);
       }
