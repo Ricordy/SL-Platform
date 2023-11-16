@@ -267,7 +267,6 @@ export const InvestmentModal = ({
         toast.error("You cannot invest on this phase!");
       } else if (error.code && error.code == -32603) {
         toast.error("Nonce to high for Metamask");
-        toast.error(error.stack);
       } else {
         // toast.error(error);
       }
