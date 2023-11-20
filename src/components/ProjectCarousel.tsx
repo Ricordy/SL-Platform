@@ -228,11 +228,11 @@ const ProjectCarousel: FC<CarouselProps> = ({
             </div>
           )}
         </div>
-      ) : (
+      ) : showNoInvestments ? (
         <div className="relative flex items-center overflow-hidden md:ml-[58px]">
-          {showNoInvestments && <h3 className="">No investments to show</h3>}
+          <h3 className="">No investments to show</h3>
         </div>
-      )}
+      ) : null}
     </div>
   );
 };
