@@ -720,6 +720,7 @@ const MyInvestments: NextPage = () => {
             items={userInvestments?.filter(
               (investment) => investment.investmentStatus == "Active"
             )}
+            showNoInvestments={true}
           />
         )}
 
@@ -731,6 +732,7 @@ const MyInvestments: NextPage = () => {
             items={userInvestments?.filter(
               (investment) => investment.investmentStatus == "Finished"
             )}
+            showNoInvestments={true}
           />
         )}
       </div>

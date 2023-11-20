@@ -120,6 +120,7 @@ interface CarouselProps {
   title?: ReactNode;
   prevNavWhite?: boolean;
   items?: InvestmentProps[];
+  showNoInvestments?: boolean;
 }
 
 const ProjectCarousel: FC<CarouselProps> = ({
@@ -128,6 +129,7 @@ const ProjectCarousel: FC<CarouselProps> = ({
   title,
   prevNavWhite,
   items,
+  showNoInvestments = false,
 }) => {
   const [contractAddress, setContractAddress] = useState();
 
@@ -228,7 +230,7 @@ const ProjectCarousel: FC<CarouselProps> = ({
         </div>
       ) : (
         <div className="relative flex items-center overflow-hidden md:ml-[58px]">
-          <h3 className="">No investments to show</h3>
+          {showNoInvestments && <h3 className="">No investments to show</h3>}
         </div>
       )}
     </div>
