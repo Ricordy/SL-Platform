@@ -317,8 +317,6 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                               <Image
                                 alt="NFT"
                                 src={dbLevels.at(idx)?.nft?.url as string}
-                                // width={498}
-                                // height={383}
                                 fill
                                 className="rounded-[5px]"
                                 style={{ objectFit: "cover" }}
@@ -327,7 +325,6 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                           </div>
                         ) : (
                           (userPieces && userPieces.length < 10 && (
-                            // </div>
                             <div className="h-90 relative flex flex-col items-center justify-between gap-6 rounded-md bg-neutral-100">
                               <h2 className="pt-6 text-center text-[24px] font-semibold uppercase leading-normal tracking-wider text-black">
                                 Your
@@ -381,16 +378,6 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                                   />
                                 </span>
                               </div>
-                              {/* <Button
-                                onClick={actionClaimPiece}
-                                className="whitespace-nowrap border-emerald-700 px-12 text-emerald-700"
-                                variant="outline"
-                                disabled={!userAllowedToClaimPiece}
-                              >
-                                {isLoadingClaimPiece
-                                  ? "Loading..."
-                                  : `Claim Piece`}
-                              </Button> */}
                               <MyAlertButton
                                 triggerButtonLabel={
                                   isLoadingClaimPiece
@@ -429,8 +416,8 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                                 ></div>
                               </div>
                             </div>
-                          )) || (
-                            // </div>
+                          )) ||
+                          (userPieces && userPieces.length == 10 && (
                             <div className="h-90 relative flex flex-col items-center justify-between rounded-md bg-neutral-100 align-middle">
                               <div className="mt-[132px] flex flex-col justify-center align-middle ">
                                 <h2 className="pt-6 text-center text-[24px] font-semibold uppercase leading-normal tracking-wider text-[#C3A279]">
@@ -467,7 +454,14 @@ const Puzzle: FC<PuzzleProps> = ({ className, isConnected, userAddress }) => {
                                 ></div>
                               </div>
                             </div>
-                          )
+                          ))
+                        )}
+                        {!userPieces && (
+                          <div className="h-90 relative flex flex-col items-center justify-center rounded-md bg-neutral-100 align-middle">
+                            <div className="flex flex-col justify-center align-middle ">
+                              Loading...
+                            </div>
+                          </div>
                         )}
 
                         {puzzlePieces
