@@ -4,7 +4,7 @@
   <h1>Something Legendary</h1>
   
   <p>
-    Something Legendary is an investment platform for the purchase, renovation and subsequent sale of classic cars, usingWeb 3.0 tools as a method of financial ease of use and as a gamification element.
+    Something Legendary is an investment platform for the purchase, restoration and subsequent sale of classic cars, using Web 3.0 tools as a method of financial ease of use and as a gamification element.
   </p>
   
 </div>
@@ -109,7 +109,7 @@ To run this project, you will need to add the following environment variables to
 
 <!-- Prerequisites -->
 
-### :bangbang: Prerequisites
+### :bangbang: Pre-requisites
 
 This project uses pnpm as package manager
 
