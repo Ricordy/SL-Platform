@@ -181,6 +181,12 @@ const MyInvestments: NextPage = () => {
   const { isConnected } = useAccount();
   const entryNFTPrice = utils.parseUnits("100", 6);
   const userInvestments = useInvestments((state) => state.userInvestments);
+  const finishedInvestments = userInvestments?.filter(
+    (investment) => investment.investmentStatus == "Finished"
+  );
+  const activeInvestments = userInvestments?.filter(
+    (investment) => investment.investmentStatus == "Active"
+  );
   const { address } = useAccount();
   const [numberOfTransactions, setNumberOfTransactions] = useState(4);
   const SlFactoryContract = {
@@ -717,9 +723,7 @@ const MyInvestments: NextPage = () => {
             className="pt-6 md:pt-0"
             prevNavWhite={true}
             title={<h2 className="text-2xl md:text-white">Active</h2>}
-            items={userInvestments?.filter(
-              (investment) => investment.investmentStatus == "Active"
-            )}
+            items={activeInvestments}
             showNoInvestments={true}
           />
         )}
@@ -729,9 +733,8 @@ const MyInvestments: NextPage = () => {
             id="4"
             className="py-12 md:py-[132px]"
             title={<h2 className="text-2xl">Finished</h2>}
-            items={userInvestments?.filter(
-              (investment) => investment.investmentStatus == "Finished"
-            )}
+            titleColor={activeInvestments?.length == 0 ? "text-white" : ""}
+            items={finishedInvestments}
             showNoInvestments={true}
           />
         )}
