@@ -118,16 +118,20 @@ interface CarouselProps {
   id: string;
   className?: string;
   title?: ReactNode;
+  titleColor?: string;
   prevNavWhite?: boolean;
   items?: InvestmentProps[];
+  showNoInvestments?: boolean;
 }
 
 const ProjectCarousel: FC<CarouselProps> = ({
   id,
   className,
   title,
+  titleColor = "text-white",
   prevNavWhite,
   items,
+  showNoInvestments = false,
 }) => {
   const [contractAddress, setContractAddress] = useState();
 
@@ -142,8 +146,13 @@ const ProjectCarousel: FC<CarouselProps> = ({
   return (
     <div className={className ?? ""}>
       {title && (
-        <div className="self-start pb-[52px] uppercase md:ml-[58px]">
-          {title ?? ""}
+        <div
+          className={cn(
+            "self-start pb-[52px] uppercase md:ml-[58px]",
+            titleColor
+          )}
+        >
+          {title}
         </div>
       )}
 
@@ -226,11 +235,11 @@ const ProjectCarousel: FC<CarouselProps> = ({
             </div>
           )}
         </div>
-      ) : (
+      ) : showNoInvestments ? (
         <div className="relative flex items-center overflow-hidden md:ml-[58px]">
-          <h3 className="">No investments to show</h3>
+          <h3 className={titleColor}>No investments to show</h3>
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

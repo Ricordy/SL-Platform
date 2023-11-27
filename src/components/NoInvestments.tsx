@@ -35,7 +35,7 @@ const NoInvestments: React.FC<NoInvestmentProps> = ({
   };
 
   return (
-    <div className="grid grid-flow-row auto-rows-auto grid-cols-1 justify-center gap-4 overflow-x-hidden  md:ml-[58px] md:grid-cols-3 md:pb-[132px] ">
+    <div className="grid grid-flow-row auto-rows-auto grid-cols-1 justify-center gap-4 overflow-x-hidden  md:ml-[58px] md:grid-cols-3 ">
       <div className="flex flex-col items-center justify-center rounded-md bg-puzzleProfitNotice p-8 text-justify align-middle">
         <h4 className="mb-4 text-2xl font-medium text-primaryGreen">
           Start your investments
